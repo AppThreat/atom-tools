@@ -1,0 +1,81 @@
+[project]
+name = "atom-tools"
+version = "0.0.1"
+description = "Collection of tools for use with appthreat/atom."
+authors = [
+  { name = "Team AppThreat", email = "hello@appthreat.com" },
+]
+dependencies = ["cleo>=1.0.0"]
+maintainers = [
+  { name = "Caroline Russell", email = "caroline@appthreat.com" },
+]
+license = { text = "Apache-2.0" }
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: Apache Software License",
+  "Development Status :: 2 - Planning",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Topic :: Security",
+  "Topic :: Utilities",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/appthreat/atom-tools"
+"Bug Tracker" = "https://github.com/appthreat/atom-tools/issues"
+
+[project.scripts]
+atom-tools = "atom_tools.cli.application:main"
+
+[project.optional-dependencies]
+dev = [
+"black",
+"flake8",
+"isort",
+"pre-commit",
+"pylint",
+"tox",
+]
+
+[build-system]
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+  "atom_tools",
+  "atom_tools.atom_data",
+  "atom_tools.cli",
+  "atom_tools.cli.commands",
+  "atom_tools.lib"
+]
+include-package-data = true
+
+[tool.flake8]
+max-line-length = 79
+max-complexity = 18
+exclude = ["atom_tools/cli/"]
+
+[tool.black]
+line-length = 79
+
+[tool.isort]
+profile = "black"
+
+[tool.pylint.design]
+max-args = 6
+
+[tool.pylint.format]
+max-line-length = 79
+
+[tool.pylint.logging]
+logging-format-style = "new"
+
+[tool.pylint.messages_control]
+disable = "W1203"
+
+
