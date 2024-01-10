@@ -1,0 +1,464 @@
+{
+  "schemas": {
+    "atom.UsageSlice": {
+      "description": "* The usage slices describes how a variable interacts within its procedure. This is perhaps a more \"descriptive\" slice in some ways. The variables are locals and parameters and the referencing identifiers are tracked to find what the variable calls and what calls it forms an argument of. There are two lists. There is a list of MethodUsageSlice with key \"objectSlices\" and a list of UserDefinedTypes with key \"userDefinedTypes\"",
+      "properties": {
+        "objectSlices": {
+          "items": {
+            "description": "Packages the object usage slices along with location and an optional method source code.",
+            "properties": {
+              "code": {
+                "description": "Raw source code of the method",
+                "type": "string"
+              },
+              "columnNumber": {
+                "description": "Column number",
+                "format": "int32",
+                "type": "integer"
+              },
+              "fileName": {
+                "description": "File name",
+                "type": "string"
+              },
+              "fullName": {
+                "description": "Method full name",
+                "type": "string"
+              },
+              "lineNumber": {
+                "description": "Line number",
+                "format": "int32",
+                "type": "integer"
+              },
+              "usages": {
+                "items": {
+                  "description": "Describes where and how the given external object/type is used",
+                  "properties": {
+                    "argToCalls": {
+                      "items": {
+                        "description": "The calls this object is observed to be an argument of.",
+                        "properties": {
+                          "callName": {
+                            "description": "Call method name",
+                            "type": "string"
+                          },
+                          "columnNumber": {
+                            "description": "Column number",
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "isExternal": {
+                            "description": "Boolean to indicate if the call belongs to an external method",
+                            "type": "boolean"
+                          },
+                          "lineNumber": {
+                            "description": "Line number",
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "paramTypes": {
+                            "description": "Types of the parameters",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "position": {
+                            "description": "Argument position",
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "resolvedMethod": {
+                            "description": "Full name of the resolved method",
+                            "type": "string"
+                          },
+                          "returnType": {
+                            "description": "Return type",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "definedBy": {
+                      "properties": {
+                        "columnNumber": {
+                          "description": "Column number",
+                          "format": "int32",
+                          "type": "integer"
+                        },
+                        "isExternal": {
+                          "description": "Boolean to indicate if the call belongs to an external method. label=CALL",
+                          "type": "boolean"
+                        },
+                        "label": {
+                          "description": "Label describing the resolved method or position",
+                          "type": "string"
+                        },
+                        "lineNumber": {
+                          "description": "Line number",
+                          "format": "int32",
+                          "type": "integer"
+                        },
+                        "name": {
+                          "description": "variable or parameter name",
+                          "type": "string"
+                        },
+                        "position": {
+                          "description": "Position",
+                          "format": "int32",
+                          "type": "integer"
+                        },
+                        "resolvedMethod": {
+                          "description": "Method name",
+                          "type": "string"
+                        },
+                        "typeFullName": {
+                          "description": "Fullname of the data type",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "invokedCalls": {
+                      "items": {
+                        "description": "The calls this object is observed to call.",
+                        "properties": {
+                          "callName": {
+                            "description": "Call method name",
+                            "type": "string"
+                          },
+                          "columnNumber": {
+                            "description": "Column number",
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "isExternal": {
+                            "description": "Boolean to indicate if the call belongs to an external method",
+                            "type": "boolean"
+                          },
+                          "lineNumber": {
+                            "description": "Line number",
+                            "format": "int32",
+                            "type": "integer"
+                          },
+                          "paramTypes": {
+                            "description": "Types of the parameters",
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "resolvedMethod": {
+                            "description": "Full name of the resolved method",
+                            "type": "string"
+                          },
+                          "returnType": {
+                            "description": "Return type",
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "targetObj": {
+                      "properties": {
+                        "columnNumber": {
+                          "description": "Column number",
+                          "format": "int32",
+                          "type": "integer"
+                        },
+                        "isExternal": {
+                          "description": "Boolean to indicate if the call belongs to an external method. label=CALL",
+                          "type": "boolean"
+                        },
+                        "label": {
+                          "enum": [
+                            "ANY",
+                            "LOCAL",
+                            "LITERAL",
+                            "PARAM",
+                            "CALL",
+                            "IDENTIFIER",
+                            "TYPE_REF",
+                            "UNKNOWN"
+                          ],
+                          "type": "string"
+                        },
+                        "lineNumber": {
+                          "description": "Line number in the file",
+                          "format": "int32",
+                          "type": "integer"
+                        },
+                        "name": {
+                          "description": "variable or parameter name",
+                          "type": "string"
+                        },
+                        "position": {
+                          "description": "Position of the parameter or argument",
+                          "format": "int32",
+                          "type": "integer"
+                        },
+                        "typeFullName": {
+                          "description": "Fullname of the data type",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "userDefinedTypes": {
+          "items": {
+            "description": "Describes custom types defined within the application.",
+            "properties": {
+              "columnNumber": {
+                "description": "Column number",
+                "format": "int32",
+                "type": "integer"
+              },
+              "fields": {
+                "items": {
+                  "description": "Represents a local transfer of data via aliasing. The data defined is via some alias.",
+                  "properties": {
+                    "columnNumber": {
+                      "description": "Column number",
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "label": {
+                      "description": "Type of the definition. Usually LOCAL",
+                      "enum": [
+                        "ANY",
+                        "LOCAL",
+                        "LITERAL",
+                        "PARAM",
+                        "CALL",
+                        "IDENTIFIER",
+                        "TYPE_REF",
+                        "UNKNOWN"
+                      ],
+                      "type": "string"
+                    },
+                    "lineNumber": {
+                      "description": "Line number",
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "Name of the local variable",
+                      "type": "string"
+                    },
+                    "typeFullName": {
+                      "description": "Full name of the type",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "fileName": {
+                "description": "File name",
+                "type": "string"
+              },
+              "lineNumber": {
+                "description": "Line number",
+                "format": "int32",
+                "type": "integer"
+              },
+              "name": {
+                "description": "Name of the type",
+                "type": "string"
+              },
+              "procedures": {
+                "items": {
+                  "description": "Details related to an observed call.",
+                  "properties": {
+                    "callName": {
+                      "description": "Name of the method or call",
+                      "type": "string"
+                    },
+                    "columnNumber": {
+                      "description": "Column number",
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "lineNumber": {
+                      "description": "Line number",
+                      "format": "int32",
+                      "type": "integer"
+                    },
+                    "paramTypes": {
+                      "description": "Types of the parameters",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    },
+                    "resolvedMethod": {
+                      "description": "Full name of the resolved method",
+                      "type": "string"
+                    },
+                    "returnType": {
+                      "description": "Type of the return value",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "atom.ReachableSlice": {
+      "description": "* Reachable slices offer a list of reachable nodes based on automated tags exported from data dependency graph",
+      "properties": {
+        "reachables": {
+          "properties": {
+            "flows": {
+              "items": {
+                "properties": {
+                  "code": {
+                    "description": "Source code",
+                    "type": "string"
+                  },
+                  "columnNumber": {
+                    "description": "Column number",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "fullName": {
+                    "description": "Full name of the call",
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "Id of the node",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "isExternal": {
+                    "description": "Boolean to indicate if this call belongs to an external method",
+                    "type": "boolean"
+                  },
+                  "label": {
+                    "description": "Label",
+                    "enum": [
+                      "UNKNOWN_NODE_TYPE",
+                      "METHOD",
+                      "METHOD_RETURN",
+                      "ANNOTATION",
+                      "ANNOTATION_PARAMETER_ASSIGN",
+                      "ANNOTATION_PARAMETER",
+                      "LITERAL",
+                      "MEMBER",
+                      "ARRAY_INITIALIZER",
+                      "CALL",
+                      "LOCAL",
+                      "TAG",
+                      "LOCATION",
+                      "IDENTIFIER",
+                      "RETURN",
+                      "BLOCK",
+                      "METHOD_PARAMETER_OUT",
+                      "METHOD_PARAMETER_IN",
+                      "DEPENDENCY",
+                      "FILE",
+                      "META_DATA",
+                      "NAMESPACE",
+                      "NAMESPACE_BLOCK",
+                      "UNKNOWN",
+                      "TYPE",
+                      "TYPE_DECL",
+                      "TYPE_PARAMETER",
+                      "TYPE_ARGUMENT",
+                      "ANNOTATION_LITERAL",
+                      "CONFIG_FILE",
+                      "BINDING",
+                      "TAG_NODE_PAIR",
+                      "FINDING",
+                      "KEY_VALUE_PAIR",
+                      "MODIFIER",
+                      "METHOD_REF",
+                      "CLOSURE_BINDING",
+                      "TYPE_REF",
+                      "CONTROL_STRUCTURE",
+                      "JUMP_TARGET",
+                      "JUMP_LABEL",
+                      "TEMPLATE_DOM",
+                      "COMMENT",
+                      "FIELD_IDENTIFIER"
+                    ],
+                    "type": "string"
+                  },
+                  "lineNumber": {
+                    "description": "Line number",
+                    "format": "int32",
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "Name of the call or identifier or parameter",
+                    "type": "string"
+                  },
+                  "parentClassName": {
+                    "description": "Parent class name",
+                    "type": "string"
+                  },
+                  "parentFileName": {
+                    "description": "Parent filename",
+                    "type": "string"
+                  },
+                  "parentMethodName": {
+                    "description": "Parent method name",
+                    "type": "string"
+                  },
+                  "parentPackageName": {
+                    "description": "Parent package name",
+                    "type": "string"
+                  },
+                  "signature": {
+                    "description": "Method signature of the call",
+                    "type": "string"
+                  },
+                  "tags": {
+                    "description": "Tags. Can contain simple names including package url",
+                    "type": "string"
+                  },
+                  "typeFullName": {
+                    "description": "Type full name",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "purls": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "type": "array"
+    }
+  }
+}
