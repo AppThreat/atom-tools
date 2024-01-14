@@ -25,6 +25,7 @@ class UsageSlice:
         import_slice: Imports a slice from a JSON file.
 
     """
+    ENDPOINTS_REGEX = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
 
     def __init__(self, filename, language):
         [self.object_slices, self.user_defined_types] = self.import_slice(
@@ -80,84 +81,117 @@ class UsageSlice:
         )
         return [], []
 
-    # TODO:
-    def extract_endpoints(self, code):
+    def generate_endpoints(self):
         """
-        Extracts endpoints from the given code based on the language specified.
+        Generates and returns a dictionary of endpoints based on the object
+        slices and user-defined types (UDTs).
 
-        Parameters:
-            code (str): The code to extract endpoints from.
+        Returns:
+            list: A list of endpoints.
+        """
+        endpoints = []
+        for object_slice in self.object_slices:
+            parent = (
+                '/' + object_slice.get('fullName', '')
+                .split(':')[0]
+                # .split('.')[-1]
+                .rstrip('/')
+            )
+            endpoints.extend(
+                self.extract_endpoints_from_usages(
+                    object_slice.get('usages', []), parent)
+            )
+        endpoints.extend(self.extract_endpoints_from_udts())
+        return list(set(endpoints))
+
+    def extract_endpoints(self, code, pkg):
+        """
+        Extracts endpoints from the given code based on the specified language.
+
+        Args:
+            code (str): The code from which to extract endpoints.
+            pkg (str): The package name to prepend to the extracted endpoints.
 
         Returns:
             list: A list of extracted endpoints.
         """
         endpoints = []
-
         if not code:
             return endpoints
-
-        pattern = re.compile(r'[\'"](\.*?)[\'"]', re.IGNORECASE)
-        matches = re.findall(pattern, code) or []
-
+        matches = re.findall(UsageSlice.ENDPOINTS_REGEX, code) or []
         match self.language:
             case 'java', 'jar':
                 if code.startswith('@') and (
-                        'Mapping' in code or 'Path' in code) and (
-                        '(' in code):
-                    endpoints = (
-                        [v.replace('"', '').replace("'", "") for v in
-                            matches if v and not v.startswith(
-                            ".") and "/" in v and not v.startswith("@")])
+                        'Mapping' in code or 'Path' in code) and '(' in code:
+                    endpoints.extend(
+                        [
+                            pkg + v.replace('"', '').replace("'", "")
+                            for v in matches
+                            if v and not v.startswith(".")
+                            and "/" in v and not v.startswith("@")
+                        ]
+                    )
             case 'js', 'ts', 'javascript', 'typescript':
-                if "app." in code or "route" in code:
-                    endpoints = (
-                    [v.replace('"', '').replace("'", "") for v in
-                     matches if v and not v.startswith(
-                        ".") and "/" in v and not v.startswith(
-                        "@") and not v.startswith(
-                        "application/") and not v.startswith("text/")])
-            case 'py', 'python':
-                endpoints = ([v.replace('"', '').replace("'", "").replace(
-                    "\n", "") for v in matches if len(v) > 2])
-
+                if 'app.' in code or 'route' in code:
+                    endpoints.extend(
+                        [
+                            pkg + v.replace('"', '').replace("'", "")
+                            for v in matches
+                            if v and not v.startswith(".")
+                            and '/' in v and not v.startswith('@')
+                            and not v.startswith('application/')
+                            and not v.startswith('text/')
+                        ]
+                    )
+            case _:
+                endpoints.extend([
+                    pkg + v.replace('"', '').replace("'", "").replace('\n', '')
+                    for v in matches or [] if len(v) > 2 and '/' in v
+                ])
         return endpoints
 
-    @staticmethod
-    def construct_root_name(slc):
+    def extract_endpoints_from_usages(self, usages, pkg):
         """
-        Generate the root name for a service based on the given slice.
+        Extracts endpoints from the given list of usages.
 
         Args:
-            slc (dict): The slc dictionary object containing the slice.
+            usages (List[Dict]): A list of dicts representing the usages.
+            pkg (str): The package name.
 
         Returns:
-            str: The constructed root name for the service.
-
+            List: A list of extracted endpoints.
         """
-        service_name = ''
-        if slc.get('fullName'):
-            service_name = slc['fullName'].split(':')[0].replace('.', '-')
-        elif slc.get('fileName'):
-            service_name = os.path.basename(slc.get('fileName')).split('.')[0]
-        return service_name
+        endpoints = []
+        for usage in usages:
+            target_obj = usage.get('targetObj', {})
+            defined_by = usage.get('definedBy', {})
+            invoked_calls = usage.get('invokedCalls', [])
+            if resolved_method := target_obj.get('resolvedMethod'):
+                endpoints.extend(self.extract_endpoints(resolved_method, pkg))
+            elif resolved_method := defined_by.get('resolvedMethod'):
+                endpoints.extend(self.extract_endpoints(resolved_method, pkg))
+            if invoked_calls:
+                for call in invoked_calls:
+                    if resolved_method := call.get('resolvedMethod'):
+                        endpoints.extend(
+                            self.extract_endpoints(resolved_method, pkg))
+        return endpoints
 
-    @property
-    def slices(self):
+    def extract_endpoints_from_udts(self):
         """
-        Get the object slices.
+        Extracts endpoints from user-defined types.
+
         Returns:
-            list: A list of object slices.
+            list: A list of endpoints extracted from the user-defined types.
         """
-        return self.object_slices
-
-    @property
-    def udts(self):
-        """
-        Get the user-defined types.
-        Returns:
-            list: A list of user-defined types.
-        """
-        return self.user_defined_types
+        endpoints = []
+        for udt in self.user_defined_types:
+            pkg = udt.get('name')
+            if fields := udt.get('fields'):
+                for f in fields:
+                    endpoints.extend(
+                        self.extract_endpoints(f.get('name'), pkg))
+        return endpoints
 
 
 class ReachablesSlice:

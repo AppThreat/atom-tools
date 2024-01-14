@@ -21,14 +21,14 @@ repos:
     rev: v3.0.2
     hooks:
       - id: pylint
-        exclude: 'cli'
+        exclude: 'cli|test'
         args: []
 
   - repo: https://github.com/PyCQA/flake8
     rev: 6.1.0
     hooks:
       - id: flake8
-        exclude: 'cli'
+        exclude: 'cli|test'
         args: [--statistics]
 
 ci:

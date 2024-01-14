@@ -1,8 +1,7 @@
 """
 Command Loader for the atom-tools CLI.
 """
-
-from typing import Callable
+from collections.abc import Callable
 
 from cleo.commands.command import Command
 from cleo.exceptions import CleoLogicError
@@ -11,15 +10,7 @@ from cleo.loaders.factory_command_loader import FactoryCommandLoader
 
 class CommandLoader(FactoryCommandLoader):
     """
-    Register a command factory for a command name.
-
-    Args:
-        command_name (str): The name of the command.
-        factory (Callable[[], Command]): The command factory function.
-
-    Raises:
-        CleoLogicError: If the command name already exists.
-
+    Command Loader for the atom-tools CLI.
     """
 
     def register_factory(

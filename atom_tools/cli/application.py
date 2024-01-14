@@ -30,7 +30,7 @@ def load_command(name: str) -> Callable[[], Command]:
 
     def _load() -> Command:
         words = name.split(' ')
-        module = import_module('atom-tools.cli.commands.' + '.'.join(words))
+        module = import_module('atom_tools.cli.commands.' + '.'.join(words))
         command_class = getattr(
             module, ''.join(c.title() for c in words) + 'Command'
         )
