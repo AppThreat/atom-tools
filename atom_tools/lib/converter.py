@@ -75,57 +75,27 @@ class OpenAPI:
         """
         raise NotImplementedError
 
-    def convert_slices(self):
+    def endpoints_to_openapi(self):
         """
-        Converts slices.
-
-        This function converts available slices
-
-        Returns:
-            The converted slices, or None if no slices are available.
-
+        Combines usages and reachables endpoints into a single document.
         """
-        if self.usages and self.reachables:
-            return self.combine_converted(self.usages, self.reachables)
-        if self.usages:
-            return self.convert_usages()
-        return self.convert_reachables() if self.reachables else None
-
-    def combine_converted(self, usages, reachables):
-        """
-        Combines converted usages and reachables into a single document.
-        """
-        raise NotImplementedError
+        endpoints = self.convert_usages()
+        paths_obj = {r: {} for r in endpoints} or {}
+        return {
+            'openapi': self.openapi_version,
+            'info': {'title': 'Atom Usages', 'version': '1.0.0'},
+            'paths': paths_obj
+        }
 
     def convert_usages(self):
         """
         Converts usages to OpenAPI.
         """
-        endpoints = self.usages.generate_endpoints()
-        return {
-            'openapi': self.openapi_version,
-            'info': {'title': 'Atom Usages', 'version': '1.0.0'},
-            'paths': {endpoint: {} for endpoint in endpoints}
-        }
+        return sorted(
+            set(self.usages.generate_endpoints())) if self.usages else []
 
     def convert_reachables(self):
         """
         Converts reachables to OpenAPI.
         """
         raise NotImplementedError
-        # endpoints = self.bom.generate_endpoints()
-        # with open(self.reachables_file, 'r', encoding='utf-8') as f:
-        #     data = json.load(f).get('reachables')
-        #
-        # with open('schemas/template.json', 'r', encoding='utf-8') as f:
-        #     template = json.load(f)
-        #
-        # paths = []
-        # reached = {}
-        #
-        # for endpoint in endpoints:
-        #     new_path = {
-        #         endpoint: {
-        #             'x-atom-reachables': {}
-        #         }
-        #     }

@@ -6,32 +6,29 @@ import json
 import logging
 import os.path
 import re
+import jmespath
 
 
 class UsageSlice:
     """
-    Represents a usage slice.
-
     This class is responsible for importing and storing usage slices.
 
     Args:
         filename (str): The path to the JSON file.
 
     Attributes:
-        object_slices (list): A list of object slices.
-        user_defined_types (list): A list of user-defined types.
+        usages (dict): The dictionary loaded from the usages JSON file.
 
     Methods:
         import_slice: Imports a slice from a JSON file.
-
+        generate_endpoints: Generates a list of endpoints from a slice.
+        extract_endpoints: Extracts a list of endpoints from a usage.
     """
-    ENDPOINTS_REGEX = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
 
     def __init__(self, filename, language):
-        [self.object_slices, self.user_defined_types] = self.import_slice(
-            filename
-        )
+        self.usages = self.import_slice(filename)
         self.language = language
+        self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
 
     @staticmethod
     def import_slice(filename):
@@ -42,9 +39,7 @@ class UsageSlice:
             filename (str): The path to the JSON file.
 
         Returns:
-            tuple: A tuple containing the object slices and user-defined types.
-                   The object slices is a list of object slices.
-                   The user-defined types is a list of user-defined types.
+            dict: The contents of the JSON file.
 
         Raises:
             JSONDecodeError: If the JSON file cannot be decoded.
@@ -55,31 +50,24 @@ class UsageSlice:
             If the JSON file is not a valid usage slice, a warning is logged.
         """
         if not filename:
-            return [], []
+            return {}
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)
-            if content.get('objectSlices'):
-                return content.get('objectSlices', []), content.get(
-                    'userDefinedTypes', []
-                )
-        except [json.decoder.JSONDecodeError, UnicodeDecodeError]:
+            return content
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             logging.warning(
                 f'Failed to load usages slice: {filename}\nPlease check '
-                f'that you specified a valid json file.'
-            )
+                f'that you specified a valid json file.')
         except FileNotFoundError:
             logging.warning(
                 f'Failed to locate the usages slice file in the location '
-                f'specified: {filename}'
-            )
+                f'specified: {filename}')
 
-        logging.warning(
-            f'This does not appear to be a valid usage slice: '
-            f'{filename}\nPlease check that you specified the '
-            f'correct usages slice file.'
-        )
-        return [], []
+        logging.warning(f'This does not appear to be a valid usage slice: '
+                        f'{filename}\nPlease check that you specified the '
+                        f'correct usages slice file.')
+        return {}
 
     def generate_endpoints(self):
         """
@@ -87,55 +75,67 @@ class UsageSlice:
         slices and user-defined types (UDTs).
 
         Returns:
-            list: A list of endpoints.
+            list: A list of unique endpoints.
         """
+        # Surely there is a way to combine these...
+        target_obj_pattern = jmespath.compile(
+            'objectSlices[].usages[].targetObj.resolvedMethod')
+        defined_by_pattern = jmespath.compile(
+            'objectSlices[].usages[].definedBy.resolvedMethod')
+        invoked_calls_pattern = jmespath.compile(
+            'objectSlices[].usages[].invokedCalls[].resolvedMethod')
+        udt_jmespath_query = jmespath.compile(
+            'userDefinedTypes[].fields[].name')
+        methods = target_obj_pattern.search(self.usages) or []
+        methods.extend(defined_by_pattern.search(self.usages) or [])
+        methods.extend(invoked_calls_pattern.search(self.usages) or [])
+        methods.extend(udt_jmespath_query.search(self.usages) or [])
+        methods = list(set(methods))
+
         endpoints = []
-        for object_slice in self.object_slices:
-            parent = (
-                '/' + object_slice.get('fullName', '')
-                .split(':')[0]
-                # .split('.')[-1]
-                .rstrip('/')
-            )
-            endpoints.extend(
-                self.extract_endpoints_from_usages(
-                    object_slice.get('usages', []), parent)
-            )
-        endpoints.extend(self.extract_endpoints_from_udts())
+        if methods:
+            for method in methods:
+                endpoints.extend(self.extract_endpoints(method))
+
         return list(set(endpoints))
 
-    def extract_endpoints(self, code, pkg):
+    def extract_endpoints(self, code):
         """
         Extracts endpoints from the given code based on the specified language.
 
         Args:
             code (str): The code from which to extract endpoints.
-            pkg (str): The package name to prepend to the extracted endpoints.
 
         Returns:
             list: A list of extracted endpoints.
+
+        Raises:
+            None.
         """
         endpoints = []
         if not code:
             return endpoints
-        matches = re.findall(UsageSlice.ENDPOINTS_REGEX, code) or []
+        matches = re.findall(self.endpoints_regex, code) or []
         match self.language:
-            case 'java', 'jar':
+            case 'java' | 'jar':
                 if code.startswith('@') and (
                         'Mapping' in code or 'Path' in code) and '(' in code:
                     endpoints.extend(
                         [
-                            pkg + v.replace('"', '').replace("'", "")
+                            f'/{v.replace('"', '')
+                                .replace("'", "")
+                                .lstrip('/')}'
                             for v in matches
                             if v and not v.startswith(".")
                             and "/" in v and not v.startswith("@")
                         ]
                     )
-            case 'js', 'ts', 'javascript', 'typescript':
+            case 'js' | 'ts' | 'javascript' | 'typescript':
                 if 'app.' in code or 'route' in code:
                     endpoints.extend(
                         [
-                            pkg + v.replace('"', '').replace("'", "")
+                            f'/{v.replace('"', '')
+                                .replace("'", "").lstrip('/')}'
                             for v in matches
                             if v and not v.startswith(".")
                             and '/' in v and not v.startswith('@')
@@ -145,59 +145,17 @@ class UsageSlice:
                     )
             case _:
                 endpoints.extend([
-                    pkg + v.replace('"', '').replace("'", "").replace('\n', '')
+                    f'/{v.replace('"', '')
+                        .replace("'", "")
+                        .replace('\n', '')
+                        .lstrip('/')}'
                     for v in matches or [] if len(v) > 2 and '/' in v
                 ])
-        return endpoints
-
-    def extract_endpoints_from_usages(self, usages, pkg):
-        """
-        Extracts endpoints from the given list of usages.
-
-        Args:
-            usages (List[Dict]): A list of dicts representing the usages.
-            pkg (str): The package name.
-
-        Returns:
-            List: A list of extracted endpoints.
-        """
-        endpoints = []
-        for usage in usages:
-            target_obj = usage.get('targetObj', {})
-            defined_by = usage.get('definedBy', {})
-            invoked_calls = usage.get('invokedCalls', [])
-            if resolved_method := target_obj.get('resolvedMethod'):
-                endpoints.extend(self.extract_endpoints(resolved_method, pkg))
-            elif resolved_method := defined_by.get('resolvedMethod'):
-                endpoints.extend(self.extract_endpoints(resolved_method, pkg))
-            if invoked_calls:
-                for call in invoked_calls:
-                    if resolved_method := call.get('resolvedMethod'):
-                        endpoints.extend(
-                            self.extract_endpoints(resolved_method, pkg))
-        return endpoints
-
-    def extract_endpoints_from_udts(self):
-        """
-        Extracts endpoints from user-defined types.
-
-        Returns:
-            list: A list of endpoints extracted from the user-defined types.
-        """
-        endpoints = []
-        for udt in self.user_defined_types:
-            pkg = udt.get('name')
-            if fields := udt.get('fields'):
-                for f in fields:
-                    endpoints.extend(
-                        self.extract_endpoints(f.get('name'), pkg))
         return endpoints
 
 
 class ReachablesSlice:
     """
-    Represents a slice of reachables.
-
     This class is responsible for importing and storing reachables slices.
 
     Args:
@@ -223,9 +181,7 @@ class ReachablesSlice:
             filename (str): The path to the JSON file.
 
         Returns:
-            tuple: A tuple containing the object slices and user-defined types.
-                   The object slices is a list of object slices.
-                   The user-defined types is a list of user-defined types.
+            list: A list of the reachables slices.
 
         Raises:
             JSONDecodeError: If the JSON file cannot be decoded.
@@ -241,7 +197,7 @@ class ReachablesSlice:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)
                 return content.get('reachables', [])
-        except [json.decoder.JSONDecodeError, UnicodeDecodeError]:
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             logging.warning(
                 f'Failed to load usages slice: {filename}\nPlease check '
                 f'that you specified a valid json file.'
@@ -257,12 +213,3 @@ class ReachablesSlice:
             f'Please check that you specified the correct usages slice file.'
         )
         return []
-
-    @property
-    def slices(self):
-        """
-        Get reachables
-        Returns:
-            A list of reachables.
-        """
-        return self.reachables

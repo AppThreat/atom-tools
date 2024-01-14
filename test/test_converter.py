@@ -1,32 +1,142 @@
-from atom_tools.lib.converter import BomFile, OpenAPI
-
-
-def test_bomfile_class():
-    # test bom file with services
-    bom = BomFile('data/bom.json')
-    assert bom.services[0] == {
-        'endpoints': ['/safecode'],
-        'name': 'org-joychou-controller-CRLFInjection-crlf-service'}
-    assert len(bom.generate_endpoints()) == 127
-
-    # test bom file no services
-    bom = BomFile('data/bom_no_svcs.json')
-    assert bom.services is None
-    assert len(bom.generate_endpoints()) == 0
-
-    # test no bom file included
-    bom = BomFile(None)
-    assert bom.services is None
-
-    # test invalid bom file
-    bom = BomFile('data/invalid_bom.json')
-    assert bom.services is None
+from atom_tools.lib.converter import OpenAPI
 
 
 def test_openapi_class():
-    openapi = OpenAPI(
-        'openapi3.1.0',
-        'data/bom.json',
-        'java',
-        'data/usages.json')
+    openapi = OpenAPI('openapi3.1.0', 'java',
+        'data/java-piggymetrics-usages.json')
     assert openapi.openapi_version == '3.1.0'
+    assert openapi.language == 'java'
+    assert openapi.endpoints_to_openapi() == {
+        'info': {'title': 'Atom Usages', 'version': '1.0.0'},
+        'openapi': '3.1.0',
+        'paths': {'/': {}, '/accounts/{accountName}': {}, '/current': {},
+                  '/latest': {}, '/statistics/{accountName}': {},
+                  '/uaa/users': {}, '/{accountName}': {}, '/{name}': {}}}
+    assert openapi.convert_usages() == ['/', '/accounts/{accountName}',
+                                        '/current', '/latest',
+                                        '/statistics/{accountName}',
+                                        '/uaa/users', '/{accountName}',
+                                        '/{name}']
+
+    openapi = OpenAPI('openapi3.0.1', 'java', 'data/java-sec-code-usages.json')
+    assert openapi.openapi_version == '3.0.1'
+    assert openapi.language == 'java'
+    assert openapi.endpoints_to_openapi() == {
+        'info': {'title': 'Atom Usages', 'version': '1.0.0'},
+        'openapi': '3.0.1',
+        'paths': {'/': {}, '/Digester/sec': {}, '/Digester/vuln': {},
+                  '/DocumentBuilder/Sec': {}, '/DocumentBuilder/vuln': {},
+                  '/DocumentBuilder/xinclude/sec': {},
+                  '/DocumentBuilder/xinclude/vuln': {},
+                  '/DocumentHelper/vuln': {}, '/HttpSyncClients/vuln': {},
+                  '/HttpURLConnection/sec': {}, '/HttpURLConnection/vuln': {},
+                  '/IOUtils/sec': {}, '/ImageIO/sec': {}, '/Jsoup/sec': {},
+                  '/ProcessBuilder': {}, '/SAXBuilder/sec': {},
+                  '/SAXBuilder/vuln': {}, '/SAXParser/sec': {},
+                  '/SAXParser/vuln': {}, '/SAXReader/sec': {},
+                  '/SAXReader/vuln': {}, '/XMLReader/sec': {},
+                  '/XMLReader/vuln': {}, '/aa': {}, '/any': {}, '/appInfo': {},
+                  '/application/javascript': {}, '/classloader': {},
+                  '/codeinject': {}, '/codeinject/host': {},
+                  '/codeinject/sec': {}, '/commonsHttpClient/sec': {},
+                  '/createToken': {}, '/deserialize': {}, '/dnsrebind/vuln': {},
+                  '/exclued/vuln': {}, '/fastjsonp/getToken': {},
+                  '/forward': {}, '/getName': {}, '/getToken': {},
+                  '/httpclient/sec': {}, '/hutool/vuln': {}, '/index': {},
+                  '/jdbc/ps/vuln': {}, '/jdbc/sec': {}, '/jdbc/vuln': {},
+                  '/jscmd': {}, '/log4j': {}, '/login': {}, '/logout': {},
+                  '/mybatis/orderby/sec04': {}, '/mybatis/orderby/vuln03': {},
+                  '/mybatis/sec01': {}, '/mybatis/sec02': {},
+                  '/mybatis/sec03': {}, '/mybatis/vuln01': {},
+                  '/mybatis/vuln02': {}, '/noproxy': {}, '/object2jsonp': {},
+                  '/okhttp/sec': {}, '/openStream': {},
+                  '/path_traversal/sec': {}, '/path_traversal/vul': {},
+                  '/pic': {}, '/post': {}, '/postgresql': {}, '/proxy': {},
+                  '/readxlsx': {}, '/redirect': {}, '/reflect': {},
+                  '/rememberMe/security': {}, '/rememberMe/vuln': {},
+                  '/request/sec': {}, '/restTemplate/vuln1': {},
+                  '/restTemplate/vuln2': {}, '/runtime/exec': {}, '/safe': {},
+                  '/safecode': {}, '/sec': {}, '/sec/array_indexOf': {},
+                  '/sec/checkOrigin': {}, '/sec/checkReferer': {},
+                  '/sec/corsFilter': {}, '/sec/crossOrigin': {},
+                  '/sec/httpCors': {}, '/sec/originFilter': {},
+                  '/sec/webMvcConfigurer': {}, '/sec/yarm': {},
+                  '/sendRedirect': {}, '/sendRedirect/sec': {},
+                  '/setHeader': {}, '/spel/vuln': {}, '/status': {},
+                  '/stored/show': {}, '/stored/store': {}, '/upload': {},
+                  '/upload/picture': {}, '/urlConnection/sec': {},
+                  '/urlConnection/vuln': {}, '/velocity': {},
+                  '/vuln/contains': {}, '/vuln/crossOrigin': {},
+                  '/vuln/emptyReferer': {}, '/vuln/endsWith': {},
+                  '/vuln/mappingJackson2JsonView': {}, '/vuln/origin': {},
+                  '/vuln/referer': {}, '/vuln/regex': {}, '/vuln/setHeader': {},
+                  '/vuln/url_bypass': {}, '/vuln/yarm': {}, '/vuln01': {},
+                  '/vuln02': {}, '/vuln03': {}, '/vuln04': {}, '/vuln05': {},
+                  '/vuln06': {}, '/websocket/cmd': {}, '/websocket/proxy': {},
+                  '/xmlReader/sec': {}, '/xmlReader/vuln': {},
+                  '/xmlbeam/vuln': {}, '/xstream': {}}}
+    assert openapi.convert_usages() == ['/', '/Digester/sec', '/Digester/vuln',
+                                        '/DocumentBuilder/Sec',
+                                        '/DocumentBuilder/vuln',
+                                        '/DocumentBuilder/xinclude/sec',
+                                        '/DocumentBuilder/xinclude/vuln',
+                                        '/DocumentHelper/vuln',
+                                        '/HttpSyncClients/vuln',
+                                        '/HttpURLConnection/sec',
+                                        '/HttpURLConnection/vuln',
+                                        '/IOUtils/sec', '/ImageIO/sec',
+                                        '/Jsoup/sec', '/ProcessBuilder',
+                                        '/SAXBuilder/sec', '/SAXBuilder/vuln',
+                                        '/SAXParser/sec', '/SAXParser/vuln',
+                                        '/SAXReader/sec', '/SAXReader/vuln',
+                                        '/XMLReader/sec', '/XMLReader/vuln',
+                                        '/aa', '/any', '/appInfo',
+                                        '/application/javascript',
+                                        '/classloader', '/codeinject',
+                                        '/codeinject/host', '/codeinject/sec',
+                                        '/commonsHttpClient/sec',
+                                        '/createToken', '/deserialize',
+                                        '/dnsrebind/vuln', '/exclued/vuln',
+                                        '/fastjsonp/getToken', '/forward',
+                                        '/getName', '/getToken',
+                                        '/httpclient/sec', '/hutool/vuln',
+                                        '/index', '/jdbc/ps/vuln', '/jdbc/sec',
+                                        '/jdbc/vuln', '/jscmd', '/log4j',
+                                        '/login', '/logout',
+                                        '/mybatis/orderby/sec04',
+                                        '/mybatis/orderby/vuln03',
+                                        '/mybatis/sec01', '/mybatis/sec02',
+                                        '/mybatis/sec03', '/mybatis/vuln01',
+                                        '/mybatis/vuln02', '/noproxy',
+                                        '/object2jsonp', '/okhttp/sec',
+                                        '/openStream', '/path_traversal/sec',
+                                        '/path_traversal/vul', '/pic', '/post',
+                                        '/postgresql', '/proxy', '/readxlsx',
+                                        '/redirect', '/reflect',
+                                        '/rememberMe/security',
+                                        '/rememberMe/vuln', '/request/sec',
+                                        '/restTemplate/vuln1',
+                                        '/restTemplate/vuln2', '/runtime/exec',
+                                        '/safe', '/safecode', '/sec',
+                                        '/sec/array_indexOf',
+                                        '/sec/checkOrigin', '/sec/checkReferer',
+                                        '/sec/corsFilter', '/sec/crossOrigin',
+                                        '/sec/httpCors', '/sec/originFilter',
+                                        '/sec/webMvcConfigurer', '/sec/yarm',
+                                        '/sendRedirect', '/sendRedirect/sec',
+                                        '/setHeader', '/spel/vuln', '/status',
+                                        '/stored/show', '/stored/store',
+                                        '/upload', '/upload/picture',
+                                        '/urlConnection/sec',
+                                        '/urlConnection/vuln', '/velocity',
+                                        '/vuln/contains', '/vuln/crossOrigin',
+                                        '/vuln/emptyReferer', '/vuln/endsWith',
+                                        '/vuln/mappingJackson2JsonView',
+                                        '/vuln/origin', '/vuln/referer',
+                                        '/vuln/regex', '/vuln/setHeader',
+                                        '/vuln/url_bypass', '/vuln/yarm',
+                                        '/vuln01', '/vuln02', '/vuln03',
+                                        '/vuln04', '/vuln05', '/vuln06',
+                                        '/websocket/cmd', '/websocket/proxy',
+                                        '/xmlReader/sec', '/xmlReader/vuln',
+                                        '/xmlbeam/vuln', '/xstream']

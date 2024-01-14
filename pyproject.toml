@@ -5,7 +5,7 @@ description = "Collection of tools for use with appthreat/atom."
 authors = [
   { name = "Team AppThreat", email = "hello@appthreat.com" },
 ]
-dependencies = ["cleo>=1.0.0"]
+dependencies = ["cleo>=1.0.0", "jmespath"]
 maintainers = [
   { name = "Caroline Russell", email = "caroline@appthreat.com" },
 ]
@@ -31,6 +31,9 @@ classifiers = [
 [project.scripts]
 atom-tools = "atom_tools.cli.application:main"
 
+[project.entry-points."console_scripts"]
+atom-tools = "atom_tools.cli.application:main"
+
 [project.optional-dependencies]
 dev = [
 "black",
@@ -48,7 +51,6 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools]
 packages = [
   "atom_tools",
-  "atom_tools.atom_data",
   "atom_tools.cli",
   "atom_tools.cli.commands",
   "atom_tools.lib"
@@ -76,6 +78,6 @@ max-line-length = 79
 logging-format-style = "new"
 
 [tool.pylint.messages_control]
-disable = "W1203"
+disable = "W1203,R0903"
 
 

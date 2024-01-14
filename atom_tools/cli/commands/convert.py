@@ -96,19 +96,26 @@ class ConvertCommand(Command):
             flag=False,
             default=None
         ),
-        option(
-            'reachables-slice',
-            'r',
-            'Reachables slice file',
-            flag=False,
-            default=None,
-        ),
+        # option(
+        #     'reachables-slice',
+        #     'r',
+        #     'Reachables slice file',
+        #     flag=False,
+        #     default=None,
+        # ),
         option(
             'language',
             'l',
             '',
             flag=False,
-            default='Java',
+            default='java',
+        ),
+        option(
+            'output-file',
+            'o',
+            'Output file',
+            flag=False,
+            default='openapi_from_slice.json',
         )
     ]
     help = """The convert command converts an atom slice to a different format.
@@ -121,15 +128,16 @@ class ConvertCommand(Command):
         Executes the convert command and performs the conversion.
         """
         match self.option('format'):
-            case 'openapi3.1.0':
+            case 'openapi3.1.0' | 'openapi3.0.1':
                 converter_instance = OpenAPI(
                     self.option('format'),
                     self.option('language'),
                     self.option('usages-slice'),
-                    self.option('reachables-slice'),
+                    # self.option('reachables-slice'),
                 )
-                if result := converter_instance.convert_slices():
-                    with open('output.json', 'w', encoding='utf-8') as f:
+                if result := converter_instance.endpoints_to_openapi():
+                    with open(self.option('output-file'), 'w',
+                              encoding='utf-8') as f:
                         json.dump(result, f, indent=4)
             case _:
                 raise ValueError(
