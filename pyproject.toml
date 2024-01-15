@@ -1,11 +1,11 @@
 [project]
 name = "atom-tools"
-version = "0.0.1"
+version = "0.1.0"
 description = "Collection of tools for use with appthreat/atom."
 authors = [
   { name = "Team AppThreat", email = "hello@appthreat.com" },
 ]
-dependencies = ["cleo>=1.0.0", "jmespath"]
+dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0"]
 maintainers = [
   { name = "Caroline Russell", email = "caroline@appthreat.com" },
 ]
@@ -17,7 +17,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "License :: OSI Approved :: Apache Software License",
-  "Development Status :: 2 - Planning",
+  "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Topic :: Security",
