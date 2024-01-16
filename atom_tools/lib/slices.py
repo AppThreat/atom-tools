@@ -8,6 +8,10 @@ import os.path
 import re
 import jmespath
 
+logger = logging.getLogger(__name__)
+if os.getenv("ATOM_TOOLS_DEBUG") in ['True', 'true', '1']:
+    logger.setLevel(logging.DEBUG)
+
 
 class UsageSlice:
     """
@@ -54,19 +58,20 @@ class UsageSlice:
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)
-            return content
+            if content.get('objectSlices'):
+                return content
         except (json.decoder.JSONDecodeError, UnicodeDecodeError):
-            logging.warning(
+            logger.warning(
                 f'Failed to load usages slice: {filename}\nPlease check '
                 f'that you specified a valid json file.')
         except FileNotFoundError:
-            logging.warning(
+            logger.warning(
                 f'Failed to locate the usages slice file in the location '
                 f'specified: {filename}')
 
-        logging.warning(f'This does not appear to be a valid usage slice: '
-                        f'{filename}\nPlease check that you specified the '
-                        f'correct usages slice file.')
+        logger.warning(f'This does not appear to be a valid usage slice: '
+                       f'{filename}\nPlease check that you specified the '
+                       f'correct usages slice file.')
         return {}
 
     def generate_endpoints(self):
@@ -121,36 +126,22 @@ class UsageSlice:
                 if code.startswith('@') and (
                         'Mapping' in code or 'Path' in code) and '(' in code:
                     endpoints.extend(
-                        [
-                            f'/{v.replace('"', '')
-                                .replace("'", "")
-                                .lstrip('/')}'
-                            for v in matches
-                            if v and not v.startswith(".")
-                            and "/" in v and not v.startswith("@")
-                        ]
-                    )
+                        [f'/{v.replace('"', '').replace("'", "").lstrip('/')}'
+                            for v in matches if v and not v.startswith(
+                            ".") and "/" in v and not v.startswith("@")])
             case 'js' | 'ts' | 'javascript' | 'typescript':
                 if 'app.' in code or 'route' in code:
                     endpoints.extend(
-                        [
-                            f'/{v.replace('"', '')
-                                .replace("'", "").lstrip('/')}'
-                            for v in matches
-                            if v and not v.startswith(".")
-                            and '/' in v and not v.startswith('@')
-                            and not v.startswith('application/')
-                            and not v.startswith('text/')
-                        ]
-                    )
+                        [f'/{v.replace('"', '').replace("'", "").lstrip('/')}'
+                            for v in matches if v and not v.startswith(
+                            ".") and '/' in v and not v.startswith(
+                            '@') and not v.startswith(
+                            'application/') and not v.startswith('text/')])
             case _:
                 endpoints.extend([
-                    f'/{v.replace('"', '')
-                        .replace("'", "")
-                        .replace('\n', '')
-                        .lstrip('/')}'
-                    for v in matches or [] if len(v) > 2 and '/' in v
-                ])
+                    f'/{(v.replace('"', '').replace("'", "").replace('\n', '')
+                         .lstrip('/'))}'
+                    for v in matches or [] if len(v) > 2 and '/' in v])
         return endpoints
 
 
@@ -200,16 +191,13 @@ class ReachablesSlice:
         except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             logging.warning(
                 f'Failed to load usages slice: {filename}\nPlease check '
-                f'that you specified a valid json file.'
-            )
+                f'that you specified a valid json file.')
         except FileNotFoundError:
             logging.warning(
                 f'Failed to locate the usages slice file in the location '
-                f'specified: {filename}'
-            )
+                f'specified: {filename}')
 
         logging.warning(
             f'This does not appear to be a valid usage slice: {filename}\n'
-            f'Please check that you specified the correct usages slice file.'
-        )
+            f'Please check that you specified the correct usages slice file.')
         return []

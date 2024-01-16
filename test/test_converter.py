@@ -5,7 +5,7 @@ def test_openapi_class():
     openapi = OpenAPI('openapi3.1.0', 'java',
         'data/java-piggymetrics-usages.json')
     assert openapi.openapi_version == '3.1.0'
-    assert openapi.language == 'java'
+    assert openapi.origin_type == 'java'
     assert openapi.endpoints_to_openapi() == {
         'info': {'title': 'Atom Usages', 'version': '1.0.0'},
         'openapi': '3.1.0',
@@ -20,7 +20,7 @@ def test_openapi_class():
 
     openapi = OpenAPI('openapi3.0.1', 'java', 'data/java-sec-code-usages.json')
     assert openapi.openapi_version == '3.0.1'
-    assert openapi.language == 'java'
+    assert openapi.origin_type == 'java'
     assert openapi.endpoints_to_openapi() == {
         'info': {'title': 'Atom Usages', 'version': '1.0.0'},
         'openapi': '3.0.1',

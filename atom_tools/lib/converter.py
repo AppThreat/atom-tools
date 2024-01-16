@@ -1,8 +1,15 @@
 """
 Classes and functions used to convert slices.
 """
+import logging
+import os
 
 from atom_tools.lib.slices import UsageSlice, ReachablesSlice
+
+
+logger = logging.getLogger(__name__)
+if os.getenv("ATOM_TOOLS_DEBUG"):
+    logger.setLevel(logging.DEBUG)
 
 
 class OpenAPI:
@@ -13,20 +20,22 @@ class OpenAPI:
 
     Args:
         dest_format (str): The destination format for the OpenAPI output.
-        language (str): The programming language for the OpenAPI output.
+        origin_type (str): The programming language or filetype of the
+                            originating project.
         usages (str, optional): The path to the usages file.
         reachables (str, optional): The path to the reachables file.
 
     Attributes:
         usages (UsageSlice): The usage slice object.
         reachables (ReachablesSlice): The reachables slice object.
-        language (str): The programming language for the OpenAPI output.
+        origin_type (str): The originating language or filetype of the source
+                                project.
         openapi_version (str): The version of OpenAPI.
 
     Methods:
         get_template: Generates the template for the OpenAPI output.
-        convert_slices: Converts slices to OpenAPI.
-        combine_converted: Combines converted slices into a single document.
+        create_paths_item: Creates a path item object for the paths object.
+        endpoints_to_openapi: Generates an OpenAPI dict with paths from usages.
         convert_usages: Converts usages to OpenAPI.
         convert_reachables: Converts reachables to OpenAPI.
 
@@ -35,15 +44,15 @@ class OpenAPI:
     def __init__(
         self,
         dest_format,
-        language,
+        origin_type,
         usages=None,
         reachables=None,
     ):
-        self.usages = UsageSlice(usages, language) if usages else None
+        self.usages = UsageSlice(usages, origin_type) if usages else None
         self.reachables = (
-            ReachablesSlice(reachables, language) if reachables else None
+            ReachablesSlice(reachables, origin_type) if reachables else None
         )
-        self.language = language
+        self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
 
     def get_template(self):
@@ -77,7 +86,7 @@ class OpenAPI:
 
     def endpoints_to_openapi(self):
         """
-        Combines usages and reachables endpoints into a single document.
+        Generates an OpenAPI document with paths from usages.
         """
         endpoints = self.convert_usages()
         paths_obj = {r: {} for r in endpoints} or {}
