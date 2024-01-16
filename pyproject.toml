@@ -78,6 +78,6 @@ max-line-length = 79
 logging-format-style = "new"
 
 [tool.pylint.messages_control]
-disable = "W1203,R0903"
+disable = "W1203,R0903,E0401"
 
 
