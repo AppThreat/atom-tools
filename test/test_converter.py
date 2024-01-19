@@ -3,7 +3,7 @@ from atom_tools.lib.converter import OpenAPI
 
 def test_openapi_class():
     openapi = OpenAPI('openapi3.1.0', 'java',
-        'data/java-piggymetrics-usages.json')
+        'test/data/java-piggymetrics-usages.json')
     assert openapi.openapi_version == '3.1.0'
     assert openapi.origin_type == 'java'
     assert openapi.endpoints_to_openapi() == {
@@ -18,7 +18,7 @@ def test_openapi_class():
                                         '/uaa/users', '/{accountName}',
                                         '/{name}']
 
-    openapi = OpenAPI('openapi3.0.1', 'java', 'data/java-sec-code-usages.json')
+    openapi = OpenAPI('openapi3.0.1', 'java', 'test/data/java-sec-code-usages.json')
     assert openapi.openapi_version == '3.0.1'
     assert openapi.origin_type == 'java'
     assert openapi.endpoints_to_openapi() == {

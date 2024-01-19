@@ -2,7 +2,7 @@ from atom_tools.lib.slices import UsageSlice
 
 
 def test_usages_class():
-    usages = UsageSlice('data/java-piggymetrics-usages.json', 'java')
+    usages = UsageSlice('test/data/java-piggymetrics-usages.json', 'java')
     assert usages.language == 'java'
     result = usages.generate_endpoints()
     result.sort()
@@ -10,7 +10,7 @@ def test_usages_class():
                       '/statistics/{accountName}', '/uaa/users',
                       '/{accountName}', '/{name}']
 
-    usages = UsageSlice('data/java-sec-code-usages.json', 'java')
+    usages = UsageSlice('test/data/java-sec-code-usages.json', 'java')
     assert usages.language == 'java'
     result = usages.generate_endpoints()
     result.sort()
