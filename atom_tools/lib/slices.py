@@ -95,10 +95,8 @@ class UsageSlice:
         methods.extend(defined_by_pattern.search(self.usages) or [])
         methods.extend(invoked_calls_pattern.search(self.usages) or [])
         methods.extend(udt_jmespath_query.search(self.usages) or [])
-        methods = list(set(methods))
-
         endpoints = []
-        if methods:
+        if methods := list(set(methods)):
             for method in methods:
                 endpoints.extend(self.extract_endpoints(method))
 
@@ -122,27 +120,53 @@ class UsageSlice:
             return endpoints
         matches = re.findall(self.endpoints_regex, code) or []
         match self.language:
-            case 'java' | 'jar':
-                if code.startswith('@') and (
-                        'Mapping' in code or 'Path' in code) and '(' in code:
-                    endpoints.extend(
-                        [f'/{v.replace('"', '').replace("'", "").lstrip('/')}'
-                            for v in matches if v and not v.startswith(
-                            ".") and "/" in v and not v.startswith("@")])
-            case 'js' | 'ts' | 'javascript' | 'typescript':
-                if 'app.' in code or 'route' in code:
-                    endpoints.extend(
-                        [f'/{v.replace('"', '').replace("'", "").lstrip('/')}'
-                            for v in matches if v and not v.startswith(
-                            ".") and '/' in v and not v.startswith(
-                            '@') and not v.startswith(
-                            'application/') and not v.startswith('text/')])
+            case 'java' | 'jar' | 'js' | 'ts' | 'javascript' | 'typescript':
+                matches = self.filter_matches(matches, code)
+                endpoints.extend(v for v in matches if v)
             case _:
-                endpoints.extend([
-                    f'/{(v.replace('"', '').replace("'", "").replace('\n', '')
-                         .lstrip('/'))}'
-                    for v in matches or [] if len(v) > 2 and '/' in v])
+                for v in matches:
+                    if len(v) > 2 and '/' in v:
+                        ep = (
+                            v.replace('"', '')
+                            .replace("'", "")
+                            .replace('\n', '')
+                            .lstrip('/')
+                        )
+                        endpoints.append(f'/{ep}')
         return endpoints
+
+    def filter_matches(self, matches, code):
+        """
+        Filters a list of matches based on certain criteria.
+
+        Args:
+            matches (list): A list of matching strings.
+            code (str): The code from which to extract endpoints.
+
+        Returns:
+            list: A list of filtered matches that meet the specified criteria.
+        """
+        filtered_matches = []
+        match self.language:
+            case 'java' | 'jar':
+                if not (
+                    code.startswith('@')
+                    and ('Mapping' in code or 'Path' in code)
+                    and '(' in code
+                ):
+                    return filtered_matches
+            case 'js' | 'ts' | 'javascript' | 'typescript':
+                if 'app.' not in code and 'route' not in code:
+                    return filtered_matches
+
+        for m in matches:
+            if m[0] not in ('.', '@') and '/' in m and (self.language not in (
+                    'js', 'ts', 'javascript', 'typescript') or not (
+                    m.startswith('application/') or m.startswith('text/'))):
+                nm = m.replace('"', '').replace("'", '').lstrip('/')
+                filtered_matches.append(f'/{nm}')
+
+        return filtered_matches
 
 
 class ReachablesSlice:
