@@ -14,8 +14,6 @@ if os.getenv("ATOM_TOOLS_DEBUG"):
 
 class OpenAPI:
     """
-    Represents an OpenAPI converter.
-
     This class is responsible for converting slices to OpenAPI format.
 
     Args:
@@ -38,6 +36,7 @@ class OpenAPI:
         endpoints_to_openapi: Generates an OpenAPI dict with paths from usages.
         convert_usages: Converts usages to OpenAPI.
         convert_reachables: Converts reachables to OpenAPI.
+        js_helper: Formats path sections which are parameters for js.
 
     """
 
@@ -100,11 +99,37 @@ class OpenAPI:
         """
         Converts usages to OpenAPI.
         """
-        return sorted(
+        endpoints = sorted(
             set(self.usages.generate_endpoints())) if self.usages else []
+        if self.origin_type in ('javascript', 'js'):
+            endpoints = list(self.js_helper(endpoints))
+        return endpoints
 
     def convert_reachables(self):
         """
         Converts reachables to OpenAPI.
         """
         raise NotImplementedError
+
+    @staticmethod
+    def js_helper(js_endpoints):
+        """
+        Formats path sections which are parameters correctly.
+
+        Args:
+            js_endpoints (list): A list of endpoints.
+
+        Yields:
+            str: The parsed endpoint.
+
+        """
+        for endpoint in js_endpoints:
+            if ':' in endpoint:
+                endpoint_comp = [
+                    f'{{{comp[1:]}}}' if comp.startswith(':')
+                    else comp for comp
+                    in endpoint.split('/')
+                ]
+                yield '/'.join(endpoint_comp)
+            else:
+                yield endpoint
