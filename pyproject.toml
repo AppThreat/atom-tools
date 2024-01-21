@@ -37,6 +37,7 @@ atom-tools = "atom_tools.cli.application:main"
 [project.optional-dependencies]
 dev = [
 "black",
+"coverage",
 "flake8",
 "isort",
 "pre-commit",
