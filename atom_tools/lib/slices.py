@@ -53,8 +53,6 @@ class UsageSlice:
         Warnings:
             If the JSON file is not a valid usage slice, a warning is logged.
         """
-        if not filename:
-            return {}
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)
@@ -69,9 +67,7 @@ class UsageSlice:
                 f'Failed to locate the usages slice file in the location '
                 f'specified: {filename}')
 
-        logger.warning(f'This does not appear to be a valid usage slice: '
-                       f'{filename}\nPlease check that you specified the '
-                       f'correct usages slice file.')
+        logger.warning('Failed to load usages slice.')
         return {}
 
     def generate_endpoints(self):
@@ -160,7 +156,8 @@ class UsageSlice:
                     return filtered_matches
 
         for m in matches:
-            if m[0] not in ('.', '@') and '/' in m and (self.language not in (
+            if m and m[0] not in ('.', '@') and '/' in m and (
+                    self.language not in (
                     'js', 'ts', 'javascript', 'typescript') or not (
                     m.startswith('application/') or m.startswith('text/'))):
                 nm = m.replace('"', '').replace("'", '').lstrip('/')
@@ -206,22 +203,18 @@ class ReachablesSlice:
         Warnings:
             A warning is logged if the JSON file is not a valid slice.
         """
-        if not filename or not os.path.isfile(filename):
-            return []
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)
                 return content.get('reachables', [])
         except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             logging.warning(
-                f'Failed to load usages slice: {filename}\nPlease check '
+                f'Failed to load reachables slice: {filename}\nPlease check '
                 f'that you specified a valid json file.')
         except FileNotFoundError:
             logging.warning(
-                f'Failed to locate the usages slice file in the location '
+                f'Failed to locate the reachables slice file in the location '
                 f'specified: {filename}')
 
-        logging.warning(
-            f'This does not appear to be a valid usage slice: {filename}\n'
-            f'Please check that you specified the correct usages slice file.')
+        logging.warning('Failed to load reachables slice.')
         return []

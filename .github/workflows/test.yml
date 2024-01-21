@@ -1,4 +1,4 @@
-name: Python matrix CI
+name: OS matrix CI
 
 on:
   push:
@@ -6,9 +6,9 @@ on:
       - master
     paths-ignore:
       - '**/README.md'
-      - 'dockertests.yml'
-      - 'dockertests.yml'
-      - 'python-publish.yml'
+      - 'pre-commit.yml'
+      - 'release.yml'
+      - 'test.yml'
   pull_request:
   workflow_dispatch:
 
@@ -27,7 +27,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.12"
+        python-version: "3.11"
     - name: Display Python version
       run: python -c "import sys; print(sys.version)"
     - name: Install dependencies
@@ -37,3 +37,5 @@ jobs:
     - name: Tox
       run: |
         python3 -m tox
+        coverage run -m pytest test
+        coverage report
