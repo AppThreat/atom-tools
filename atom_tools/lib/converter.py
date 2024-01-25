@@ -9,7 +9,7 @@ from pathlib import Path
 
 import jmespath
 
-from atom_tools.lib.slices import UsageSlice, ReachablesSlice
+from atom_tools.lib.slices import AtomSlice
 
 
 logger = logging.getLogger(__name__)
@@ -26,7 +26,7 @@ class OpenAPI:
         reachables (list, optional): The list of reachables. Defaults to None.
 
     Attributes:
-        usages (UsageSlice): The usage slice.
+        usages (AtomSlice): The usage slice.
         reachables (ReachablesSlice): The reachables slice.
         origin_type (str): The origin type.
         openapi_version (str): The OpenAPI version.
@@ -63,9 +63,9 @@ class OpenAPI:
         usages=None,
         reachables=None,
     ):
-        self.usages = UsageSlice(usages, origin_type) if usages else None
+        self.usages = AtomSlice(usages, origin_type) if usages else None
         self.reachables = (
-            ReachablesSlice(reachables, origin_type) if reachables else None
+            AtomSlice(reachables, origin_type) if reachables else None
         )
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
@@ -83,7 +83,7 @@ class OpenAPI:
         paths_obj = self.convert_usages()
         output = {
             'openapi': self.openapi_version,
-            'info': {'title': 'Atom Usages', 'version': '1.0.0'},
+            'info': {'title': self.title, 'version': '1.0.0'},
             'paths': paths_obj
         }
         if server:
@@ -225,7 +225,8 @@ class OpenAPI:
             if res := self.query_calls(call, list(resolved_method_obj.keys())):
                 mmap = self.filter_calls(res, resolved_method_obj)
                 if new_method_map.get(call):
-                    new_method_map[call]['endpoints'].update(mmap.get('endpoints'))
+                    new_method_map[call]['endpoints'].update(mmap.get(
+                        'endpoints'))
                     new_method_map[call]['calls'].extend(mmap.get('calls'))
                 else:
                     new_method_map[call] = mmap
@@ -402,7 +403,7 @@ class OpenAPI:
             ]
         if not params:
             params = [
-                {'name': param, 'in': 'query'}
+                {'name': param, 'in': 'header'}
                 for param in set(call.get('paramTypes', [])) if param != 'ANY'
             ]
         return params

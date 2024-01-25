@@ -85,4 +85,4 @@ Help:
 **Example**
 >`atom-tools convert -u usages.slices.json -f openapi3.0.1 -o openapi_usages.json -t java -s https://myserver.com`
 
-Note: Supported languages include the following: jar, java, javascript, python, typescript
+Note: Supported languages include the following: jar, java, javascript, typescript

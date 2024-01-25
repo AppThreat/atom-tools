@@ -4,15 +4,12 @@ Classes and functions for working with slices.
 
 import json
 import logging
-import os.path
 import re
 
 logger = logging.getLogger(__name__)
-if os.getenv("ATOM_TOOLS_DEBUG") in ['True', 'true', '1']:
-    logger.setLevel(logging.DEBUG)
 
 
-class UsageSlice:
+class AtomSlice:
     """
     This class is responsible for importing and storing usage slices.
 
@@ -66,57 +63,3 @@ class UsageSlice:
 
         logger.warning('Failed to load usages slice.')
         return {}
-
-
-class ReachablesSlice:
-    """
-    This class is responsible for importing and storing reachables slices.
-
-    Args:
-        filename: The name of the file to import the reachables from.
-
-    Attributes:
-        reachables: A list of reachables.
-
-    Methods:
-        import_slice: Imports the reachables slice from a file.
-    """
-
-    def __init__(self, filename, language):
-        self.reachables = self.import_slice(filename)
-        self.language = language
-
-    @staticmethod
-    def import_slice(filename):
-        """
-        Import a slice from a JSON file.
-
-        Args:
-            filename (str): The path to the JSON file.
-
-        Returns:
-            list: A list of the reachables slices.
-
-        Raises:
-            JSONDecodeError: If the JSON file cannot be decoded.
-            UnicodeDecodeError: If there is an encoding error.
-            FileNotFoundError: If the specified file cannot be found.
-
-        Warnings:
-            A warning is logged if the JSON file is not a valid slice.
-        """
-        try:
-            with open(filename, 'r', encoding='utf-8') as f:
-                content = json.load(f)
-                return content.get('reachables', [])
-        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
-            logging.warning(
-                f'Failed to load reachables slice: {filename}\nPlease check '
-                f'that you specified a valid json file.')
-        except FileNotFoundError:
-            logging.warning(
-                f'Failed to locate the reachables slice file in the location '
-                f'specified: {filename}')
-
-        logging.warning('Failed to load reachables slice.')
-        return []
