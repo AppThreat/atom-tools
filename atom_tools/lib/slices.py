@@ -24,8 +24,6 @@ class UsageSlice:
 
     Methods:
         import_slice: Imports a slice from a JSON file.
-        generate_endpoints: Generates a list of endpoints from a slice.
-        extract_endpoints: Extracts a list of endpoints from a usage.
     """
 
     def __init__(self, filename, language):

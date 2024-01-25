@@ -5,6 +5,8 @@ import json.encoder
 import logging
 import re
 
+from pathlib import Path
+
 import jmespath
 
 from atom_tools.lib.slices import UsageSlice, ReachablesSlice
@@ -15,30 +17,43 @@ logger = logging.getLogger(__name__)
 
 class OpenAPI:
     """
-    This class is responsible for converting slices to OpenAPI format.
+    Represents an OpenAPI object.
 
     Args:
-        dest_format (str): The destination format for the OpenAPI output.
-        origin_type (str): The programming language or filetype of the
-                            originating project.
-        usages (str, optional): The path to the usages file.
-        reachables (str, optional): The path to the reachables file.
+        dest_format (str): The destination format.
+        origin_type (str): The origin type.
+        usages (list, optional): The list of usages. Defaults to None.
+        reachables (list, optional): The list of reachables. Defaults to None.
 
     Attributes:
-        usages (UsageSlice): The usage slice object.
-        reachables (ReachablesSlice): The reachables slice object.
-        origin_type (str): The originating language or filetype of the source
-                                project.
-        openapi_version (str): The version of OpenAPI.
+        usages (UsageSlice): The usage slice.
+        reachables (ReachablesSlice): The reachables slice.
+        origin_type (str): The origin type.
+        openapi_version (str): The OpenAPI version.
+        endpoints_regex (re.Pattern): The regular expression for endpoints.
+        param_regex (re.Pattern): The regular expression pattern for params.
+        title (str): The title of the OpenAPI specification.
 
     Methods:
-        get_template: Generates the template for the OpenAPI output.
-        create_paths_item: Creates a path item object for the paths object.
-        endpoints_to_openapi: Generates an OpenAPI dict with paths from usages.
+        endpoints_to_openapi: Generates an OpenAPI document.
         convert_usages: Converts usages to OpenAPI.
         convert_reachables: Converts reachables to OpenAPI.
-        js_helper: Formats path sections which are parameters for js.
-
+        js_helper: Formats path sections which are parameters correctly.
+        process_methods: Creates a dictionary of endpoints and methods.
+        query_calls: Queries calls for the given function name and methods.
+        query_calls_helper: A helper function to query calls.
+        process_calls: Processes calls and returns a new method map.
+        filter_calls: Filters invokedCalls and argToCalls.
+        methods_to_endpoints: Converts a method map to a map of endpoints.
+        process_methods_helper: Utility for process_methods.
+        populate_endpoints: Populates the endpoints based on the method_map.
+        create_paths_item: Creates paths item object.
+        determine_operations: Determines the supported operations.
+        calls_to_params: Transforms a call and endpoint into parameter object.
+        create_param_object: Creates a parameter object for each parameter.
+        collect_methods: Collects and combines methods that may be endpoints.
+        extract_endpoints: Extracts endpoints from the given code.
+        filter_matches: Filters a list of matches based on certain criteria.
     """
 
     def __init__(
@@ -56,6 +71,7 @@ class OpenAPI:
         self.openapi_version = dest_format.replace('openapi', '')
         self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
         self.param_regex = re.compile(r'(?<={)[^\s}]+(?=})', re.IGNORECASE)
+        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
 
     def endpoints_to_openapi(self, server=None):
         """
@@ -311,6 +327,7 @@ class OpenAPI:
                 paths_object[ep] = paths_item_object
 
         return paths_object
+
     @staticmethod
     def determine_operations(call, params):
         """
