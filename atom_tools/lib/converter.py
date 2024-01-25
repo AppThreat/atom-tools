@@ -95,6 +95,8 @@ class OpenAPI:
         Converts usages to OpenAPI.
         """
         methods = self.process_methods()
+        methods = self.methods_to_endpoints(methods)
+        methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
 
     def convert_reachables(self):
@@ -132,7 +134,7 @@ class OpenAPI:
 
     def process_methods(self):
         """
-        Create a dictionary of endpoints and their corresponding methods.
+        Create a dictionary of full names and their corresponding methods.
         """
         method_map = self.process_methods_helper(
             'objectSlices[].{fullName: fullName, resolvedMethods: usages['
@@ -167,7 +169,7 @@ class OpenAPI:
         for k, v in method_map.items():
             method_map[k] = list(set(v.get('resolved_methods')))
 
-        return self.process_calls(self.methods_to_endpoints(method_map))
+        return method_map
 
     def query_calls(self, full_name, resolved_methods):
         """
@@ -220,9 +222,13 @@ class OpenAPI:
         new_method_map = {}
         for call in method_map.keys():
             resolved_method_obj = method_map[call]
-            if res := self.query_calls(call, resolved_method_obj.keys()):
+            if res := self.query_calls(call, list(resolved_method_obj.keys())):
                 mmap = self.filter_calls(res, resolved_method_obj)
-                new_method_map[call] = mmap
+                if new_method_map.get(call):
+                    new_method_map[call]['endpoints'].update(mmap.get('endpoints'))
+                    new_method_map[call]['calls'].extend(mmap.get('calls'))
+                else:
+                    new_method_map[call] = mmap
         return new_method_map
 
     @staticmethod
@@ -301,7 +307,12 @@ class OpenAPI:
         paths_object = {}
         for key in method_map.keys():
             for k in method_map[key].keys():
-                paths_object |= self.create_paths_item(method_map[key][k])
+                to_add = self.create_paths_item(method_map[key][k])
+                for x, y in to_add.items():
+                    if paths_object.get(x):
+                        paths_object[x].update(y)
+                    else:
+                        paths_object[x] = y
         return paths_object
 
     def create_paths_item(self, obj):
