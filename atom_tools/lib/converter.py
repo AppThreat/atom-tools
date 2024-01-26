@@ -23,11 +23,9 @@ class OpenAPI:
         dest_format (str): The destination format.
         origin_type (str): The origin type.
         usages (list, optional): The list of usages. Defaults to None.
-        reachables (list, optional): The list of reachables. Defaults to None.
 
     Attributes:
         usages (AtomSlice): The usage slice.
-        reachables (ReachablesSlice): The reachables slice.
         origin_type (str): The origin type.
         openapi_version (str): The OpenAPI version.
         endpoints_regex (re.Pattern): The regular expression for endpoints.
@@ -37,7 +35,6 @@ class OpenAPI:
     Methods:
         endpoints_to_openapi: Generates an OpenAPI document.
         convert_usages: Converts usages to OpenAPI.
-        convert_reachables: Converts reachables to OpenAPI.
         js_helper: Formats path sections which are parameters correctly.
         process_methods: Creates a dictionary of endpoints and methods.
         query_calls: Queries calls for the given function name and methods.
@@ -61,17 +58,14 @@ class OpenAPI:
         dest_format,
         origin_type,
         usages=None,
-        reachables=None,
     ):
         self.usages = AtomSlice(usages, origin_type) if usages else None
-        self.reachables = (
-            AtomSlice(reachables, origin_type) if reachables else None
-        )
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
         self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
-        self.param_regex = re.compile(r'(?<={)[^\s}]+(?=})', re.IGNORECASE)
+        self.param_regex = re.compile(r'{(?P<pname>[^\s}]+)}', re.IGNORECASE)
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
+        self.py_param_regex = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
 
     def endpoints_to_openapi(self, server=None):
         """
@@ -99,38 +93,69 @@ class OpenAPI:
         methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
 
-    def convert_reachables(self):
-        """
-        Converts reachables to OpenAPI.
-        """
-        raise NotImplementedError
-
-    @staticmethod
-    def js_helper(endpoints):
+    def js_helper(self, endpoint):
         """
         Formats path sections which are parameters correctly.
 
         Args:
-            endpoints (list): The list of endpoints to format.
+            endpoint (list): The list of endpoints to format.
 
         Returns:
-            list: The formatted list of endpoints.
+            tuple[str, list]: The formatted endpoint and parameters.
 
         """
-        new_endpoints = set()
+        endpoint = '/'.join([
+            f'{{{comp[1:]}}}' if comp.startswith(':')
+            else comp for comp
+            in endpoint.split('/')
+        ])
 
-        for endpoint in endpoints:
-            if ':' in endpoint:
-                endpoint_comp = [
-                    f'{{{comp[1:]}}}' if comp.startswith(':')
-                    else comp for comp
-                    in endpoint.split('/')
-                ]
-                new_endpoints.add('/'.join(endpoint_comp))
-            else:
-                new_endpoints.add(endpoint)
+        params = self.generic_params_helper(endpoint)
+        return endpoint, params
 
-        return list(new_endpoints)
+    def generic_params_helper(self, endpoint):
+        """
+        Extracts generic path parameters from the given endpoint.
+
+        Args:
+            endpoint (str): The endpoint string with generic path parameters.
+
+        Returns:
+            list: A list of dictionaries containing the extracted parameters.
+        """
+        matches = self.param_regex.findall(endpoint)
+        return [
+            {'name': m, 'in': 'path', 'required': True} for m in matches
+        ] if matches else []
+
+    def py_helper(self, endpoint):
+        """
+        Handles Python path parameters.
+        Args:
+            endpoint (str): The endpoint string
+
+        Returns:
+            tuple[str,list]: The modified endpoint and parameters
+        """
+        type_mapping = {
+            'int': 'integer', 'string': 'string',
+            'float': 'number', 'path': 'string'
+        }
+        params = []
+
+        if matches := self.py_param_regex.findall(endpoint):
+            endpoint = re.sub(self.py_param_regex, self._py_repl, endpoint)
+            params = []
+            for m in matches:
+                p = {'in': 'path', 'name': m[1], 'required': True}
+                if type_mapping.get(m[0]):
+                    p['schema'] = {'type': type_mapping[m[0]]}
+                params.append(p)
+        return endpoint, params
+
+    @staticmethod
+    def _py_repl(match):
+        return '{' + match.group('pname') + '}'
 
     def process_methods(self):
         """
@@ -220,6 +245,7 @@ class OpenAPI:
             dict: A new method map containing calls.
         """
         new_method_map = {}
+
         for call in method_map.keys():
             resolved_method_obj = method_map[call]
             if res := self.query_calls(call, list(resolved_method_obj.keys())):
@@ -228,6 +254,13 @@ class OpenAPI:
                     new_method_map[call]['endpoints'].update(mmap.get(
                         'endpoints'))
                     new_method_map[call]['calls'].extend(mmap.get('calls'))
+                else:
+                    new_method_map[call] = {'endpoints': mmap.get('endpoints')}
+            else:
+                mmap = self.filter_calls([], resolved_method_obj)
+                if new_method_map.get(call):
+                    new_method_map[call]['endpoints'].update(
+                        mmap.get('endpoints'))
                 else:
                     new_method_map[call] = mmap
         return new_method_map
@@ -269,7 +302,7 @@ class OpenAPI:
                 if res := self.extract_endpoints(method):
                     endpoints[method] = {r: {} for r in res}
             if endpoints:
-                new_method_map[full_name] = endpoints
+                new_method_map = endpoints
         return new_method_map
 
     def process_methods_helper(self, pattern):
@@ -316,23 +349,35 @@ class OpenAPI:
                         paths_object[x] = y
         return paths_object
 
-    def create_paths_item(self, obj):
+    def create_paths_item(self, paths_dict):
         """
         Create paths item object based on provided endpoints and calls.
         Args:
-            obj (dict): The object containing endpoints and calls
+            paths_dict (dict): The object containing endpoints and calls
         Returns:
             dict: The paths item object
 
         """
-        endpoints = obj.get('endpoints', [])
-        calls = obj.get('calls', [])
-
+        endpoints = paths_dict.get('endpoints', [])
+        calls = paths_dict.get('calls', [])
         paths_object = {}
+
         for ep in endpoints:
             paths_item_object = {}
             for call in calls:
-                paths_item_object |= self.calls_to_params(call, ep)
+                paths_item_object |= self.calls_to_params(ep, call)
+            if not calls:
+                paths_item_object = self.calls_to_params(ep)
+            if ':' in ep or '{' in ep:
+                match self.origin_type:
+                    case 'js' | 'ts' | 'javascript' | 'typescript':
+                        [ep, tmp_paths_item_object] = self.js_helper(ep)
+                    case 'py' | 'python':
+                        [ep, tmp_paths_item_object] = self.py_helper(ep)
+                    case _:
+                        tmp_paths_item_object = self.generic_params_helper(ep)
+                if tmp_paths_item_object:
+                    paths_item_object['parameters'] = tmp_paths_item_object
             if paths_item_object and paths_object.get(ep):
                 paths_object[ep] |= paths_item_object
             elif paths_item_object:
@@ -361,7 +406,7 @@ class OpenAPI:
                 op: {'parameters': params, 'responses': {}} for op in found}
         return {'parameters': params} if params else {}
 
-    def calls_to_params(self, call, ep):
+    def calls_to_params(self, ep, call=None):
         """
         Transforms a call and endpoint into a parameter object and organizes it
         into a dictionary based on the call name.
@@ -371,21 +416,17 @@ class OpenAPI:
         Returns:
             dict: The operation object
         """
+        if not call:
+            call = {}
         ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
         call_name = call.get('callName', '')
         params = []
-        if '{' in ep:
-            if matches := self.param_regex.findall(ep):
-                params = [
-                    {'name': match, 'in': 'path', 'required': True}
-                    for match in matches
-                ]
         if call_name in ops:
-            params = self.create_param_object(call, ep)
+            params = self.create_param_object(ep, call)
             return {call_name: {'parameters': params, 'responses': {}}}
         return self.determine_operations(call, params)
 
-    def create_param_object(self, call, ep):
+    def create_param_object(self, ep, call=None):
         """
         Create a parameter object for each parameter in the input list.
         Args:
@@ -397,11 +438,8 @@ class OpenAPI:
         """
         params = []
         if '{' in ep:
-            matches = self.param_regex.findall(ep)
-            params = [
-                {'name': m, 'in': 'path', 'required': True} for m in matches
-            ]
-        if not params:
+            params = self.generic_params_helper(ep)
+        if not params and call:
             params = [
                 {'name': param, 'in': 'header'}
                 for param in set(call.get('paramTypes', [])) if param != 'ANY'
@@ -442,29 +480,10 @@ class OpenAPI:
         endpoints = []
         if not method:
             return endpoints
-        matches = re.findall(self.endpoints_regex, method) or []
-        if not matches:
+        if not (matches := re.findall(self.endpoints_regex, method)):
             return endpoints
-        match self.origin_type:
-            case 'java' | 'jar':
-                matches = self.filter_matches(matches, method)
-                endpoints.extend([v for v in matches if v])
-            case 'js' | 'ts' | 'javascript' | 'typescript':
-                matches = self.js_helper(self.filter_matches(matches, method))
-                endpoints.extend([v for v in matches if v])
-            case _:
-                to_add = []
-                for v in matches:
-                    if v and len(v) > 2 and '/' in v:
-                        ep = (
-                            v.replace('"', '')
-                            .replace("'", "")
-                            .replace('\n', '')
-                            .lstrip('/')
-                        )
-                        to_add.append(f'/{ep}')
-                if to_add:
-                    endpoints.extend(to_add)
+        matches = self.filter_matches(matches, method)
+        endpoints.extend([v for v in matches if v])
         return endpoints
 
     def filter_matches(self, matches, code):
