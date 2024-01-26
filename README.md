@@ -63,10 +63,11 @@ Usage:
   convert [options]
 
 Options:
-  -f, --format=FORMAT              Destination format [default: "openapi3.1.0"]
+  -f, --format=FORMAT              Destination format [default: "openapi3.0.1"]
   -u, --usages-slice=USAGES-SLICE  Usages slice file
   -t, --type=TYPE                  Origin type of source on which the atom slice was generated. [default: "java"]
   -o, --output-file=OUTPUT-FILE    Output file [default: "openapi_from_slice.json"]
+  -s, --server=SERVER              The server url to be included in the server object.
   -h, --help                       Display help for the given command. When no command is given display help for the list command.
   -q, --quiet                      Do not output any message.
   -V, --version                    Display this application version.
@@ -82,6 +83,6 @@ Help:
 ```
 
 **Example**
->`atom-tools convert -u usages.slices.json -f openapi3.1.0 -o openapi_usages.json -t java`
+>`atom-tools convert -u usages.slices.json -f openapi3.0.1 -o openapi_usages.json -t java -s https://myserver.com`
 
-Note: Supported languages include the following: jar, java, javascript, python, typescript
+Note: Supported languages include the following: jar, java, javascript, typescript

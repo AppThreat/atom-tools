@@ -4,16 +4,12 @@ Classes and functions for working with slices.
 
 import json
 import logging
-import os.path
 import re
-import jmespath
 
 logger = logging.getLogger(__name__)
-if os.getenv("ATOM_TOOLS_DEBUG") in ['True', 'true', '1']:
-    logger.setLevel(logging.DEBUG)
 
 
-class UsageSlice:
+class AtomSlice:
     """
     This class is responsible for importing and storing usage slices.
 
@@ -21,16 +17,14 @@ class UsageSlice:
         filename (str): The path to the JSON file.
 
     Attributes:
-        usages (dict): The dictionary loaded from the usages JSON file.
+        content (dict): The dictionary loaded from the usages JSON file.
 
     Methods:
         import_slice: Imports a slice from a JSON file.
-        generate_endpoints: Generates a list of endpoints from a slice.
-        extract_endpoints: Extracts a list of endpoints from a usage.
     """
 
     def __init__(self, filename, language):
-        self.usages = self.import_slice(filename)
+        self.content = self.import_slice(filename)
         self.language = language
         self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
 
@@ -69,152 +63,3 @@ class UsageSlice:
 
         logger.warning('Failed to load usages slice.')
         return {}
-
-    def generate_endpoints(self):
-        """
-        Generates and returns a dictionary of endpoints based on the object
-        slices and user-defined types (UDTs).
-
-        Returns:
-            list: A list of unique endpoints.
-        """
-        # Surely there is a way to combine these...
-        target_obj_pattern = jmespath.compile(
-            'objectSlices[].usages[].targetObj.resolvedMethod')
-        defined_by_pattern = jmespath.compile(
-            'objectSlices[].usages[].definedBy.resolvedMethod')
-        invoked_calls_pattern = jmespath.compile(
-            'objectSlices[].usages[].invokedCalls[].resolvedMethod')
-        udt_jmespath_query = jmespath.compile(
-            'userDefinedTypes[].fields[].name')
-        methods = target_obj_pattern.search(self.usages) or []
-        methods.extend(defined_by_pattern.search(self.usages) or [])
-        methods.extend(invoked_calls_pattern.search(self.usages) or [])
-        methods.extend(udt_jmespath_query.search(self.usages) or [])
-        endpoints = []
-        if methods := list(set(methods)):
-            for method in methods:
-                endpoints.extend(self.extract_endpoints(method))
-
-        return list(set(endpoints))
-
-    def extract_endpoints(self, code):
-        """
-        Extracts endpoints from the given code based on the specified language.
-
-        Args:
-            code (str): The code from which to extract endpoints.
-
-        Returns:
-            list: A list of extracted endpoints.
-
-        Raises:
-            None.
-        """
-        endpoints = []
-        if not code:
-            return endpoints
-        matches = re.findall(self.endpoints_regex, code) or []
-        match self.language:
-            case 'java' | 'jar' | 'js' | 'ts' | 'javascript' | 'typescript':
-                matches = self.filter_matches(matches, code)
-                endpoints.extend(v for v in matches if v)
-            case _:
-                for v in matches:
-                    if len(v) > 2 and '/' in v:
-                        ep = (
-                            v.replace('"', '')
-                            .replace("'", "")
-                            .replace('\n', '')
-                            .lstrip('/')
-                        )
-                        endpoints.append(f'/{ep}')
-        return endpoints
-
-    def filter_matches(self, matches, code):
-        """
-        Filters a list of matches based on certain criteria.
-
-        Args:
-            matches (list): A list of matching strings.
-            code (str): The code from which to extract endpoints.
-
-        Returns:
-            list: A list of filtered matches that meet the specified criteria.
-        """
-        filtered_matches = []
-        match self.language:
-            case 'java' | 'jar':
-                if not (
-                    code.startswith('@')
-                    and ('Mapping' in code or 'Path' in code)
-                    and '(' in code
-                ):
-                    return filtered_matches
-            case 'js' | 'ts' | 'javascript' | 'typescript':
-                if 'app.' not in code and 'route' not in code:
-                    return filtered_matches
-
-        for m in matches:
-            if m and m[0] not in ('.', '@') and '/' in m and (
-                    self.language not in (
-                    'js', 'ts', 'javascript', 'typescript') or not (
-                    m.startswith('application/') or m.startswith('text/'))):
-                nm = m.replace('"', '').replace("'", '').lstrip('/')
-                filtered_matches.append(f'/{nm}')
-
-        return filtered_matches
-
-
-class ReachablesSlice:
-    """
-    This class is responsible for importing and storing reachables slices.
-
-    Args:
-        filename: The name of the file to import the reachables from.
-
-    Attributes:
-        reachables: A list of reachables.
-
-    Methods:
-        import_slice: Imports the reachables slice from a file.
-    """
-
-    def __init__(self, filename, language):
-        self.reachables = self.import_slice(filename)
-        self.language = language
-
-    @staticmethod
-    def import_slice(filename):
-        """
-        Import a slice from a JSON file.
-
-        Args:
-            filename (str): The path to the JSON file.
-
-        Returns:
-            list: A list of the reachables slices.
-
-        Raises:
-            JSONDecodeError: If the JSON file cannot be decoded.
-            UnicodeDecodeError: If there is an encoding error.
-            FileNotFoundError: If the specified file cannot be found.
-
-        Warnings:
-            A warning is logged if the JSON file is not a valid slice.
-        """
-        try:
-            with open(filename, 'r', encoding='utf-8') as f:
-                content = json.load(f)
-                return content.get('reachables', [])
-        except (json.decoder.JSONDecodeError, UnicodeDecodeError):
-            logging.warning(
-                f'Failed to load reachables slice: {filename}\nPlease check '
-                f'that you specified a valid json file.')
-        except FileNotFoundError:
-            logging.warning(
-                f'Failed to locate the reachables slice file in the location '
-                f'specified: {filename}')
-
-        logging.warning('Failed to load reachables slice.')
-        return []

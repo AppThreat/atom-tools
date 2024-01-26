@@ -62,6 +62,13 @@ class ConvertCommand(Command):
             'Output file',
             flag=False,
             default='openapi_from_slice.json',
+        ),
+        option(
+            'server',
+            's',
+            'The server url to be included in the server object.',
+            flag=False,
+            default=None,
         )
     ]
     help = """The convert command converts an atom slice to a different format.
@@ -82,16 +89,17 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
             )
         match self.option('format'):
             case 'openapi3.1.0' | 'openapi3.0.1':
-                converter_instance = OpenAPI(
+                converter = OpenAPI(
                     self.option('format'),
                     self.option('type'),
                     self.option('usages-slice'),
                     # self.option('reachables-slice'),
                 )
-                if result := converter_instance.endpoints_to_openapi():
+                if result := converter.endpoints_to_openapi(
+                        self.option('server')):
                     with open(self.option('output-file'), 'w',
                               encoding='utf-8') as f:
-                        json.dump(result, f, indent=4)
+                        json.dump(result, f, indent=4, sort_keys=True)
             case _:
                 raise ValueError(
                     f'Unknown destination format: {self.option("format")}'
