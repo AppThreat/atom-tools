@@ -28,7 +28,7 @@ def js_usages_2():
 
 @pytest.fixture
 def py_usages_1():
-    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-abbreviated-usages.json')
+    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-usages.json')
 
 
 @pytest.fixture
@@ -633,7 +633,7 @@ def test_usages_class(java_usages_1):
     assert java_usages_1.title == 'OpenAPI Specification for data'
 
 
-def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, py_usages_1, py_usages_2):
+def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, py_usages_2):
     assert java_usages_1.convert_usages() == {'/': {'post': {'responses': {}}},
                                               '/accounts/{accountName}': {
                                                   'get': {'responses': {}},
@@ -869,140 +869,53 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
                                                   'post': {'responses': {}}}}
     assert len(js_usages_1.convert_usages()) == 114
     assert len(js_usages_2.convert_usages()) == 15
-    assert py_usages_1.convert_usages() == {
-        '/': {}, '/dags/{dag_id}': {
-        'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
-                        'schema': {'type': 'string'}}]},
-                                            '/dags/{dag_id}/code': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/dags/{dag_id}/dag_runs': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/dags/{dag_id}/dag_runs/{'
-                                            'execution_date}': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}},
-                                                               {'in': 'path',
-                                                                'name':
-                                                                    'execution_date',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/dags/{dag_id}/dag_runs/{'
-                                            'execution_date}/tasks/{task_id}': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}},
-                                                               {'in': 'path',
-                                                                'name':
-                                                                    'execution_date',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}},
-                                                               {'in': 'path',
-                                                                'name':
-                                                                    'task_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/dags/{dag_id}/paused': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/dags/{dag_id}/paused/{paused}': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}},
-                                                               {'in': 'path',
-                                                                'name':
-                                                                    'paused',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/dags/{dag_id}/tasks/{task_id}': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}},
-                                                               {'in': 'path',
-                                                                'name':
-                                                                    'task_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/info': {}, '/latest_runs': {},
-                                            '/lineage/{dag_id}/{'
-                                            'execution_date}': {
-                                                'parameters': [{'in': 'path',
-                                                                'name':
-                                                                    'dag_id',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}},
-                                                               {'in': 'path',
-                                                                'name':
-                                                                    'execution_date',
-                                                                'required':
-                                                                    True,
-                                                                'schema': {
-                                                                    'type':
-                                                                        'string'}}]},
-                                            '/log/{filename}': {'parameters': [
-                                                {'in': 'path',
-                                                 'name': 'filename',
-                                                 'required': True, 'schema': {
-                                                    'type': 'string'}}]},
-                                            '/pools': {}, '/pools/{name}': {
-            'parameters': [{'in': 'path', 'name': 'name', 'required': True,
-                            'schema': {'type': 'string'}}]}, '/test': {}}
-    assert py_usages_2.convert_usages() == {'/': {}, '/auth/google': {}, '/logout': {}}
+    # Airflow slice is too large to upload.
+    # assert py_usages_1.convert_usages() == {
+    #     '/': {}, '/dags/{dag_id}': {
+    #     'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
+    #                     'schema': {'type': 'string'}}]},
+    #     '/dags/{dag_id}/code': {'parameters': [
+    #         {'in': 'path', 'name': 'dag_id', 'required': True,
+    #          'schema': {'type': 'string'}}]}, '/dags/{dag_id}/dag_runs': {
+    #         'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
+    #                         'schema': {'type': 'string'}}]},
+    #     '/dags/{dag_id}/dag_runs/{'
+    #     'execution_date}': {'parameters': [
+    #         {'in': 'path', 'name': 'dag_id', 'required': True,
+    #          'schema': {'type': 'string'}},
+    #         {'in': 'path', 'name': 'execution_date', 'required': True,
+    #          'schema': {'type': 'string'}}]}, '/dags/{dag_id}/dag_runs/{'
+    #                                           'execution_date}/tasks/{task_id}': {
+    #         'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
+    #                         'schema': {'type': 'string'}},
+    #                        {'in': 'path', 'name': 'execution_date',
+    #                         'required': True, 'schema': {'type': 'string'}},
+    #                        {'in': 'path', 'name': 'task_id', 'required': True,
+    #                         'schema': {'type': 'string'}}]},
+    #     '/dags/{dag_id}/paused': {'parameters': [
+    #         {'in': 'path', 'name': 'dag_id', 'required': True,
+    #          'schema': {'type': 'string'}}]},
+    #     '/dags/{dag_id}/paused/{paused}': {'parameters': [
+    #         {'in': 'path', 'name': 'dag_id', 'required': True,
+    #          'schema': {'type': 'string'}},
+    #         {'in': 'path', 'name': 'paused', 'required': True,
+    #          'schema': {'type': 'string'}}]},
+    #     '/dags/{dag_id}/tasks/{task_id}': {'parameters': [
+    #         {'in': 'path', 'name': 'dag_id', 'required': True,
+    #          'schema': {'type': 'string'}},
+    #         {'in': 'path', 'name': 'task_id', 'required': True,
+    #          'schema': {'type': 'string'}}]}, '/info': {}, '/latest_runs': {},
+    #     '/lineage/{dag_id}/{'
+    #     'execution_date}': {'parameters': [
+    #         {'in': 'path', 'name': 'dag_id', 'required': True,
+    #          'schema': {'type': 'string'}},
+    #         {'in': 'path', 'name': 'execution_date', 'required': True,
+    #          'schema': {'type': 'string'}}]}, '/log/{filename}': {
+    #         'parameters': [{'in': 'path', 'name': 'filename', 'required': True,
+    #                         'schema': {'type': 'string'}}]}, '/pools': {},
+    #     '/pools/{name}': {'parameters': [
+    #         {'in': 'path', 'name': 'name', 'required': True,
+    #          'schema': {'type': 'string'}}]}, '/test': {}
+    #                                         }
+    assert py_usages_2.convert_usages() == {'/': {}, '/auth/google': {},
+                                            '/logout': {}}
