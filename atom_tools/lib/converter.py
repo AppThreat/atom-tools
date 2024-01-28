@@ -15,9 +15,58 @@ from atom_tools.lib.slices import AtomSlice
 logger = logging.getLogger(__name__)
 
 
+class RegexCollection:
+    """
+    Collection of regular expressions needed for conversions.
+
+    Attributes:
+        endpoints (re.compile): Regex to find endpoints
+        param (re.compile): Regex to find path parameters
+        py_param (re.compile): Regex to find Python path parameters
+        py_regex_in_path (re.compile): Regex to find Python path parameters
+
+    Methods:
+        py_helper(endpoint): Handles Python path parameters
+        _py_repl(match): Replaces Python path parameters
+    """
+    def __init__(self):
+        self.endpoints = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
+        self.param = re.compile(r'{(?P<pname>[^\s}]+)}', re.IGNORECASE)
+        self.py_param = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
+        self.py_regex_in_path = re.compile(r'(?<=\?P<)(?P<field>\w+)(?=>)')
+
+    def py_helper(self, endpoint):
+        """
+        Handles Python path parameters.
+        Args:
+            endpoint (str): The endpoint string
+
+        Returns:
+            tuple[str,list]: The modified endpoint and parameters
+        """
+        type_mapping = {
+            'int': 'integer', 'string': 'string',
+            'float': 'number', 'path': 'string'
+        }
+        params = []
+
+        if matches := self.py_param.findall(endpoint):
+            endpoint = re.sub(self.py_param, self._py_repl, endpoint)
+            for m in matches:
+                p = {'in': 'path', 'name': m[1], 'required': True}
+                if type_mapping.get(m[0]):
+                    p['schema'] = {'type': type_mapping[m[0]]}
+                params.append(p)
+        return endpoint, params
+
+    @staticmethod
+    def _py_repl(match):
+        return '{' + match.group('pname') + '}'
+
+
 class OpenAPI:
     """
-    Represents an OpenAPI object.
+    Represents an OpenAPI converter.
 
     Args:
         dest_format (str): The destination format.
@@ -28,29 +77,28 @@ class OpenAPI:
         usages (AtomSlice): The usage slice.
         origin_type (str): The origin type.
         openapi_version (str): The OpenAPI version.
-        endpoints_regex (re.Pattern): The regular expression for endpoints.
-        param_regex (re.Pattern): The regular expression pattern for params.
         title (str): The title of the OpenAPI specification.
+        regex (RegexCollection): collection of regular expressions
 
     Methods:
-        endpoints_to_openapi: Generates an OpenAPI document.
+        _js_helper: Formats path sections which are parameters correctly.
+        _process_methods_helper: Utility for process_methods.
+        _query_calls_helper: A helper function to query calls.
+        calls_to_params: Transforms a call and endpoint into parameter object.
+        collect_methods: Collects and combines methods that may be endpoints.
         convert_usages: Converts usages to OpenAPI.
-        js_helper: Formats path sections which are parameters correctly.
-        process_methods: Creates a dictionary of endpoints and methods.
-        query_calls: Queries calls for the given function name and methods.
-        query_calls_helper: A helper function to query calls.
-        process_calls: Processes calls and returns a new method map.
-        filter_calls: Filters invokedCalls and argToCalls.
-        methods_to_endpoints: Converts a method map to a map of endpoints.
-        process_methods_helper: Utility for process_methods.
-        populate_endpoints: Populates the endpoints based on the method_map.
+        create_param_object: Creates a parameter object for each parameter.
         create_paths_item: Creates paths item object.
         determine_operations: Determines the supported operations.
-        calls_to_params: Transforms a call and endpoint into parameter object.
-        create_param_object: Creates a parameter object for each parameter.
-        collect_methods: Collects and combines methods that may be endpoints.
+        endpoints_to_openapi: Generates an OpenAPI document.
         extract_endpoints: Extracts endpoints from the given code.
+        filter_calls: Filters invokedCalls and argToCalls.
         filter_matches: Filters a list of matches based on certain criteria.
+        methods_to_endpoints: Converts a method map to a map of endpoints.
+        populate_endpoints: Populates the endpoints based on the method_map.
+        process_calls: Processes calls and returns a new method map.
+        process_methods: Creates a dictionary of endpoints and methods.
+        query_calls: Queries calls for the given function name and methods.
     """
 
     def __init__(
@@ -62,10 +110,8 @@ class OpenAPI:
         self.usages = AtomSlice(usages, origin_type) if usages else None
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
-        self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
-        self.param_regex = re.compile(r'{(?P<pname>[^\s}]+)}', re.IGNORECASE)
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
-        self.py_param_regex = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
+        self.regex = RegexCollection()
 
     def endpoints_to_openapi(self, server=None):
         """
@@ -93,7 +139,7 @@ class OpenAPI:
         methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
 
-    def js_helper(self, endpoint):
+    def _js_helper(self, endpoint):
         """
         Formats path sections which are parameters correctly.
 
@@ -123,58 +169,26 @@ class OpenAPI:
         Returns:
             list: A list of dictionaries containing the extracted parameters.
         """
-        matches = self.param_regex.findall(endpoint)
+        matches = self.regex.param.findall(endpoint)
         return [
             {'name': m, 'in': 'path', 'required': True} for m in matches
         ] if matches else []
-
-    def py_helper(self, endpoint):
-        """
-        Handles Python path parameters.
-        Args:
-            endpoint (str): The endpoint string
-
-        Returns:
-            tuple[str,list]: The modified endpoint and parameters
-        """
-        type_mapping = {
-            'int': 'integer', 'string': 'string',
-            'float': 'number', 'path': 'string'
-        }
-        params = []
-
-        if matches := self.py_param_regex.findall(endpoint):
-            endpoint = re.sub(self.py_param_regex, self._py_repl, endpoint)
-            params = []
-            for m in matches:
-                p = {'in': 'path', 'name': m[1], 'required': True}
-                if type_mapping.get(m[0]):
-                    p['schema'] = {'type': type_mapping[m[0]]}
-                params.append(p)
-        return endpoint, params
-
-    @staticmethod
-    def _py_repl(match):
-        return '{' + match.group('pname') + '}'
 
     def process_methods(self):
         """
         Create a dictionary of full names and their corresponding methods.
         """
-        method_map = self.process_methods_helper(
+        method_map = self._process_methods_helper(
             'objectSlices[].{fullName: fullName, resolvedMethods: usages['
-            '].*.resolvedMethod[]}'
-        )
+            '].*.resolvedMethod[]}')
 
-        calls = self.process_methods_helper(
+        calls = self._process_methods_helper(
             'objectSlices[].{fullName: fullName, resolvedMethods: usages['
-            '].invokedCalls[?resolvedMethod].resolvedMethod[]}'
-        )
+            '].invokedCalls[?resolvedMethod].resolvedMethod[]}')
 
-        user_defined_types = self.process_methods_helper(
+        user_defined_types = self._process_methods_helper(
             'userDefinedTypes[].{fullName: name, resolvedMethods: fields['
-            '].name}'
-        )
+            '].name}')
         for key, value in calls.items():
             if method_map.get(key):
                 method_map[key]['resolved_methods'].extend(
@@ -207,20 +221,20 @@ class OpenAPI:
         Returns:
             list: List of invoked calls and argument to calls.
         """
-        result = self.query_calls_helper(full_name, '].invokedCalls[][]')
-        invokes = []
+        result = self._query_calls_helper(full_name, '].invokedCalls[][]')
+        calls = []
         for call in result:
             m = call.get('resolvedMethod', '')
-            if m in resolved_methods:
-                invokes.append(call)
-        result = self.query_calls_helper(full_name, '].argToCalls[][]')
+            if m and m in resolved_methods:
+                calls.append(call)
+        result = self._query_calls_helper(full_name, '].argToCalls[][]')
         for call in result:
             m = call.get('resolvedMethod', '')
-            if m in resolved_methods:
-                invokes.append(call)
-        return invokes
+            if m and m in resolved_methods:
+                calls.append(call)
+        return calls
 
-    def query_calls_helper(self, full_name, call_type_str):
+    def _query_calls_helper(self, full_name, call_type_str):
         """
         A function to help query calls.
 
@@ -244,45 +258,36 @@ class OpenAPI:
         Returns:
             dict: A new method map containing calls.
         """
-        new_method_map = {}
-
-        for call in method_map.keys():
-            resolved_method_obj = method_map[call]
-            if res := self.query_calls(call, list(resolved_method_obj.keys())):
-                mmap = self.filter_calls(res, resolved_method_obj)
-                if new_method_map.get(call):
-                    new_method_map[call]['endpoints'].update(mmap.get(
-                        'endpoints'))
-                    new_method_map[call]['calls'].extend(mmap.get('calls'))
-                else:
-                    new_method_map[call] = {'endpoints': mmap.get('endpoints')}
+        for full_name, resolved_methods in method_map['full_names'].items():
+            if res := self.query_calls(
+                    full_name, resolved_methods['resolved_methods'].keys()):
+                mmap = self.filter_calls(res, resolved_methods)
             else:
-                mmap = self.filter_calls([], resolved_method_obj)
-                if new_method_map.get(call):
-                    new_method_map[call]['endpoints'].update(
-                        mmap.get('endpoints'))
-                else:
-                    new_method_map[call] = mmap
-        return new_method_map
+                mmap = self.filter_calls([], resolved_methods)
+            method_map['full_names'][full_name]['resolved_methods'] = (
+                mmap.get('resolved_methods'))
+
+        return method_map
 
     @staticmethod
-    def filter_calls(invokes, resolved_method_obj):
+    def filter_calls(queried_calls, resolved_methods):
         """
         Iterate through the invokedCalls and argToCalls and create a relevant
         dictionary of endpoints and calls.
         Args:
-            invokes: list of invokes
-            resolved_method_obj: dictionary of resolved method objects
+            queried_calls: list of invokes
+            resolved_methods: dictionary of resolved method objects
         Returns:
             relevant: dictionary of relevant endpoints and calls
         """
-        relevant = {
-            k: {'endpoints': v, 'calls': []}
-            for k, v in resolved_method_obj.items()
-        }
-        for i in invokes:
-            relevant[i.get('resolvedMethod')]['calls'].append(i)
-        return relevant
+        for method in resolved_methods['resolved_methods'].keys():
+            calls = [
+                i for i in queried_calls
+                if i.get('resolvedMethod', '') == method
+            ]
+            resolved_methods['resolved_methods'][method].update(
+                {'calls': calls})
+        return resolved_methods
 
     def methods_to_endpoints(self, method_map):
         """
@@ -295,22 +300,42 @@ class OpenAPI:
         Returns:
             dict: A new method map containing endpoints.
         """
-        new_method_map = {}
+        reparsed = {'full_names': {}}
         for full_name, resolved_methods in method_map.items():
-            endpoints = {}
-            for method in resolved_methods:
-                if res := self.extract_endpoints(method):
-                    endpoints[method] = {r: {} for r in res}
-            if endpoints:
-                new_method_map = endpoints
+            reparsed['full_names'] |= {full_name: {
+                'resolved_methods': list(set(resolved_methods))}
+            }
+        new_method_map = {'full_names': {}}
+        for full_name, resolved_methods in method_map.items():
+            if new_resolved := self.process_resolved_methods(resolved_methods):
+                new_method_map['full_names'][full_name] = {
+                    'resolved_methods': new_resolved
+                }
+
         return new_method_map
 
-    def process_methods_helper(self, pattern):
+    def process_resolved_methods(self, resolved_methods):
+        """
+
+        Args:
+            resolved_methods (list):
+
+        Returns:
+
+        """
+        resolved_map = {}
+        for method in resolved_methods:
+            if endpoint := self.extract_endpoints(method):
+                resolved_map[method] = {'endpoints': endpoint}
+        return resolved_map
+
+    def _process_methods_helper(self, pattern):
         """
         Process the given pattern and return the resolved methods.
 
         Args:
             pattern (str): The pattern to be processed and resolved.
+
         Returns:
             dict: The resolved methods.
 
@@ -339,15 +364,36 @@ class OpenAPI:
 
         """
         paths_object = {}
-        for key in method_map.keys():
-            for k in method_map[key].keys():
-                to_add = self.create_paths_item(method_map[key][k])
-                for x, y in to_add.items():
-                    if paths_object.get(x):
-                        paths_object[x].update(y)
+        for resolved_methods in method_map.values():
+            for value in resolved_methods.values():
+                for m in value['resolved_methods'].items():
+                    new_path_item = self.create_paths_item(m)
+                    if paths_object:
+                        paths_object = self.merge_path_objects(
+                            paths_object, new_path_item)
                     else:
-                        paths_object[x] = y
+                        paths_object = new_path_item
+
         return paths_object
+
+    @staticmethod
+    def merge_path_objects(p1, p2):
+        """
+        Merge two dictionaries representing path objects.
+
+        Args:
+            p1 (dict): The first dictionary representing a path object.
+            p2 (dict): The second dictionary representing a path object.
+
+        Returns:
+            dict: The merged dictionary representing the path object.
+        """
+        for key, value in p2.items():
+            if p1.get(key):
+                p1[key].update(value)
+            else:
+                p1[key] = value
+        return p1
 
     def create_paths_item(self, paths_dict):
         """
@@ -358,30 +404,34 @@ class OpenAPI:
             dict: The paths item object
 
         """
-        endpoints = paths_dict.get('endpoints', [])
-        calls = paths_dict.get('calls', [])
+        endpoints = paths_dict[1].get('endpoints')
+        calls = paths_dict[1].get('calls')
         paths_object = {}
 
         for ep in endpoints:
             paths_item_object = {}
-            for call in calls:
-                paths_item_object |= self.calls_to_params(ep, call)
-            if not calls:
-                paths_item_object = self.calls_to_params(ep)
-            if ':' in ep or '{' in ep:
+            if ':' in ep or '{' in ep or '<' in ep:
                 match self.origin_type:
                     case 'js' | 'ts' | 'javascript' | 'typescript':
-                        [ep, tmp_paths_item_object] = self.js_helper(ep)
+                        [ep, tmp_paths_item_object] = self._js_helper(ep)
                     case 'py' | 'python':
-                        [ep, tmp_paths_item_object] = self.py_helper(ep)
+                        [ep, tmp_paths_item_object] = self.regex.py_helper(ep)
                     case _:
                         tmp_paths_item_object = self.generic_params_helper(ep)
                 if tmp_paths_item_object:
                     paths_item_object['parameters'] = tmp_paths_item_object
-            if paths_item_object and paths_object.get(ep):
-                paths_object[ep] |= paths_item_object
-            elif paths_item_object:
-                paths_object[ep] = paths_item_object
+            if calls:
+                for call in calls:
+                    paths_item_object |= self.calls_to_params(ep, call)
+            else:
+                paths_item_object |= self.calls_to_params(ep)
+            if paths_item_object:
+                if paths_object.get(ep):
+                    paths_object[ep] |= paths_item_object
+                else:
+                    paths_object |= {ep: paths_item_object}
+            else:
+                paths_object[ep] = {}
 
         return paths_object
 
@@ -402,8 +452,12 @@ class OpenAPI:
         if found := [
             op for op in ops if op in call.get('resolvedMethod', '').lower()
         ]:
+            if params:
+                return {op: {
+                    'parameters': params, 'responses': {}} for op in found
+                }
             return {
-                op: {'parameters': params, 'responses': {}} for op in found}
+                op: {'responses': {}} for op in found}
         return {'parameters': params} if params else {}
 
     def calls_to_params(self, ep, call=None):
@@ -423,22 +477,25 @@ class OpenAPI:
         params = []
         if call_name in ops:
             params = self.create_param_object(ep, call)
-            return {call_name: {'parameters': params, 'responses': {}}}
+            result = {call_name: {'responses': {}}}
+            if params:
+                result[call_name] |= {'parameters': params}
+            return result
         return self.determine_operations(call, params)
 
     def create_param_object(self, ep, call=None):
         """
         Create a parameter object for each parameter in the input list.
+
         Args:
             call (dict): The call object
             ep (str): The endpoint
+
         Returns:
             list: The list of parameter objects
 
         """
-        params = []
-        if '{' in ep:
-            params = self.generic_params_helper(ep)
+        params = self.generic_params_helper(ep) if '{' in ep else []
         if not params and call:
             params = [
                 {'name': param, 'in': 'header'}
@@ -480,11 +537,10 @@ class OpenAPI:
         endpoints = []
         if not method:
             return endpoints
-        if not (matches := re.findall(self.endpoints_regex, method)):
+        if not (matches := re.findall(self.regex.endpoints, method)):
             return endpoints
         matches = self.filter_matches(matches, method)
-        endpoints.extend([v for v in matches if v])
-        return endpoints
+        return [v for v in matches if v]
 
     def filter_matches(self, matches, code):
         """
