@@ -47,6 +47,8 @@ class AtomSlice:
         Warnings:
             If the JSON file is not a valid usage slice, a warning is logged.
         """
+        if not filename:
+            return {}
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)

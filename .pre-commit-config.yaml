@@ -12,11 +12,6 @@ repos:
 #      - id: double-quote-string-fixer
 #        types: [ python ]
 
-#  - repo: https://github.com/psf/black
-#    rev: 23.11.0
-#    hooks:
-#      - id: black
-
   - repo: https://github.com/pycqa/pylint
     rev: v3.0.2
     hooks:
@@ -30,6 +25,11 @@ repos:
       - id: flake8
         exclude: 'cli|test'
         args: [--statistics]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.8.0
+    hooks:
+      - id: mypy
 
 ci:
   autofix_prs: false

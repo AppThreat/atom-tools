@@ -1,13 +1,13 @@
 [project]
 name = "atom-tools"
-version = "0.1.0"
+version = "0.1.1"
 description = "Collection of tools for use with appthreat/atom."
 authors = [
   { name = "Team AppThreat", email = "hello@appthreat.com" },
 ]
 dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0"]
 maintainers = [
-  { name = "Caroline Russell", email = "caroline@appthreat.com" },
+  { name = "Caroline Russell", email = "caroline@appthreat.dev" },
 ]
 license = { text = "Apache-2.0" }
 readme = "README.md"
@@ -36,10 +36,10 @@ atom-tools = "atom_tools.cli.application:main"
 
 [project.optional-dependencies]
 dev = [
-"black",
 "coverage",
 "flake8",
 "isort",
+"mypy",
 "pre-commit",
 "pylint",
 "pytest",

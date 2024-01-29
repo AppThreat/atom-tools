@@ -6,6 +6,7 @@ import logging
 import re
 
 from pathlib import Path
+from typing import Any, Dict, List, Tuple
 
 import jmespath
 
@@ -29,13 +30,13 @@ class RegexCollection:
         py_helper(endpoint): Handles Python path parameters
         _py_repl(match): Replaces Python path parameters
     """
-    def __init__(self):
+    def __init__(self) -> None:
         self.endpoints = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
         self.param = re.compile(r'{(?P<pname>[^\s}]+)}', re.IGNORECASE)
         self.py_param = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
         self.py_regex_in_path = re.compile(r'(?<=\?P<)(?P<field>\w+)(?=>)')
 
-    def py_helper(self, endpoint):
+    def py_helper(self, endpoint: str) -> Tuple[str, List[Dict]]:
         """
         Handles Python path parameters.
         Args:
@@ -60,8 +61,8 @@ class RegexCollection:
         return endpoint, params
 
     @staticmethod
-    def _py_repl(match):
-        return '{' + match.group('pname') + '}'
+    def _py_repl(match: re.Match) -> str:
+        return '{' + match['pname'] + '}'
 
 
 class OpenAPI:
@@ -103,22 +104,22 @@ class OpenAPI:
 
     def __init__(
         self,
-        dest_format,
-        origin_type,
-        usages=None,
-    ):
-        self.usages = AtomSlice(usages, origin_type) if usages else None
+        dest_format: str,
+        origin_type: str,
+        usages: str,
+        server: str
+    ) -> None:
+        self.usages = AtomSlice(usages, origin_type)
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
         self.regex = RegexCollection()
+        self.server = server
+        self.output: Dict[str, Any] = {}
 
-    def endpoints_to_openapi(self, server=None):
+    def endpoints_to_openapi(self) -> None:
         """
         Generates an OpenAPI document with paths from usages.
-
-        Args:
-            server (str): The server URL.
         """
         paths_obj = self.convert_usages()
         output = {
@@ -126,11 +127,11 @@ class OpenAPI:
             'info': {'title': self.title, 'version': '1.0.0'},
             'paths': paths_obj
         }
-        if server:
-            output['servers'] = [{'url': server}]
-        return output
+        if self.server:
+            output['servers'] = list({'url': self.server})
+        self.output = output
 
-    def convert_usages(self):
+    def convert_usages(self) -> Dict[str, Any]:
         """
         Converts usages to OpenAPI.
         """
@@ -139,15 +140,15 @@ class OpenAPI:
         methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
 
-    def _js_helper(self, endpoint):
+    def _js_helper(self, endpoint: str) -> Tuple[str, List[Dict[str, str]]]:
         """
         Formats path sections which are parameters correctly.
 
         Args:
-            endpoint (list): The list of endpoints to format.
+            endpoint (str): The list of endpoints to format.
 
         Returns:
-            tuple[str, list]: The formatted endpoint and parameters.
+            tuple[str, list[str]]: The formatted endpoint and parameters.
 
         """
         endpoint = '/'.join([
@@ -159,7 +160,7 @@ class OpenAPI:
         params = self.generic_params_helper(endpoint)
         return endpoint, params
 
-    def generic_params_helper(self, endpoint):
+    def generic_params_helper(self, endpoint: str) -> List[Dict[str, Any]]:
         """
         Extracts generic path parameters from the given endpoint.
 
@@ -174,7 +175,7 @@ class OpenAPI:
             {'name': m, 'in': 'path', 'required': True} for m in matches
         ] if matches else []
 
-    def process_methods(self):
+    def process_methods(self) -> Dict[str, List[str]]:
         """
         Create a dictionary of full names and their corresponding methods.
         """
@@ -210,16 +211,16 @@ class OpenAPI:
 
         return method_map
 
-    def query_calls(self, full_name, resolved_methods):
+    def query_calls(self, full_name: str, resolved_methods: List[str]) -> List:
         """
         Query calls for the given function name and resolved methods.
 
         Args:
             full_name (str): The name of the function to query calls for.
-            resolved_methods (list): List of resolved methods.
+            resolved_methods (list[str]): List of resolved methods.
 
         Returns:
-            list: List of invoked calls and argument to calls.
+            list[dict]: List of invoked calls and argument to calls.
         """
         result = self._query_calls_helper(full_name, '].invokedCalls[][]')
         calls = []
@@ -234,7 +235,8 @@ class OpenAPI:
                 calls.append(call)
         return calls
 
-    def _query_calls_helper(self, full_name, call_type_str):
+    def _query_calls_helper(
+            self, full_name: str, call_type_str: str) -> List[Dict]:
         """
         A function to help query calls.
 
@@ -245,12 +247,12 @@ class OpenAPI:
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        calls_pattern = (f'objectSlices[].usages[?fullName=='
-                         f'{json.dumps(full_name)}{call_type_str}')
-        calls_pattern = jmespath.compile(calls_pattern)
-        return calls_pattern.search(self.usages.content)
+        pattern = (f'objectSlices[].usages[?fullName=='
+                   f'{json.dumps(full_name)}{call_type_str}')
+        compiled_pattern = jmespath.compile(pattern)
+        return compiled_pattern.search(self.usages.content)
 
-    def process_calls(self, method_map):
+    def process_calls(self, method_map: Dict) -> Dict[str, Any]:
         """
         Process calls and return a new method map.
         Args:
@@ -270,15 +272,17 @@ class OpenAPI:
         return method_map
 
     @staticmethod
-    def filter_calls(queried_calls, resolved_methods):
+    def filter_calls(
+            queried_calls: List[Dict[str, Any]], resolved_methods: Dict
+    ) -> Dict[str, List]:
         """
         Iterate through the invokedCalls and argToCalls and create a relevant
         dictionary of endpoints and calls.
         Args:
-            queried_calls: list of invokes
-            resolved_methods: dictionary of resolved method objects
+            queried_calls: List of invokes
+            resolved_methods: Dictionary of resolved method objects
         Returns:
-            relevant: dictionary of relevant endpoints and calls
+            dict: Dictionary of relevant endpoints and calls
         """
         for method in resolved_methods['resolved_methods'].keys():
             calls = [
@@ -289,7 +293,8 @@ class OpenAPI:
                 {'calls': calls})
         return resolved_methods
 
-    def methods_to_endpoints(self, method_map):
+    def methods_to_endpoints(
+            self, method_map: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert a method map to a map of endpoints.
 
@@ -300,12 +305,12 @@ class OpenAPI:
         Returns:
             dict: A new method map containing endpoints.
         """
-        reparsed = {'full_names': {}}
+        reparsed: Dict = {'full_names': {}}
         for full_name, resolved_methods in method_map.items():
             reparsed['full_names'] |= {full_name: {
                 'resolved_methods': list(set(resolved_methods))}
             }
-        new_method_map = {'full_names': {}}
+        new_method_map: Dict = {'full_names': {}}
         for full_name, resolved_methods in method_map.items():
             if new_resolved := self.process_resolved_methods(resolved_methods):
                 new_method_map['full_names'][full_name] = {
@@ -314,14 +319,23 @@ class OpenAPI:
 
         return new_method_map
 
-    def process_resolved_methods(self, resolved_methods):
+    def process_resolved_methods(self, resolved_methods: Dict) -> Dict:
         """
+        Processes the resolved methods and extracts their endpoints.
 
         Args:
-            resolved_methods (list):
+            resolved_methods (dict): The resolved methods.
 
         Returns:
+            dict: A dictionary mapping each method to its extracted endpoints.
 
+        Raises:
+            None
+
+        Examples:
+            >>> methods = {'m1': ['ep1'], 'm1': ['ep2']}
+            >>> OpenAPI.process_resolved_methods(methods)
+            {'m1': {'endpoints': ['ep1']}, 'm2': {'endpoints': ['ep2']}}
         """
         resolved_map = {}
         for method in resolved_methods:
@@ -329,7 +343,7 @@ class OpenAPI:
                 resolved_map[method] = {'endpoints': endpoint}
         return resolved_map
 
-    def _process_methods_helper(self, pattern):
+    def _process_methods_helper(self, pattern: str) -> Dict[str, Any]:
         """
         Process the given pattern and return the resolved methods.
 
@@ -344,7 +358,7 @@ class OpenAPI:
         result = [i for i in dict_resolved_pattern.search(self.usages.content)
                   if i.get('resolvedMethods')]
 
-        resolved = {}
+        resolved: Dict = {}
         for r in result:
             full_name = r['fullName']
             methods = r['resolvedMethods']
@@ -353,7 +367,7 @@ class OpenAPI:
 
         return resolved
 
-    def populate_endpoints(self, method_map):
+    def populate_endpoints(self, method_map: Dict) -> Dict[str, Any]:
         """
         Populate the endpoints based on the provided method_map.
         Args:
@@ -363,7 +377,7 @@ class OpenAPI:
             dict: The populated endpoints.
 
         """
-        paths_object = {}
+        paths_object: Dict = {}
         for resolved_methods in method_map.values():
             for value in resolved_methods.values():
                 for m in value['resolved_methods'].items():
@@ -377,7 +391,7 @@ class OpenAPI:
         return paths_object
 
     @staticmethod
-    def merge_path_objects(p1, p2):
+    def merge_path_objects(p1: Dict, p2: Dict) -> Dict:
         """
         Merge two dictionaries representing path objects.
 
@@ -395,7 +409,7 @@ class OpenAPI:
                 p1[key] = value
         return p1
 
-    def create_paths_item(self, paths_dict):
+    def create_paths_item(self, paths_dict: Dict) -> Dict:
         """
         Create paths item object based on provided endpoints and calls.
         Args:
@@ -406,10 +420,10 @@ class OpenAPI:
         """
         endpoints = paths_dict[1].get('endpoints')
         calls = paths_dict[1].get('calls')
-        paths_object = {}
+        paths_object: Dict = {}
 
         for ep in endpoints:
-            paths_item_object = {}
+            paths_item_object: Dict = {}
             if ':' in ep or '{' in ep or '<' in ep:
                 match self.origin_type:
                     case 'js' | 'ts' | 'javascript' | 'typescript':
@@ -424,7 +438,7 @@ class OpenAPI:
                 for call in calls:
                     paths_item_object |= self.calls_to_params(ep, call)
             else:
-                paths_item_object |= self.calls_to_params(ep)
+                paths_item_object |= self.calls_to_params(ep, None)
             if paths_item_object:
                 if paths_object.get(ep):
                     paths_object[ep] |= paths_item_object
@@ -436,7 +450,7 @@ class OpenAPI:
         return paths_object
 
     @staticmethod
-    def determine_operations(call, params):
+    def determine_operations(call: Dict, params: List) -> Dict[str, Any]:
         """
         Determine the supported operations based on the call and parameters.
 
@@ -460,7 +474,7 @@ class OpenAPI:
                 op: {'responses': {}} for op in found}
         return {'parameters': params} if params else {}
 
-    def calls_to_params(self, ep, call=None):
+    def calls_to_params(self, ep: str, call: Dict | None) -> Dict[str, Any]:
         """
         Transforms a call and endpoint into a parameter object and organizes it
         into a dictionary based on the call name.
@@ -477,13 +491,13 @@ class OpenAPI:
         params = []
         if call_name in ops:
             params = self.create_param_object(ep, call)
-            result = {call_name: {'responses': {}}}
+            result: Dict[str, Dict] = {call_name: {'responses': {}}}
             if params:
                 result[call_name] |= {'parameters': params}
             return result
         return self.determine_operations(call, params)
 
-    def create_param_object(self, ep, call=None):
+    def create_param_object(self, ep: str, call: Dict | None) -> List[Dict]:
         """
         Create a parameter object for each parameter in the input list.
 
@@ -492,7 +506,7 @@ class OpenAPI:
             ep (str): The endpoint
 
         Returns:
-            list: The list of parameter objects
+            list[dict]: The list of parameter objects
 
         """
         params = self.generic_params_helper(ep) if '{' in ep else []
@@ -503,7 +517,7 @@ class OpenAPI:
             ]
         return params
 
-    def collect_methods(self):
+    def collect_methods(self) -> List:
         """
         Collects and combines methods that may be endpoints based on the object
         slices and user-defined types (UDTs) from the content.
@@ -526,15 +540,18 @@ class OpenAPI:
         methods.extend(udt_jmespath_query.search(self.usages.content) or [])
         return list(set(methods))
 
-    def extract_endpoints(self, method):
+    def extract_endpoints(self, method: str) -> List[str]:
         """
         Extracts endpoints from the given code based on the specified language.
 
         Args:
             method (str): The code from which to extract endpoints.
 
+        Returns:
+            list: A list of endpoints extracted from the code.
+
         """
-        endpoints = []
+        endpoints: List[str] = []
         if not method:
             return endpoints
         if not (matches := re.findall(self.regex.endpoints, method)):
@@ -542,18 +559,18 @@ class OpenAPI:
         matches = self.filter_matches(matches, method)
         return [v for v in matches if v]
 
-    def filter_matches(self, matches, code):
+    def filter_matches(self, matches: List[str], code: str) -> List[str]:
         """
         Filters a list of matches based on certain criteria.
 
         Args:
-            matches (list): A list of matching strings.
+            matches (list[str]): A list of matching strings.
             code (str): The code from which to extract endpoints.
 
         Returns:
-            list: A list of filtered matches that meet the specified criteria.
+            list[str]: Filtered matches that meet the specified criteria.
         """
-        filtered_matches = []
+        filtered_matches: List[str] = []
 
         match self.origin_type:
             case 'java' | 'jar':

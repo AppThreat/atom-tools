@@ -68,7 +68,7 @@ class ConvertCommand(Command):
             's',
             'The server url to be included in the server object.',
             flag=False,
-            default=None,
+            default='',
         )
     ]
     help = """The convert command converts an atom slice to a different format.
@@ -93,10 +93,10 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                     self.option('format'),
                     self.option('type'),
                     self.option('usages-slice'),
+                    self.option('server'),
                     # self.option('reachables-slice'),
                 )
-                if result := converter.endpoints_to_openapi(
-                        self.option('server')):
+                if result := converter.endpoints_to_openapi():
                     with open(self.option('output-file'), 'w',
                               encoding='utf-8') as f:
                         json.dump(result, f, indent=4, sort_keys=True)
