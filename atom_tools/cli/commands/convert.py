@@ -2,6 +2,7 @@
 Convert Command for the atom-tools CLI.
 """
 import json
+import logging
 
 from cleo.commands.command import Command
 from cleo.helpers import option
@@ -93,13 +94,19 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                     self.option('format'),
                     self.option('type'),
                     self.option('usages-slice'),
-                    self.option('server'),
+                    # self.option('server'),
                     # self.option('reachables-slice'),
                 )
-                if result := converter.endpoints_to_openapi():
-                    with open(self.option('output-file'), 'w',
-                              encoding='utf-8') as f:
-                        json.dump(result, f, indent=4, sort_keys=True)
+
+                if not (result := converter.endpoints_to_openapi(
+                        self.option('server'))):
+                    logging.error('No results produced!')
+                    return 1
+                with open(self.option('output-file'), 'w',
+                          encoding='utf-8') as f:
+                    json.dump(result, f, indent=4, sort_keys=True)
+                logging.info(f'OpenAPI document written to '
+                             f'{self.option("output-file")}.')
             case _:
                 raise ValueError(
                     f'Unknown destination format: {self.option("format")}'
