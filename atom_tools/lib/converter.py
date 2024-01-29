@@ -107,17 +107,14 @@ class OpenAPI:
         dest_format: str,
         origin_type: str,
         usages: str,
-        server: str
     ) -> None:
         self.usages = AtomSlice(usages, origin_type)
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
         self.regex = RegexCollection()
-        self.server = server
-        self.output: Dict[str, Any] = {}
 
-    def endpoints_to_openapi(self) -> None:
+    def endpoints_to_openapi(self, server: str = '') -> Any:
         """
         Generates an OpenAPI document with paths from usages.
         """
@@ -127,9 +124,10 @@ class OpenAPI:
             'info': {'title': self.title, 'version': '1.0.0'},
             'paths': paths_obj
         }
-        if self.server:
-            output['servers'] = list({'url': self.server})
-        self.output = output
+        if server:
+            output['servers'] = [{'url': server}]  # type: ignore[list-item]
+
+        return output
 
     def convert_usages(self) -> Dict[str, Any]:
         """

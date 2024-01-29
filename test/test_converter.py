@@ -6,34 +6,34 @@ from atom_tools.lib.converter import OpenAPI
 @pytest.fixture
 def java_usages_1():
     return OpenAPI('openapi3.1.0', 'java',
-                   'test/data/java-piggymetrics-usages.json', 'https://piggymetrics.com')
+                   'test/data/java-piggymetrics-usages.json')
 
 
 @pytest.fixture
 def java_usages_2():
     return OpenAPI('openapi3.0.1', 'java',
-                   'test/data/java-sec-code-usages.json', '')
+                   'test/data/java-sec-code-usages.json')
 
 
 @pytest.fixture
 def js_usages_1():
     return OpenAPI('openapi3.0.1', 'javascript',
-                   'test/data/js-juiceshop-usages.json', '')
+                   'test/data/js-juiceshop-usages.json')
 
 
 @pytest.fixture
 def js_usages_2():
-    return OpenAPI('openapi3.0.1', 'js', 'test/data/js-nodegoat-usages.json', '')
+    return OpenAPI('openapi3.0.1', 'js', 'test/data/js-nodegoat-usages.json')
 
 
 @pytest.fixture
 def py_usages_1():
-    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-usages.json', '')
+    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-usages.json')
 
 
 @pytest.fixture
 def py_usages_2():
-    return OpenAPI('openapi3.0.1', 'py', 'test/data/py-tornado-usages.json', '')
+    return OpenAPI('openapi3.0.1', 'py', 'test/data/py-tornado-usages.json')
 
 
 def test_populate_endpoints(js_usages_1, js_usages_2):
@@ -919,3 +919,30 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
     #                                         }
     assert py_usages_2.convert_usages() == {'/': {}, '/auth/google': {},
                                             '/logout': {}}
+
+
+def test_endpoints_to_openapi(java_usages_1):
+
+    assert java_usages_1.endpoints_to_openapi() == {'info': {'title': 'OpenAPI Specification for data', 'version': '1.0.0'},
+ 'openapi': '3.1.0',
+ 'paths': {'/': {'post': {'responses': {}}},
+           '/accounts/{accountName}': {'get': {'responses': {}},
+                                       'parameters': [{'in': 'path',
+                                                       'name': 'accountName',
+                                                       'required': True}]},
+           '/current': {'get': {'responses': {}}, 'put': {'responses': {}}},
+           '/latest': {'get': {'responses': {}}},
+           '/statistics/{accountName}': {'parameters': [{'in': 'path',
+                                                         'name': 'accountName',
+                                                         'required': True}],
+                                         'put': {'responses': {}}},
+           '/uaa/users': {'post': {'responses': {}}},
+           '/{accountName}': {'get': {'responses': {}},
+                              'parameters': [{'in': 'path',
+                                              'name': 'accountName',
+                                              'required': True}],
+                              'put': {'responses': {}}},
+           '/{name}': {'get': {'responses': {}},
+                       'parameters': [{'in': 'path',
+                                       'name': 'name',
+                                       'required': True}]}}}
