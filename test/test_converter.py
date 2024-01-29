@@ -6,34 +6,34 @@ from atom_tools.lib.converter import OpenAPI
 @pytest.fixture
 def java_usages_1():
     return OpenAPI('openapi3.1.0', 'java',
-                   'test/data/java-piggymetrics-usages.json')
+                   'test/data/java-piggymetrics-usages.json', 'https://piggymetrics.com')
 
 
 @pytest.fixture
 def java_usages_2():
     return OpenAPI('openapi3.0.1', 'java',
-                   'test/data/java-sec-code-usages.json')
+                   'test/data/java-sec-code-usages.json', '')
 
 
 @pytest.fixture
 def js_usages_1():
     return OpenAPI('openapi3.0.1', 'javascript',
-                   'test/data/js-juiceshop-usages.json')
+                   'test/data/js-juiceshop-usages.json', '')
 
 
 @pytest.fixture
 def js_usages_2():
-    return OpenAPI('openapi3.0.1', 'js', 'test/data/js-nodegoat-usages.json')
+    return OpenAPI('openapi3.0.1', 'js', 'test/data/js-nodegoat-usages.json', '')
 
 
 @pytest.fixture
 def py_usages_1():
-    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-usages.json')
+    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-usages.json', '')
 
 
 @pytest.fixture
 def py_usages_2():
-    return OpenAPI('openapi3.0.1', 'py', 'test/data/py-tornado-usages.json')
+    return OpenAPI('openapi3.0.1', 'py', 'test/data/py-tornado-usages.json', '')
 
 
 def test_populate_endpoints(js_usages_1, js_usages_2):
