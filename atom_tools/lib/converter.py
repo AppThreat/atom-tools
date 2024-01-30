@@ -72,13 +72,12 @@ class OpenAPI:
     Args:
         dest_format (str): The destination format.
         origin_type (str): The origin type.
-        usages (list, optional): The list of usages. Defaults to None.
+        usages (str): Path of the usages slice.
 
     Attributes:
         usages (AtomSlice): The usage slice.
         origin_type (str): The origin type.
         openapi_version (str): The OpenAPI version.
-        title (str): The title of the OpenAPI specification.
         regex (RegexCollection): collection of regular expressions
 
     Methods:
@@ -108,7 +107,7 @@ class OpenAPI:
         origin_type: str,
         usages: str,
     ) -> None:
-        self.usages = AtomSlice(usages, origin_type)
+        self.usages: AtomSlice = AtomSlice(usages)
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
@@ -182,12 +181,13 @@ class OpenAPI:
             '].*.resolvedMethod[]}')
 
         calls = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages['
-            '].invokedCalls[?resolvedMethod].resolvedMethod[]}')
+            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*['
+            '][?resolvedMethod].resolvedMethod[]}')
 
         user_defined_types = self._process_methods_helper(
             'userDefinedTypes[].{fullName: name, resolvedMethods: fields['
             '].name}')
+
         for key, value in calls.items():
             if method_map.get(key):
                 method_map[key]['resolved_methods'].extend(
@@ -220,13 +220,8 @@ class OpenAPI:
         Returns:
             list[dict]: List of invoked calls and argument to calls.
         """
-        result = self._query_calls_helper(full_name, '].invokedCalls[][]')
+        result = self._query_calls_helper(full_name, '].*[][][]')
         calls = []
-        for call in result:
-            m = call.get('resolvedMethod', '')
-            if m and m in resolved_methods:
-                calls.append(call)
-        result = self._query_calls_helper(full_name, '].argToCalls[][]')
         for call in result:
             m = call.get('resolvedMethod', '')
             if m and m in resolved_methods:
@@ -326,14 +321,6 @@ class OpenAPI:
 
         Returns:
             dict: A dictionary mapping each method to its extracted endpoints.
-
-        Raises:
-            None
-
-        Examples:
-            >>> methods = {'m1': ['ep1'], 'm1': ['ep2']}
-            >>> OpenAPI.process_resolved_methods(methods)
-            {'m1': {'endpoints': ['ep1']}, 'm2': {'endpoints': ['ep2']}}
         """
         resolved_map = {}
         for method in resolved_methods:
@@ -445,7 +432,26 @@ class OpenAPI:
             else:
                 paths_object[ep] = {}
 
-        return paths_object
+        return self.remove_nested_parameters(paths_object)
+
+    @staticmethod
+    def remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
+        """
+        Removes nested path parameters from the given data.
+
+        Args:
+            data (dict): The data containing nested path parameters.
+
+        Returns:
+            dict: The modified data with the nested path parameters removed.
+        """
+        for value in data.values():
+            for v in value.values():
+                if isinstance(v, dict) and "parameters" in v and isinstance(
+                        v["parameters"], list):
+                    v["parameters"] = [param for param in v["parameters"] if
+                                       param.get("in") != "path"]
+        return data
 
     @staticmethod
     def determine_operations(call: Dict, params: List) -> Dict[str, Any]:
@@ -509,10 +515,17 @@ class OpenAPI:
         """
         params = self.generic_params_helper(ep) if '{' in ep else []
         if not params and call:
-            params = [
-                {'name': param, 'in': 'header'}
-                for param in set(call.get('paramTypes', [])) if param != 'ANY'
-            ]
+            ptypes = set(call.get('paramTypes', []))
+            if len(ptypes) > 1:
+                params = [
+                    {'name': param, 'in': 'header'}
+                    for param in ptypes if param != 'ANY'
+                ]
+            else:
+                params = [
+                    {'name': param, 'in': 'header'}
+                    for param in ptypes
+                ]
         return params
 
     def collect_methods(self) -> List:
@@ -579,11 +592,15 @@ class OpenAPI:
                 ):
                     return filtered_matches
             case 'js' | 'ts' | 'javascript' | 'typescript':
-                if 'app.' not in code and 'route' not in code:
+                if (
+                        'app.' not in code and
+                        'route' not in code and
+                        'ftp' not in code
+                ):
                     return filtered_matches
 
         for m in matches:
-            if m and m[0] not in ('.', '@') and '/' in m:
+            if m and m[0] not in ('.', '@', ','):
                 nm = m.replace('"', '').replace("'", '').lstrip('/')
                 filtered_matches.append(f'/{nm}')
 

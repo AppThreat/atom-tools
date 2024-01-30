@@ -23,9 +23,8 @@ class AtomSlice:
         import_slice: Imports a slice from a JSON file.
     """
 
-    def __init__(self, filename, language):
+    def __init__(self, filename: str) -> None:
         self.content = self.import_slice(filename)
-        self.language = language
         self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
 
     @staticmethod
