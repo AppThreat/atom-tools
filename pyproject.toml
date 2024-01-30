@@ -1,7 +1,7 @@
 [project]
 name = "atom-tools"
-version = "0.1.1"
-description = "Collection of tools for use with appthreat/atom."
+version = "0.1.2"
+description = "Collection of tools for use with AppThreat/atom."
 authors = [
   { name = "Team AppThreat", email = "hello@appthreat.com" },
 ]
