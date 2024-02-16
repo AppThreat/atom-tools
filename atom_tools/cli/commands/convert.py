@@ -80,33 +80,23 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
         """
         Executes the convert command and performs the conversion.
         """
-        supported_types = [
-            'java', 'jar', 'python', 'py', 'javascript', 'js',
-            'typescript', 'ts'
-        ]
+        supported_types = ['java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts']
         if self.option('type') not in supported_types:
-            raise ValueError(
-                f'Unknown origin type: {self.option("type")}'
-            )
+            raise ValueError(f'Unknown origin type: {self.option("type")}')
         match self.option('format'):
             case 'openapi3.1.0' | 'openapi3.0.1':
                 converter = OpenAPI(
                     self.option('format'),
                     self.option('type'),
                     self.option('usages-slice'),
-                    # self.option('server'),
-                    # self.option('reachables-slice'),
                 )
 
-                if not (result := converter.endpoints_to_openapi(
-                        self.option('server'))):
+                if not (result := converter.endpoints_to_openapi(self.option('server'))):
                     logging.error('No results produced!')
                     return 1
-                with open(self.option('output-file'), 'w',
-                          encoding='utf-8') as f:
+                with open(self.option('output-file'), 'w', encoding='utf-8') as f:
                     json.dump(result, f, indent=4, sort_keys=True)
-                logging.info(f'OpenAPI document written to '
-                             f'{self.option("output-file")}.')
+                logging.info(f'OpenAPI document written to {self.option("output-file")}.')
             case _:
                 raise ValueError(
                     f'Unknown destination format: {self.option("format")}'

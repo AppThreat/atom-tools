@@ -81,9 +81,12 @@ class OpenAPI:
         regex (RegexCollection): collection of regular expressions
 
     Methods:
+        _create_ln_entries: Creates an x-atom-usages entry.
+        _filter_matches: Filters a list of matches based on certain criteria.
         _js_helper: Formats path sections which are parameters correctly.
         _process_methods_helper: Utility for process_methods.
         _query_calls_helper: A helper function to query calls.
+        _remove_nested_parameters: Removes nested path parameters from the get/post/etc.
         calls_to_params: Transforms a call and endpoint into parameter object.
         collect_methods: Collects and combines methods that may be endpoints.
         convert_usages: Converts usages to OpenAPI.
@@ -93,7 +96,6 @@ class OpenAPI:
         endpoints_to_openapi: Generates an OpenAPI document.
         extract_endpoints: Extracts endpoints from the given code.
         filter_calls: Filters invokedCalls and argToCalls.
-        filter_matches: Filters a list of matches based on certain criteria.
         methods_to_endpoints: Converts a method map to a map of endpoints.
         populate_endpoints: Populates the endpoints based on the method_map.
         process_calls: Processes calls and returns a new method map.
@@ -112,7 +114,7 @@ class OpenAPI:
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
         self.regex = RegexCollection()
-        self.file_endpoint_map = {}
+        self.file_endpoint_map: Dict = {}
 
     def endpoints_to_openapi(self, server: str = '') -> Any:
         """
@@ -198,34 +200,26 @@ class OpenAPI:
         Create a dictionary of full names and their corresponding methods.
         """
         method_map = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages['
-            '].*.resolvedMethod[]}'
-        )
+            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*.resolvedMethod[]}')
 
         calls = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*['
-            '][?resolvedMethod].resolvedMethod[]}'
-        )
+            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*[][?resolvedMethod].'
+            'resolvedMethod[]}')
 
         user_defined_types = self._process_methods_helper(
-            'userDefinedTypes[].{fullName: name, resolvedMethods: fields['
-            '].name}')
+            'userDefinedTypes[].{fullName: name, resolvedMethods: fields[].name}')
 
         for key, value in calls.items():
             if method_map.get(key):
-                method_map[key]['resolved_methods'].extend(
-                    value.get('resolved_methods'))
+                method_map[key]['resolved_methods'].extend(value.get('resolved_methods'))
             else:
-                method_map[key] = {
-                    'resolved_methods': value.get('resolved_methods')}
+                method_map[key] = {'resolved_methods': value.get('resolved_methods')}
 
         for key, value in user_defined_types.items():
             if method_map.get(key):
-                method_map[key]['resolved_methods'].extend(
-                    value.get('resolved_methods'))
+                method_map[key]['resolved_methods'].extend(value.get('resolved_methods'))
             else:
-                method_map[key] = {
-                    'resolved_methods': value.get('resolved_methods')}
+                method_map[key] = {'resolved_methods': value.get('resolved_methods')}
 
         for k, v in method_map.items():
             method_map[k] = list(set(v.get('resolved_methods')))
@@ -262,8 +256,7 @@ class OpenAPI:
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        pattern = (f'objectSlices[].usages[?fullName=='
-                   f'{json.dumps(full_name)}{call_type_str}')
+        pattern = f'objectSlices[].usages[?fullName=={json.dumps(full_name)}{call_type_str}'
         compiled_pattern = jmespath.compile(pattern)
         return compiled_pattern.search(self.usages.content)
 
@@ -276,19 +269,18 @@ class OpenAPI:
             dict: A new method map containing calls.
         """
         for full_name, resolved_methods in method_map['full_names'].items():
-            if res := self.query_calls(
-                    full_name, resolved_methods['resolved_methods'].keys()):
+            if res := self.query_calls(full_name, resolved_methods['resolved_methods'].keys()):
                 mmap = self.filter_calls(res, resolved_methods)
             else:
                 mmap = self.filter_calls([], resolved_methods)
 
-            method_map['full_names'][full_name]['resolved_methods'] = (
-                mmap.get('resolved_methods'))
+            method_map['full_names'][full_name]['resolved_methods'] = mmap.get('resolved_methods')
 
         return method_map
 
     @staticmethod
-    def filter_calls(queried_calls: List[Dict[str, Any]], resolved_methods: Dict) -> Dict[str, List]:
+    def filter_calls(
+            queried_calls: List[Dict[str, Any]], resolved_methods: Dict) -> Dict[str, List]:
         """
         Iterate through the invokedCalls and argToCalls and create a relevant
         dictionary of endpoints and calls.
@@ -303,14 +295,12 @@ class OpenAPI:
                 i for i in queried_calls
                 if i.get('resolvedMethod', '') == method
             ]
-            line_nos = [
+            lns = [
                 i.get('lineNumber')
                 for i in calls
-                if i.get('lineNumber') and
-                   i.get('resolvedMethod', '') == method
+                if i.get('lineNumber') and i.get('resolvedMethod', '') == method
             ]
-            resolved_methods['resolved_methods'][method].update(
-                {'calls': calls, 'line_nos': line_nos})
+            resolved_methods['resolved_methods'][method].update({'calls': calls, 'line_nos': lns})
         return resolved_methods
 
     def methods_to_endpoints(self, method_map: Dict[str, Any]) -> Dict[str, Any]:
@@ -366,8 +356,10 @@ class OpenAPI:
 
         """
         dict_resolved_pattern = jmespath.compile(pattern)
-        result = [i for i in dict_resolved_pattern.search(self.usages.content)
-                  if i.get('resolvedMethods')]
+        result = [
+            i for i in dict_resolved_pattern.search(self.usages.content)
+            if i.get('resolvedMethods')
+        ]
 
         resolved: Dict = {}
         for r in result:
@@ -424,6 +416,7 @@ class OpenAPI:
         """
         Create paths item object based on provided endpoints and calls.
         Args:
+            filename (str): The name of the file
             paths_dict (dict): The object containing endpoints and calls
         Returns:
             dict: The paths item object
@@ -451,7 +444,7 @@ class OpenAPI:
                     paths_item_object |= self.calls_to_params(ep, call)
             else:
                 paths_item_object |= self.calls_to_params(ep, None)
-            if line_numbers and (line_nos := self.create_ln_entries(
+            if line_numbers and (line_nos := self._create_ln_entries(
                     filename, list(set(line_numbers)))):
                 paths_item_object |= line_nos
             if paths_item_object:
@@ -462,17 +455,25 @@ class OpenAPI:
             else:
                 paths_object[ep] = {}
 
-        return self.remove_nested_parameters(paths_object)
+        return self._remove_nested_parameters(paths_object)
 
-    def create_ln_entries(self, filename, line_numbers):
-        # files = self.file_endpoint_map.get(ep, [])
-        # if len(files) == 1:
+    @staticmethod
+    def _create_ln_entries(filename, line_numbers):
+        """
+        Creates line number entries for a given filename and line numbers.
+
+        Args:
+            filename (str): The name of the file.
+            line_numbers (list): A list of line numbers.
+
+        Returns:
+            dict: A dictionary containing line number entries.
+        """
         fn = filename.split(':')[0]
         return {'x-atom-usages': {fn: line_numbers}}
 
-
     @staticmethod
-    def remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
+    def _remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
         """
         Removes nested path parameters from the given data.
 
@@ -484,8 +485,7 @@ class OpenAPI:
         """
         for value in data.values():
             for v in value.values():
-                if isinstance(v, dict) and "parameters" in v and isinstance(
-                        v["parameters"], list):
+                if isinstance(v, dict) and "parameters" in v and isinstance(v["parameters"], list):
                     v["parameters"] = [param for param in v["parameters"] if
                                        param.get("in") != "path"]
         return data
@@ -504,15 +504,10 @@ class OpenAPI:
             parameters and responses.
         """
         ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
-        if found := [
-            op for op in ops if op in call.get('resolvedMethod', '').lower()
-        ]:
+        if found := [op for op in ops if op in call.get('resolvedMethod', '').lower()]:
             if params:
-                return {op: {
-                    'parameters': params, 'responses': {}} for op in found
-                }
-            return {
-                op: {'responses': {}} for op in found}
+                return {op: {'parameters': params, 'responses': {}} for op in found}
+            return {op: {'responses': {}} for op in found}
         return {'parameters': params} if params else {}
 
     def calls_to_params(self, ep: str, call: Dict | None) -> Dict[str, Any]:
@@ -554,15 +549,9 @@ class OpenAPI:
         if not params and call:
             ptypes = set(call.get('paramTypes', []))
             if len(ptypes) > 1:
-                params = [
-                    {'name': param, 'in': 'header'}
-                    for param in ptypes if param != 'ANY'
-                ]
+                params = [{'name': param, 'in': 'header'} for param in ptypes if param != 'ANY']
             else:
-                params = [
-                    {'name': param, 'in': 'header'}
-                    for param in ptypes
-                ]
+                params = [{'name': param, 'in': 'header'} for param in ptypes]
         return params
 
     def collect_methods(self) -> List:
@@ -574,14 +563,11 @@ class OpenAPI:
             list: A list of unique methods.
         """
         # Surely there is a way to combine these...
-        target_obj_pattern = jmespath.compile(
-            'objectSlices[].usages[].targetObj.resolvedMethod')
-        defined_by_pattern = jmespath.compile(
-            'objectSlices[].usages[].definedBy.resolvedMethod')
-        invoked_calls_pattern = jmespath.compile(
-            'objectSlices[].usages[].invokedCalls[].resolvedMethod')
-        udt_jmespath_query = jmespath.compile(
-            'userDefinedTypes[].fields[].name')
+        target_obj_pattern = jmespath.compile('objectSlices[].usages[].targetObj.resolvedMethod')
+        defined_by_pattern = jmespath.compile('objectSlices[].usages[].definedBy.resolvedMethod')
+        invoked_calls_pattern = jmespath.compile('objectSlices[].usages[].invokedCalls[].resolved'
+                                                 'Method')
+        udt_jmespath_query = jmespath.compile('userDefinedTypes[].fields[].name')
         methods = target_obj_pattern.search(self.usages.content) or []
         methods.extend(defined_by_pattern.search(self.usages.content) or [])
         methods.extend(invoked_calls_pattern.search(self.usages.content) or [])
@@ -604,10 +590,10 @@ class OpenAPI:
             return endpoints
         if not (matches := re.findall(self.regex.endpoints, method)):
             return endpoints
-        matches = self.filter_matches(matches, method)
+        matches = self._filter_matches(matches, method)
         return [v for v in matches if v]
 
-    def filter_matches(self, matches: List[str], code: str) -> List[str]:
+    def _filter_matches(self, matches: List[str], code: str) -> List[str]:
         """
         Filters a list of matches based on certain criteria.
 
@@ -629,11 +615,7 @@ class OpenAPI:
                 ):
                     return filtered_matches
             case 'js' | 'ts' | 'javascript' | 'typescript':
-                if (
-                        'app.' not in code and
-                        'route' not in code and
-                        'ftp' not in code
-                ):
+                if 'app.' not in code and 'route' not in code and 'ftp' not in code:
                     return filtered_matches
 
         for m in matches:
