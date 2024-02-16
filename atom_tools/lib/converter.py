@@ -112,6 +112,7 @@ class OpenAPI:
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
         self.regex = RegexCollection()
+        self.file_endpoint_map = {}
 
     def endpoints_to_openapi(self, server: str = '') -> Any:
         """
@@ -128,12 +129,32 @@ class OpenAPI:
 
         return output
 
+    def create_file_to_method_dict(self, method_map):
+        """
+        Creates a dictionary of endpoints and methods.
+        """
+        full_names = list(method_map.get('full_names').keys())
+        file_endpoint_map = {i: [] for i in full_names}
+        for full_name in full_names:
+            for values in method_map['full_names'][full_name]['resolved_methods'].values():
+                file_endpoint_map[full_name].extend(values.get('endpoints'))
+        for k, v in file_endpoint_map.items():
+            filename = k.split(':')[0]
+            endpoints = set(v)
+            for i in endpoints:
+                if self.file_endpoint_map.get(i):
+                    self.file_endpoint_map[i].add(filename)
+                else:
+                    self.file_endpoint_map[i] = {filename}
+        self.file_endpoint_map = {k: list(v) for k, v in self.file_endpoint_map.items()}
+
     def convert_usages(self) -> Dict[str, Any]:
         """
         Converts usages to OpenAPI.
         """
         methods = self.process_methods()
         methods = self.methods_to_endpoints(methods)
+        self.create_file_to_method_dict(methods)
         methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
 
@@ -178,11 +199,13 @@ class OpenAPI:
         """
         method_map = self._process_methods_helper(
             'objectSlices[].{fullName: fullName, resolvedMethods: usages['
-            '].*.resolvedMethod[]}')
+            '].*.resolvedMethod[]}'
+        )
 
         calls = self._process_methods_helper(
             'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*['
-            '][?resolvedMethod].resolvedMethod[]}')
+            '][?resolvedMethod].resolvedMethod[]}'
+        )
 
         user_defined_types = self._process_methods_helper(
             'userDefinedTypes[].{fullName: name, resolvedMethods: fields['
@@ -228,8 +251,7 @@ class OpenAPI:
                 calls.append(call)
         return calls
 
-    def _query_calls_helper(
-            self, full_name: str, call_type_str: str) -> List[Dict]:
+    def _query_calls_helper(self, full_name: str, call_type_str: str) -> List[Dict]:
         """
         A function to help query calls.
 
@@ -259,15 +281,14 @@ class OpenAPI:
                 mmap = self.filter_calls(res, resolved_methods)
             else:
                 mmap = self.filter_calls([], resolved_methods)
+
             method_map['full_names'][full_name]['resolved_methods'] = (
                 mmap.get('resolved_methods'))
 
         return method_map
 
     @staticmethod
-    def filter_calls(
-            queried_calls: List[Dict[str, Any]], resolved_methods: Dict
-    ) -> Dict[str, List]:
+    def filter_calls(queried_calls: List[Dict[str, Any]], resolved_methods: Dict) -> Dict[str, List]:
         """
         Iterate through the invokedCalls and argToCalls and create a relevant
         dictionary of endpoints and calls.
@@ -282,12 +303,17 @@ class OpenAPI:
                 i for i in queried_calls
                 if i.get('resolvedMethod', '') == method
             ]
+            line_nos = [
+                i.get('lineNumber')
+                for i in calls
+                if i.get('lineNumber') and
+                   i.get('resolvedMethod', '') == method
+            ]
             resolved_methods['resolved_methods'][method].update(
-                {'calls': calls})
+                {'calls': calls, 'line_nos': line_nos})
         return resolved_methods
 
-    def methods_to_endpoints(
-            self, method_map: Dict[str, Any]) -> Dict[str, Any]:
+    def methods_to_endpoints(self, method_map: Dict[str, Any]) -> Dict[str, Any]:
         """
         Convert a method map to a map of endpoints.
 
@@ -364,9 +390,9 @@ class OpenAPI:
         """
         paths_object: Dict = {}
         for resolved_methods in method_map.values():
-            for value in resolved_methods.values():
+            for key, value in resolved_methods.items():
                 for m in value['resolved_methods'].items():
-                    new_path_item = self.create_paths_item(m)
+                    new_path_item = self.create_paths_item(key, m)
                     if paths_object:
                         paths_object = self.merge_path_objects(
                             paths_object, new_path_item)
@@ -394,7 +420,7 @@ class OpenAPI:
                 p1[key] = value
         return p1
 
-    def create_paths_item(self, paths_dict: Dict) -> Dict:
+    def create_paths_item(self, filename: str, paths_dict: Dict) -> Dict:
         """
         Create paths item object based on provided endpoints and calls.
         Args:
@@ -405,6 +431,7 @@ class OpenAPI:
         """
         endpoints = paths_dict[1].get('endpoints')
         calls = paths_dict[1].get('calls')
+        line_numbers = paths_dict[1].get('line_nos')
         paths_object: Dict = {}
 
         for ep in endpoints:
@@ -424,6 +451,9 @@ class OpenAPI:
                     paths_item_object |= self.calls_to_params(ep, call)
             else:
                 paths_item_object |= self.calls_to_params(ep, None)
+            if line_numbers and (line_nos := self.create_ln_entries(
+                    filename, list(set(line_numbers)))):
+                paths_item_object |= line_nos
             if paths_item_object:
                 if paths_object.get(ep):
                     paths_object[ep] |= paths_item_object
@@ -433,6 +463,13 @@ class OpenAPI:
                 paths_object[ep] = {}
 
         return self.remove_nested_parameters(paths_object)
+
+    def create_ln_entries(self, filename, line_numbers):
+        # files = self.file_endpoint_map.get(ep, [])
+        # if len(files) == 1:
+        fn = filename.split(':')[0]
+        return {'x-atom-usages': {fn: line_numbers}}
+
 
     @staticmethod
     def remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
