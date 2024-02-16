@@ -1,14 +1,11 @@
 [project]
 name = "atom-tools"
-version = "0.1.2"
+version = "0.2.0"
 description = "Collection of tools for use with AppThreat/atom."
 authors = [
-  { name = "Team AppThreat", email = "hello@appthreat.com" },
-]
-dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0"]
-maintainers = [
   { name = "Caroline Russell", email = "caroline@appthreat.dev" },
 ]
+dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0"]
 license = { text = "Apache-2.0" }
 readme = "README.md"
 requires-python = ">=3.10"
@@ -47,7 +44,7 @@ dev = [
 ]
 
 [build-system]
-requires = ["setuptools>=61", "wheel"]
+requires = ["setuptools>=65", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -59,13 +56,8 @@ packages = [
 ]
 include-package-data = true
 
-[tool.flake8]
-max-line-length = 79
-max-complexity = 18
-exclude = ["atom_tools/cli/"]
-
 [tool.black]
-line-length = 79
+line-length = 99
 
 [tool.isort]
 profile = "black"
@@ -74,7 +66,7 @@ profile = "black"
 max-args = 6
 
 [tool.pylint.format]
-max-line-length = 79
+max-line-length = 99
 
 [tool.pylint.logging]
 logging-format-style = "new"
