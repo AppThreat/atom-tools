@@ -237,7 +237,7 @@ class OpenAPI:
         Returns:
             list[dict]: List of invoked calls and argument to calls.
         """
-        result = self._query_calls_helper(full_name, '].*[][][]')
+        result = self._query_calls_helper(full_name)
         calls = []
         for call in result:
             m = call.get('resolvedMethod', '')
@@ -245,18 +245,17 @@ class OpenAPI:
                 calls.append(call)
         return calls
 
-    def _query_calls_helper(self, full_name: str, call_type_str: str) -> List[Dict]:
+    def _query_calls_helper(self, full_name: str) -> List[Dict]:
         """
         A function to help query calls.
 
         Args:
             full_name (str): The name of the function to query calls for.
-            call_type_str (str): The string to append to the calls pattern.
 
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        pattern = f'objectSlices[].usages[?fullName=={json.dumps(full_name)}{call_type_str}'
+        pattern = f'objectSlices[?fullName==`{json.dumps(full_name)}`].usages[].*[][]'
         compiled_pattern = jmespath.compile(pattern)
         return compiled_pattern.search(self.usages.content)
 
