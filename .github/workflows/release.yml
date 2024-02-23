@@ -32,7 +32,7 @@ jobs:
       - name: Make sure version in atom_tools.__init__.py has been updated
         run: |
           version=$(python3 -c 'from atom_tools.__init__ import __version__; print(f"refs/tags/v{__version__}")')
-          if $version != ${{ github.ref }}; then
+          if $version != "${{ github.ref }}"; then
             echo "Version in atom_tools.__init__.py has not been updated. $version != ${{ github.ref }}"
             exit 1
           fi
