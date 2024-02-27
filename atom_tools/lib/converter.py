@@ -4,65 +4,17 @@ Classes and functions used to convert slices.
 import json.encoder
 import logging
 import re
-
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import jmespath
 
+from atom_tools.lib.regex_utils import (
+    regex, py_helper, path_param_repl, regex_match_helper, js_helper
+)
 from atom_tools.lib.slices import AtomSlice
 
-
 logger = logging.getLogger(__name__)
-
-
-class RegexCollection:
-    """
-    Collection of regular expressions needed for conversions.
-
-    Attributes:
-        endpoints (re.compile): Regex to find endpoints
-        param (re.compile): Regex to find path parameters
-        py_param (re.compile): Regex to find Python path parameters
-        py_regex_in_path (re.compile): Regex to find Python path parameters
-
-    Methods:
-        py_helper(endpoint): Handles Python path parameters
-        _py_repl(match): Replaces Python path parameters
-    """
-    def __init__(self) -> None:
-        self.endpoints = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
-        self.param = re.compile(r'{(?P<pname>[^\s}]+)}', re.IGNORECASE)
-        self.py_param = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
-        self.py_regex_in_path = re.compile(r'(?<=\?P<)(?P<field>\w+)(?=>)')
-
-    def py_helper(self, endpoint: str) -> Tuple[str, List[Dict]]:
-        """
-        Handles Python path parameters.
-        Args:
-            endpoint (str): The endpoint string
-
-        Returns:
-            tuple[str,list]: The modified endpoint and parameters
-        """
-        type_mapping = {
-            'int': 'integer', 'string': 'string',
-            'float': 'number', 'path': 'string'
-        }
-        params = []
-
-        if matches := self.py_param.findall(endpoint):
-            endpoint = re.sub(self.py_param, self._py_repl, endpoint)
-            for m in matches:
-                p = {'in': 'path', 'name': m[1], 'required': True}
-                if type_mapping.get(m[0]):
-                    p['schema'] = {'type': type_mapping[m[0]]}
-                params.append(p)
-        return endpoint, params
-
-    @staticmethod
-    def _py_repl(match: re.Match) -> str:
-        return '{' + match['pname'] + '}'
 
 
 class OpenAPI:
@@ -78,7 +30,10 @@ class OpenAPI:
         usages (AtomSlice): The usage slice.
         origin_type (str): The origin type.
         openapi_version (str): The OpenAPI version.
-        regex (RegexCollection): collection of regular expressions
+        title (str): The title for the OpenAPI document
+        file_endpoint_map (dict): Stores the originating filename for endpoints
+        params (dict): Stores params identified from regexes in the path
+        regex_param_count: Keeps count of params from unnamed regexes
 
     Methods:
         _create_ln_entries: Creates an x-atom-usages entry.
@@ -113,8 +68,9 @@ class OpenAPI:
         self.origin_type = origin_type
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
-        self.regex = RegexCollection()
         self.file_endpoint_map: Dict = {}
+        self.params: Dict[str, List[Dict]] = {}
+        self.regex_param_count = 0
 
     def endpoints_to_openapi(self, server: str = '') -> Any:
         """
@@ -160,26 +116,6 @@ class OpenAPI:
         methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
 
-    def _js_helper(self, endpoint: str) -> Tuple[str, List[Dict[str, str]]]:
-        """
-        Formats path sections which are parameters correctly.
-
-        Args:
-            endpoint (str): The list of endpoints to format.
-
-        Returns:
-            tuple[str, list[str]]: The formatted endpoint and parameters.
-
-        """
-        endpoint = '/'.join([
-            f'{{{comp[1:]}}}' if comp.startswith(':')
-            else comp for comp
-            in endpoint.split('/')
-        ])
-
-        params = self.generic_params_helper(endpoint)
-        return endpoint, params
-
     def generic_params_helper(self, endpoint: str) -> List[Dict[str, Any]]:
         """
         Extracts generic path parameters from the given endpoint.
@@ -190,10 +126,10 @@ class OpenAPI:
         Returns:
             list: A list of dictionaries containing the extracted parameters.
         """
-        matches = self.regex.param.findall(endpoint)
-        return [
-            {'name': m, 'in': 'path', 'required': True} for m in matches
-        ] if matches else []
+        if self.params.get(endpoint):
+            return self.params[endpoint]
+        matches = regex.processed_param.findall(endpoint)
+        return [{'name': m, 'in': 'path', 'required': True} for m in matches] if matches else []
 
     def process_methods(self) -> Dict[str, List[str]]:
         """
@@ -313,11 +249,6 @@ class OpenAPI:
         Returns:
             dict: A new method map containing endpoints.
         """
-        reparsed: Dict = {'full_names': {}}
-        for full_name, resolved_methods in method_map.items():
-            reparsed['full_names'] |= {full_name: {
-                'resolved_methods': list(set(resolved_methods))}
-            }
         new_method_map: Dict = {'full_names': {}}
         for full_name, resolved_methods in method_map.items():
             if new_resolved := self.process_resolved_methods(resolved_methods):
@@ -339,8 +270,9 @@ class OpenAPI:
         """
         resolved_map = {}
         for method in resolved_methods:
-            if endpoint := self.extract_endpoints(method):
-                resolved_map[method] = {'endpoints': endpoint}
+            if endpoints := self.extract_endpoints(method):
+                eps = [self.parse_path_regexes(ep) for ep in endpoints]
+                resolved_map[method] = {'endpoints': eps}
         return resolved_map
 
     def _process_methods_helper(self, pattern: str) -> Dict[str, Any]:
@@ -385,8 +317,7 @@ class OpenAPI:
                 for m in value['resolved_methods'].items():
                     new_path_item = self.create_paths_item(key, m)
                     if paths_object:
-                        paths_object = self.merge_path_objects(
-                            paths_object, new_path_item)
+                        paths_object = self.merge_path_objects(paths_object, new_path_item)
                     else:
                         paths_object = new_path_item
 
@@ -419,7 +350,6 @@ class OpenAPI:
             paths_dict (dict): The object containing endpoints and calls
         Returns:
             dict: The paths item object
-
         """
         endpoints = paths_dict[1].get('endpoints')
         calls = paths_dict[1].get('calls')
@@ -427,34 +357,50 @@ class OpenAPI:
         paths_object: Dict = {}
 
         for ep in endpoints:
-            paths_item_object: Dict = {}
-            if ':' in ep or '{' in ep or '<' in ep:
-                match self.origin_type:
-                    case 'js' | 'ts' | 'javascript' | 'typescript':
-                        [ep, tmp_paths_item_object] = self._js_helper(ep)
-                    case 'py' | 'python':
-                        [ep, tmp_paths_item_object] = self.regex.py_helper(ep)
-                    case _:
-                        tmp_paths_item_object = self.generic_params_helper(ep)
-                if tmp_paths_item_object:
-                    paths_item_object['parameters'] = tmp_paths_item_object
-            if calls:
-                for call in calls:
-                    paths_item_object |= self.calls_to_params(ep, call)
+            ep, paths_item_object = self._paths_object_helper(
+                calls,
+                ep,
+                filename,
+                line_numbers,
+                )
+            if paths_object.get(ep):
+                paths_object[ep] |= paths_item_object
             else:
-                paths_item_object |= self.calls_to_params(ep, None)
-            if line_numbers and (line_nos := self._create_ln_entries(
-                    filename, list(set(line_numbers)))):
-                paths_item_object |= line_nos
-            if paths_item_object:
-                if paths_object.get(ep):
-                    paths_object[ep] |= paths_item_object
-                else:
-                    paths_object |= {ep: paths_item_object}
-            else:
-                paths_object[ep] = {}
+                paths_object |= {ep: paths_item_object}
 
         return self._remove_nested_parameters(paths_object)
+
+    def _paths_object_helper(
+            self, calls: List, ep: str, filename: str, line_numbers: List) -> Tuple[str, Dict]:
+        """
+        Creates a paths item object.
+        """
+        paths_item_object: Dict = {}
+        tmp_params: List = []
+        py_special_case = False
+        if ':' in ep:
+            ep, py_special_case, tmp_params = self._extract_params(ep)
+        if '{' in ep and not py_special_case:
+            tmp_params = self.generic_params_helper(ep)
+        if tmp_params:
+            paths_item_object['parameters'] = tmp_params
+        if calls:
+            for call in calls:
+                paths_item_object |= self.calls_to_params(ep, call)
+        if line_numbers and (line_nos := self._create_ln_entries(
+                filename, list(set(line_numbers)))):
+            paths_item_object |= line_nos
+        return ep, paths_item_object
+
+    def _extract_params(self, ep: str) -> Tuple[str, bool, List]:
+        tmp_params: List = []
+        py_special_case = False
+        if self.origin_type in ('js', 'ts', 'javascript', 'typescript'):
+            ep = js_helper(ep)
+        elif self.origin_type in ('py', 'python'):
+            ep, tmp_params = py_helper(ep)
+            py_special_case = True
+        return ep, py_special_case, tmp_params
 
     @staticmethod
     def _create_ln_entries(filename, line_numbers):
@@ -525,14 +471,14 @@ class OpenAPI:
         call_name = call.get('callName', '')
         params = []
         if call_name in ops:
-            params = self.create_param_object(ep, call)
+            params = self._create_param_object(ep, call)
             result: Dict[str, Dict] = {call_name: {'responses': {}}}
             if params:
                 result[call_name] |= {'parameters': params}
             return result
         return self.determine_operations(call, params)
 
-    def create_param_object(self, ep: str, call: Dict | None) -> List[Dict]:
+    def _create_param_object(self, ep: str, call: Dict | None) -> List[Dict]:
         """
         Create a parameter object for each parameter in the input list.
 
@@ -553,26 +499,6 @@ class OpenAPI:
                 params = [{'name': param, 'in': 'header'} for param in ptypes]
         return params
 
-    def collect_methods(self) -> List:
-        """
-        Collects and combines methods that may be endpoints based on the object
-        slices and user-defined types (UDTs) from the content.
-
-        Returns:
-            list: A list of unique methods.
-        """
-        # Surely there is a way to combine these...
-        target_obj_pattern = jmespath.compile('objectSlices[].usages[].targetObj.resolvedMethod')
-        defined_by_pattern = jmespath.compile('objectSlices[].usages[].definedBy.resolvedMethod')
-        invoked_calls_pattern = jmespath.compile('objectSlices[].usages[].invokedCalls[].resolved'
-                                                 'Method')
-        udt_jmespath_query = jmespath.compile('userDefinedTypes[].fields[].name')
-        methods = target_obj_pattern.search(self.usages.content) or []
-        methods.extend(defined_by_pattern.search(self.usages.content) or [])
-        methods.extend(invoked_calls_pattern.search(self.usages.content) or [])
-        methods.extend(udt_jmespath_query.search(self.usages.content) or [])
-        return list(set(methods))
-
     def extract_endpoints(self, method: str) -> List[str]:
         """
         Extracts endpoints from the given code based on the specified language.
@@ -587,7 +513,7 @@ class OpenAPI:
         endpoints: List[str] = []
         if not method:
             return endpoints
-        if not (matches := re.findall(self.regex.endpoints, method)):
+        if not (matches := re.findall(regex.endpoints, method)):
             return endpoints
         matches = self._filter_matches(matches, method)
         return [v for v in matches if v]
@@ -623,3 +549,78 @@ class OpenAPI:
                 filtered_matches.append(f'/{nm}')
 
         return filtered_matches
+
+    def check_path_elements_regex(self, ele: str) -> Tuple[str, List]:
+        """Try to interpret regexes in the path"""
+        if '<' in ele:
+            matches = regex.named_param_generic_extract.findall(ele)
+            named = True
+        else:
+            matches = regex.unnamed_param_generic_extract.findall(ele)
+            named = False
+
+        if matches:
+            ele, params = self.process_regex_matches(ele, named, matches)
+        else:
+            self.regex_param_count += 1
+            ele_name = f'regex_param_{self.regex_param_count}'
+            params = [{
+                          'in': 'path',
+                          'name': ele_name,
+                          'required': True,
+                          'schema': {'type': 'string', 'pattern': ele}
+                      }]
+
+        return ele, params
+
+    def parse_path_regexes(self, endpoint: str) -> str:
+        """
+        Parses path regexes in the endpoint, extracts params for later use.
+        """
+        endpoint_elements = regex.split_pattern.split(
+            endpoint.lstrip('/').rstrip('$').rstrip('/'))
+        endpoint_elements = [i.lstrip('/').lstrip('^').rstrip('/').rstrip('$') for i in
+                             endpoint_elements]
+        params = []
+        new_endpoint = ''
+        for i in endpoint_elements:
+            if regex.detect_regex.search(i):
+                e, b = self.check_path_elements_regex(i)
+                new_endpoint += f'/{e}'
+                params.extend(b)
+            else:
+                new_endpoint += f'/{i}'
+        if params:
+            self.params[new_endpoint] = params
+        return new_endpoint
+
+    def process_regex_matches(
+            self,
+            element: str,
+            param_named: bool,
+            matches: List[Tuple[str, str]]
+    ) -> Tuple[str, List[Dict[str, Any]]]:
+        """
+        Processes regex matches and generates parameters for a path element.
+
+        Args:
+            - element (str): The original path element.
+            - param_named (bool): Indicates whether the path element contains named parameters.
+            - matches (List[str]): The regex matches found in the path element.
+
+        Returns:
+            - Tuple[str, List[Dict[str, Any]]]: A tuple containing the processed path element and a
+                                                list of parameter dictionaries.
+        """
+        orig_element = element
+        if param_named:
+            element = re.sub(regex.named_param_generic_extract, path_param_repl, element)
+
+        params = []
+        for m in matches:
+            element, p, self.regex_param_count = regex_match_helper(
+                element, m, orig_element, param_named, self.regex_param_count)
+
+            params.append(p)
+
+        return element, params
