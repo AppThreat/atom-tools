@@ -21,20 +21,15 @@ class RegexCollection:
     processed_param = re.compile(r'{(?P<pname>[^\s}]+)}')
     # This regex is used to extract named python parameters that include a type
     py_param = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
-    # This regex is used to extract named python parameters that do not include a type
-    py_path_regex = re.compile(r'(?<=\?P<)(?P<field>\w+)(?=>)')
     # This regex is used to detect when a path contains a regex set
     detect_regex = re.compile(
-        r'[\|$\^]|\\[sbigmd]|\\[dhsvwpbagz\dnfrtu]|\?P?[<:!]|\{\d|\[\S+\]|\Wr\"')
-    l_trim_pattern = re.compile(r'/?\(\?P?:<?')
-    # Splits paths into sections for processing - ignores forward slashes contained in a regex set
-    split_pattern = re.compile(r'/(?=[^]][^]][^]])')
+        r'[|$^]|\\[sbigmd]|\\[dhsvwpbagz\dnfrtu]|\?P?[<:!]|\{\d|\[\S+]|\Wr\"')
+    # This regex is used to extract regexes so we can escape forward slashes not part of the path.
+    extract_parentheses = re.compile(r'(?P<paren>[(\[][^\s)]+[)\]])')
     # This regex is used to extract named parameters regardless of language
-    named_param_generic_extract = re.compile(r'(?:\(\?P?:?<?)(?P<pname>[^\[]+)>([^\)]+\))')
-    # unnamed_param_generic_extract = re.compile(r'(?<=\?:)(?P<pattern>[^\s/\)]+)\)')
-    unnamed_param_generic_extract = re.compile(r'(?P<pattern>\(?\?:[^\s/\)]+[^\w\(/.]+)')
+    named_param_generic_extract = re.compile(r'\(\?P?:?<?(?P<pname>[^\[]+)>([^)]+\))')
     # This regex will extract regexes not in a group.
-    alternation_pattern = re.compile(r'(?<=\?:)(?P<pname>[^\s/\)]+)')
+    unnamed_param_generic_extract = re.compile(r'(?P<pattern>\(?\?[:!][^\s)]+[^\w(/.]+)')
 
 
 regex = RegexCollection()
@@ -120,7 +115,12 @@ def create_tmp_regex_name(element: str, m: Tuple | str, count: int) -> Tuple[str
     count += 1
     ele_name = f'regex_param_{count}'
     if isinstance(m, str):
-        element = '{' + element.replace(m, f'{ele_name}') + '}'
+        element = f'{"{" + ele_name + "}"}'
     if isinstance(m, tuple):
         element = '{' + element.replace(m[0], f'{ele_name}') + '}'
     return ele_name, element, count
+
+
+def fwd_slash_repl(match):
+    """For substituting forward slashes."""
+    return match['paren'].replace('/', '$L@$H')
