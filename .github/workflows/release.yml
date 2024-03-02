@@ -1,7 +1,9 @@
-name: Publish release
+name: Publish to PyPI
 
 on:
-  release:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 concurrency:
@@ -22,29 +24,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install setuptools wheel twine build
+          python3 -m pip install setuptools build
+      - name: Build
+        run: |
+          python3 -m build
       - name: Make sure version in atom_tools.__init__.py has been updated
+        if: startsWith(github.ref, 'refs/tags/')
         run: |
           version=$(python3 -c 'from atom_tools.__init__ import __version__; print(f"refs/tags/v{__version__}")')
           if $version != "${{ github.ref }}"; then
             echo "Version in atom_tools.__init__.py has not been updated. $version != ${{ github.ref }}"
             exit 1
           fi
-      - name: Create Release
-        id: create_release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
-        run: |
-          python3 -m build
       - name: Publish package distributions to PyPI
         if: startsWith(github.ref, 'refs/tags/')
         uses: pypa/gh-action-pypi-publish@release/v1

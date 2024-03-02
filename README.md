@@ -28,7 +28,7 @@ available commands.
 Individual command options can be accessed with `atom help ` and the command 
 name (e.g. `atom help convert`).
 ```
-Atom Tools (version 0.1.0)
+Atom Tools (version 0.3.0)
 
 Usage:
   command [options] [arguments]
