@@ -3,7 +3,7 @@ name: OS matrix CI
 on:
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - '**/README.md'
       - 'pre-commit.yml'
@@ -37,6 +37,8 @@ jobs:
         if [ "$init_version" != "$toml_version" ]; then
           echo "Version in atom_tools.__init__.py does not match pyproject.toml."
           exit 1
+        else
+          echo "Version in atom_tools.__init__.py matches pyproject.toml."
         fi
     - name: Install dependencies
       run: |
