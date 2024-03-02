@@ -3,7 +3,7 @@ name: OS matrix CI
 on:
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - '**/README.md'
       - 'pre-commit.yml'
