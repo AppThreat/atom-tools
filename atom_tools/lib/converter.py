@@ -144,14 +144,14 @@ class OpenAPI:
         Create a dictionary of full names and their corresponding methods.
         """
         method_map = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*.resolvedMethod[]}')
+            'objectSlices[].{full_name: fullName, resolved_methods: usages[].*.resolvedMethod[]}')
 
         calls = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*[][?resolvedMethod].'
-            'resolvedMethod[]}')
+            'objectSlices[].{full_name: fullName, resolved_methods: usages[].*[?resolvedMethod][]'
+            '[].resolvedMethod[]}')
 
         user_defined_types = self._process_methods_helper(
-            'userDefinedTypes[].{fullName: name, resolvedMethods: fields[].name}')
+            'userDefinedTypes[].{full_name: name, resolved_methods: fields[].name}')
 
         for key, value in calls.items():
             if method_map.get(key):
@@ -199,7 +199,7 @@ class OpenAPI:
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        pattern = f'objectSlices[?fullName==`{json.dumps(full_name)}`].usages[].*[][]'
+        pattern = f'objectSlices[?fullName==`{json.dumps(full_name)}`].usages[].*[?callName][][]'
         compiled_pattern = jmespath.compile(pattern)
         return compiled_pattern.search(self.usages.content)
 
@@ -297,13 +297,13 @@ class OpenAPI:
         dict_resolved_pattern = jmespath.compile(pattern)
         result = [
             i for i in dict_resolved_pattern.search(self.usages.content)
-            if i.get('resolvedMethods')
+            if i.get('resolved_methods')
         ]
 
         resolved: Dict = {}
         for r in result:
-            full_name = r['fullName']
-            methods = r['resolvedMethods']
+            full_name = r['full_name']
+            methods = r['resolved_methods']
             resolved.setdefault(full_name, {'resolved_methods': []})[
                 'resolved_methods'].extend(methods)
 
