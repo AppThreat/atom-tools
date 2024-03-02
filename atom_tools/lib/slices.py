@@ -4,7 +4,6 @@ Classes and functions for working with slices.
 
 import json
 import logging
-import re
 
 logger = logging.getLogger(__name__)
 
@@ -18,14 +17,16 @@ class AtomSlice:
 
     Attributes:
         content (dict): The dictionary loaded from the usages JSON file.
+        slice_type (str): The type of slice.
+        origin_type (str): The originating language.
 
     Methods:
         import_slice: Imports a slice from a JSON file.
     """
 
-    def __init__(self, filename: str) -> None:
-        self.content = self.import_slice(filename)
-        self.endpoints_regex = re.compile(r'[\'"](\S*?)[\'"]', re.IGNORECASE)
+    def __init__(self, filename: str, origin_type: str) -> None:
+        self.content, self.slice_type = self.import_slice(filename)
+        self.origin_type = origin_type
 
     @staticmethod
     def import_slice(filename):
@@ -47,20 +48,21 @@ class AtomSlice:
             If the JSON file is not a valid usage slice, a warning is logged.
         """
         if not filename:
+            logger.warning('No filename specified.')
             return {}
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)
             if content.get('objectSlices'):
-                return content
+                return content, 'usages'
+            if content.get('reachables'):
+                return content, 'reachables'
         except (json.decoder.JSONDecodeError, UnicodeDecodeError):
             logger.warning(
-                f'Failed to load usages slice: {filename}\nPlease check '
-                f'that you specified a valid json file.')
+                f'Failed to load usages slice: {filename}\nPlease check that you specified a valid'
+                f' json file.'
+            )
         except FileNotFoundError:
-            logger.warning(
-                f'Failed to locate the usages slice file in the location '
-                f'specified: {filename}')
-
-        logger.warning('Failed to load usages slice.')
-        return {}
+            logger.warning(f'Failed to locate the following slice file: {filename}')
+        logger.warning('Slice type not recognized.')
+        return {}, 'unknown'

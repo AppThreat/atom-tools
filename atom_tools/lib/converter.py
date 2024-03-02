@@ -28,7 +28,6 @@ class OpenAPI:
 
     Attributes:
         usages (AtomSlice): The usage slice.
-        origin_type (str): The origin type.
         openapi_version (str): The OpenAPI version.
         title (str): The title for the OpenAPI document
         file_endpoint_map (dict): Stores the originating filename for endpoints
@@ -64,8 +63,7 @@ class OpenAPI:
         origin_type: str,
         usages: str,
     ) -> None:
-        self.usages: AtomSlice = AtomSlice(usages)
-        self.origin_type = origin_type
+        self.usages: AtomSlice = AtomSlice(usages, origin_type)
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
         self.file_endpoint_map: Dict = {}
@@ -144,14 +142,14 @@ class OpenAPI:
         Create a dictionary of full names and their corresponding methods.
         """
         method_map = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*.resolvedMethod[]}')
+            'objectSlices[].{full_name: fullName, resolved_methods: usages[].*.resolvedMethod[]}')
 
         calls = self._process_methods_helper(
-            'objectSlices[].{fullName: fullName, resolvedMethods: usages[].*[][?resolvedMethod].'
-            'resolvedMethod[]}')
+            'objectSlices[].{full_name: fullName, resolved_methods: usages[].*[?resolvedMethod][]'
+            '[].resolvedMethod[]}')
 
         user_defined_types = self._process_methods_helper(
-            'userDefinedTypes[].{fullName: name, resolvedMethods: fields[].name}')
+            'userDefinedTypes[].{full_name: name, resolved_methods: fields[].name}')
 
         for key, value in calls.items():
             if method_map.get(key):
@@ -199,7 +197,7 @@ class OpenAPI:
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        pattern = f'objectSlices[?fullName==`{json.dumps(full_name)}`].usages[].*[][]'
+        pattern = f'objectSlices[?fullName==`{json.dumps(full_name)}`].usages[].*[?callName][][]'
         compiled_pattern = jmespath.compile(pattern)
         return compiled_pattern.search(self.usages.content)
 
@@ -297,13 +295,13 @@ class OpenAPI:
         dict_resolved_pattern = jmespath.compile(pattern)
         result = [
             i for i in dict_resolved_pattern.search(self.usages.content)
-            if i.get('resolvedMethods')
+            if i.get('resolved_methods')
         ]
 
         resolved: Dict = {}
         for r in result:
-            full_name = r['fullName']
-            methods = r['resolvedMethods']
+            full_name = r['full_name']
+            methods = r['resolved_methods']
             resolved.setdefault(full_name, {'resolved_methods': []})[
                 'resolved_methods'].extend(methods)
 
@@ -406,9 +404,9 @@ class OpenAPI:
     def _extract_params(self, ep: str) -> Tuple[str, bool, List]:
         tmp_params: List = []
         py_special_case = False
-        if self.origin_type in ('js', 'ts', 'javascript', 'typescript'):
+        if self.usages.origin_type in ('js', 'ts', 'javascript', 'typescript'):
             ep = js_helper(ep)
-        elif self.origin_type in ('py', 'python'):
+        elif self.usages.origin_type in ('py', 'python'):
             ep, tmp_params = py_helper(ep)
             py_special_case = True
         return ep, py_special_case, tmp_params
@@ -473,6 +471,7 @@ class OpenAPI:
         Args:
             call (dict): The call object
             ep (str): The endpoint
+            orig_ep (str): The original endpoint
         Returns:
             dict: The operation object
         """
@@ -542,7 +541,7 @@ class OpenAPI:
         """
         filtered_matches: List[str] = []
 
-        match self.origin_type:
+        match self.usages.origin_type:
             case 'java' | 'jar':
                 if not (
                     code.startswith('@')
