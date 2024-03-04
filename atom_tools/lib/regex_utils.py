@@ -6,13 +6,13 @@ import re
 from dataclasses import dataclass
 from typing import Tuple, List, Dict, Any
 
-logger = logging.getLogger(__name__)
+logger: logging.Logger = logging.getLogger(__name__)
 
 PY_TYPE_MAPPING = {'int': 'integer', 'string': 'string', 'float': 'number', 'path': 'string'}
 
 
 @dataclass
-class RegexCollection:
+class OpenAPIRegexCollection:
     """
     Collection of regular expressions needed for conversions.
     """
@@ -22,8 +22,7 @@ class RegexCollection:
     # This regex is used to extract named python parameters that include a type
     py_param = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
     # This regex is used to detect when a path contains a regex set
-    detect_regex = re.compile(
-        r'[|$^]|\\[sbigmd]|\\[dhsvwpbagz\dnfrtu]|\?P?[<:!]|\{\d|\[\S+]|\Wr\"')
+    detect_regex = re.compile(r'[|$^]|\\[sbigmd]|\\[dhsvwpbagznfrtu\d]|\?P?[<:!]|\{\d|\[\S+]|\Wr\"')
     # This regex is used to extract regexes so we can escape forward slashes not part of the path.
     extract_parentheses = re.compile(r'(?P<paren>[(\[][^\s)]+[)\]])')
     # This regex is used to extract named parameters regardless of language
@@ -32,10 +31,32 @@ class RegexCollection:
     unnamed_param_generic_extract = re.compile(r'(?P<pattern>\(?\?[:!][^\s)]+[^\w(/.]+)')
 
 
-regex = RegexCollection()
+@dataclass(init=True)
+class ValidationRegexCollection:  # pylint: disable=too-many-instance-attributes
+    """
+    A collection of regular expressions used for validation.
+
+    Attributes:
+        java_lib_type (Pattern): Pattern for matching Java library types.
+        java_udt_regex (Pattern): Pattern for matching Java user-defined types.
+        tests_regex (Pattern): Pattern for matching test-related strings.
+        single_char_var (Pattern): Pattern for matching single-character variables.
+        js_import (Pattern): Pattern for matching JavaScript import statements.
+        js_require_extract (Pattern): Pattern for extracting JavaScript require statements.
+        py_func_name (Pattern): Pattern for extracting Python function names.
+        py_mod_members (Pattern): Pattern for matching Python module members.
+    """
+    java_lib_type = re.compile(r'java.[^.\s]+.(?P<type>\w+)')
+    java_udt_regex = re.compile(r'(?:(void\()?com|org)[a-z0-9.]+(?P<udt>([A-Z]\w+)*)(?=\(?\))')
+    tests_regex = re.compile(r'test.|tests.|/test/|/tests/')
+    single_char_var = re.compile(r'(?<=[(\s])[a-z](?=[\s),.\[])')
+    js_import = re.compile(r'import \{ (?P<lib>[\w,\s]+) } from (?P<mod>\S+)')
+    js_require_extract = re.compile(r'require\((?P<lib>\S+)\).(?P<mod>\S+)')
+    py_func_name = re.compile(r'(?<=\().+?(?=\))')
+    py_mod_members = re.compile(r'(?<=:<module>.)(?P<class>[A-Z][^<.]+)?\.?(?P<func>[^<.]+)?')
 
 
-def py_helper(endpoint: str) -> Tuple[str, List[Dict]]:
+def py_helper(endpoint: str, regex: OpenAPIRegexCollection) -> Tuple[str, List[Dict]]:
     """
     Handles Python path parameters.
     Args:
@@ -121,6 +142,69 @@ def create_tmp_regex_name(element: str, m: Tuple | str, count: int) -> Tuple[str
     return ele_name, element, count
 
 
-def fwd_slash_repl(match):
+def fwd_slash_repl(match: re.Match) -> str:
     """For substituting forward slashes."""
     return match['paren'].replace('/', '$L@$H')
+
+
+operator_map: Dict[str, List[str]] = {
+    '<operator>.addition': ['+'],
+    '<operator>.minus': ['-'],
+    '<operator>.multiplication': ['*'],
+    '<operator>.division': ['/'],
+    '<operator>.lessThan': ['<'],
+    '<operator>.notEquals': ['!='],
+    '<operator>.indexAccess': [':'],
+    '<operator>.logicalNot': ['!', ' not '],
+    '<operator>.logicalOr': ['||', ' or '],
+    '<operator>.throw': ['throw'],
+    '<operator>.plus': ['+'],
+    '<operator>.formatString': ['`$', 'f"', "f'"],
+    '<operator>.conditional': ['?', 'if ', 'elif ', ' else '],
+    '<operator>.new': ['new ', '<init>'],
+    '<operator>.assignmentDivision': ['/='],
+    '<operator>.in': [' in '],
+    '<operator>.listLiteral': ['= []', '= ['],
+    '<operator>.starredUnpack': ['*'],
+    '<operator>.greaterThan': ['>'],
+    '<operator>.logicalAnd': ['&&', ' and '],
+    '<operator>.postIncrement': ['++'],
+    '<operator>.fieldAccess': [':'],
+    '<operator>.assignmentMinus': ['-='],
+    '<operator>.assignmentMultiplication': ['*='],
+    '<operator>.modulo': ['%'],
+    '<operator>.iterator': ['for'],
+    '<operator>.assignmentPlus': ['+='],
+    '<operator>.instanceOf': ['instanceof'],
+    '<operator>.subtraction': ['-'],
+    '<operator>.equals': ['='],
+}
+ecma_map: Dict[str, List[str]] = {
+    '__ecma.Array.factory': ['[]'],
+    '__ecma.Set:<operator>.new': ['new Set('],
+    '__ecma.String[]:sort': ['.sort'],
+    '__ecma.Array.factory:splice': ['.splice'],
+    '__ecma.Array.factory:push': ['.push'],
+    '__ecma.Number:toString': ['.toString'],
+    '__ecma.Math:floor': ['.floor'],
+    '__ecma.String:toLowerCase': ['.toLowerCase'],
+}
+init_map: List[str] = ['new ', 'super ', 'private ', 'public ', 'constructor ']
+py_builtins: Dict[str, str] = {
+    '__builtin.str.split': '.split(',
+    '__builtin.str.join': '.join(',
+    '__builtin.getattr': 'getattr(',
+    '__builtin.open': 'with open(',
+    '__builtin.print': 'print(',
+    '__builtin.str.format': '.format(',
+    '__builtin.list': '= [',
+    '__builtin.str.replace': '.replace(',
+    '__builtin.set<meta>': 'set(',
+    '__builtin.len': 'len(',
+    '__builtin.list.append': '.append(',
+    '__builtin.str.startswith': '.startswith(',
+    '__builtin.list<meta>': 'list(',
+    '__builtin.set.add': '.add(',
+    '__builtin.str.lstrip': '.lstrip(',
+    '__builtin.list.extend': '.extend(',
+}
