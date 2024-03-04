@@ -3,6 +3,7 @@ Convert Command for the atom-tools CLI.
 """
 import json
 import logging
+import sys
 
 from cleo.commands.command import Command
 from cleo.helpers import option
@@ -26,7 +27,7 @@ class ConvertCommand(Command):
     """
 
     name = 'convert'
-    description = 'Convert an atom slice to a different format'
+    description = 'Convert an atom slice to a different format.'
     options = [
         option(
             'format',
@@ -69,7 +70,6 @@ class ConvertCommand(Command):
             's',
             'The server url to be included in the server object.',
             flag=False,
-            default='',
         )
     ]
     help = """The convert command converts an atom slice to a different format.
@@ -92,12 +92,10 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                 )
 
                 if not (result := converter.endpoints_to_openapi(self.option('server'))):
-                    logging.error('No results produced!')
-                    return 1
+                    logging.warning('No results produced!')
+                    sys.exit(1)
                 with open(self.option('output-file'), 'w', encoding='utf-8') as f:
                     json.dump(result, f, indent=4, sort_keys=True)
                 logging.info(f'OpenAPI document written to {self.option("output-file")}.')
             case _:
-                raise ValueError(
-                    f'Unknown destination format: {self.option("format")}'
-                )
+                raise ValueError(f'Unknown destination format: {self.option("format")}')

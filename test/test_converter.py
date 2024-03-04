@@ -20,7 +20,7 @@ def java_usages_2():
 @pytest.fixture
 def js_usages_1():
     return OpenAPI('openapi3.0.1', 'javascript',
-                   'test/data/js-juiceshop-usages.json')
+                   'test/data/js-juiceshop-usages-2.json')
 
 
 @pytest.fixture

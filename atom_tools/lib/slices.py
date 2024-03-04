@@ -4,6 +4,8 @@ Classes and functions for working with slices.
 
 import json
 import logging
+from pathlib import Path
+from typing import Tuple, Dict
 
 logger = logging.getLogger(__name__)
 
@@ -24,12 +26,12 @@ class AtomSlice:
         import_slice: Imports a slice from a JSON file.
     """
 
-    def __init__(self, filename: str, origin_type: str) -> None:
+    def __init__(self, filename: str | Path, origin_type: str) -> None:
         self.content, self.slice_type = self.import_slice(filename)
         self.origin_type = origin_type
 
     @staticmethod
-    def import_slice(filename):
+    def import_slice(filename: str | Path) -> Tuple[Dict, str]:
         """
         Import a slice from a JSON file.
 
@@ -37,7 +39,7 @@ class AtomSlice:
             filename (str): The path to the JSON file.
 
         Returns:
-            dict: The contents of the JSON file.
+            tuple[dict, str]: The contents of the JSON file and the type of slice
 
         Raises:
             JSONDecodeError: If the JSON file cannot be decoded.
@@ -45,11 +47,11 @@ class AtomSlice:
             FileNotFoundError: If the specified file cannot be found.
 
         Warnings:
-            If the JSON file is not a valid usage slice, a warning is logged.
+            If the JSON file is not a valid slice, a warning is logged.
         """
         if not filename:
             logger.warning('No filename specified.')
-            return {}
+            return {}, 'unknown'
         try:
             with open(filename, 'r', encoding='utf-8') as f:
                 content = json.load(f)

@@ -10,11 +10,17 @@ from typing import Any, Dict, List, Tuple
 import jmespath
 
 from atom_tools.lib.regex_utils import (
-    regex, py_helper, path_param_repl, regex_match_helper, js_helper, fwd_slash_repl
+    py_helper,
+    path_param_repl,
+    regex_match_helper,
+    js_helper,
+    fwd_slash_repl,
+    OpenAPIRegexCollection
 )
 from atom_tools.lib.slices import AtomSlice
 
 logger = logging.getLogger(__name__)
+regex = OpenAPIRegexCollection()
 
 
 class OpenAPI:
@@ -249,8 +255,7 @@ class OpenAPI:
         Convert a method map to a map of endpoints.
 
         Args:
-            method_map (dict): A dictionary mapping method names to resolved
-            methods.
+            method_map (dict): A dictionary mapping method names to resolved methods.
 
         Returns:
             dict: A new method map containing endpoints.
@@ -370,7 +375,7 @@ class OpenAPI:
                 ep,
                 filename,
                 line_numbers,
-                )
+            )
             if paths_object.get(ep):
                 paths_object[ep] |= paths_item_object
             else:
@@ -407,7 +412,7 @@ class OpenAPI:
         if self.usages.origin_type in ('js', 'ts', 'javascript', 'typescript'):
             ep = js_helper(ep)
         elif self.usages.origin_type in ('py', 'python'):
-            ep, tmp_params = py_helper(ep)
+            ep, tmp_params = py_helper(ep, regex)
             py_special_case = True
         return ep, py_special_case, tmp_params
 
@@ -544,9 +549,7 @@ class OpenAPI:
         match self.usages.origin_type:
             case 'java' | 'jar':
                 if not (
-                    code.startswith('@')
-                    and ('Mapping' in code or 'Path' in code)
-                    and '(' in code
+                    code.startswith('@') and ('Mapping' in code or 'Path' in code) and '(' in code
                 ):
                     return filtered_matches
             case 'js' | 'ts' | 'javascript' | 'typescript':
@@ -575,10 +578,10 @@ class OpenAPI:
             self.regex_param_count += 1
             ele_name = f'regex_param_{self.regex_param_count}'
             params = [{
-                          'in': 'path',
-                          'name': ele_name,
-                          'required': True,
-                          'schema': {'type': 'string', 'pattern': ele}
+                      'in': 'path',
+                      'name': ele_name,
+                      'required': True,
+                      'schema': {'type': 'string', 'pattern': ele}
                       }]
 
         return ele, params

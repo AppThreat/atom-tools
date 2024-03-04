@@ -1,4 +1,4 @@
 [flake8]
-max-line-length = 99
+ignore=E501
 max-complexity = 18
 exclude = ["atom_tools/cli/"]

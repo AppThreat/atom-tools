@@ -13,9 +13,7 @@ class CommandLoader(FactoryCommandLoader):
     Command Loader for the atom-tools CLI.
     """
 
-    def register_factory(
-        self, command_name: str, factory: Callable[[], Command]
-    ) -> None:
+    def register_factory(self, command_name: str, factory: Callable[[], Command]) -> None:
         """
         Register a command factory.
 
@@ -30,8 +28,6 @@ class CommandLoader(FactoryCommandLoader):
             None
         """
         if command_name in self._factories:
-            raise CleoLogicError(
-                f'The command "{command_name}" already exists.'
-            )
+            raise CleoLogicError(f'The command "{command_name}" already exists.')
 
         self._factories[command_name] = factory
