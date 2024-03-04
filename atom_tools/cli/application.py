@@ -30,9 +30,9 @@ def load_command(name: str) -> Callable[[], Command]:
 
     def _load() -> Command:
         words = name.split(' ')
-        module = import_module('atom_tools.cli.commands.' + '.'.join(words))
+        module = import_module('atom_tools.cli.commands.' + '.'.join(words).replace('-', '_'))
         command_class = getattr(
-            module, ''.join(c.title() for c in words) + 'Command'
+            module, ''.join(c.title() for c in words).replace('-', '') + 'Command'
         )
         command: Command = command_class()
         return command
@@ -42,6 +42,7 @@ def load_command(name: str) -> Callable[[], Command]:
 
 COMMANDS = [
     'convert',
+    'validate-lines',
 ]
 
 
