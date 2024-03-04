@@ -13,14 +13,12 @@ def java_usages_1():
 
 @pytest.fixture
 def java_usages_2():
-    return OpenAPI('openapi3.0.1', 'java',
-                   'test/data/java-sec-code-usages.json')
+    return OpenAPI('openapi3.0.1', 'java', 'test/data/java-sec-code-usages.json')
 
 
 @pytest.fixture
 def js_usages_1():
-    return OpenAPI('openapi3.0.1', 'javascript',
-                   'test/data/js-juiceshop-usages-2.json')
+    return OpenAPI('openapi3.0.1', 'javascript', 'test/data/js-juiceshop-usages.json')
 
 
 @pytest.fixture
