@@ -6,9 +6,9 @@ import os
 import pathlib
 import sys
 
-from cleo.commands.command import Command
 from cleo.helpers import option
 
+from atom_tools.cli.commands.command import Command
 from atom_tools.lib.validator import LineValidator
 
 

@@ -1,20 +1,26 @@
 """
 Base console application.
 """
-
+import logging
 from importlib import import_module
 from typing import Callable
 
 from cleo.application import Application as BaseApplication
-from cleo.commands.command import Command
+from cleo.events.console_command_event import ConsoleCommandEvent
+from cleo.events.console_events import COMMAND
+from cleo.events.event import Event
+from cleo.events.event_dispatcher import EventDispatcher
+from cleo.io.io import IO
 
 from atom_tools import __version__
 from atom_tools.cli.command_loader import CommandLoader
+from atom_tools.cli.commands.command import Command
+from atom_tools.cli.logging_config import ATOM_TOOLS_FILTER, IOFormatter, IOHandler
 
 
 def load_command(name: str) -> Callable[[], Command]:
     """
-    Load a command dynamically based on the given name.
+    Loads a command dynamically based on the given name.
 
     This function dynamically imports the module and retrieves the command
     class based on the name. It returns a callable that can be used to
@@ -51,17 +57,51 @@ class Application(BaseApplication):
     Represents the main application.
 
     This class initializes the application with the appropriate command loader
-    and command names.
+    and command names. It also sets up logging.
 
     """
 
     def __init__(self) -> None:
         super().__init__('atom-tools', __version__)
-
-        command_loader = CommandLoader(
-            {name: load_command(name) for name in COMMANDS}
-        )
+        self._io: IO | None = None
+        dispatcher = EventDispatcher()
+        dispatcher.add_listener(COMMAND, self.register_command_loggers)
+        self.set_event_dispatcher(dispatcher)
+        self._io = self.create_io()
+        command_loader = CommandLoader({name: load_command(name) for name in COMMANDS})
         self.set_command_loader(command_loader)
+
+    @staticmethod
+    def register_command_loggers(event: Event, event_name: str, _: EventDispatcher) -> None:
+        assert isinstance(event, ConsoleCommandEvent)
+        command = event.command
+        if not isinstance(command, Command):
+            return
+
+        io = event.io
+
+        loggers = []
+        loggers += command.loggers
+
+        handler = IOHandler(io)
+        handler.setFormatter(IOFormatter())
+
+        level = logging.WARNING
+
+        if io.is_debug():
+            level = logging.DEBUG
+        elif io.is_very_verbose() or io.is_verbose():
+            level = logging.INFO
+
+        logging.basicConfig(level=level, handlers=[handler])
+
+        # only log third-party packages when very verbose
+        if not io.is_very_verbose():
+            handler.addFilter(ATOM_TOOLS_FILTER)
+
+        for name in loggers:
+            logger = logging.getLogger(name)
+            logger.setLevel(level)
 
 
 def main() -> int:
