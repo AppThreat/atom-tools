@@ -503,10 +503,10 @@ class OpenAPI:
 
         """
         params = self.generic_params_helper(ep, orig_ep) if '{' in ep else []
-        if not params and call:
-            ptypes = set(call.get('paramTypes', []))
-            # FIXME: This is not a correct assumption. Perhaps the parameter types could be passed as an `x-` attribute
-            # params = [{'name': param, 'in': 'header'} for param in ptypes if param not in ('ANY', 'LAMBDA') and not param.startswith("__ecma")]
+        # if not params and call:
+        #     ptypes = set(call.get('paramTypes', []))
+        #     # FIXME: This is not a correct assumption. Perhaps the parameter types could be passed as an `x-` attribute
+        #     params = [{'name': param, 'in': 'header'} for param in ptypes if param not in ('ANY', 'LAMBDA') and not param.startswith("__ecma")]
         return params
 
     def extract_endpoints(self, method: str) -> List[str]:
