@@ -131,9 +131,9 @@ class OpenAPI:
         if not file_names:
             return
         conditional = [f'fileName==`{json.dumps(i)}`' for i in file_names]
-        conditional = 'objectSlices[?' + ' || '.join(conditional) + (
-            '].{file_name: fileName, methods: usages[?targetObj.resolvedMethod].targetObj[].{'
-            'resolved_method: resolvedMethod, line_number: lineNumber}}')
+        conditional = '*[?' + ' || '.join(conditional) + (
+            '][].{file_name: fileName, methods: usages[].targetObj[].{resolved_method: '
+            'resolvedMethod || callName || code || name, line_number: lineNumber}}')
         pattern = jmespath.compile(conditional)
         result = pattern.search(self.usages.content)
         result = {i['file_name']: i['methods'] for i in result if i['methods']}
