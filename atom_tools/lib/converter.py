@@ -21,6 +21,8 @@ from atom_tools.lib.slices import AtomSlice
 
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
+exclusions = ['/content-type', '/application/javascript', '/application/json', '/application/text',
+              '/application/xml', '/*', '/*/*', '/allow']
 
 
 class OpenAPI:
@@ -75,6 +77,7 @@ class OpenAPI:
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
         self.regex_param_count = 0
+        self.target_line_nums = {}
 
     def endpoints_to_openapi(self, server: str = '') -> Any:
         """
@@ -95,19 +98,19 @@ class OpenAPI:
         """
         Creates a dictionary of endpoints and methods.
         """
-        full_names = list(method_map.get('full_names').keys())
-        file_endpoint_map = {i: [] for i in full_names}
-        for full_name in full_names:
-            for values in method_map['full_names'][full_name]['resolved_methods'].values():
+        file_names = list(method_map.get('file_names').keys())
+        file_endpoint_map = {i: [] for i in file_names}
+        for full_name in file_names:
+            for values in method_map['file_names'][full_name]['resolved_methods'].values():
                 file_endpoint_map[full_name].extend(values.get('endpoints'))
         for k, v in file_endpoint_map.items():
-            filename = k.split(':')[0]
+            # filename = k.split(':')[0]
             endpoints = set(v)
             for i in endpoints:
                 if self.file_endpoint_map.get(i):
-                    self.file_endpoint_map[i].add(filename)
+                    self.file_endpoint_map[i].add(k)
                 else:
-                    self.file_endpoint_map[i] = {filename}
+                    self.file_endpoint_map[i] = {k}
         self.file_endpoint_map = {k: list(v) for k, v in self.file_endpoint_map.items()}
 
     def convert_usages(self) -> Dict[str, Any]:
@@ -117,8 +120,28 @@ class OpenAPI:
         methods = self.process_methods()
         methods = self.methods_to_endpoints(methods)
         self.create_file_to_method_dict(methods)
+        self._identify_target_line_nums(methods)
         methods = self.process_calls(methods)
         return self.populate_endpoints(methods)
+
+    def _identify_target_line_nums(self, methods):
+        file_names = list(methods['file_names'].keys())
+        if not file_names:
+            return
+        conditional = [f'fileName==`{json.dumps(i)}`' for i in file_names]
+        conditional = 'objectSlices[?' + ' || '.join(conditional) + (
+            '].{file_name: fileName, methods: usages[?targetObj.resolvedMethod].targetObj[].{'
+            'resolved_method: resolvedMethod, line_number: lineNumber}}')
+        pattern = jmespath.compile(conditional)
+        result = pattern.search(self.usages.content)
+        result = {i['file_name']: i['methods'] for i in result if i['methods']}
+        targets = {i: {} for i in result}
+
+        for k, v in result.items():
+            for i in v:
+                targets[k] |= {i['resolved_method']: i['line_number']}
+
+        self.target_line_nums = targets
 
     def generic_params_helper(self, endpoint: str, orig_endpoint: str) -> List[Dict[str, Any]]:
         """
@@ -145,17 +168,17 @@ class OpenAPI:
 
     def process_methods(self) -> Dict[str, List[str]]:
         """
-        Create a dictionary of full names and their corresponding methods.
+        Create a dictionary of file names and their corresponding methods.
         """
         method_map = self._process_methods_helper(
-            'objectSlices[].{full_name: fullName, resolved_methods: usages[].*.resolvedMethod[]}')
+            'objectSlices[].{file_name: fileName, resolved_methods: usages[].*.resolvedMethod[]}')
 
         calls = self._process_methods_helper(
-            'objectSlices[].{full_name: fullName, resolved_methods: usages[].*[?resolvedMethod][]'
+            'objectSlices[].{file_name: fileName, resolved_methods: usages[].*[?resolvedMethod][]'
             '[].resolvedMethod[]}')
 
         user_defined_types = self._process_methods_helper(
-            'userDefinedTypes[].{full_name: name, resolved_methods: fields[].name}')
+            'userDefinedTypes[].{file_name: name, resolved_methods: fields[].name}')
 
         for key, value in calls.items():
             if method_map.get(key):
@@ -174,18 +197,18 @@ class OpenAPI:
 
         return method_map
 
-    def query_calls(self, full_name: str, resolved_methods: List[str]) -> List:
+    def query_calls(self, file_name: str, resolved_methods: List[str]) -> List:
         """
         Query calls for the given function name and resolved methods.
 
         Args:
-            full_name (str): The name of the function to query calls for.
+            file_name (str): The name of the function to query calls for.
             resolved_methods (list[str]): List of resolved methods.
 
         Returns:
             list[dict]: List of invoked calls and argument to calls.
         """
-        result = self._query_calls_helper(full_name)
+        result = self._query_calls_helper(file_name)
         calls = []
         for call in result:
             m = call.get('resolvedMethod', '')
@@ -193,17 +216,17 @@ class OpenAPI:
                 calls.append(call)
         return calls
 
-    def _query_calls_helper(self, full_name: str) -> List[Dict]:
+    def _query_calls_helper(self, file_name: str) -> List[Dict]:
         """
         A function to help query calls.
 
         Args:
-            full_name (str): The name of the function to query calls for.
+            file_name (str): The name of the function to query calls for.
 
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        pattern = f'objectSlices[?fullName==`{json.dumps(full_name)}`].usages[].*[?callName][][]'
+        pattern = f'objectSlices[?fileName==`{json.dumps(file_name)}`].usages[].*[?callName][][]'
         compiled_pattern = jmespath.compile(pattern)
         return compiled_pattern.search(self.usages.content)
 
@@ -211,17 +234,17 @@ class OpenAPI:
         """
         Process calls and return a new method map.
         Args:
-            method_map (dict): A mapping of full names to resolved methods.
+            method_map (dict): A mapping of file names to resolved methods.
         Returns:
             dict: A new method map containing calls.
         """
-        for full_name, resolved_methods in method_map['full_names'].items():
-            if res := self.query_calls(full_name, resolved_methods['resolved_methods'].keys()):
+        for file_name, resolved_methods in method_map['file_names'].items():
+            if res := self.query_calls(file_name, resolved_methods['resolved_methods'].keys()):
                 mmap = self.filter_calls(res, resolved_methods)
             else:
                 mmap = self.filter_calls([], resolved_methods)
 
-            method_map['full_names'][full_name]['resolved_methods'] = mmap.get('resolved_methods')
+            method_map['file_names'][file_name]['resolved_methods'] = mmap.get('resolved_methods')
 
         return method_map
 
@@ -260,10 +283,10 @@ class OpenAPI:
         Returns:
             dict: A new method map containing endpoints.
         """
-        new_method_map: Dict = {'full_names': {}}
-        for full_name, resolved_methods in method_map.items():
+        new_method_map: Dict = {'file_names': {}}
+        for file_name, resolved_methods in method_map.items():
             if new_resolved := self.process_resolved_methods(resolved_methods):
-                new_method_map['full_names'][full_name] = {
+                new_method_map['file_names'][file_name] = {
                     'resolved_methods': new_resolved
                 }
 
@@ -298,16 +321,18 @@ class OpenAPI:
 
         """
         dict_resolved_pattern = jmespath.compile(pattern)
-        result = [
-            i for i in dict_resolved_pattern.search(self.usages.content)
-            if i.get('resolved_methods')
-        ]
+        result = []
+        if dict_resolved_pattern:
+            result = [
+                i for i in dict_resolved_pattern.search(self.usages.content)
+                if i.get('resolved_methods')
+            ]
 
         resolved: Dict = {}
         for r in result:
-            full_name = r['full_name']
+            file_name = r['file_name']
             methods = r['resolved_methods']
-            resolved.setdefault(full_name, {'resolved_methods': []})[
+            resolved.setdefault(file_name, {'resolved_methods': []})[
                 'resolved_methods'].extend(methods)
 
         return resolved
@@ -364,17 +389,21 @@ class OpenAPI:
         """
         endpoints = paths_dict[1].get('endpoints')
         calls = paths_dict[1].get('calls')
-        line_numbers = paths_dict[1].get('line_nos')
+        call_line_numbers = paths_dict[1].get('line_nos')
+        target_line_number = None
+        try:
+            target_line_number = self.target_line_nums[filename][paths_dict[0]]
+        except:
+            pass
         paths_object: Dict = {}
 
         for ep in set(endpoints):
-            if ep.startswith('/ftp(?!/quarantine)'):
-                print('found')
             ep, paths_item_object = self._paths_object_helper(
                 calls,
                 ep,
                 filename,
-                line_numbers,
+                call_line_numbers,
+                target_line_number
             )
             if paths_object.get(ep):
                 paths_object[ep] |= paths_item_object
@@ -384,7 +413,7 @@ class OpenAPI:
         return self._remove_nested_parameters(paths_object)
 
     def _paths_object_helper(
-            self, calls: List, ep: str, filename: str, line_numbers: List) -> Tuple[str, Dict]:
+            self, calls: List, ep: str, filename: str, call_line_numbers: List, line_number: int) -> Tuple[str, Dict]:
         """
         Creates a paths item object.
         """
@@ -401,9 +430,11 @@ class OpenAPI:
         if calls:
             for call in calls:
                 paths_item_object |= self.calls_to_params(ep, orig_ep, call)
-        if line_numbers and (line_nos := self._create_ln_entries(
-                filename, list(set(line_numbers)))):
+        if (call_line_numbers or line_number) and (line_nos := self._create_ln_entries(
+                filename, list(set(call_line_numbers)), line_number)):
             paths_item_object |= line_nos
+        # if line_number:
+        #     paths_item_object['x-atom-usages-target'] = {filename: line_number}
         return ep, paths_item_object
 
     def _extract_params(self, ep: str) -> Tuple[str, bool, List]:
@@ -417,19 +448,24 @@ class OpenAPI:
         return ep, py_special_case, tmp_params
 
     @staticmethod
-    def _create_ln_entries(filename, line_numbers):
+    def _create_ln_entries(filename, call_line_numbers, line_numbers):
         """
         Creates line number entries for a given filename and line numbers.
 
         Args:
             filename (str): The name of the file.
-            line_numbers (list): A list of line numbers.
+            call_line_numbers (list): A list of line numbers.
 
         Returns:
             dict: A dictionary containing line number entries.
         """
         fn = filename.split(':')[0]
-        return {'x-atom-usages': {fn: line_numbers}}
+        x_atom = {'x-atom-usages': {}}
+        if call_line_numbers:
+            x_atom['x-atom-usages']['call'] = {fn: call_line_numbers}
+        if line_numbers:
+            x_atom['x-atom-usages']['target'] = {fn: line_numbers}
+        return x_atom
 
     @staticmethod
     def _remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
@@ -525,13 +561,10 @@ class OpenAPI:
             list: A list of endpoints extracted from the code.
 
         """
-        endpoints: List[str] = []
-        if not method:
-            return endpoints
-        if not (matches := re.findall(regex.endpoints, method)):
-            return endpoints
+        if not method or not (matches := re.findall(regex.endpoints, method)):
+            return []
         matches = self._filter_matches(matches, method)
-        return [v for v in matches if v]
+        return [v for v in matches if v and v not in exclusions]
 
     def _filter_matches(self, matches: List[str], code: str) -> List[str]:
         """
