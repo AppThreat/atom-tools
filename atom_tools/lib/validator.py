@@ -558,7 +558,7 @@ class LineValidator:
         for fn, val in output.items():
             file_path = self.base_path / fn
 
-            if regex.tests_regex.search(fn.lower()):
+            if regex.tests_regex.search(fn):
                 logger.debug(f'Skipping test file: {file_path}',)
                 continue
 

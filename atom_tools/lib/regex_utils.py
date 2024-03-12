@@ -48,7 +48,7 @@ class ValidationRegexCollection:  # pylint: disable=too-many-instance-attributes
     """
     java_lib_type = re.compile(r'java.[^.\s]+.(?P<type>\w+)')
     java_udt_regex = re.compile(r'(?:(void\()?com|org)[a-z0-9.]+(?P<udt>([A-Z]\w+)*)(?=\(?\))')
-    tests_regex = re.compile(r'test.|tests.|/test/|/tests/')
+    tests_regex = re.compile(r'test.|tests.|/test/|/tests/', re.IGNORECASE)
     single_char_var = re.compile(r'(?<=[(\s])[a-z](?=[\s),.\[])')
     js_import = re.compile(r'import \{ (?P<lib>[\w,\s]+) } from (?P<mod>\S+)')
     js_require_extract = re.compile(r'require\((?P<lib>\S+)\).(?P<mod>\S+)')
