@@ -1,6 +1,7 @@
 """
 Classes and functions used to convert slices.
 """
+import contextlib
 import json.encoder
 import logging
 import re
@@ -391,10 +392,10 @@ class OpenAPI:
         calls = paths_dict[1].get('calls')
         call_line_numbers = paths_dict[1].get('line_nos')
         target_line_number = None
-        try:
-            target_line_number = self.target_line_nums[filename][paths_dict[0]]
-        except:
-            pass
+        if self.target_line_nums:
+            with contextlib.suppress(KeyError):
+                target_line_number = self.target_line_nums[filename][paths_dict[0]]
+
         paths_object: Dict = {}
 
         for ep in set(endpoints):
@@ -564,7 +565,7 @@ class OpenAPI:
         if not method or not (matches := re.findall(regex.endpoints, method)):
             return []
         matches = self._filter_matches(matches, method)
-        return [v for v in matches if v and v not in exclusions]
+        return [v for v in matches if v and v not in exclusions and not v.lower().startswith('/x-')]
 
     def _filter_matches(self, matches: List[str], code: str) -> List[str]:
         """

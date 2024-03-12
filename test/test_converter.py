@@ -59,7 +59,6 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
                                                    "app.delete('/api/Products/:id',security.denyAll())": {'endpoints': ['/api/Products/:id']},
                                                    "app.delete('/api/Quantitys/:id',security.denyAll())": {'endpoints': ['/api/Quantitys/:id']},
                                                    "app.delete('/api/Recycles/:id',security.denyAll())": {'endpoints': ['/api/Recycles/:id']},
-                                                   "app.disable('x-powered-by')": {'endpoints': ['/x-powered-by']},
                                                    "app.enable('trustproxy')": {'endpoints': ['/trustproxy']},
                                                    "app.get('/api/Addresss',security.appendUserId(),address.getAddress())": {'endpoints': ['/api/Addresss']},
                                                    "app.get('/api/Addresss/:id',security.appendUserId(),address.getAddressById())": {'endpoints': ['/api/Addresss/:id']},
@@ -205,8 +204,7 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
                                                    "app.use('/rest/basket/:id',security.isAuthorized())": {'endpoints': ['/rest/basket/:id']},
                                                    "app.use('/rest/basket/:id/order',security.isAuthorized())": {'endpoints': ['/rest/basket/:id/order']},
                                                    "app.use('/rest/user/authentication-details',security.isAuthorized())": {'endpoints': ['/rest/user/authentication-details']},
-                                                   "app.use('/rest/user/reset-password',newRateLimit({\rwindowMs:5*60*1000,\rmax:100,\rkeyGenerator({headers,ip}:{headers:any,ip:any}){returnheaders['X-Forwarded-For']||ip}//vuln-code-snippetvuln-lineresetPasswordMortyChallenge\r}))": {'endpoints': ['/rest/user/reset-password',
-                                                                                                                                                                                                                                                                                                          '/X-Forwarded-For']},
+                                                   "app.use('/rest/user/reset-password',newRateLimit({\rwindowMs:5*60*1000,\rmax:100,\rkeyGenerator({headers,ip}:{headers:any,ip:any}){returnheaders['X-Forwarded-For']||ip}//vuln-code-snippetvuln-lineresetPasswordMortyChallenge\r}))": {'endpoints': ['/rest/user/reset-password']},
                                                    "app.use('/solve/challenges/server-side',verify.serverSideChallenges())": {'endpoints': ['/solve/challenges/server-side']},
                                                    "app.use('/support/logs',serveIndexMiddleware,serveIndex('logs',{icons:true,view:'details'}))": {'endpoints': ['/support/logs',
                                                                                                                                                                   '/logs',
@@ -214,8 +212,7 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
                                                    "app.use('/support/logs',verify.accessControlChallenges())": {'endpoints': ['/support/logs']},
                                                    "app.use('/support/logs/:file',logFileServer())": {'endpoints': ['/support/logs/:file']},
                                                    "app.use((req:Request,res:Response,next:NextFunction)=>{\rreq.url=req.url.replace(/[/]+/g,'/')\rnext()\r})": {'endpoints': ['/']},
-                                                   "app.use((req:Request,res:Response,next:NextFunction)=>{\rres.append('X-Recruiting',config.get('application.securityTxt.hiring'))\rnext()\r})": {'endpoints': ['/X-Recruiting',
-                                                                                                                                                                                                                  '/application.securityTxt.hiring']},
+                                                   "app.use((req:Request,res:Response,next:NextFunction)=>{\rres.append('X-Recruiting',config.get('application.securityTxt.hiring'))\rnext()\r})": {'endpoints': ['/application.securityTxt.hiring']},
                                                    "app.use(['/.well-known/security.txt','/security.txt'],securityTxt({\rcontact:config.get('application.securityTxt.contact'),\rencryption:config.get('application.securityTxt.encryption'),\racknowledgements:config.get('application.securityTxt.acknowledgements'),\r'Preferred-Languages':[...newSet(locales.map((locale:{key:string})=>locale.key.substr(0,2)))].join(','),\rhiring:config.get('application.securityTxt.hiring'),\rexpires:securityTxtExpiration.toUTCString()\r}))": {'endpoints': ['/.well-known/security.txt',
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '/security.txt',
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '/application.securityTxt.contact',
@@ -238,8 +235,6 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
     '/Noanswerfound!',
     '/Noquestionfound!',
     '/Preferred-Languages',
-    '/X-Forwarded-For',
-    '/X-Recruiting',
     '/api-docs',
     '/api/Addresss',
     '/api/Addresss/{id}',
@@ -365,7 +360,6 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
     '/video',
     '/viewengine',
     '/we/may/also/instruct/you/to/refuse/all/reasonably/necessary/responsibility',
-    '/x-powered-by',
     '/{regex_param_1}/{file}']
     assert list(
         result['/rest/continue-code-findIt/apply/{continueCode}'].keys()) == ['parameters', 'put', 'x-atom-usages']
@@ -690,7 +684,7 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
  '/xstream': {'post': {'responses': {}},
               'x-atom-usages': {'call': {'src\\main\\java\\org\\joychou\\controller\\XStreamRce.java': [23]},
                                 'target': {'src\\main\\java\\org\\joychou\\controller\\XStreamRce.java': 23}}}}
-    assert len(js_usages_1.convert_usages()) == 137
+    assert len(js_usages_1.convert_usages()) == 134
     assert len(js_usages_2.convert_usages()) == 21
     assert py_usages_2.convert_usages() == {'/': {},
  '/127.0.0.1': {},
