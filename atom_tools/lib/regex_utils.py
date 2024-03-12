@@ -61,6 +61,7 @@ def py_helper(endpoint: str, regex: OpenAPIRegexCollection) -> Tuple[str, List[D
     Handles Python path parameters.
     Args:
         endpoint (str): The endpoint string
+        regex (OpenAPIRegexCollection): The regex collection
 
     Returns:
         tuple[str,list]: The modified endpoint and parameters
@@ -144,7 +145,7 @@ def create_tmp_regex_name(element: str, m: Tuple | str, count: int) -> Tuple[str
 
 def fwd_slash_repl(match: re.Match) -> str:
     """For substituting forward slashes."""
-    return match['paren'].replace('/', '$L@$H')
+    return str(match['paren'].replace('/', '$L@$H'))
 
 
 operator_map: Dict[str, List[str]] = {

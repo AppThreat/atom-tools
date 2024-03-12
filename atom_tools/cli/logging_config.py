@@ -1,3 +1,5 @@
+# pylint: disable-all
+# Adapted from poetry
 from __future__ import annotations
 
 import sys

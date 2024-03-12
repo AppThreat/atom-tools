@@ -45,6 +45,7 @@ class OpenAPI:
 
     Methods:
         _create_ln_entries: Creates an x-atom-usages entry.
+        _identify_target_line_nums: Identifies targetObj line numbers.
         _filter_matches: Filters a list of matches based on certain criteria.
         _js_helper: Formats path sections which are parameters correctly.
         _process_methods_helper: Utility for process_methods.
@@ -78,7 +79,7 @@ class OpenAPI:
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
         self.regex_param_count = 0
-        self.target_line_nums = {}
+        self.target_line_nums: Dict[str, Dict] = {}
 
     def endpoints_to_openapi(self, server: str = '') -> Any:
         """
@@ -414,7 +415,13 @@ class OpenAPI:
         return self._remove_nested_parameters(paths_object)
 
     def _paths_object_helper(
-            self, calls: List, ep: str, filename: str, call_line_numbers: List, line_number: int) -> Tuple[str, Dict]:
+            self,
+            calls: List,
+            ep: str,
+            filename: str,
+            call_line_numbers: List,
+            line_number: int | None
+    ) -> Tuple[str, Dict]:
         """
         Creates a paths item object.
         """
@@ -565,7 +572,10 @@ class OpenAPI:
         if not method or not (matches := re.findall(regex.endpoints, method)):
             return []
         matches = self._filter_matches(matches, method)
-        return [v for v in matches if v and v not in exclusions and not v.lower().startswith('/x-')]
+        return [
+            v for v in matches
+            if v and v not in exclusions and not v.lower().startswith('/x-')
+        ]
 
     def _filter_matches(self, matches: List[str], code: str) -> List[str]:
         """
