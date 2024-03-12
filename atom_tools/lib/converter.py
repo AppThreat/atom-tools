@@ -554,7 +554,7 @@ class OpenAPI:
         for m in matches:
             if m and m[0] not in ('.', '@', ','):
                 nm = m.replace('"', '').replace("'", '')
-                # Checking for / cuts down lots of false positives
+                # Ignore some wildcard based paths
                 if nm not in ("*", "*/*"):
                     filtered_matches.append(nm)
 
