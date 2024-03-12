@@ -479,8 +479,8 @@ class LineValidator:
                                           'callName, line_number: lineNumber, '
                                           'code: resolvedMethod || code}}')
         udts_pattern = jmespath.compile('userDefinedTypes[].{file_name: fileName, usages: *[].{'
-                                        'function_name: name || callName, code: typeFullName || '
-                                        'resolvedMethod, line_number: lineNumber}}')
+                                        'function_name: name || callName, code: resolvedMethod || typeFullName,'
+                                        'line_number: lineNumber}}')
         res = usages_pattern.search(self.slc.content)
         res.extend(udts_pattern.search(self.slc.content))
         return consolidate_usage_slices(res)

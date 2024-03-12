@@ -171,7 +171,6 @@ class OpenAPI:
 
         for k, v in method_map.items():
             method_map[k] = list(set(v.get('resolved_methods')))
-
         return method_map
 
     def query_calls(self, full_name: str, resolved_methods: List[str]) -> List:
@@ -368,8 +367,6 @@ class OpenAPI:
         paths_object: Dict = {}
 
         for ep in set(endpoints):
-            if ep.startswith('/ftp(?!/quarantine)'):
-                print('found')
             ep, paths_item_object = self._paths_object_helper(
                 calls,
                 ep,
@@ -508,10 +505,8 @@ class OpenAPI:
         params = self.generic_params_helper(ep, orig_ep) if '{' in ep else []
         if not params and call:
             ptypes = set(call.get('paramTypes', []))
-            if len(ptypes) > 1:
-                params = [{'name': param, 'in': 'header'} for param in ptypes if param != 'ANY']
-            else:
-                params = [{'name': param, 'in': 'header'} for param in ptypes]
+            # FIXME: This is not a correct assumption. Perhaps the parameter types could be passed as an `x-` attribute
+            # params = [{'name': param, 'in': 'header'} for param in ptypes if param not in ('ANY', 'LAMBDA') and not param.startswith("__ecma")]
         return params
 
     def extract_endpoints(self, method: str) -> List[str]:
@@ -558,8 +553,10 @@ class OpenAPI:
 
         for m in matches:
             if m and m[0] not in ('.', '@', ','):
-                nm = m.replace('"', '').replace("'", '').lstrip('/')
-                filtered_matches.append(f'/{nm}')
+                nm = m.replace('"', '').replace("'", '')
+                # Checking for / cuts down lots of false positives
+                if nm not in ("*", "*/*"):
+                    filtered_matches.append(nm)
 
         return filtered_matches
 

@@ -115,7 +115,6 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
                                                             "app.get('/we/may/also/instruct/you/to/refuse/all/reasonably/necessary/responsibility',privacyPolicyProof())": {'endpoints': ['/we/may/also/instruct/you/to/refuse/all/reasonably/necessary/responsibility']},
                                                             "app.get(['/.well-known/security.txt','/security.txt'],verify.accessControlChallenges())": {'endpoints': ['/.well-known/security.txt',
                                                                                                                                                                       '/security.txt']},
-                                                            "app.options('*',cors())": {'endpoints': ['/*']},
                                                             "app.patch('/rest/products/reviews',security.isAuthorized(),updateProductReviews())": {'endpoints': ['/rest/products/reviews']},
                                                             "app.post('/api/Addresss',security.appendUserId())": {'endpoints': ['/api/Addresss']},
                                                             "app.post('/api/BasketItems',security.appendUserId(),basketItems.quantityCheckBeforeBasketItemAddition(),basketItems.addBasketItem())": {'endpoints': ['/api/BasketItems']},
@@ -226,19 +225,18 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     '/application.securityTxt.acknowledgements',
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     '/Preferred-Languages',
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     '/application.securityTxt.hiring']},
-                                                            "app.use(bodyParser.text({type:'*/*'}))": {'endpoints': ['/*/*']},
                                                             "app.use(cookieParser('kekse'))": {'endpoints': ['/kekse']},
                                                             "app.use(express.static(path.resolve('frontend/dist/frontend')))": {'endpoints': ['/frontend/dist/frontend']},
                                                             "app.use(functionjsonParser(req:Request,res:Response,next:NextFunction){\r//@ts-expect-errorFIXMEintentionallysavingoriginalrequestinthisproperty\rreq.rawBody=req.body\rif(req.headers['content-type']?.includes('application/json')){\rif(!req.body){\rreq.body={}\r}\rif(req.body!==Object(req.body)){//Expensiveworkaroundfor500errorsduringFrisbytestrun(see#640)\rreq.body=JSON.parse(req.body)\r}\r}\rnext()\r})": {'endpoints': ['/content-type',
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      '/application/json']},
                                                             "app.use(morgan('combined',{stream:accessLogStream}))": {'endpoints': ['/combined']},
-                                                            "app.use(robots({UserAgent:'*',Disallow:'/ftp'}))": {'endpoints': ['/*',
+                                                            "app.use(robots({UserAgent:'*',Disallow:'/ftp'}))": {'endpoints': [
                                                                                                                                '/ftp']}}}}}
     methods = js_usages_1.process_calls(methods)
     result = js_usages_1.populate_endpoints(methods)
     result_keys = list(result.keys())
     result_keys.sort()
-    assert result_keys == ['/', '/*', '/*/*', '/.well-known/security.txt', '/123.456.789',
+    assert result_keys == ['/', '/.well-known/security.txt', '/123.456.789',
                            '/Blockedillegalactivityby', '/Invalidemail/passwordcannotbeempty',
                            '/Noanswerfound!', '/Noquestionfound!', '/Preferred-Languages',
                            '/X-Forwarded-For', '/X-Recruiting', '/allow', '/api-docs',
@@ -382,8 +380,6 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
     assert java_usages_2.convert_usages() == {
         '/': {'get': {'responses': {}},
               'x-atom-usages': {'org.joychou.controller.Test.Index': [15]}},
-        '/*': {'get': {'responses': {}},
-               'x-atom-usages': {'org.joychou.controller.Cors.vuls3': [41]}},
         '/Digester/sec': {'post': {'responses': {}},
                           'x-atom-usages': {'org.joychou.controller.XXE.DigesterSec': [213]}},
         '/Digester/vuln': {'post': {'responses': {}},
@@ -605,7 +601,7 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
         '/xstream': {'post': {'responses': {}},
                      'x-atom-usages': {'org.joychou.controller.XStreamRce.parseXml': [23]}}
     }
-    assert len(js_usages_1.convert_usages()) == 142
+    assert len(js_usages_1.convert_usages()) == 140
     assert len(js_usages_2.convert_usages()) == 21
     assert py_usages_2.convert_usages() == {'/': {},
  '/127.0.0.1': {},
