@@ -37,8 +37,8 @@ class ConvertCommand(Command):
             default='openapi3.0.1',
         ),
         option(
-            'usages-slice',
-            'u',
+            'input-slice',
+            'i',
             'Usages slice file',
             flag=False,
             default=None,
@@ -88,7 +88,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                 converter = OpenAPI(
                     self.option('format'),
                     self.option('type'),
-                    self.option('usages-slice'),
+                    self.option('input-slice'),
                 )
 
                 if not (result := converter.endpoints_to_openapi(self.option('server'))):

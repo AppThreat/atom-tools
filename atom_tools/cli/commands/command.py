@@ -1,4 +1,4 @@
-# pylint: disable=missing-class-docstring,missing-function-docstring,missing-module-docstring
+# pylint: disable-all
 from __future__ import annotations
 
 from typing import ClassVar

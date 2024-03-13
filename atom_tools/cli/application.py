@@ -72,7 +72,15 @@ class Application(BaseApplication):
         self.set_command_loader(command_loader)
 
     @staticmethod
-    def register_command_loggers(event: Event, event_name: str, _: EventDispatcher) -> None:
+    def register_command_loggers(event: Event, event_name: str, _: EventDispatcher) -> None:  # pylint: disable=unused-argument
+        """
+        Registers the command loggers.
+
+        Args:
+            event (Event): The event.
+            event_name (str): The event name.
+            _: EventDispatcher: The event dispatcher.
+        """
         assert isinstance(event, ConsoleCommandEvent)
         command = event.command
         if not isinstance(command, Command):
