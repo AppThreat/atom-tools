@@ -21,6 +21,8 @@ class OpenAPIRegexCollection:
     processed_param = re.compile(r'{(?P<pname>[^\s}]+)}')
     # This regex is used to extract named python parameters that include a type
     py_param = re.compile(r'<(?P<ptype>\w+):(?P<pname>\w+)>')
+    # Secondary python parameter regex
+    py_param_2 = re.compile(r'<(?P<pname>[^\s>]+)>')
     # This regex is used to detect when a path contains a regex set
     detect_regex = re.compile(r'[|$^]|\\[sbigmd]|\\[dhsvwpbagznfrtu\d]|\?P?[<:!]|\{\d|\[\S+]|\Wr\"')
     # This regex is used to extract regexes so we can escape forward slashes not part of the path.
@@ -68,12 +70,17 @@ def py_helper(endpoint: str, regex: OpenAPIRegexCollection) -> Tuple[str, List[D
     """
     params = []
 
-    if matches := regex.py_param.findall(endpoint):
+    if ':' in endpoint and (matches := regex.py_param.findall(endpoint)):
         endpoint = re.sub(regex.py_param, path_param_repl, endpoint)
         for m in matches:
             p = {'in': 'path', 'name': m[1], 'required': True}
             if PY_TYPE_MAPPING.get(m[0]):
                 p['schema'] = {'type': PY_TYPE_MAPPING[m[0]]}
+            params.append(p)
+    elif matches := regex.py_param_2.findall(endpoint):
+        endpoint = re.sub(regex.py_param_2, path_param_repl, endpoint)
+        for m in matches:
+            p = {'in': 'path', 'name': m, 'required': True}
             params.append(p)
     return endpoint, params
 

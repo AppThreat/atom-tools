@@ -28,7 +28,7 @@ def js_usages_2():
 
 @pytest.fixture
 def py_usages_1():
-    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-airflow-usages.json')
+    return OpenAPI('openapi3.0.1', 'python', 'test/data/py-django-goat-usages.json')
 
 
 @pytest.fixture
@@ -686,63 +686,33 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
                                 'target': {'src\\main\\java\\org\\joychou\\controller\\XStreamRce.java': 23}}}}
     assert len(js_usages_1.convert_usages()) == 134
     assert len(js_usages_2.convert_usages()) == 21
-    assert py_usages_2.convert_usages() == {'/': {},
- '/127.0.0.1': {},
- '/auth/google': {},
- '/google_oauth': {},
- '/logout': {}}
-
-
-# Airflow slice is too large to upload.
-@pytest.mark.skipif(not os.path.exists('test/data/py-airflow-usages.json'), reason="requires test/data/py-airflow-usages.json")
-def test_convert_usages2(py_usages_1):
-    assert py_usages_1.convert_usages() == {
-        '/': {}, '/dags/{dag_id}': {
-        'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
-                        'schema': {'type': 'string'}}]},
-        '/dags/{dag_id}/code': {'parameters': [
-            {'in': 'path', 'name': 'dag_id', 'required': True,
-             'schema': {'type': 'string'}}]}, '/dags/{dag_id}/dag_runs': {
-            'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
-                            'schema': {'type': 'string'}}]},
-        '/dags/{dag_id}/dag_runs/{'
-        'execution_date}': {'parameters': [
-            {'in': 'path', 'name': 'dag_id', 'required': True,
-             'schema': {'type': 'string'}},
-            {'in': 'path', 'name': 'execution_date', 'required': True,
-             'schema': {'type': 'string'}}]}, '/dags/{dag_id}/dag_runs/{'
-                                              'execution_date}/tasks/{task_id}': {
-            'parameters': [{'in': 'path', 'name': 'dag_id', 'required': True,
-                            'schema': {'type': 'string'}},
-                           {'in': 'path', 'name': 'execution_date',
-                            'required': True, 'schema': {'type': 'string'}},
-                           {'in': 'path', 'name': 'task_id', 'required': True,
-                            'schema': {'type': 'string'}}]},
-        '/dags/{dag_id}/paused': {'parameters': [
-            {'in': 'path', 'name': 'dag_id', 'required': True,
-             'schema': {'type': 'string'}}]},
-        '/dags/{dag_id}/paused/{paused}': {'parameters': [
-            {'in': 'path', 'name': 'dag_id', 'required': True,
-             'schema': {'type': 'string'}},
-            {'in': 'path', 'name': 'paused', 'required': True,
-             'schema': {'type': 'string'}}]},
-        '/dags/{dag_id}/tasks/{task_id}': {'parameters': [
-            {'in': 'path', 'name': 'dag_id', 'required': True,
-             'schema': {'type': 'string'}},
-            {'in': 'path', 'name': 'task_id', 'required': True,
-             'schema': {'type': 'string'}}]}, '/info': {}, '/latest_runs': {},
-        '/lineage/{dag_id}/{'
-        'execution_date}': {'parameters': [
-            {'in': 'path', 'name': 'dag_id', 'required': True,
-             'schema': {'type': 'string'}},
-            {'in': 'path', 'name': 'execution_date', 'required': True,
-             'schema': {'type': 'string'}}]}, '/log/{filename}': {
-            'parameters': [{'in': 'path', 'name': 'filename', 'required': True,
-                            'schema': {'type': 'string'}}]}, '/pools': {},
-        '/pools/{name}': {'parameters': [
-            {'in': 'path', 'name': 'name', 'required': True,
-             'schema': {'type': 'string'}}]}, '/test': {}
-                                            }
+    assert py_usages_1.convert_usages() == {'/admin': {},
+ '/conversation': {},
+ '/conversation/{friend_pk}': {'parameters': [{'in': 'path',
+                                               'name': 'friend_pk',
+                                               'required': True}]},
+ '/dash': {},
+ '/instructions': {},
+ '/landing': {},
+ '/login': {},
+ '/logout': {},
+ '/media/{path}': {'parameters': [{'in': 'path',
+                                   'name': 'path',
+                                   'required': True,
+                                   'schema': {'pattern': '.*',
+                                              'type': 'string'}}]},
+ '/note': {},
+ '/note/{pk}': {'parameters': [{'in': 'path', 'name': 'pk', 'required': True}]},
+ '/profile': {},
+ '/profile-update': {},
+ '/profile/{pk}': {'parameters': [{'in': 'path',
+                                   'name': 'pk',
+                                   'required': True}]},
+ '/sign-up': {},
+ '/vulnerabilities': {},
+ '/write-note': {}}
+    assert py_usages_2.convert_usages() == {'/': {}, '/127.0.0.1': {}, '/auth/google': {},
+                                            '/google_oauth': {}, '/logout': {}}
 
 
 def test_endpoints_to_openapi(java_usages_1):

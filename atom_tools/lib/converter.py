@@ -324,12 +324,11 @@ class OpenAPI:
         """
         dict_resolved_pattern = jmespath.compile(pattern)
         result = []
-        if dict_resolved_pattern:
+        if matches := dict_resolved_pattern.search(self.usages.content):
             result = [
-                i for i in dict_resolved_pattern.search(self.usages.content)
+                i for i in matches
                 if i.get('resolved_methods')
             ]
-
         resolved: Dict = {}
         for r in result:
             file_name = r['file_name']
@@ -429,7 +428,7 @@ class OpenAPI:
         tmp_params: List = []
         py_special_case = False
         orig_ep = ep
-        if ':' in ep:
+        if ':' in ep or '<' in ep:
             ep, py_special_case, tmp_params = self._extract_params(ep)
         if '{' in ep and not py_special_case:
             tmp_params = self.generic_params_helper(ep, orig_ep)
