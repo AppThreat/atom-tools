@@ -11,12 +11,72 @@ from typing import Tuple, List, Dict
 import jmespath
 
 from atom_tools.lib.slices import AtomSlice
-from atom_tools.lib.regex_utils import operator_map, ecma_map, init_map, py_builtins
 from atom_tools.lib.regex_utils import ValidationRegexCollection
 
 
 logger = logging.getLogger(__name__)
 regex: ValidationRegexCollection = ValidationRegexCollection()
+operator_map: Dict[str, List[str]] = {
+    '<operator>.addition': ['+'],
+    '<operator>.minus': ['-'],
+    '<operator>.multiplication': ['*'],
+    '<operator>.division': ['/'],
+    '<operator>.lessThan': ['<'],
+    '<operator>.notEquals': ['!='],
+    '<operator>.indexAccess': [':'],
+    '<operator>.logicalNot': ['!', ' not '],
+    '<operator>.logicalOr': ['||', ' or '],
+    '<operator>.throw': ['throw'],
+    '<operator>.plus': ['+'],
+    '<operator>.formatString': ['`$', 'f"', "f'"],
+    '<operator>.conditional': ['?', 'if ', 'elif ', ' else '],
+    '<operator>.new': ['new ', '<init>'],
+    '<operator>.assignmentDivision': ['/='],
+    '<operator>.in': [' in '],
+    '<operator>.listLiteral': ['= []', '= ['],
+    '<operator>.starredUnpack': ['*'],
+    '<operator>.greaterThan': ['>'],
+    '<operator>.logicalAnd': ['&&', ' and '],
+    '<operator>.postIncrement': ['++'],
+    '<operator>.fieldAccess': [':'],
+    '<operator>.assignmentMinus': ['-='],
+    '<operator>.assignmentMultiplication': ['*='],
+    '<operator>.modulo': ['%'],
+    '<operator>.iterator': ['for'],
+    '<operator>.assignmentPlus': ['+='],
+    '<operator>.instanceOf': ['instanceof'],
+    '<operator>.subtraction': ['-'],
+    '<operator>.equals': ['='],
+}
+ecma_map: Dict[str, List[str]] = {
+    '__ecma.Array.factory': ['[]'],
+    '__ecma.Set:<operator>.new': ['new Set('],
+    '__ecma.String[]:sort': ['.sort'],
+    '__ecma.Array.factory:splice': ['.splice'],
+    '__ecma.Array.factory:push': ['.push'],
+    '__ecma.Number:toString': ['.toString'],
+    '__ecma.Math:floor': ['.floor'],
+    '__ecma.String:toLowerCase': ['.toLowerCase'],
+}
+init_map: List[str] = ['new ', 'super ', 'private ', 'public ', 'constructor ']
+py_builtins: Dict[str, str] = {
+    '__builtin.str.split': '.split(',
+    '__builtin.str.join': '.join(',
+    '__builtin.getattr': 'getattr(',
+    '__builtin.open': 'with open(',
+    '__builtin.print': 'print(',
+    '__builtin.str.format': '.format(',
+    '__builtin.list': '= [',
+    '__builtin.str.replace': '.replace(',
+    '__builtin.set<meta>': 'set(',
+    '__builtin.len': 'len(',
+    '__builtin.list.append': '.append(',
+    '__builtin.str.startswith': '.startswith(',
+    '__builtin.list<meta>': 'list(',
+    '__builtin.set.add': '.add(',
+    '__builtin.str.lstrip': '.lstrip(',
+    '__builtin.list.extend': '.extend(',
+}
 
 
 def check_init(line: str) -> bool:
@@ -99,6 +159,18 @@ def cleanup_usages(usages: Dict[str, List[Dict[str, str]]]) -> Dict[str, List[Di
     return usages
 
 
+def consolidate_reachable_slices(data: List[Dict]) -> Dict[str, List[Dict[str, str]]]:
+    """Consolidate reachables by parent file name."""
+    consolidated: Dict[str, List[Dict]] = {}
+    for i in data:
+        fn = i.get('file_name') or 'unknown'
+        if fn in consolidated:
+            consolidated[fn].append(i)
+        else:
+            consolidated[fn] = [i]
+    return consolidated
+
+
 def consolidate_usage_slices(data: List[Dict]) -> Dict[str, List[Dict[str, str]]]:
     """
     Consolidate data by file, grouping related entries together.
@@ -123,18 +195,6 @@ def consolidate_usage_slices(data: List[Dict]) -> Dict[str, List[Dict[str, str]]
             consolidated[fn] = [root_entry]
         consolidated[fn].extend(i.get('usages', []))
     return cleanup_usages(consolidated)
-
-
-def consolidate_reachable_slices(data: List[Dict]) -> Dict[str, List[Dict[str, str]]]:
-    """Consolidate reachables by parent file name."""
-    consolidated: Dict[str, List[Dict]] = {}
-    for i in data:
-        fn = i.get('file_name') or 'unknown'
-        if fn in consolidated:
-            consolidated[fn].append(i)
-        else:
-            consolidated[fn] = [i]
-    return consolidated
 
 
 def java_validation_helper(func: str, line: str) -> bool:
@@ -330,18 +390,6 @@ class LineValidator:
         problem_files (list): A dictionary containing problem files.
         slc (AtomSlice): An instance of AtomSlice representing the slice file.
         unverifiable (dict): A dictionary containing unverifiable line numbers grouped by type.
-
-    Methods:
-        expand_search(code, function_name, line_number, lines, file_name): Expand the search range.
-        find_line(code, function_name, line): First pass verification attempt.
-        find_line2(code, found, function_name, line): Second pass verification attempt.
-        find_reachables(): Find reachable line numbers in the slice file.
-        find_usages(): Find line numbers of usages in the slice file.
-        get_results(): Get the results of the line number validation.
-        iterate_results(result, lines, file_name): Iterate over the results and process each line.
-        remove_dupes(result): Remove duplicates from the result dictionary.
-        validate_line_numbers(): Validate line numbers in the code files.
-        write_report(report_file, summary): Write the validation summary to a file.
     """
     def __init__(self, slice_file: Path, base_path: Path, interval: int, origin_type: str) -> None:
         self.slc = AtomSlice(slice_file, origin_type)
@@ -380,31 +428,6 @@ class LineValidator:
                     f' had missing line numbers.\n')
         return summary
 
-    def expand_search(
-            self, code: str, function_name: str, line_number: int, lines: List[str], file_name: str
-    ) -> bool:
-        """
-        Expand the search range.
-        """
-        start = line_number - self.interval
-        # We don't want to exceed the file bounds
-        start = max(start, 0)
-        end = min(line_number + self.interval, len(lines))
-        for n in range(start, end):
-            if self.find_line(code.strip(), function_name.strip(), lines[n]):
-                self.matches['close'].append(
-                    {
-                        'function_name': function_name,
-                        'code': code,
-                        'line_number': line_number,
-                        'actual_number': n - 1,
-                        'file_name': file_name,
-                        'found_line': lines[n].strip()
-                    }
-                )
-                return True
-        return False
-
     def export_validation_results(self, json_report_path):
         """
         Export details for the validation results to a JSON file.
@@ -420,44 +443,6 @@ class LineValidator:
         }
         with open(json_report_path, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=4)
-
-    def find_line(self, code: str, function_name: str, line: str) -> bool:
-        """
-        First pass verification attempt.
-        """
-        found = False
-        if not code and function_name:
-            code = function_name
-        if not function_name:
-            function_name = code
-        if len(function_name) == 1 and (match := regex.single_char_var.findall(line)):
-            if function_name in match:
-                found = True
-        elif function_name in line and len(function_name) >= 2:
-            found = True
-        elif function_name == '<init>' or function_name.startswith('__init__'):
-            found = check_init(line)
-        elif function_name.startswith('<operator>.') or code.startswith('<operator>.'):
-            found = check_mapping_type(function_name, code, line, operator_map)
-        elif function_name.startswith('$obj') and 'new ' in line:
-            found = True
-        elif code.startswith(line) or code.startswith(line.replace('return ', '')):
-            found = True
-        return found or self.match_by_lang(code, function_name, line)
-
-    def match_by_lang(self, code: str, function_name: str, line: str) -> bool:
-        """
-        Second pass verification attempt.
-        """
-        found = False
-        match self.slc.origin_type:
-            case 'java':
-                found = java_validation_helper(function_name, line)
-            case 'js' | 'javascript' | 'ts' | 'typescript':
-                found = js_validation_helper(function_name, code, line)
-            case 'py' | 'python':
-                found = py_validation_helper(function_name, code, line)
-        return found
 
     def find_reachables(self) -> Dict[str, List[Dict[str, str]]]:
         """Collect reachables for analysis."""
@@ -500,7 +485,106 @@ class LineValidator:
         )
         return self.create_summary(stats)
 
-    def output_verbose_results(self):
+    def validate_line_numbers(self) -> None:
+        """Validate line numbers in the slice file"""
+        if self.slc.slice_type == 'reachables':
+            data = self.find_reachables()
+        elif self.slc.slice_type == 'usages':
+            data = self.find_usages()
+        else:
+            print("Cannot analyze unidentified slice type.")
+            sys.exit(1)
+
+        output = self._remove_dupes(data)
+
+        for fn, val in output.items():
+            file_path = self.base_path / fn
+
+            if regex.tests_regex.search(fn):
+                logger.debug(f'Skipping test file: {file_path}',)
+                continue
+
+            if not file_path or not os.path.isfile(file_path):
+                self.problem_files.append(file_path)
+                self.unverifiable['file'].extend(val)
+                logger.warning(f'Could not locate {file_path}.')
+                continue
+
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    lines = file.readlines()
+            except UnicodeDecodeError:
+                try:
+                    with open(file_path, 'rb') as file:
+                        lines = file.readlines()  # type: ignore[assignment]
+                    if lines and isinstance(lines[0], bytes):
+                        lines = [i.decode for i in lines]
+                except Exception:  # pylint: disable=broad-exception-caught
+                    self.problem_files.append(file_path)
+                    self.unverifiable['file'].extend(val)
+                    continue
+            file_path = str(file_path)
+            for v in val:
+                self._validate_line_number(v, lines, file_path)
+
+    def write_report(self, report_file: str, summary: str, verbose: bool) -> None:
+        """Write the validation report to a file."""
+        logger.debug(f"Writing report to {report_file}.")
+        if verbose and (vresults := self._get_verbose_results()):
+            summary += vresults
+        with open(report_file, 'w', encoding='utf-8') as f:
+            f.write(summary)
+
+    def _expand_search(
+            self, code: str, function_name: str, line_number: int, lines: List[str], file_name: str
+    ) -> bool:
+        """
+        Expand the search range.
+        """
+        start = line_number - self.interval
+        # We don't want to exceed the file bounds
+        start = max(start, 0)
+        end = min(line_number + self.interval, len(lines))
+        for n in range(start, end):
+            if self._find_line(code.strip(), function_name.strip(), lines[n]):
+                self.matches['close'].append(
+                    {
+                        'function_name': function_name,
+                        'code': code,
+                        'line_number': line_number,
+                        'actual_number': n - 1,
+                        'file_name': file_name,
+                        'found_line': lines[n].strip()
+                    }
+                )
+                return True
+        return False
+
+    def _find_line(self, code: str, function_name: str, line: str) -> bool:
+        """
+        First pass verification attempt.
+        """
+        found = False
+        if not code and function_name:
+            code = function_name
+        if not function_name:
+            function_name = code
+        if len(function_name) == 1 and (match := regex.single_char_var.findall(line)):
+            if function_name in match:
+                found = True
+        elif function_name in line and len(function_name) >= 2:
+            found = True
+        elif function_name == '<init>' or function_name.startswith('__init__'):
+            found = check_init(line)
+        elif function_name.startswith('<operator>.') or code.startswith('<operator>.'):
+            found = check_mapping_type(function_name, code, line, operator_map)
+        elif function_name.startswith('$obj') and 'new ' in line:
+            found = True
+        elif code.startswith(line) or code.startswith(line.replace('return ', '')):
+            found = True
+        return found or self._match_by_lang(code, function_name, line)
+
+    def _get_verbose_results(self):
         """
         Add the verbose results of the line number validation.
 
@@ -536,56 +620,28 @@ class LineValidator:
             verbose_results += '\n'
         return verbose_results
 
+    def _match_by_lang(self, code: str, function_name: str, line: str) -> bool:
+        """
+        Second pass verification attempt.
+        """
+        found = False
+        match self.slc.origin_type:
+            case 'java':
+                found = java_validation_helper(function_name, line)
+            case 'js' | 'javascript' | 'ts' | 'typescript':
+                found = js_validation_helper(function_name, code, line)
+            case 'py' | 'python':
+                found = py_validation_helper(function_name, code, line)
+        return found
+
     @staticmethod
-    def remove_dupes(result: Dict) -> Dict:
+    def _remove_dupes(result: Dict) -> Dict:
         """Remove duplicates from the result dictionary."""
         for fn, val in result.items():
             result[fn] = remove_duplicates_list(val)
         return result
 
-    def validate_line_numbers(self) -> None:
-        """Validate line numbers in the slice file"""
-        if self.slc.slice_type == 'reachables':
-            data = self.find_reachables()
-        elif self.slc.slice_type == 'usages':
-            data = self.find_usages()
-        else:
-            print("Cannot analyze unidentified slice type.")
-            sys.exit(1)
-
-        output = self.remove_dupes(data)
-
-        for fn, val in output.items():
-            file_path = self.base_path / fn
-
-            if regex.tests_regex.search(fn):
-                logger.debug(f'Skipping test file: {file_path}',)
-                continue
-
-            if not file_path or not os.path.isfile(file_path):
-                self.problem_files.append(file_path)
-                self.unverifiable['file'].extend(val)
-                logger.warning(f'Could not locate {file_path}.')
-                continue
-
-            try:
-                with open(file_path, 'r', encoding='utf-8') as file:
-                    lines = file.readlines()
-            except UnicodeDecodeError:
-                try:
-                    with open(file_path, 'rb') as file:
-                        lines = file.readlines()  # type: ignore[assignment]
-                    if lines and isinstance(lines[0], bytes):
-                        lines = [i.decode for i in lines]
-                except Exception:  # pylint: disable=broad-exception-caught
-                    self.problem_files.append(file_path)
-                    self.unverifiable['file'].extend(val)
-                    continue
-            file_path = str(file_path)
-            for v in val:
-                self.validate_line_number(v, lines, file_path)
-
-    def validate_line_number(self, result: Dict, lines: List[str], file_name: str) -> None:
+    def _validate_line_number(self, result: Dict, lines: List[str], file_name: str) -> None:
         """
         Run validation for a slice line number.
         """
@@ -608,10 +664,10 @@ class LineValidator:
             return
 
         line = lines[line_number - 1].strip()
-        if self.find_line(code.strip(), function_name.strip(), line):
+        if self._find_line(code.strip(), function_name.strip(), line):
             self.matches['matched'].append(result)
             return
-        if self.interval > 0 and self.expand_search(
+        if self.interval > 0 and self._expand_search(
                 code, function_name, line_number, lines, file_name):
             return
         self.matches['unmatched'].append(
@@ -623,11 +679,3 @@ class LineValidator:
                 'file_line': line
             }
         )
-
-    def write_report(self, report_file: str, summary: str, verbose: bool) -> None:
-        """Write the validation report to a file."""
-        logger.debug(f"Writing report to {report_file}.")
-        if verbose and (vresults := self.output_verbose_results()):
-            summary += vresults
-        with open(report_file, 'w', encoding='utf-8') as f:
-            f.write(summary)

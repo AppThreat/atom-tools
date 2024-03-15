@@ -8,8 +8,6 @@ from typing import Tuple, List, Dict, Any
 
 logger: logging.Logger = logging.getLogger(__name__)
 
-PY_TYPE_MAPPING = {'int': 'integer', 'string': 'string', 'float': 'number', 'path': 'string'}
-
 
 @dataclass
 class OpenAPIRegexCollection:
@@ -74,8 +72,8 @@ def py_helper(endpoint: str, regex: OpenAPIRegexCollection) -> Tuple[str, List[D
         endpoint = re.sub(regex.py_param, path_param_repl, endpoint)
         for m in matches:
             p = {'in': 'path', 'name': m[1], 'required': True}
-            if PY_TYPE_MAPPING.get(m[0]):
-                p['schema'] = {'type': PY_TYPE_MAPPING[m[0]]}
+            if py_type_mapping.get(m[0]):
+                p['schema'] = {'type': py_type_mapping[m[0]]}
             params.append(p)
     elif matches := regex.py_param_2.findall(endpoint):
         endpoint = re.sub(regex.py_param_2, path_param_repl, endpoint)
@@ -155,64 +153,4 @@ def fwd_slash_repl(match: re.Match) -> str:
     return str(match['paren'].replace('/', '$L@$H'))
 
 
-operator_map: Dict[str, List[str]] = {
-    '<operator>.addition': ['+'],
-    '<operator>.minus': ['-'],
-    '<operator>.multiplication': ['*'],
-    '<operator>.division': ['/'],
-    '<operator>.lessThan': ['<'],
-    '<operator>.notEquals': ['!='],
-    '<operator>.indexAccess': [':'],
-    '<operator>.logicalNot': ['!', ' not '],
-    '<operator>.logicalOr': ['||', ' or '],
-    '<operator>.throw': ['throw'],
-    '<operator>.plus': ['+'],
-    '<operator>.formatString': ['`$', 'f"', "f'"],
-    '<operator>.conditional': ['?', 'if ', 'elif ', ' else '],
-    '<operator>.new': ['new ', '<init>'],
-    '<operator>.assignmentDivision': ['/='],
-    '<operator>.in': [' in '],
-    '<operator>.listLiteral': ['= []', '= ['],
-    '<operator>.starredUnpack': ['*'],
-    '<operator>.greaterThan': ['>'],
-    '<operator>.logicalAnd': ['&&', ' and '],
-    '<operator>.postIncrement': ['++'],
-    '<operator>.fieldAccess': [':'],
-    '<operator>.assignmentMinus': ['-='],
-    '<operator>.assignmentMultiplication': ['*='],
-    '<operator>.modulo': ['%'],
-    '<operator>.iterator': ['for'],
-    '<operator>.assignmentPlus': ['+='],
-    '<operator>.instanceOf': ['instanceof'],
-    '<operator>.subtraction': ['-'],
-    '<operator>.equals': ['='],
-}
-ecma_map: Dict[str, List[str]] = {
-    '__ecma.Array.factory': ['[]'],
-    '__ecma.Set:<operator>.new': ['new Set('],
-    '__ecma.String[]:sort': ['.sort'],
-    '__ecma.Array.factory:splice': ['.splice'],
-    '__ecma.Array.factory:push': ['.push'],
-    '__ecma.Number:toString': ['.toString'],
-    '__ecma.Math:floor': ['.floor'],
-    '__ecma.String:toLowerCase': ['.toLowerCase'],
-}
-init_map: List[str] = ['new ', 'super ', 'private ', 'public ', 'constructor ']
-py_builtins: Dict[str, str] = {
-    '__builtin.str.split': '.split(',
-    '__builtin.str.join': '.join(',
-    '__builtin.getattr': 'getattr(',
-    '__builtin.open': 'with open(',
-    '__builtin.print': 'print(',
-    '__builtin.str.format': '.format(',
-    '__builtin.list': '= [',
-    '__builtin.str.replace': '.replace(',
-    '__builtin.set<meta>': 'set(',
-    '__builtin.len': 'len(',
-    '__builtin.list.append': '.append(',
-    '__builtin.str.startswith': '.startswith(',
-    '__builtin.list<meta>': 'list(',
-    '__builtin.set.add': '.add(',
-    '__builtin.str.lstrip': '.lstrip(',
-    '__builtin.list.extend': '.extend(',
-}
+py_type_mapping = {'int': 'integer', 'string': 'string', 'float': 'number', 'path': 'string'}
