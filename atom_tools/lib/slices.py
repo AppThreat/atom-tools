@@ -4,6 +4,7 @@ Classes and functions for working with slices.
 
 import json
 import logging
+import sys
 from pathlib import Path
 from typing import Tuple, Dict
 
@@ -65,6 +66,7 @@ class AtomSlice:
                 f' json file.'
             )
         except FileNotFoundError:
-            logger.warning(f'Failed to locate the following slice file: {filename}')
+            logger.exception(f'Failed to locate the following slice file: {filename}')
+            sys.exit(1)
         logger.warning('Slice type not recognized.')
         return {}, 'unknown'

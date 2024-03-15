@@ -44,8 +44,6 @@ def test_usages_class(
 
 
 def test_import_slices(js_usages_1):
-    # Test nonexistent file
-    assert AtomSlice('test/data/js-tornado-usages.json', 'js').content == {}
 
     # Test invalid JSON file
     assert AtomSlice('test/data/invalid.json', 'js').content == {}
