@@ -6,7 +6,9 @@ import re
 from dataclasses import dataclass
 from typing import Tuple, List, Dict, Any
 
+
 logger: logging.Logger = logging.getLogger(__name__)
+py_type_mapping = {'int': 'integer', 'string': 'string', 'float': 'number', 'path': 'string'}
 
 
 @dataclass
@@ -151,6 +153,3 @@ def create_tmp_regex_name(element: str, m: Tuple | str, count: int) -> Tuple[str
 def fwd_slash_repl(match: re.Match) -> str:
     """For substituting forward slashes."""
     return str(match['paren'].replace('/', '$L@$H'))
-
-
-py_type_mapping = {'int': 'integer', 'string': 'string', 'float': 'number', 'path': 'string'}
