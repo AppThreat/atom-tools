@@ -55,7 +55,9 @@ class AtomSlice:
             return {}, 'unknown'
         try:
             with open(filename, 'r', encoding='utf-8') as f:
-                content = json.load(f)
+                raw_content = f.read()
+                raw_content = raw_content.replace(r'\\', '/')
+                content = json.loads(raw_content)
             if content.get('objectSlices'):
                 return content, 'usages'
             if content.get('reachables'):
