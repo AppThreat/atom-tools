@@ -1,5 +1,33 @@
 {
   "objectSlices" : [
+        {
+      "code" : "",
+      "fullName" : "org.joychou.Application.<init>:void()",
+      "signature" : "void()",
+      "fileName" : "test/file/name.java",
+      "lineNumber" : 40,
+      "columnNumber" : 3,
+      "usages" : [
+        {
+          "targetObj" : {
+            "name" : "<empty>",
+            "typeFullName" : "ANY",
+            "lineNumber" : 40,
+            "columnNumber" : null,
+            "label" : "UNKNOWN"
+          },
+          "definedBy" : {
+            "name" : "<empty>",
+            "typeFullName" : "ANY",
+            "lineNumber" : 40,
+            "columnNumber" : null,
+            "label" : "UNKNOWN"
+          },
+          "invokedCalls" : [],
+          "argToCalls" : []
+        }
+      ]
+    },
     {
       "code" : "",
       "fullName" : "org.joychou.Application.<init>:void()",

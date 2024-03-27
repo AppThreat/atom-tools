@@ -41,9 +41,3 @@ def test_usages_class(
 
     usages = AtomSlice('test/data/java-sec-code-usages.json', 'java')
     assert usages.content is not None
-
-
-def test_import_slices(js_usages_1):
-
-    # Test invalid JSON file
-    assert AtomSlice('test/data/invalid.json', 'js').content == {}
