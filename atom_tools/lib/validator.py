@@ -1,6 +1,5 @@
 """Classes and functions to validate source file line numbers in an atom slice file."""
 
-import json
 import logging
 import os
 import sys
@@ -12,7 +11,7 @@ import jmespath
 
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.regex_utils import ValidationRegexCollection
-
+from atom_tools.lib.utils import export_json
 
 logger = logging.getLogger(__name__)
 regex: ValidationRegexCollection = ValidationRegexCollection()
@@ -441,8 +440,7 @@ class LineValidator:
             },
             'inaccessible_files': [str(i) for i in self.problem_files]
         }
-        with open(json_report_path, 'w', encoding='utf-8') as f:
-            json.dump(results, f, indent=4)
+        export_json(results, json_report_path, 4)
 
     def find_reachables(self) -> Dict[str, List[Dict[str, str]]]:
         """Collect reachables for analysis."""

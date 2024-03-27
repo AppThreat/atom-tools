@@ -5,6 +5,56 @@
       "fullName" : "com.piggymetrics.account.AccountApplication.<init>:void()",
       "signature" : "void()",
       "fileName" : "account-service/src/main/java/com/piggymetrics/account/AccountApplication.java",
+      "lineNumber" : 400,
+      "columnNumber" : 20,
+      "usages":  [
+        {
+          "targetObj" : {
+            "name" : "<empty>",
+            "typeFullName" : "ANY",
+            "lineNumber" : null,
+            "columnNumber" : null,
+            "label" : "UNKNOWN"
+          },
+          "definedBy" : {
+            "name" : "<empty>",
+            "typeFullName" : "ANY",
+            "lineNumber" : null,
+            "columnNumber" : null,
+            "label" : "UNKNOWN"
+          },
+          "invokedCalls" : [
+            {
+              "callName" : "testFilterQuery",
+              "resolvedMethod" : "com.piggymetrics.statistics.domain.Item.getCurrency:com.piggymetrics.statistics.domain.Currency()",
+              "paramTypes" : [
+              ],
+              "returnType" : "ANY",
+              "isExternal" : false,
+              "lineNumber" : 106,
+              "columnNumber" : 14
+            },
+            {
+              "callName" : "getTitle",
+              "resolvedMethod" : "com.piggymetrics.statistics.domain.Item.getTitle:java.lang.String()",
+              "paramTypes" : [
+              ],
+              "returnType" : "ANY",
+              "isExternal" : false,
+              "lineNumber" : 109,
+              "columnNumber" : 25
+            }
+          ],
+          "argToCalls" : [
+          ]
+        }
+      ]
+    },
+    {
+      "code" : "",
+      "fullName" : "com.piggymetrics.account.AccountApplication.<init>:void()",
+      "signature" : "void()",
+      "fileName" : "account-service/src/main/java/com/piggymetrics/account/AccountApplication.java",
       "lineNumber" : null,
       "columnNumber" : null,
       "usages" : [

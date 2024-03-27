@@ -1,7 +1,6 @@
 """
 Convert Command for the atom-tools CLI.
 """
-import json
 import logging
 import sys
 
@@ -9,6 +8,7 @@ from cleo.helpers import option
 
 from atom_tools.cli.commands.command import Command
 from atom_tools.lib.converter import OpenAPI
+from atom_tools.lib.utils import export_json
 
 
 class ConvertCommand(Command):
@@ -41,16 +41,8 @@ class ConvertCommand(Command):
             'i',
             'Usages slice file',
             flag=False,
-            default=None,
             value_required=True,
         ),
-        # option(
-        #     'reachables-slice',
-        #     'r',
-        #     'Reachables slice file',
-        #     flag=False,
-        #     default=None,
-        # ),
         option(
             'type',
             't',
@@ -80,7 +72,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
         """
         Executes the convert command and performs the conversion.
         """
-        supported_types = ['java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts']
+        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts'}
         if self.option('type') not in supported_types:
             raise ValueError(f'Unknown origin type: {self.option("type")}')
         match self.option('format'):
@@ -94,8 +86,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                 if not (result := converter.endpoints_to_openapi(self.option('server'))):
                     logging.warning('No results produced!')
                     sys.exit(1)
-                with open(self.option('output-file'), 'w', encoding='utf-8') as f:
-                    json.dump(result, f, indent=4, sort_keys=True)
+                export_json(result, self.option('output-file'), 4)
                 logging.info(f'OpenAPI document written to {self.option("output-file")}.')
             case _:
                 raise ValueError(f'Unknown destination format: {self.option("format")}')

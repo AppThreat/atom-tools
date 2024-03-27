@@ -2,6 +2,7 @@
 Base console application.
 """
 import logging
+import sys
 from importlib import import_module
 from typing import Callable
 
@@ -10,7 +11,11 @@ from cleo.events.console_command_event import ConsoleCommandEvent
 from cleo.events.console_events import COMMAND
 from cleo.events.event import Event
 from cleo.events.event_dispatcher import EventDispatcher
+from cleo.io.inputs.argv_input import ArgvInput
+from cleo.io.inputs.input import Input
 from cleo.io.io import IO
+from cleo.io.outputs.output import Output
+from cleo.io.outputs.stream_output import StreamOutput
 
 from atom_tools import __version__
 from atom_tools.cli.command_loader import CommandLoader
@@ -48,6 +53,7 @@ def load_command(name: str) -> Callable[[], Command]:
 
 COMMANDS = [
     'convert',
+    'filter',
     'validate-lines',
 ]
 
@@ -71,15 +77,33 @@ class Application(BaseApplication):
         command_loader = CommandLoader({name: load_command(name) for name in COMMANDS})
         self.set_command_loader(command_loader)
 
+    def create_io(
+        self,
+        input: Input | None = None,  # pylint: disable=redefined-builtin
+        output: Output | None = None,
+        error_output: Output | None = None,
+    ) -> IO:
+        if not input:
+            input = ArgvInput()
+            input.set_stream(sys.stdin)
+
+        if output is None:
+            output = StreamOutput(sys.stdout)
+
+        if error_output is None:
+            error_output = StreamOutput(sys.stderr)
+
+        return IO(input, output, error_output)
+
     @staticmethod
     def register_command_loggers(event: Event, event_name: str, _: EventDispatcher) -> None:  # pylint: disable=unused-argument
         """
-        Registers the command loggers.
+        Register command loggers. Based heavily on Poetry's implementation.
 
         Args:
-            event (Event): The event.
-            event_name (str): The event name.
-            _: EventDispatcher: The event dispatcher.
+            event (Event): The event object.
+            event_name (str): The name of the event.
+            _: The event dispatcher.
         """
         assert isinstance(event, ConsoleCommandEvent)
         command = event.command
@@ -98,7 +122,8 @@ class Application(BaseApplication):
 
         if io.is_debug():
             level = logging.DEBUG
-        elif io.is_very_verbose() or io.is_verbose():
+        # elif io.is_very_verbose() or io.is_verbose():
+        else:
             level = logging.INFO
 
         logging.basicConfig(level=level, handlers=[handler])

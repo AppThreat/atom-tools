@@ -8,6 +8,7 @@ from typing import Tuple, List, Dict, Any
 
 
 logger: logging.Logger = logging.getLogger(__name__)
+
 py_type_mapping = {'int': 'integer', 'string': 'string', 'float': 'number', 'path': 'string'}
 
 
@@ -56,6 +57,20 @@ class ValidationRegexCollection:  # pylint: disable=too-many-instance-attributes
     js_require_extract = re.compile(r'require\((?P<lib>\S+)\).(?P<mod>\S+)')
     py_func_name = re.compile(r'(?<=\().+?(?=\))')
     py_mod_members = re.compile(r'(?<=:<module>.)(?P<class>[A-Z][^<.]+)?\.?(?P<func>[^<.]+)?')
+
+
+@dataclass
+class FilteringPatternCollection:
+    """
+    A collection of regular expressions used for filtering.
+    """
+    flattened_loc_index = re.compile(r'(?P<type>objectSlices|userDefinedTypes|usages|invokedCalls|argToCalls|fields|procedures).\[(?P<index>\d+)]')
+    top_level_flat_loc_index = re.compile(r'(?P<type>objectSlices|userDefinedTypes).\[(?P<index>\d+)]')
+    attribute_and_line = re.compile(r'(?P<attrib>[^:]+):(?P<line_nums>[\d,-]+)')
+    top_level_filter_usages = (
+        '{objectSlices: objectSlices[?ATTRIBUTECONDITION`TARGET_VALUE`], '
+        'userDefinedTypes: userDefinedTypes[?ATTRIBUTECONDITION`TARGET_VALUE`]}'
+    )
 
 
 def py_helper(endpoint: str, regex: OpenAPIRegexCollection) -> Tuple[str, List[Dict]]:

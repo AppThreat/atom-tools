@@ -176,7 +176,7 @@ class OpenAPI:
         if call_name in ops:
             params = self._create_param_object(ep, orig_ep, call)
             result: Dict[str, Dict] = {call_name: {'responses': {}}}
-            if params and self.usages.origin_type not in ('js', 'ts', 'javascript', 'typescript'):
+            if params:
                 result[call_name] |= {'parameters': params}
             return result
         return determine_operations(call, params)
