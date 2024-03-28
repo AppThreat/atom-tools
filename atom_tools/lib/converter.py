@@ -24,7 +24,7 @@ from atom_tools.lib.slices import AtomSlice
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
 exclusions = ['/content-type', '/application/javascript', '/application/json', '/application/text',
-              '/application/xml', '/*', '/*/*', '/allow']
+              '/application/xml', '/*', '/*/*', '/allow', '/GET', '/POST', '/xml', '/cookie']
 
 
 class OpenAPI:
@@ -157,6 +157,21 @@ class OpenAPI:
                         paths_object = new_path_item
         return paths_object
 
+    def _add_py_request_methods(self, paths_item_object: Dict) -> Dict:
+        """Add default request methods for flask and django"""
+        if self.usages.custom_attr == 'flask':
+            paths_item_object = merge_path_objects(
+                paths_item_object,
+                {'head': {'responses': {}}, 'options': {'responses': {}}}
+            )
+            pio_ct = len(paths_item_object.keys())
+            if pio_ct == 2 or (pio_ct == 3 and 'x-atom-usages' in paths_item_object):
+                paths_item_object['get'] = {'responses': {}}
+        elif self.usages.custom_attr == 'django':
+            paths_item_object = merge_path_objects(
+                paths_item_object, {'get': {'responses': {}}, 'post': {'responses': {}}})
+        return paths_item_object
+
     def _calls_to_params(self, ep: str, orig_ep: str, call: Dict | None) -> Dict[str, Any]:
         """
         Transforms a call and endpoint into a parameter object and organizes it
@@ -254,6 +269,15 @@ class OpenAPI:
             py_special_case = True
         return ep, py_special_case, tmp_params
 
+    def _extract_unparsed_params(
+            self, ep: str, orig_ep: str, py_special_case: bool, tmp_params: List
+    ) -> Tuple[str, List]:
+        if ':' in ep or '<' in ep:
+            ep, py_special_case, tmp_params = self._extract_params(ep)
+        if '{' in ep and not py_special_case:
+            tmp_params = self._generic_params_helper(ep, orig_ep)
+        return ep, tmp_params
+
     def _filter_matches(self, matches: List[str], code: str) -> List[str]:
         """
         Filters a list of matches based on certain criteria.
@@ -311,8 +335,8 @@ class OpenAPI:
         file_names = list(methods['file_names'].keys())
         if not file_names:
             return {}
-        conditional = [f'fileName==`{i}`' for i in file_names]
-        conditional = '*[?' + ' || '.join(conditional) + (  # type: ignore
+        file_names = [f'fileName==`{i}`' for i in file_names]
+        conditional = '*[?' + ' || '.join(file_names) + (
             '][].{file_name: fileName, methods: usages[].targetObj[].{resolved_method: '
             'resolvedMethod || callName || code || name, line_number: lineNumber}}')
         pattern = jmespath.compile(conditional)  # type: ignore
@@ -341,15 +365,14 @@ class OpenAPI:
         tmp_params: List = []
         py_special_case = False
         orig_ep = ep
-        if ':' in ep or '<' in ep:
-            ep, py_special_case, tmp_params = self._extract_params(ep)
-        if '{' in ep and not py_special_case:
-            tmp_params = self._generic_params_helper(ep, orig_ep)
+        ep, tmp_params = self._extract_unparsed_params(ep, orig_ep, py_special_case, tmp_params)
         if tmp_params:
             paths_item_object['parameters'] = tmp_params
         if calls:
             for call in calls:
-                paths_item_object |= self._calls_to_params(ep, orig_ep, call)
+                paths_item_object = merge_path_objects(
+                    paths_item_object, self._calls_to_params(ep, orig_ep, call)
+                )
         if (call_line_numbers or line_number) and (line_nos := create_ln_entries(
                 filename, list(set(call_line_numbers)), line_number)):
             if 'x-atom-usages' in paths_item_object:
@@ -357,6 +380,8 @@ class OpenAPI:
                     paths_item_object['x-atom-usages'], line_nos)
             else:
                 paths_item_object |= line_nos
+        if self.usages.origin_type in ('py', 'python'):
+            paths_item_object = self._add_py_request_methods(paths_item_object)
         return ep, paths_item_object
 
     def _parse_path_regexes(self, endpoint: str) -> str:
@@ -413,7 +438,13 @@ class OpenAPI:
             '[].resolvedMethod[]}')
 
         user_defined_types = self._process_methods_helper(
-            'userDefinedTypes[].{file_name: name, resolved_methods: fields[].name}')
+            'userDefinedTypes[].{file_name: fileName, resolved_methods: fields[].name}')
+
+        if self.usages.origin_type in ('py', 'python'):
+            user_defined_types = merge_path_objects(
+                user_defined_types,
+                self._process_methods_helper('userDefinedTypes[].{file_name: fileName, '
+                                             'resolved_methods: procedures[].resolvedMethod}'))
 
         for key, value in calls.items():
             if method_map.get(key):
@@ -454,8 +485,10 @@ class OpenAPI:
         for r in result:
             file_name = r['file_name']
             methods = r['resolved_methods']
-            resolved.setdefault(file_name, {'resolved_methods': []})[
-                'resolved_methods'].extend(methods)
+            if resolved.get(file_name):
+                resolved[file_name]['resolved_methods'].extend(methods)
+            else:
+                resolved[file_name] = {'resolved_methods': methods}
 
         return resolved
 
@@ -539,7 +572,12 @@ class OpenAPI:
         pattern = (f'objectSlices[?fileName==`{json.dumps(file_name.encode().decode())}`].usages[]'
                    f'.*[?callName][][]')
         compiled_pattern = jmespath.compile(pattern)
-        return compiled_pattern.search(self.usages.content)
+        result = compiled_pattern.search(self.usages.content)
+        pattern = (f'userDefinedTypes[?fileName==`{json.dumps(file_name.encode().decode())}`][].procedures[]')
+        compiled_pattern = jmespath.compile(pattern)
+        result2 = compiled_pattern.search(self.usages.content)
+        result += result2
+        return result
 
 
 def create_ln_entries(filename: str, call_line_numbers: List, line_number: int | None) -> Dict:
@@ -662,7 +700,9 @@ def merge_path_objects(p1: Dict, p2: Dict) -> Dict:
             continue
         for k, v in value.items():
             if p1[key].get(k):
-                if k == 'x-atom-usages':
+                if k == 'resolved_methods':
+                    p1[key][k].extend(v)
+                elif k == 'x-atom-usages':
                     p1[key][k] = merge_x_atom(p1[key][k], v)
                 elif k == 'parameters':
                     p1[key][k] = merge_params(p1[key][k], v)

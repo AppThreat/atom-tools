@@ -65,7 +65,7 @@ def import_flat_slice(content: Dict) -> Dict[str, Dict]:
     return create_flattened_dicts(content)
 
 
-def import_slice(filename: str | Path) -> Tuple[Dict, str]:
+def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
     """
     Import a slice from a JSON file.
 
@@ -85,12 +85,17 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str]:
     """
     content: Dict = {}
     slice_type = ''
+    custom_attr = ''
     if not filename:
         logger.warning('No filename specified.')
-        return content, slice_type
+        return content, slice_type, custom_attr
     try:
         with open(filename, 'r', encoding='utf-8') as f:
             raw_content = f.read().replace(r'\\', '/')
+            if 'flask' in raw_content:
+                custom_attr = 'flask'
+            elif 'django' in raw_content:
+                custom_attr = 'django'
             content = json.loads(raw_content)
         if content.get('objectSlices'):
             slice_type = 'usages'
@@ -107,7 +112,7 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str]:
     if not slice_type:
         logger.warning('Slice type not recognized.')
         sys.exit(1)
-    return content, slice_type
+    return content, slice_type, custom_attr
 
 
 def process_attrib_dict(attrib_dict: Dict, k: str, v: str) -> Dict:
@@ -136,7 +141,7 @@ class AtomSlice:
     """
 
     def __init__(self, filename: str | Path, origin_type: str | None = None) -> None:
-        self.content, self.slice_type = import_slice(filename)
+        self.content, self.slice_type, self.custom_attr = import_slice(filename)
         self.origin_type = origin_type
 
 
@@ -149,5 +154,5 @@ class FlatSlice:
     attrib_dicts: Dict = field(default_factory=dict)
 
     def __post_init__(self):
-        self.content, self.slice_type = import_slice(self.slice_file)
+        self.content, self.slice_type, self.custom_attr = import_slice(self.slice_file)
         self.attrib_dicts = import_flat_slice(self.content)

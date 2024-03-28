@@ -27,7 +27,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
+        python-version: "3.12"
     - name: Make sure versions are synced if PR or ref is tag
       if: ${{ github.event_name == 'pull_request' || github.ref_type == 'tag' }}
       shell: bash
