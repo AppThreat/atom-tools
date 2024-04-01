@@ -54,6 +54,7 @@ def load_command(name: str) -> Callable[[], Command]:
 COMMANDS = [
     'convert',
     'filter',
+    'query-endpoints',
     'validate-lines',
 ]
 

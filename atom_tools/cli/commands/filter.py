@@ -8,7 +8,7 @@ from cleo.helpers import option
 
 from atom_tools.cli.commands.command import Command
 from atom_tools.lib.filtering import Filter, parse_filters
-from atom_tools.lib.utils import add_outfile_to_cmd, export_json
+from atom_tools.lib.utils import add_params_to_cmd, export_json
 
 
 logger = logging.getLogger(__name__)
@@ -78,7 +78,7 @@ class FilterCommand(Command):
             outfile = str(slice_file.parent / f'{slice_file.stem}_filtered{slice_file.suffix}')
         cmd, args = 'export', ''
         if self.option('execute') != 'export':
-            cmd, args = add_outfile_to_cmd(self.option('execute'), outfile)
+            cmd, args = add_params_to_cmd(self.option('execute'), outfile)
         filter_runner = Filter(self.option('input-slice'), outfile, self.option('fuzz'))
         if criteria:
             filters = parse_filters(criteria)

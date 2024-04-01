@@ -52,10 +52,6 @@ class Filter:
                          f'{a_filter.value}')
             self.attribute_filters.append(a_filter)
 
-    def filter_lns(self, data, attribute_filter):
-        """Filter line numbers"""
-        raise NotImplementedError
-
     def filter_reachables(self):
         """Filter reachables"""
         raise NotImplementedError
@@ -75,7 +71,7 @@ class Filter:
                 if self.fuzz:
                     self._search_values_fuzzy(f)
                 else:
-                    self._search_values(f.attribute, f.value, f.condition)
+                    self._search_values(f)
         if self.results:
             return self._process_slice_indexes()
         return {'objectSlices': [], 'userDefinedTypes': []}
@@ -89,9 +85,7 @@ class Filter:
                     filtered_slice[i.group('type')].append(
                         self.slc.content[i.group('type')][int(i.group('index'))])
             return filtered_slice
-        if exclude:
-            return self._handle_exclude_only(exclude)
-        return self.slc.content
+        return self._handle_exclude_only(exclude) if exclude else self.slc.content
 
     def _handle_exclude_only(self, exclude: Set[re.Match]) -> Dict:
         filtered_slice = deepcopy(self.slc.content)
@@ -125,13 +119,14 @@ class Filter:
                 exclude_indexes.add(matched)
         return self._exclude_indexes(include_indexes, exclude_indexes)
 
-    def _search_values(self, attrib: str, value: re.Pattern, condition: str) -> None:
+    def _search_values(self, f: AttributeFilter) -> None:
         include = []
         exclude = []
-        for k, v in self.slc.attrib_dicts.get(attrib, {}).items():
-            if value.search(k):
-                if condition == '==':
+        for k, v in self.slc.attrib_dicts.get(f.attribute, {}).items():
+            if f.value.search(k):
+                if f.condition == '==':
                     include.extend(v)
+                    # self.found_keys.append(k)
                 else:
                     exclude.extend(v)
         self.results.extend(list(set(include)))
@@ -153,7 +148,7 @@ def create_attribute_filter(value: str, fuzz_pct: int | None) -> Tuple:
     """Create an attribute filter"""
     lns = ()
     if ':' in value and (match := filtering.attribute_and_line.search(value)):
-        value = match.group('filename')
+        value = match.group('attrib')
         lns = get_ln_range(match.group('line_nums'))
     new_value = value if fuzz_pct else re.compile(value, re.IGNORECASE)
     return new_value, lns

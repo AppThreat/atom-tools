@@ -11,7 +11,7 @@ import jmespath
 
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.regex_utils import ValidationRegexCollection
-from atom_tools.lib.utils import export_json
+from atom_tools.lib.utils import export_json, remove_duplicates_list
 
 logger = logging.getLogger(__name__)
 regex: ValidationRegexCollection = ValidationRegexCollection()
@@ -279,20 +279,6 @@ def py_validation_helper(function_name: str, code: str, line: str) -> bool:
     if ('__iter__' in function_name or '__next__' in function_name) and 'for ' in line:
         found = True
     return found
-
-
-def remove_duplicates_list(obj: List[Dict]) -> List[Dict]:
-    """Removes duplicates from a list of dictionaries."""
-    if not obj:
-        return obj
-    unique_objs = []
-    seen = set()
-    for o in obj:
-        key = tuple(o.get(k) for k, v in o.items())
-        if key not in seen:
-            unique_objs.append(o)
-            seen.add(key)
-    return unique_objs
 
 
 @dataclass(init=True)
@@ -585,9 +571,6 @@ class LineValidator:
     def _get_verbose_results(self):
         """
         Add the verbose results of the line number validation.
-
-        Args:
-            f: The file object to write the results to.
         """
         verbose_results = '\n*** INVALID ENTRIES ***\n'
         for i in self.matches['unmatched']:
