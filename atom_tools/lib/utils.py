@@ -46,7 +46,7 @@ def output_endpoints(data: Dict, names_only: bool, line_range: Tuple[int, int] |
             continue
         for k, v in usages.items():
             for i in v:
-                if line_range[0] <= i <= line_range[1]:
+                if not line_range or line_range[0] <= i <= line_range[1]:
                     to_print += f':{k}:{i}'
                     break
             to_print += '\n'
