@@ -35,22 +35,28 @@ def export_json(data: Dict, outfile: str, indent: int | None = None) -> None:
         json.dump(data, f, indent=indent, sort_keys=True)
 
 
-def output_endpoints(data: Dict, names_only: bool, line_range: Tuple[int, int] | Tuple) -> None:
+def output_endpoints(data: Dict, sparse: bool, line_range: Tuple[int, int] | Tuple) -> str:
     """Outputs endpoints"""
     to_print = ''
     for endpoint, values in data.get('paths', {}).items():
-        to_print += f'{endpoint}'
-        usages = values.get("x-atom-usages", {}).get('call', {})
-        if names_only:
-            to_print += '\n'
-            continue
-        for k, v in usages.items():
-            for i in v:
-                if not line_range or line_range[0] <= i <= line_range[1]:
-                    to_print += f':{k}:{i}'
-                    break
-            to_print += '\n'
-    print(to_print)
+        if result := filter_endpoint_ln(endpoint, values, sparse, line_range):
+            to_print += f'{result}\n'
+    return to_print
+
+
+def filter_endpoint_ln(ep: str, values: Dict, sparse: bool, ln_range: Tuple[int, int]) -> str:
+    """Filters endpoint line numbers"""
+    to_print = ''
+    usages = values.get("x-atom-usages", {}).get('call', {})
+    for k, v in usages.items():
+        for i in v:
+            if not ln_range or ln_range[0] <= i <= ln_range[1]:
+                if sparse:
+                    return f'{ep}'
+                to_print += f':{k}:{i}'
+    if to_print:
+        to_print = f'{ep}{to_print}'
+    return to_print
 
 
 def remove_duplicates_list(obj: List[Dict]) -> List[Dict]:
