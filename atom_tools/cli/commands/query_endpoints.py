@@ -77,4 +77,5 @@ class QueryEndpointsCommand(Command):
         line_filter = ()
         if self.option('filter-lines'):
             line_filter = get_ln_range(self.option('filter-lines'))
-        output_endpoints(result, self.option('sparse'), line_filter)
+        output = output_endpoints(result, self.option('sparse'), line_filter)
+        print(output)
