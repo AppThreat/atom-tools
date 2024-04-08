@@ -2,6 +2,7 @@
 """
 Line validation command for the atom-tools CLI.
 """
+import logging
 import os
 import pathlib
 import sys
@@ -10,6 +11,9 @@ from cleo.helpers import option
 
 from atom_tools.cli.commands.command import Command
 from atom_tools.lib.validator import LineValidator
+
+
+logger = logging.getLogger(__name__)
 
 
 class ValidateLinesCommand(Command):
@@ -72,7 +76,8 @@ class ValidateLinesCommand(Command):
 
     ]
     help = """Validate source file line numbers in an atom usages or reachables slice."""
-    loggers = ['atom_tools.lib.validator', 'atom_tools.lib.regex_utils', 'atom_tools.lib.slices']
+    loggers = ['atom_tools.lib.validator', 'atom_tools.lib.regex_utils', 'atom_tools.lib.slices',
+               'atom_tools.lib.utils']
 
     def handle(self):
         """

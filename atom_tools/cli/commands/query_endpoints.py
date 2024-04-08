@@ -57,8 +57,9 @@ class QueryEndpointsCommand(Command):
             'Only display names; do not include path and line numbers.',
         )
     ]
-    help = """The query command can be used to return results directly to the console. """
-    loggers = ['atom_tools.lib.converter', 'atom_tools.lib.regex_utils', 'atom_tools.lib.slices']
+    help = """The query command can be used to return endpoint results directly to the console. """
+    loggers = ['atom_tools.lib.converter', 'atom_tools.lib.regex_utils', 'atom_tools.lib.slices',
+               'atom_tools.lib.utils']
 
     def handle(self):
         """
@@ -74,8 +75,10 @@ class QueryEndpointsCommand(Command):
         )
         if not (result := converter.endpoints_to_openapi('')):
             logging.warning('No results produced!')
-        line_filter = ()
-        if self.option('filter-lines'):
-            line_filter = get_ln_range(self.option('filter-lines'))
-        output = output_endpoints(result, self.option('sparse'), line_filter)
-        print(output)
+            print('')
+        else:
+            line_filter = ()
+            if self.option('filter-lines'):
+                line_filter = get_ln_range(self.option('filter-lines'))
+            output = output_endpoints(result, self.option('sparse'), line_filter)
+            print(output)

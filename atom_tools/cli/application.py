@@ -114,7 +114,7 @@ class Application(BaseApplication):
         io = event.io
 
         loggers = []
-        loggers += command.loggers
+        loggers += command.loggers  # type: ignore
 
         handler = IOHandler(io)
         handler.setFormatter(IOFormatter())

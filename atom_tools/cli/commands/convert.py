@@ -69,7 +69,8 @@ class ConvertCommand(Command):
     ]
     help = """The convert command converts an atom slice to a different format.
 Currently supports creating an OpenAPI 3.x document based on a usages slice."""
-    loggers = ['atom_tools.lib.converter', 'atom_tools.lib.regex_utils', 'atom_tools.lib.slices']
+    loggers = ['atom_tools.lib.converter', 'atom_tools.lib.regex_utils', 'atom_tools.lib.slices',
+               'atom_tools.lib.utils']
 
     def handle(self):
         """
