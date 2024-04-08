@@ -97,9 +97,9 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
             elif 'django' in raw_content:
                 custom_attr = 'django'
             content = json.loads(raw_content)
-        if content.get('objectSlices'):
+        if 'objectSlices' in content:
             slice_type = 'usages'
-        if content.get('reachables'):
+        elif 'reachables' in content:
             slice_type = 'reachables'
     except (json.decoder.JSONDecodeError, UnicodeDecodeError):
         logger.warning(
