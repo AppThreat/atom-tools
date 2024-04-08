@@ -13,6 +13,7 @@ from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.regex_utils import ValidationRegexCollection
 from atom_tools.lib.utils import export_json, remove_duplicates_list
 
+
 logger = logging.getLogger(__name__)
 regex: ValidationRegexCollection = ValidationRegexCollection()
 operator_map: Dict[str, List[str]] = {
