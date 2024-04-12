@@ -23,8 +23,10 @@ from atom_tools.lib.slices import AtomSlice
 
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
+
 exclusions = ['/content-type', '/application/javascript', '/application/json', '/application/text',
-              '/application/xml', '/*', '/*/*', '/allow', '/GET', '/POST', '/xml', '/cookie']
+              '/application/xml', '/*', '/*/*', '/allow', '/get', '/post', '/xml', '/cookie',
+              '/usestrict', '/maxage', '/sessionid']
 
 
 class OpenAPI:
@@ -256,7 +258,7 @@ class OpenAPI:
         matches = self._filter_matches(matches, method)
         return [
             v for v in matches
-            if v and v not in exclusions and not v.lower().startswith('/x-')
+            if v and v.lower() not in exclusions and not v.lower().startswith('/x-')
         ]
 
     def _extract_params(self, ep: str) -> Tuple[str, bool, List]:
@@ -298,7 +300,8 @@ class OpenAPI:
                 ):
                     return filtered_matches
             case 'js' | 'ts' | 'javascript' | 'typescript':
-                if 'app.' not in code and 'route' not in code and 'ftp' not in code:
+                if ('app.' not in code and 'route' not in code and 'ftp' not in code) or (
+                        'app.set(' in code):
                     return filtered_matches
 
         for m in matches:
