@@ -116,6 +116,9 @@ Regex word boundaries can be used if you only want to be exact about the filenam
 
 This will filter files named server.ts - without the \b, files like ftpserver.ts would also be matched.
 
+>Note: You can search for a file name without including the path if needed and fuzzing ratios will be computed based 
+> only on the file name.
+
 ##### Chaining filter commands
 
 The filter command can act on itself by specifying an additional filter command as an argument.
