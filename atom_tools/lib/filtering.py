@@ -1,5 +1,6 @@
 """Classes and functions for filtering slices"""
 import logging
+import pathlib
 import re
 from copy import deepcopy
 from dataclasses import dataclass
@@ -20,7 +21,7 @@ class AttributeFilter:
     """Attribute filter class"""
     def __init__(self, key: str, value: str, condition: str, fuzz_pct: int | None) -> None:
         self.attribute = key.lower()
-        self.value, self.line_numbers = create_attribute_filter(value, fuzz_pct)
+        self.value, self.line_numbers, self.fn_only = create_attribute_filter(key, value, fuzz_pct)
         self.condition = condition
 
 
@@ -97,14 +98,15 @@ class Filter:
                     filtered_slice[key].pop(k)
         return filtered_slice
 
-    def _process_fuzzy_results(self, f: AttributeFilter, result: List[Tuple[str, int]]) -> None:
+    def _process_fuzzy_results(
+            self, f: AttributeFilter, result: List[Tuple[str, int, str]]) -> None:
         include = []
         exclude = []
         for i in result:
             if f.condition == '==':
-                include.extend(self.slc.attrib_dicts.get(f.attribute, {}).get(i[0], []))
+                include.extend(self.slc.attrib_dicts.get(f.attribute, {}).get(i[2], []))
             else:
-                exclude.extend(self.slc.attrib_dicts.get(f.attribute, {}).get(i[0], []))
+                exclude.extend(self.slc.attrib_dicts.get(f.attribute, {}).get(i[2], []))
         self.results.extend(list(set(include)))
         self.negative_results.extend(list(set(exclude)))
 
@@ -126,7 +128,6 @@ class Filter:
             if f.value.search(k):
                 if f.condition == '==':
                     include.extend(v)
-                    # self.found_keys.append(k)
                 else:
                     exclude.extend(v)
         self.results.extend(list(set(include)))
@@ -134,6 +135,13 @@ class Filter:
 
     def _search_values_fuzzy(self, f: AttributeFilter) -> None:
         search_values = self.slc.attrib_dicts.get(f.attribute, {}).keys()
+        if f.fn_only:
+            search_values = {
+                i: f'{pathlib.Path(i).stem}{pathlib.Path(i).suffix}'
+                for i in search_values
+            }
+        else:
+            search_values = {i: i for i in search_values}
         if result := process.extractBests(
             f.value,
             search_values,
@@ -144,14 +152,22 @@ class Filter:
             self._process_fuzzy_results(f, result)
 
 
-def create_attribute_filter(value: str, fuzz_pct: int | None) -> Tuple:
+def create_attribute_filter(key: str, value: str, fuzz_pct: int | None) -> Tuple:
     """Create an attribute filter"""
     lns = ()
+    fn_only = False
+    if key.lower() == 'filename' and '/' not in value and '\\' not in value:
+        fn_only = True
     if ':' in value and (match := filtering.attribute_and_line.search(value)):
         value = match.group('attrib')
         lns = get_ln_range(match.group('line_nums'))
-    new_value = value if fuzz_pct else re.compile(value, re.IGNORECASE)
-    return new_value, lns
+    if fuzz_pct:
+        new_value = value
+    else:
+        if '.' in value:
+            value += '$'
+        new_value = re.compile(value, re.IGNORECASE)  # type: ignore
+    return new_value, lns, fn_only
 
 
 def get_ln_range(value: str) -> Tuple[int, int] | Tuple:

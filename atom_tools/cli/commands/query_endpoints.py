@@ -73,8 +73,9 @@ class QueryEndpointsCommand(Command):
             self.option('type'),
             self.option('input-slice'),
         )
-        if not (result := converter.endpoints_to_openapi('')):
-            logging.warning('No results produced!')
+        result = converter.endpoints_to_openapi('')
+        if not result.get('paths'):
+            logger.warning('No results produced!')
             print('')
         else:
             line_filter = ()
