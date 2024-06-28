@@ -55,6 +55,7 @@ COMMANDS = [
     'convert',
     'filter',
     'query-endpoints',
+    'check-reachable',
     'validate-lines',
 ]
 

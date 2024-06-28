@@ -1,5 +1,5 @@
 # pylint: disable=R0801
-"""Query Command for the atom-tools CLI."""
+"""Query Endpoints Command for the atom-tools CLI."""
 import logging
 
 from cleo.helpers import option

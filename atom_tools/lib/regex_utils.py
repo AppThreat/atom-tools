@@ -6,6 +6,7 @@ import re
 from dataclasses import dataclass
 from typing import Tuple, List, Dict, Any
 
+import jmespath
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -71,6 +72,11 @@ class FilteringPatternCollection:
         '{objectSlices: objectSlices[?ATTRIBUTECONDITION`TARGET_VALUE`], '
         'userDefinedTypes: userDefinedTypes[?ATTRIBUTECONDITION`TARGET_VALUE`]}'
     )
+    jmespath_purls = jmespath.compile('reachables[].purls[]')
+    purl_pkg = re.compile(r'(?P<p1>[^/:]+/(?P<p2>[^/]+))(?:(?:.|/)v\d+)?(?=@)')
+    purl_trailing_version = re.compile(r'(?:.|/)v\d+(?=@)')
+    purl_version = re.compile(r'(?<=@)(?P<v1>v?(?P<v2>[\d.]+){1,3})(?P<ext>[^?\s]+)?')
+    filename = re.compile(r'[^/]+(?!/)')
 
 
 def py_helper(endpoint: str, regex: OpenAPIRegexCollection) -> Tuple[str, List[Dict]]:
