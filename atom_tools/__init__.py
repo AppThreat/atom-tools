@@ -1,4 +1,4 @@
 """
 A cli, classes and functions for converting an atom slice to a different format
 """
-__version__ = '0.5.5'
+__version__ = '0.6.0'

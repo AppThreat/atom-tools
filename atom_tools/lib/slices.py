@@ -11,11 +11,14 @@ from typing import Tuple, Dict
 
 import json_flatten  # type: ignore
 
+from atom_tools.lib.regex_utils import FilteringPatternCollection
+
 
 logger = logging.getLogger(__name__)
+patterns = FilteringPatternCollection()
 
 
-def create_flattened_dicts(data: Dict) -> Dict[str, Dict]:
+def create_attrib_dicts(data: Dict) -> Dict[str, Dict]:
     """Creates a flattened slice and individual attribute dictionaries."""
     attributes: Dict[str, Dict] = {
         'filename': {},
@@ -27,7 +30,7 @@ def create_flattened_dicts(data: Dict) -> Dict[str, Dict]:
     }
 
     for k, v in data.items():
-        if 'fileName' in k:
+        if 'fileName' in k or 'parentFileName' in k:
             attributes['filename'] = process_attrib_dict(attributes['filename'], k, v)
         elif 'fullName' in k:
             attributes['fullname'] = process_attrib_dict(attributes['fullname'], k, v)
@@ -48,7 +51,7 @@ def import_flat_slice(content: Dict) -> Dict[str, Dict]:
     Import a slice from a JSON file.
 
     Args:
-        filename (str): The path to the JSON file.
+        content (dict): The contents of the JSON file
 
     Returns:
         tuple[dict, str]: The contents of the JSON file and the type of slice
@@ -62,7 +65,7 @@ def import_flat_slice(content: Dict) -> Dict[str, Dict]:
         If the JSON file is not a valid slice, a warning is logged.
     """
     content = json_flatten.flatten(content)
-    return create_flattened_dicts(content)
+    return create_attrib_dicts(content)
 
 
 def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:

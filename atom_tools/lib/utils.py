@@ -5,6 +5,8 @@ import re
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+from atom_tools.lib.filtering import check_reachable_purl, filter_flows, get_ln_range
+
 
 logger = logging.getLogger(__name__)
 
@@ -27,6 +29,15 @@ def add_params_to_cmd(cmd: str, outfile: str, origin_type: str = '') -> Tuple[st
     if not args:
         cmd, args = cmd.split(' ', 1)
     return cmd, args
+
+
+def check_reachable(data: Dict, pkg: str, loc: str) -> bool:
+    """Checks if package is reachable"""
+    if pkg:
+        return check_reachable_purl(data, pkg)
+    if match := re.search(r'(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)', loc):
+        return filter_flows(data.get('reachables', []), match['file'], get_ln_range(match['line']))
+    raise ValueError(f'Invalid location: {loc}')
 
 
 def export_json(data: Dict, outfile: str, indent: int | None = None) -> None:

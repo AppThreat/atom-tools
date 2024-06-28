@@ -41,6 +41,13 @@ class FilterCommand(Command):
             flag=False,
         ),
         option(
+            'package-version',
+            'p',
+            description='Filter a reachables slice based on a package name and version in format '
+                        'package:version. May include multiple separated by a comma.',
+            flag=False,
+        ),
+        option(
             'outfile',
             'o',
             'File to re-export filtered slice to.',

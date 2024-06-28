@@ -1,26 +1,33 @@
 import pytest
 
-from atom_tools.lib.filtering import Filter, parse_filters
-from atom_tools.lib.utils import sort_dict
+from atom_tools.lib.filtering import check_reachable_purl, Filter, filter_flows, parse_filters
+from atom_tools.lib.slices import AtomSlice
+from atom_tools.lib.utils import check_reachable, sort_dict
 
 
 @pytest.fixture
 def java_usages_1():
-    return Filter('test/data/java-piggymetrics-usages.json', 'outfile.json', '90')
+    filter_obj = Filter('test/data/java-piggymetrics-usages.json', 'outfile.json', '90')
+    filter_obj.add_filters(parse_filters('callName=testFilterQuery'))
+    return filter_obj
+
 
 @pytest.fixture
 def java_usages_2():
-    return Filter('test/data/java-sec-code-usages.json', 'outfile.json', '90')
+    filter_obj = Filter('test/data/java-sec-code-usages.json', 'outfile.json', '90')
+    filter_obj.add_filters(parse_filters('fileName=test/file/name.java'))
+    return filter_obj
 
 
 @pytest.fixture
 def js_usages_1():
-    return Filter('test/data/js-juiceshop-usages.json', 'outfile.json', '90')
+    filter_obj = Filter('test/data/js-juiceshop-usages.json', 'outfile.json', '90')
+    filter_obj.add_filters(parse_filters('signature=@Pipe'))
+    return filter_obj
 
 
 def test_attribute_filter_class(java_usages_1, js_usages_1, java_usages_2):
-    java_usages_1.add_filters(parse_filters('callName=testFilterQuery'))
-    assert java_usages_1.filter_slice() == {'objectSlices': [{'code': '',
+    assert sort_dict(java_usages_1.filter_slice()) == {'objectSlices': [{'code': '',
                    'columnNumber': 20,
                    'fileName': 'account-service/src/main/java/com/piggymetrics/account/AccountApplication.java',
                    'fullName': 'com.piggymetrics.account.AccountApplication.<init>:void()',
@@ -52,10 +59,7 @@ def test_attribute_filter_class(java_usages_1, js_usages_1, java_usages_2):
                                              'name': '<empty>',
                                              'typeFullName': 'ANY'}}]}],
  'userDefinedTypes': []}
-    js_usages_1.add_filters(parse_filters('signature=@Pipe'))
-    result = js_usages_1.filter_slice()
-    result = sort_dict(result)
-    assert result == {
+    assert sort_dict(js_usages_1.filter_slice()) == {
         'objectSlices': [{'code': "@Pipe({name:'challengeHint',pure:false})",
                    'columnNumber': 0,
                    'fileName': 'frontend/src/app/score-board/pipes/challenge-hint.pipe.ts',
@@ -71,7 +75,7 @@ def test_attribute_filter_class(java_usages_1, js_usages_1, java_usages_2):
                    'signature': '@Pipe',
                    'usages': []}],
  'userDefinedTypes': []}
-    java_usages_2.add_filters(parse_filters('fileName=test/file/name.java'))
+
     result = java_usages_2.filter_slice()
     result = sort_dict(result)
     assert result == {'objectSlices': [{'code': '',
@@ -93,3 +97,23 @@ def test_attribute_filter_class(java_usages_1, js_usages_1, java_usages_2):
                                              'name': '<empty>',
                                              'typeFullName': 'ANY'}}]}],
  'userDefinedTypes': []}
+
+
+def test_check_reachable():
+    atom_slice = AtomSlice('test/data/js-juiceshop-reachables.json')
+
+    # Test package:version
+    assert check_reachable(atom_slice.content, 'colors:1.6.0', '') == True
+    assert check_reachable(atom_slice.content, 'colors:1.9.0', '') == False
+    assert check_reachable(atom_slice.content, '@colors/colors:1.6.0', '') == True
+    assert check_reachable(atom_slice.content, '@colors/colors:1.9.0', '') == False
+
+    # Test filename:linenumber
+    assert check_reachable(atom_slice.content, '', 'routes/updateUserProfile.ts:29') == True
+    assert check_reachable(atom_slice.content, '', 'updateUserProfile.ts:29') == True
+    assert check_reachable(atom_slice.content, '', 'routes/updateUserProfile.ts:25-30') == True
+    assert check_reachable(atom_slice.content, '', 'updateUserProfile.ts:25-30') == True
+    assert check_reachable(atom_slice.content, '', 'routes/updateUserProfile.ts:400') == False
+    assert check_reachable(atom_slice.content, '', 'updateUserProfile.ts:400') == False
+    assert check_reachable(atom_slice.content, '', 'routes/updateUserProfile.ts:400-600') == False
+    assert check_reachable(atom_slice.content, '', 'updateUserProfile.ts:400-600') == False

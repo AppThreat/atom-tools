@@ -29,7 +29,7 @@ e.g. `atom-tools help
 convert`).
 
 ```
-Atom Tools (version 0.5.0)
+Atom Tools (version 0.6.0)
 
 Usage:
   command [options] [arguments]
@@ -44,11 +44,13 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
 
 Available commands:
-  convert         Convert an atom slice to a different format.
-  filter          Filter an atom slice based on specified criteria.
-  help            Displays help for a command.
-  list            Lists commands.
-  validate-lines  Check the accuracy of the line numbers in an atom slice.
+  check-reachable  Find out if there are hits for a given package:version or file:linenumber in an atom slice.
+  convert          Convert an atom slice to a different format.
+  filter           Filter an atom slice based on specified criteria.
+  help             Displays help for a command.
+  list             Lists commands.
+  query-endpoints  List elements to display in the console.
+  validate-lines   Check the accuracy of the line numbers in an atom slice.
 ```
 
 ## Features
@@ -134,6 +136,7 @@ This would be equivalent to
 
 ##### Available attributes (not case-sensitive):
 
+*For usages slices*
 - callName
 - fileName
 - fullName
@@ -141,14 +144,21 @@ This would be equivalent to
 - resolvedMethod
 - signature
 
-| attribute      | locations                                                                                                                                                   |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| callName       | objectSlices.usages.argToCalls, objectSlices.usages.invokedCalls, userDefinedTypes.procedures,                                                              |
-| fileName       | objectSlices, userDefinedTypes                                                                                                                              |                                                                                                                          |
-| fullName       | objectSlices                                                                                                                                                |
-| name           | objectSlices.usages.targetObj, objectSlices.usages.definedBy, userDefinedTypes.fields                                                                       |
-| resolvedMethod | objectSlices.usages.targetObj, objectSlices.usages.definedBy, objectSlices.usages.argToCalls, objectSlices.usages.invokedCalls, userDefinedTypes.procedures |
-| signature      | objectSlices                                                                                                                                                |
+| attribute      | locations searched                                                                                                                                                      | reachables locations                       |
+|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------|
+| callName       | objectSlices.usages.argToCalls<br/>objectSlices.usages.invokedCalls<br/>userDefinedTypes.procedures,                                                                    |                                            |
+| fileName       | objectSlices<br/>userDefinedTypes                                                                                                               |                                            |                                                                                                                          |
+| fullName       | objectSlices                                                                                                                                                            |                                            |
+| name           | objectSlices.usages.targetObj<br/>objectSlices.usages.definedBy<br/>userDefinedTypes.fields                                                                             |                                            |
+| purl           |                                                                                                                                                                         | reachables.purls<br/>reachables.flows.tags |
+| resolvedMethod | objectSlices.usages.targetObj<br/>objectSlices.usages.definedBy<br/>objectSlices.usages.argToCalls<br/>objectSlices.usages.invokedCalls<br/>userDefinedTypes.procedures |                                            |
+| signature      | objectSlices                                                                                                                                                            |                                            |                                                                                                                                                         |                      |
+
+#### Searching reachables for package name/version
+
+This option filters reachables to the given package name and version in the format of name:version
+
+`--package mypackage:1.0.0`
 
 #### Criteria syntax
 
@@ -237,6 +247,37 @@ Query using filter command to target by both filename and line number range
 
 `filter -i usages.slices -t js -c filename=server.ts -e "query-endpoints -f 50-70"`
 
+### Check Reachable
+
+The check-reachable command takes either a package:version or filename:line_number/line_number_range
+
+`check-reachable -i reachable_slice.json -p colors:1.0.0`
+`check-reachable -i reachable_slice.json -p @colors/colors:1.0.0`
+`check-reachable -i reachable_slice.json -l file:20`
+`check-reachable -i reachable_slice.json -l file:20-40`
+
+```
+Description:
+  Find out if there are hits for a given package:version or file:linenumber in an atom slice.
+
+Usage:
+  check-reachable [options]
+
+Options:
+  -i, --input-slice=INPUT-SLICE  Slice file
+  -p, --pkg=PKG                  Package to search for in the format of <package_name>:<version>
+  -l, --location=LOCATION        Filename with line number to search for in the format of <filename>:<linenumber>
+  -h, --help                     Display help for the given command. When no command is given display help for the list command.
+  -q, --quiet                    Do not output any message.
+  -V, --version                  Display this application version.
+      --ansi                     Force ANSI output.
+      --no-ansi                  Disable ANSI output.
+  -n, --no-interaction           Do not ask any interactive question.
+  -v|vv|vvv, --verbose           Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
+
+Help:
+  The check-reachables command checks for reachable flows for a package:version or file:linenumber in an atom slice.
+```
 
 ### Validate Lines
 

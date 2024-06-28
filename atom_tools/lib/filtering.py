@@ -13,7 +13,7 @@ from atom_tools.lib.slices import FlatSlice
 
 
 logger = logging.getLogger(__name__)
-filtering = FilteringPatternCollection()
+patterns = FilteringPatternCollection()
 
 
 @dataclass
@@ -62,7 +62,7 @@ class Filter:
         if self.slc.slice_type == 'usages':
             return self.filter_usages()
         if self.slc.slice_type == 'reachables':
-            return self.filter_reachables()
+            return self.filter_usages()
         raise ValueError(f'Unknown slice type: {self.slc.slice_type}')
 
     def filter_usages(self) -> Dict:
@@ -114,10 +114,10 @@ class Filter:
         include_indexes = set()
         exclude_indexes = set()
         for k in self.results:
-            if matched := filtering.top_level_flat_loc_index.search(k):
+            if matched := patterns.top_level_flat_loc_index.search(k):
                 include_indexes.add(matched)
         for k in self.negative_results:
-            if matched := filtering.top_level_flat_loc_index.search(k):
+            if matched := patterns.top_level_flat_loc_index.search(k):
                 exclude_indexes.add(matched)
         return self._exclude_indexes(include_indexes, exclude_indexes)
 
@@ -152,13 +152,19 @@ class Filter:
             self._process_fuzzy_results(f, result)
 
 
+def check_reachable_purl(data: Dict, purl: str) -> bool:
+    """Checks if purl is reachable"""
+    purls = enumerate_reachable_purls(data)
+    return purl.lower() in purls
+
+
 def create_attribute_filter(key: str, value: str, fuzz_pct: int | None) -> Tuple:
     """Create an attribute filter"""
     lns = ()
     fn_only = False
-    if key.lower() == 'filename' and '/' not in value and '\\' not in value:
+    if (key.lower() in {'filename', 'parentfilename'}) and '/' not in value and '\\' not in value:
         fn_only = True
-    if ':' in value and (match := filtering.attribute_and_line.search(value)):
+    if ':' in value and (match := patterns.attribute_and_line.search(value)):
         value = match.group('attrib')
         lns = get_ln_range(match.group('line_nums'))
     if fuzz_pct:
@@ -168,6 +174,40 @@ def create_attribute_filter(key: str, value: str, fuzz_pct: int | None) -> Tuple
             value += '$'
         new_value = re.compile(value, re.IGNORECASE)  # type: ignore
     return new_value, lns, fn_only
+
+
+def create_purl_map(data: Dict) -> Dict:
+    """Map purls to package:version strings"""
+    purls = set(patterns.jmespath_purls.search(data))
+    purl_dict = {}
+    for purl in purls:
+        formatted_purls = parse_purl(purl)
+        for p in formatted_purls:
+            purl_dict[p] = purl
+    return purl_dict
+
+
+def enumerate_reachable_purls(data: Dict) -> Set[str]:
+    """Enumerate reachable purls"""
+    all_purls = set(patterns.jmespath_purls.search(data))
+    purls = []
+    for purl in all_purls:
+        purls.extend(parse_purl(purl))
+    return set(purls)
+
+
+def filter_flows(reachables: List[Dict], filename: str, ln: Tuple[int, int]) -> bool:
+    """Filters flows"""
+    if not reachables:
+        return False
+    for flows in reachables:
+        for f in flows.get('flows', []):
+            num = f.get('lineNumber')
+            if num and num not in ln:
+                continue
+            if f.get('parentFileName').endswith(filename):
+                return True
+    return False
 
 
 def get_ln_range(value: str) -> Tuple[int, int] | Tuple:
@@ -195,3 +235,38 @@ def parse_filters(filter_options: str) -> Generator[Tuple[str, str, str], None, 
         if condition == '=':
             condition = '=='
         yield target, value, condition
+
+
+def parse_purl_pkgs(match: re.Match) -> List[str]:
+    """Extract package and version variations from purl"""
+    pkgs = [match.group('p1')]
+    pkgs.append(match.group('p2'))
+    pkgs = list(set(pkgs))
+    for i, p in enumerate(pkgs):
+        pkgs[i] = p.replace('pypi/', '').replace('npm/', '').replace('%40', '@')  # type: ignore
+    return pkgs
+
+
+def parse_purl_versions(match: re.Match) -> List[str]:
+    """Returns a list of version variations from a purl"""
+    versions = {match.group('v1')}
+    versions.add(match.group('v2'))
+    if match.group('ext'):
+        versions.add(f"{match.group('v1')}{match.group('ext')}")
+        versions.add(f"{match.group('v2')}{match.group('ext')}")
+    return list(versions)
+
+
+def parse_purl(purl: str) -> List[str]:
+    """Returns a list of permutations of pkg:version from a purl"""
+    purl = patterns.purl_trailing_version.sub('', purl)
+    result: List[str] = []
+    pkgs: List[str] = []
+    versions: List[str] = []
+    if match := patterns.purl_version.search(purl):
+        versions = parse_purl_versions(match)
+    if match := patterns.purl_pkg.search(purl):
+        pkgs = parse_purl_pkgs(match)
+    for i in pkgs:
+        result.extend(f"{i}:{j}" for j in versions)
+    return list(set(result))
