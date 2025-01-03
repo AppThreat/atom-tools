@@ -1,11 +1,12 @@
 ---
 sidebar_position: 2
-title: Installation
+title: Quick Start
+slug: /
 ---
 
 # Installing Atom-tools
 
-Running atom tools requires the need of atom project.
+Running `atom-tools` requires the `atom` project.
 
 ## Install atom
 
@@ -15,9 +16,14 @@ the [AppThreat/atom](https://github.com/AppThreat/atom?tab=readme-ov-file) GitHu
 
 Atom can easily be installed from
 a [native image](https://github.com/AppThreat/atom#atom-native-image) or via
-npm `npm install -g @appthreat/atom`.
+npm 
+```bash
+npm install -g @appthreat/atom
+```
 
 ## Atom-tools installation
 
-`pip install atom-tools`
+```bash
+pip install atom-tools
+```
 
