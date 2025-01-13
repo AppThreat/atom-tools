@@ -1,6 +1,6 @@
 [project]
 name = "atom-tools"
-version = "0.6.0"
+version = "0.7.0"
 description = "Collection of tools for use with AppThreat/atom."
 authors = [
   { name = "Caroline Russell", email = "caroline@appthreat.dev" },
@@ -13,6 +13,7 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
   "License :: OSI Approved :: Apache Software License",
   "Development Status :: 4 - Beta",
   "Intended Audience :: Developers",
