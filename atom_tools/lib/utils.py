@@ -9,19 +9,17 @@ from atom_tools.lib.filtering import check_reachable_purl, filter_flows, get_ln_
 
 
 logger = logging.getLogger(__name__)
+file_line_regex = re.compile(r'(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)')
 
 
 def add_params_to_cmd(cmd: str, outfile: str, origin_type: str = '') -> Tuple[str, str]:
     """
     Adds the outfile to the command.
     """
-    # Check that the input slice has not already been specified
     args = ''
     if origin_type and '-t ' not in cmd and '--type' not in cmd:
         cmd += f' -t {origin_type}'
     if '-i ' in cmd or '--input-slice' in cmd:
-        logging.warning(
-            'Input slice specified in command to be filtered. Replacing with filtered slice.')
         if match := re.search(r'((?:-i|--input-slice)\s\S+)', cmd):
             cmd = cmd.replace(match[1], f'-i {Path(outfile)}')
     else:
@@ -33,9 +31,11 @@ def add_params_to_cmd(cmd: str, outfile: str, origin_type: str = '') -> Tuple[st
 
 def check_reachable(data: Dict, pkg: str, loc: str) -> bool:
     """Checks if package is reachable"""
+    if not pkg and not loc:
+        return False
     if pkg:
         return check_reachable_purl(data, pkg)
-    if match := re.search(r'(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)', loc):
+    if match := file_line_regex.search(loc):
         return filter_flows(data.get('reachables', []), match['file'], get_ln_range(match['line']))
     raise ValueError(f'Invalid location: {loc}')
 
@@ -43,7 +43,7 @@ def check_reachable(data: Dict, pkg: str, loc: str) -> bool:
 def export_json(data: Dict, outfile: str, indent: int | None = None) -> None:
     """Exports data to json"""
     with open(outfile, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=indent, sort_keys=True)
+        f.write(json.dumps(data, indent=indent, sort_keys=True))
 
 
 def output_endpoints(data: Dict, sparse: bool, line_range: Tuple[int, int] | Tuple) -> str:

@@ -59,9 +59,7 @@ class Filter:
 
     def filter_slice(self) -> Dict:
         """Filters the slice"""
-        if self.slc.slice_type == 'usages':
-            return self.filter_usages()
-        if self.slc.slice_type == 'reachables':
+        if self.slc.slice_type in {'usages', 'reachables'}:
             return self.filter_usages()
         raise ValueError(f'Unknown slice type: {self.slc.slice_type}')
 
