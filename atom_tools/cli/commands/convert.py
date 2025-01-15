@@ -76,7 +76,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
         """
         Executes the convert command and performs the conversion.
         """
-        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts'}
+        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts', 'ruby'}
         if self.option('type') not in supported_types:
             raise ValueError(f'Unknown origin type: {self.option("type")}')
         match self.option('format'):

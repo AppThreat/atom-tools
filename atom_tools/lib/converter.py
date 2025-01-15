@@ -50,11 +50,45 @@ class OpenAPI:
         """
         Converts usages to OpenAPI.
         """
+        if self.usages.origin_type == 'ruby':
+            return self._convert_usages_ruby()
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
         self.target_line_nums = self._identify_target_line_nums(methods)
         self.file_endpoint_map = self.create_file_to_method_dict(methods)
         methods = self._process_calls(methods)
+        return self.populate_endpoints(methods)
+
+    def _convert_usages_ruby(self) -> Dict[str, Dict]:
+        """
+        Converts ruby usages to OpenAPI.
+        """
+        methods = self._process_methods()
+        for code in methods:
+            code = code.replace('"', '')
+            result = regex.ruby_endpoints2.findall(code)
+            # TODO: Need to handle when multiple resources given e.g. "resources :users do get \"account_settings\" resources :retirement resources :paid_time_off resources :work_info resources :performance resources :benefit_forms resources :m..."
+            # TODO: Need to look up if namespace should be specified in endpoint
+            # TODO: Handle redirects or whatever => is doing e.g.Railsgoat::Application.routes.draw do get \"login\" => \"sessions#new\" get \"signup\" => \"users#new\"
+            is_resource = regex.ruby_endpoints.search(code)
+            base_endpoint = ""
+            parameters = []
+            if is_resource.group('resource'):
+                base_endpoint = f"/{is_resource.group('resource')}/" + "{" + f"{is_resource.group('resource')}_id" + "}"
+                parameters = [
+                    {"name": f"{is_resource.group('resource')}_id", "in": "path", "required": True}]
+
+            endpoints = []
+
+            for r in result:
+                path_obj = {
+                    f"{base_endpoint}/{r[1]}": {r[0]: {"responses": {}}, "parameters": parameters}}
+                endpoints.append(path_obj)
+                print(path_obj)
+        # methods = self.methods_to_endpoints(methods)
+        # self.target_line_nums = self._identify_target_line_nums(methods)
+        # self.file_endpoint_map = self.create_file_to_method_dict(methods)
+        # methods = self._process_calls(methods)
         return self.populate_endpoints(methods)
 
     def create_file_to_method_dict(self, method_map: Dict[str, Any]) -> Dict[str, List]:
@@ -121,6 +155,13 @@ class OpenAPI:
             output['servers'] = [{'url': server}]  # type: ignore[list-item]
 
         return output
+
+    def list_endpoints(self) -> List[str]:
+        """
+        Returns a list of endpoints.
+        """
+        openapi = self.endpoints_to_openapi('')
+        return list(openapi['paths'].keys())
 
     def methods_to_endpoints(self, method_map: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -253,7 +294,25 @@ class OpenAPI:
             list: A list of endpoints extracted from the code.
 
         """
-        if not method or not (matches := re.findall(regex.endpoints, method)):
+        if not method:
+            return []
+        # if self.usages.origin_type == 'ruby':
+        #     matches = re.search(regex.ruby_endpoints, method)
+        # else:
+        matches = re.findall(regex.endpoints, method)
+        if not matches:
+            return []
+        matches = self._filter_matches(matches, method)
+        return [
+            v for v in matches
+            if v and v.lower() not in exclusions and not v.lower().startswith('/x-')
+        ]
+
+    def _extract_ruby_endpoints(self, method: str) -> List[str]:
+        if not method:
+            return []
+        matches = re.findall(regex.ruby_endpoints, method)
+        if not matches:
             return []
         matches = self._filter_matches(matches, method)
         return [
@@ -303,6 +362,8 @@ class OpenAPI:
                 if ('app.' not in code and 'route' not in code and 'ftp' not in code) or (
                         'app.set(' in code):
                     return filtered_matches
+            # case 'ruby':
+            #     return filter_ruby_matches(code)
 
         for m in matches:
             if m and m[0] not in ('.', '@', ','):
@@ -433,9 +494,12 @@ class OpenAPI:
         """
         Create a dictionary of file names and their corresponding methods.
         """
-        method_map = self._process_methods_helper(
-            'objectSlices[].{file_name: fileName, resolved_methods: usages[].*.resolvedMethod[]}')
-
+        if self.usages.origin_type == 'ruby':
+            method_map = self._process_methods_helper(
+                'objectSlices[].{file_name: fileName, resolved_methods: usages[].*.name[]}')
+        else:
+            method_map = self._process_methods_helper(
+                'objectSlices[].{file_name: fileName, resolved_methods: usages[].*.resolvedMethod[]}')
         calls = self._process_methods_helper(
             'objectSlices[].{file_name: fileName, resolved_methods: usages[].*[?resolvedMethod][]'
             '[].resolvedMethod[]}')
@@ -538,6 +602,9 @@ class OpenAPI:
         """
         resolved_map = {}
         for method in resolved_methods:
+            # TODO: Add support for collections
+            if "collection" in method or method.endswith("..."):
+                continue
             if endpoints := self._extract_endpoints(method):
                 eps = [self._parse_path_regexes(ep) for ep in endpoints]
                 resolved_map[method] = {'endpoints': eps}
@@ -647,6 +714,8 @@ def filter_calls(
         ]
         resolved_methods['resolved_methods'][method].update({'calls': calls, 'line_nos': lns})
     return resolved_methods
+
+
 
 
 def merge_operations(op1: Dict, op2: Dict) -> Dict:

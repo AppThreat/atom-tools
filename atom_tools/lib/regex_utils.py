@@ -33,6 +33,9 @@ class OpenAPIRegexCollection:
     named_param_generic_extract = re.compile(r'\(\?P?:?<?(?P<pname>[^\[]+)>([^)]+\))')
     # This regex will extract regexes not in a group.
     unnamed_param_generic_extract = re.compile(r'(?P<pattern>\(?\?[:!][^\s)]+[^\w(/.]+)')
+    # This regex is for ruby endpoints
+    ruby_endpoints = re.compile(r'(?:resources :(?P<resource>\w+) )?do (get|post|put|delete) \S+')
+    ruby_endpoints2 = re.compile(r'(?P<verb>get|post|put|delete|patch) (?P<endpoint>\S+)')
 
 
 @dataclass(init=True)
@@ -123,6 +126,20 @@ def js_helper(endpoint: str) -> str:
             for comp in endpoint.split('/')
         ]
     )
+
+
+def ruby_helper(name_str: str) -> List:
+    """
+    Formats path sections which are parameters correctly.
+
+    Args:
+        endpoint (str): The list of endpoints to format.
+
+    Returns:
+        tuple[str, list[str]]: The formatted endpoint and parameters.
+
+    """
+
 
 
 def path_param_repl(match: re.Match) -> str:
