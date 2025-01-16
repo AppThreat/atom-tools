@@ -64,32 +64,45 @@ class OpenAPI:
         Converts ruby usages to OpenAPI.
         """
         methods = self._process_methods()
-        for code in methods:
-            code = code.replace('"', '')
-            result = regex.ruby_endpoints2.findall(code)
-            # TODO: Need to handle when multiple resources given e.g. "resources :users do get \"account_settings\" resources :retirement resources :paid_time_off resources :work_info resources :performance resources :benefit_forms resources :m..."
-            # TODO: Need to look up if namespace should be specified in endpoint
-            # TODO: Handle redirects or whatever => is doing e.g.Railsgoat::Application.routes.draw do get \"login\" => \"sessions#new\" get \"signup\" => \"users#new\"
-            is_resource = regex.ruby_endpoints.search(code)
-            base_endpoint = ""
-            parameters = []
-            if is_resource.group('resource'):
-                base_endpoint = f"/{is_resource.group('resource')}/" + "{" + f"{is_resource.group('resource')}_id" + "}"
-                parameters = [
-                    {"name": f"{is_resource.group('resource')}_id", "in": "path", "required": True}]
+        processed_methods = {}
 
-            endpoints = []
+        for file_name, resources in methods.items():
+            processed_methods[file_name] = []
+            for resource_block in resources:
+                parts = resource_block.split("resources :")
+                for part in parts[1:]:
+                    resource_lines = part.strip().split()
+                    resource_name = resource_lines[0]
+                    resource_path = f"/{resource_name}/{{{resource_name}_res_id}}"
+                    processed_methods[file_name].append(resource_path)
 
-            for r in result:
-                path_obj = {
-                    f"{base_endpoint}/{r[1]}": {r[0]: {"responses": {}}, "parameters": parameters}}
-                endpoints.append(path_obj)
-                print(path_obj)
-        # methods = self.methods_to_endpoints(methods)
-        # self.target_line_nums = self._identify_target_line_nums(methods)
-        # self.file_endpoint_map = self.create_file_to_method_dict(methods)
-        # methods = self._process_calls(methods)
-        return self.populate_endpoints(methods)
+                    idx = 1
+                    while idx < len(resource_lines):
+                        token = resource_lines[idx]
+
+                        if token == "do":
+                            idx += 1
+                            continue
+
+                        if token == "collection":
+                            # FIXME: Correct collection handling when nested under a resource
+                            idx += 1  # Skip "collection"
+                            while resource_lines[idx] != "end":
+                                method = resource_lines[idx]
+                                if method in ["get", "post", "patch", "delete"]:
+                                    route_name = resource_lines[idx + 1]
+                                    processed_methods[file_name].append(
+                                        f"{resource_path}/{route_name}$$${method}")
+                                    idx += 2
+                                else:
+                                    idx += 1
+                        elif token in ["get", "post", "patch", "delete"]:
+                            route_name = resource_lines[idx + 1]
+                            processed_methods[file_name].append(f"{resource_path}/{route_name}$$${token}")
+                            idx += 2
+                        else:
+                            idx += 1
+        return processed_methods
 
     def create_file_to_method_dict(self, method_map: Dict[str, Any]) -> Dict[str, List]:
         """

@@ -34,7 +34,7 @@ class OpenAPIRegexCollection:
     # This regex will extract regexes not in a group.
     unnamed_param_generic_extract = re.compile(r'(?P<pattern>\(?\?[:!][^\s)]+[^\w(/.]+)')
     # This regex is for ruby endpoints
-    ruby_endpoints = re.compile(r'(?:resources :(?P<resource>\w+) )?do (get|post|put|delete) \S+')
+    ruby_endpoints = re.compile(r'do (get|post|put|delete|patch)')
     ruby_endpoints2 = re.compile(r'(?P<verb>get|post|put|delete|patch) (?P<endpoint>\S+)')
 
 
