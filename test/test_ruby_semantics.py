@@ -7,7 +7,8 @@ def test_code_to_routes():
     assert code_to_routes(None) == []
     assert code_to_routes("") == []
     assert code_to_routes("Railsgoat::Application.routes.draw do") == []
-    assert code_to_routes('create_table \"analytics\", force: :cascade do |t| t.string \"ip_address\" t.string \"referrer\" t.string \"user_agent\" t.datetime \"created_at\" t.datetime \"updated_at\" end') == []
+    assert code_to_routes(
+        'create_table \"analytics\", force: :cascade do |t| t.string \"ip_address\" t.string \"referrer\" t.string \"user_agent\" t.datetime \"created_at\" t.datetime \"updated_at\" end') == []
     assert code_to_routes('Railsgoat::Application.routes.draw do get \"login\" => ...') == [
         HttpRoute(url_pattern='/login', method='GET')]
     assert code_to_routes(
@@ -131,3 +132,28 @@ def test_code_to_routes_namespace():
         HttpRoute(url_pattern='/v1/users/:id/edit', method='GET'),
         HttpRoute(url_pattern='/v1/users/:id', method='PUT'),
         HttpRoute(url_pattern='/v1/users/:id', method='DELETE')]
+
+
+def test_code_to_routes_advanced():
+    assert code_to_routes('resources :photos do member do get "preview" end end') == [
+        HttpRoute(url_pattern='/photos/preview', method='GET')]
+    assert code_to_routes('get "こんにちは", to: "welcome#index"') == [
+        HttpRoute(url_pattern='/こんにちは,', method='GET')]
+    assert code_to_routes(
+        'scope ":account_id", as: "account", constraints: { account_id: /\d+/ } do resources :articles end') == [
+               HttpRoute(url_pattern='/account_id/articles', method='GET'),
+               HttpRoute(url_pattern='/account_id/articles/new', method='GET'),
+               HttpRoute(url_pattern='/account_id/articles', method='POST'),
+               HttpRoute(url_pattern='/account_id/articles/:id', method='GET'),
+               HttpRoute(url_pattern='/account_id/articles/:id/edit', method='GET'),
+               HttpRoute(url_pattern='/account_id/articles/:id', method='PUT'),
+               HttpRoute(url_pattern='/account_id/articles/:id', method='DELETE')]
+    assert code_to_routes(
+        'scope(path_names: { new: "neu", edit: "bearbeiten" }) do resources :categories, path: "kategorien" end') == [
+               HttpRoute(url_pattern='/kategorien/categories', method='GET'),
+               HttpRoute(url_pattern='/kategorien/categories/new', method='GET'),
+               HttpRoute(url_pattern='/kategorien/categories', method='POST'),
+               HttpRoute(url_pattern='/kategorien/categories/:id', method='GET'),
+               HttpRoute(url_pattern='/kategorien/categories/:id/edit', method='GET'),
+               HttpRoute(url_pattern='/kategorien/categories/:id', method='PUT'),
+               HttpRoute(url_pattern='/kategorien/categories/:id', method='DELETE')]

@@ -22,10 +22,10 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
 
     """
     routes = []
-    url_pattern = f"{url_prefix}{re.sub('^:', '', code_parts[i + 1])}"
+    url_pattern = _clean_url(f"{url_prefix}{re.sub('^:', '', code_parts[i + 1])}")
     if kind == "resources":
         routes.append(HttpRoute(url_pattern=url_pattern, method="GET"))
-    if "only: [" not in code and "shallow:" not in code:
+    if ("match " in code and "via: :all" in code) or ("only: [" not in code and "shallow:" not in code):
         routes.append(HttpRoute(url_pattern=f"{url_pattern}/new", method="GET"))
         routes.append(HttpRoute(url_pattern=url_pattern, method="POST"))
         routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id", method="GET"))
@@ -33,6 +33,10 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
         routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id", method="PUT"))
         routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id", method="DELETE"))
     return routes
+
+
+def _clean_url(url_pattern):
+    return re.sub('[,/]$', '', url_pattern)
 
 
 def code_to_routes(code: str) -> List[HttpRoute]:
@@ -50,7 +54,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
     keyword_found = False
     for keyword in (
             "namespace", "scope", "concern", "resource", "resources", "get",
-            "post", "patch", "delete", "put", "head",
+            "post", "patch", "delete", "put", "head", "match",
             "options"):
         if f"{keyword} " in code:
             keyword_found = True
@@ -61,11 +65,25 @@ def code_to_routes(code: str) -> List[HttpRoute]:
     # Dangling resources - leads to many kinds of automatic routes
     has_resources = "resources " in code or "resource " in code
     url_prefix = ""
+    has_scope = False
     for i, part in enumerate(code_parts):
-        if part in ("resource", "resources", "namespace") and len(code_parts) >= i + 1 and code_parts[i + 1].startswith(
-                ":"):
-            url_pattern = f"/{re.sub('^:', '', code_parts[i + 1])}"
-            url_pattern = re.sub('[,/]$', '', url_pattern)
+        if not part or len(part) < 2:
+            continue
+        if part in ("scope",) or part.startswith("scope("):
+            has_scope = True
+            if len(code_parts) >= i + 1 and code_parts[i + 1].startswith('":'):
+                url_prefix = f"""/{re.sub('[:",]', '', code_parts[i + 1])}"""
+                continue
+        if (part in ("resource", "resources", "namespace", "member")
+                and len(code_parts) >= i + 1
+                and code_parts[i + 1].startswith(":")):
+            url_pattern = _clean_url(f"/{re.sub('^:', '', code_parts[i + 1])}")
+            # Is there an alias for this patten
+            if len(code_parts) > i + 3 and code_parts[i + 2] in ("path:", "path", "path("):
+                url_pattern = _clean_url(code_parts[i + 3].replace('"', ""))
+                routes += _get_dangling_routes(i, part, code, code_parts,
+                                               f"{url_prefix}/{url_pattern}/")
+                continue
             if len(code_parts) > i + 2 and code_parts[i + 2] in ("resources", "resource"):
                 routes += _get_dangling_routes(i, code_parts[i + 2], code, code_parts, f"{url_prefix}/")
             elif i == len(code_parts) - 2 and part in ("resource", "resources"):
@@ -73,7 +91,8 @@ def code_to_routes(code: str) -> List[HttpRoute]:
             else:
                 url_prefix = f"{url_prefix}{url_pattern}"
             continue
-        if part in ("collection", "concern", "do") or part.startswith(":") or part.startswith('"'):
+        if part in ("collection", "member", "concern", "do", "as:", "constraints:") or part.startswith(
+                ":") or part.startswith('"'):
             continue
         if part == "end" and url_prefix:
             url_prefix = "/".join(url_prefix.split("/")[:-1])
@@ -89,6 +108,6 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                 for m in ("resource", "resources"):
                     if part == m and code_parts[i + 1].startswith(':') and (
                             i == len(code_parts) - 2 or (len(code_parts) > i + 2 and code_parts[i + 1] != "do")):
-                        routes += _get_dangling_routes(i, m, code, code_parts, "/")
+                        routes += _get_dangling_routes(i, m, code, code_parts, f"{url_prefix}/" if has_scope else "/")
 
     return routes
