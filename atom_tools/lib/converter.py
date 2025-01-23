@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Tuple
 
 import jmespath
 
-from atom_tools.lib import HttpRoute
 from atom_tools.lib.regex_utils import (
     py_helper,
     path_param_repl,
@@ -20,7 +19,6 @@ from atom_tools.lib.regex_utils import (
     OpenAPIRegexCollection
 )
 from atom_tools.lib.slices import AtomSlice
-from atom_tools.lib.ruby_semantics import code_to_routes
 from atom_tools.lib.ruby_converter import convert as ruby_convert
 
 logger = logging.getLogger(__name__)
@@ -246,7 +244,7 @@ class OpenAPI:
                 params = [{'name': param, 'in': 'header'} for param in ptypes]
         return params
 
-    def _extract_endpoints(self, method: str) -> List[str] | List[HttpRoute]:
+    def _extract_endpoints(self, method: str) -> List[str]:
         """
         Extracts endpoints from the given code based on the specified language.
 
@@ -545,10 +543,7 @@ class OpenAPI:
         resolved_map = {}
         for method in resolved_methods:
             if endpoints := self._extract_endpoints(method):
-                if self.usages.origin_type in ("rb", "ruby"):
-                    eps = endpoints
-                else:
-                    eps = [self._parse_path_regexes(ep) for ep in endpoints]
+                eps = [self._parse_path_regexes(ep) for ep in endpoints]
                 resolved_map[method] = {'endpoints': eps}
         return resolved_map
 

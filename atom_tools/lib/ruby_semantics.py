@@ -2,7 +2,7 @@
 Ruby semantic utils
 """
 import re
-from typing import Any, Dict, List, Tuple
+from typing import List
 
 from atom_tools.lib import HttpRoute
 
@@ -28,8 +28,8 @@ def code_to_routes(code: str, file_name: str | None = None, method_full_name: st
         return []
     keyword_found = False
     for keyword in (
-        "namespace", "scope", "concern", "resource", "resources", "get", "post", "patch", "delete", "put", "head",
-        "options"):
+            "namespace", "scope", "concern", "resource", "resources", "get", "post", "patch", "delete", "put", "head",
+            "options"):
         if f"{keyword} " in code:
             keyword_found = True
             break
@@ -41,7 +41,7 @@ def code_to_routes(code: str, file_name: str | None = None, method_full_name: st
     url_prefix = ""
     for i, part in enumerate(code_parts):
         if part in ("resource", "resources", "namespace") and len(code_parts) >= i + 1 and code_parts[i + 1].startswith(
-            ":"):
+                ":"):
             url_pattern = f"/{re.sub('^:', '', code_parts[i + 1])}"
             url_pattern = re.sub('[,/]$', '', url_pattern)
             if len(code_parts) > i + 2 and code_parts[i + 2] in ("resources", "resource"):
@@ -66,7 +66,7 @@ def code_to_routes(code: str, file_name: str | None = None, method_full_name: st
             for i, part in enumerate(code_parts):
                 for m in ("resource", "resources"):
                     if part == m and code_parts[i + 1].startswith(':') and (
-                        i == len(code_parts) - 2 or (len(code_parts) > i + 2 and code_parts[i + 1] != "do")):
+                            i == len(code_parts) - 2 or (len(code_parts) > i + 2 and code_parts[i + 1] != "do")):
                         routes += _get_dangling_routes(i, m, code, code_parts, "/")
 
     return routes
