@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Tuple
 
 import jmespath
 
+from atom_tools.lib import HttpRoute
 from atom_tools.lib.regex_utils import (
     py_helper,
     path_param_repl,
@@ -19,7 +20,8 @@ from atom_tools.lib.regex_utils import (
     OpenAPIRegexCollection
 )
 from atom_tools.lib.slices import AtomSlice
-
+from atom_tools.lib.ruby_semantics import code_to_routes
+from atom_tools.lib.ruby_converter import convert as ruby_convert
 
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
@@ -40,7 +42,7 @@ class OpenAPI:
     ) -> None:
         self.usages: AtomSlice = AtomSlice(usages, origin_type)
         self.openapi_version = dest_format.replace('openapi', '')
-        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}'
+        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}' if Path(usages).parent.stem else "OpenAPI Specification"
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
         self.regex_param_count = 0
@@ -50,6 +52,8 @@ class OpenAPI:
         """
         Converts usages to OpenAPI.
         """
+        if self.usages.origin_type in ("rb", "ruby"):
+            return ruby_convert(self.usages)
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
         self.target_line_nums = self._identify_target_line_nums(methods)
@@ -242,7 +246,7 @@ class OpenAPI:
                 params = [{'name': param, 'in': 'header'} for param in ptypes]
         return params
 
-    def _extract_endpoints(self, method: str) -> List[str]:
+    def _extract_endpoints(self, method: str) -> List[str] | List[HttpRoute]:
         """
         Extracts endpoints from the given code based on the specified language.
 
@@ -488,6 +492,8 @@ class OpenAPI:
         for r in result:
             file_name = r['file_name']
             methods = r['resolved_methods']
+            if self.usages.origin_type in ("rb", "ruby"):
+                methods = [m for m in methods if m and not m.startswith("<operator>") and m not in ["(...)", "<body>"] and not m.startswith("<tmp-")]
             if resolved.get(file_name):
                 resolved[file_name]['resolved_methods'].extend(methods)
             else:
@@ -539,7 +545,10 @@ class OpenAPI:
         resolved_map = {}
         for method in resolved_methods:
             if endpoints := self._extract_endpoints(method):
-                eps = [self._parse_path_regexes(ep) for ep in endpoints]
+                if self.usages.origin_type in ("rb", "ruby"):
+                    eps = endpoints
+                else:
+                    eps = [self._parse_path_regexes(ep) for ep in endpoints]
                 resolved_map[method] = {'endpoints': eps}
         return resolved_map
 

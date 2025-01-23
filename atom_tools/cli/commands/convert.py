@@ -10,7 +10,6 @@ from atom_tools.cli.commands.command import Command
 from atom_tools.lib.converter import OpenAPI
 from atom_tools.lib.utils import export_json
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -37,7 +36,7 @@ class ConvertCommand(Command):
             'f',
             'Destination format',
             flag=False,
-            default='openapi3.0.1',
+            default='openapi3.1.0',
         ),
         option(
             'input-slice',
@@ -76,7 +75,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
         """
         Executes the convert command and performs the conversion.
         """
-        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts'}
+        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts', "ruby", "rb"}
         if self.option('type') not in supported_types:
             raise ValueError(f'Unknown origin type: {self.option("type")}')
         match self.option('format'):
