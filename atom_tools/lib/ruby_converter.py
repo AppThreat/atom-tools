@@ -1,3 +1,6 @@
+"""
+Ruby converter helper
+"""
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.ruby_semantics import code_to_routes
 

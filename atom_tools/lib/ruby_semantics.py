@@ -8,6 +8,19 @@ from atom_tools.lib import HttpRoute
 
 
 def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
+    """
+    Internal method
+
+    Args:
+        i:
+        kind:
+        code:
+        code_parts:
+        url_prefix:
+
+    Returns:
+
+    """
     routes = []
     url_pattern = f"{url_prefix}{re.sub('^:', '', code_parts[i + 1])}"
     if kind == "resources":
@@ -22,13 +35,22 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
     return routes
 
 
-def code_to_routes(code: str, file_name: str | None = None, method_full_name: str | None = None) -> List[HttpRoute]:
+def code_to_routes(code: str) -> List[HttpRoute]:
+    """
+    Convert code string to routes
+    Args:
+        code: Code snippet
+
+    Returns:
+        List of http routes
+    """
     routes = []
     if not code:
         return []
     keyword_found = False
     for keyword in (
-            "namespace", "scope", "concern", "resource", "resources", "get", "post", "patch", "delete", "put", "head",
+            "namespace", "scope", "concern", "resource", "resources", "get",
+            "post", "patch", "delete", "put", "head",
             "options"):
         if f"{keyword} " in code:
             keyword_found = True
