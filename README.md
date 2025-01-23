@@ -29,7 +29,7 @@ e.g. `atom-tools help
 convert`).
 
 ```
-Atom Tools (version 0.6.0)
+Atom Tools (version 0.7.0)
 
 Usage:
   command [options] [arguments]
@@ -70,7 +70,7 @@ Usage:
   convert [options]
 
 Options:
-  -f, --format=FORMAT              Destination format [default: "openapi3.0.1"]
+  -f, --format=FORMAT              Destination format [default: "openapi3.1.0"]
   -i, --input-slice=INPUT-SLICE  Usages slice file
   -t, --type=TYPE                  Origin type of source on which the atom slice was generated. [default: "java"]
   -o, --output-file=OUTPUT-FILE    Output file [default: "openapi_from_slice.json"]

@@ -2,7 +2,7 @@ import pytest
 
 from atom_tools.lib.converter import filter_calls, OpenAPI
 from atom_tools.lib.utils import sort_list
-
+from atom_tools.lib.ruby_converter import convert as ruby_convert
 
 def sort_openapi_result(result):
     for k, v in result.items():
@@ -48,6 +48,9 @@ def py_usages_1():
 def py_usages_2():
     return OpenAPI('openapi3.0.1', 'py', 'test/data/py-breakable-flask-usages.json')
 
+@pytest.fixture
+def rb_usages_1():
+    return OpenAPI('openapi3.0.1', 'rb', 'test/data/rb-railsgoat-usages.json')
 
 def test_populate_endpoints(js_usages_1, js_usages_2):
     # The populate_endpoints method is the final operation in convert_usages.
@@ -5751,3 +5754,8 @@ def test_js(js_usages_1):
                                              'schema': {'pattern': 'ftp(?!/quarantine)',
                                                         'type': 'string'}}],
                              'x-atom-usages': {'call': {'server.ts': [250]}}}}
+
+
+def test_rb(rb_usages_1):
+    result = ruby_convert(rb_usages_1.usages)
+    assert result

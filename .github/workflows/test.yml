@@ -20,14 +20,15 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-latest, windows-latest]
+        python: ['3.10', '3.11', '3.12', '3.13']
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.12"
+        python-version: ${{ matrix.python }}
     - name: Make sure versions are synced if PR or ref is tag
       if: ${{ github.event_name == 'pull_request' || github.ref_type == 'tag' }}
       shell: bash
