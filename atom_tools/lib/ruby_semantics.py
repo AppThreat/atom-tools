@@ -80,7 +80,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
         for m in ("get", "post", "delete", "patch", "put", "head", "options"):
             if part == m and len(code_parts) > i + 1 and code_parts[i + 1].startswith('"'):
                 routes.append(
-                    HttpRoute(url_pattern=f"{url_prefix}/{code_parts[i + 1].replace('"', "")}",
+                    HttpRoute(url_pattern=f"""{url_prefix}/{code_parts[i + 1].replace('"', "")}""",
                               method=m.upper() if m != "patch" else "PUT"))
                 break
     if has_resources:
