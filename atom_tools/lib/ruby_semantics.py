@@ -28,10 +28,10 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
     if ("match " in code and "via: :all" in code) or ("only: [" not in code and "shallow:" not in code):
         routes.append(HttpRoute(url_pattern=f"{url_pattern}/new", method="GET"))
         routes.append(HttpRoute(url_pattern=url_pattern, method="POST"))
-        routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id", method="GET"))
-        routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id/edit", method="GET"))
-        routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id", method="PUT"))
-        routes.append(HttpRoute(url_pattern=f"{url_pattern}/:id", method="DELETE"))
+        routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="GET"))
+        routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}/edit", method="GET"))
+        routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="PUT"))
+        routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="DELETE"))
     return routes
 
 

@@ -29,7 +29,7 @@ e.g. `atom-tools help
 convert`).
 
 ```
-Atom Tools (version 0.7.0)
+Atom Tools (version 0.7.1)
 
 Usage:
   command [options] [arguments]
@@ -98,14 +98,14 @@ Help:
 The filter command can be run on its own to produce a filtered slice or used before another command
 to filter a slice before executing another command against the results.
 
->**Filters operate on an inclusive-or basis. If you want to operate on an 'and' basis, 
+>**Filters operate on an inclusive-or basis. If you want to operate on an 'and' basis,
 > [chain](#chaining-filter-commands) the filter commands.**
 
 **Mode**
 
 The default mode creates a regular expression from the value given. Fuzzy mode is specified using
-the -f option and a number between 0-100 indicating how close the result must be to be a match. 
-Note that to exactly match the specified input, you need to either include regex anchors at the 
+the -f option and a number between 0-100 indicating how close the result must be to be a match.
+Note that to exactly match the specified input, you need to either include regex anchors at the
 beginning and end or use -f 100 (to specify a 100% match).
 
 `filter -f 100 --criteria filename=path/to/file/server.ts -i usages.json`
@@ -118,7 +118,7 @@ Regex word boundaries can be used if you only want to be exact about the filenam
 
 This will filter files named server.ts - without the \b, files like ftpserver.ts would also be matched.
 
->Note: You can search for a file name without including the path if needed and fuzzing ratios will be computed based 
+>Note: You can search for a file name without including the path if needed and fuzzing ratios will be computed based
 > only on the file name.
 
 ##### Chaining filter commands
@@ -305,7 +305,7 @@ Options:
       --no-ansi                  Disable ANSI output.
   -n, --no-interaction           Do not ask any interactive question.
   -v|vv|vvv, --verbose           Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
-  
+
 Help:
   Validate source file line numbers in an atom usages or reachables slice.
 ```
