@@ -23,6 +23,10 @@ def extract_params(url):
                         "type": "integer",
                         "format": "int64"
                     }
+                elif part.startswith("{"):
+                    param["schema"] = {
+                        "type": "string"
+                    }
                 params.append(param)
     return params
 

@@ -157,3 +157,22 @@ def test_code_to_routes_advanced():
                HttpRoute(url_pattern='/kategorien/categories/{id}/edit', method='GET'),
                HttpRoute(url_pattern='/kategorien/categories/{id}', method='PUT'),
                HttpRoute(url_pattern='/kategorien/categories/{id}', method='DELETE')]
+
+
+def test_code_to_routes_sinatra():
+    assert code_to_routes("get '/' do Sinatra::RestApi::Router.list_routes.to_json end") == [
+        HttpRoute(url_pattern='/', method='GET')]
+    assert code_to_routes("get '/' do @details = OpenStruct.new( attributes: {} )") == [
+        HttpRoute(url_pattern='/', method='GET')]
+    assert code_to_routes("get '/:model' do mod = @models[params[:model].to_sym] @model = mod.to_s.split( '::' )") == [
+        HttpRoute(url_pattern='/{model}', method='GET')]
+    assert code_to_routes("get '/:model/:id' do mod = @models[params[:model].to_sym] @details = mod.find( params[:id] )") == [
+        HttpRoute(url_pattern='/{model}/{id}', method='GET')]
+    assert code_to_routes("get '/:model/:id/delete' do @item = @models[params[:model].to_sym].find( params[:id] )") == [
+        HttpRoute(url_pattern='/{model}/{id}/delete', method='GET')]
+    assert code_to_routes("options '*' do response.headers['Access-Control-Allow-Origin'] = '*' response.headers['Access-Control-Allow-Methods'] = 'HEAD,GET,PUT,DELETE,OPTIONS' response.headers['Access-Control-Allow-Headers'] = 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept' halt 200 end") == [
+        HttpRoute(url_pattern='/', method='OPTIONS')]
+    assert code_to_routes("post '/:model/:id' do mod = @models[params[:model].to_sym] @details = mod.find( params[:id] )") == [
+        HttpRoute(url_pattern='/{model}/{id}', method='POST')]
+    assert code_to_routes("post '/:model' do mod = @models[params[:model].to_sym] @model = mod.to_s.split( '::' )") == [
+        HttpRoute(url_pattern='/{model}', method='POST')]
