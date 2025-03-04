@@ -29,8 +29,6 @@ e.g. `atom-tools help
 convert`).
 
 ```
-Atom Tools (version 0.7.1)
-
 Usage:
   command [options] [arguments]
 

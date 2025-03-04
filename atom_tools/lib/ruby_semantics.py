@@ -39,6 +39,20 @@ def _clean_url(url_pattern):
     return re.sub('[,/]$', '', url_pattern)
 
 
+def fix_url_params(path_str):
+    if path_str == "*":
+        return "/"
+    s = []
+    for p in path_str.split("/"):
+        if p.startswith(":"):
+            s.append("{" + p.removeprefix(":") + "}")
+        elif p in ("*", "*.*", ".*"):
+            s.append("{extra_path}")
+        else:
+            s.append(p)
+    return "/".join(s)
+
+
 def code_to_routes(code: str) -> List[HttpRoute]:
     """
     Convert code string to routes
@@ -97,9 +111,14 @@ def code_to_routes(code: str) -> List[HttpRoute]:
         if part == "end" and url_prefix:
             url_prefix = "/".join(url_prefix.split("/")[:-1])
         for m in ("get", "post", "delete", "patch", "put", "head", "options"):
-            if part == m and len(code_parts) > i + 1 and code_parts[i + 1].startswith('"'):
+            if part == m and len(code_parts) > i + 1 and (code_parts[i + 1].startswith('"') or code_parts[i + 1].startswith("'")):
+                fmt_path = fix_url_params(code_parts[i + 1].replace('"', "").replace("'", ""))
+                full_path = fmt_path if not url_prefix and fmt_path in ("/", "*") else f"""{url_prefix}/{fmt_path.removeprefix("/")}"""
+                # * is not allowed by swagger
+                if m == "options" and full_path == "*":
+                    full_path = "/"
                 routes.append(
-                    HttpRoute(url_pattern=f"""{url_prefix}/{code_parts[i + 1].replace('"', "")}""",
+                    HttpRoute(url_pattern=full_path,
                               method=m.upper() if m != "patch" else "PUT"))
                 break
     if has_resources:
