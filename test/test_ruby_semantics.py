@@ -1,6 +1,6 @@
 import pytest
 from atom_tools.lib import HttpRoute
-from atom_tools.lib.ruby_semantics import code_to_routes
+from atom_tools.lib.ruby_semantics import code_to_routes, fix_url_params
 
 
 def test_code_to_routes():
@@ -160,6 +160,7 @@ def test_code_to_routes_advanced():
 
 
 def test_code_to_routes_sinatra():
+    assert fix_url_params('/download/*.*') == "/download/{extra_path}"
     assert code_to_routes("get '/' do Sinatra::RestApi::Router.list_routes.to_json end") == [
         HttpRoute(url_pattern='/', method='GET')]
     assert code_to_routes("get '/' do @details = OpenStruct.new( attributes: {} )") == [
@@ -176,3 +177,10 @@ def test_code_to_routes_sinatra():
         HttpRoute(url_pattern='/{model}/{id}', method='POST')]
     assert code_to_routes("post '/:model' do mod = @models[params[:model].to_sym] @model = mod.to_s.split( '::' )") == [
         HttpRoute(url_pattern='/{model}', method='POST')]
+    assert code_to_routes("get '/download/*.*' do") == [
+        HttpRoute(url_pattern='/download/{extra_path}', method='GET')]
+    # These two patterns are not supported by swagger, so needs some post-processing
+    assert code_to_routes("get '/hello/([\w]+)/' do") == [
+        HttpRoute(url_pattern='/hello/([\w]+)/', method='GET')]
+    assert code_to_routes("get '%r{/hello/([\w]+)}' do") == [
+        HttpRoute(url_pattern='/%r{/hello/([\\w]+)}', method='GET')]

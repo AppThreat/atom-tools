@@ -40,12 +40,14 @@ def _clean_url(url_pattern):
 
 
 def fix_url_params(path_str):
-    if ":" not in path_str:
-        return path_str
+    if path_str == "*":
+        return "/"
     s = []
     for p in path_str.split("/"):
         if p.startswith(":"):
             s.append("{" + p.removeprefix(":") + "}")
+        elif p in ("*", "*.*", ".*"):
+            s.append("{extra_path}")
         else:
             s.append(p)
     return "/".join(s)
