@@ -7,7 +7,6 @@ from typing import Dict, List, Tuple
 
 from atom_tools.lib.filtering import check_reachable_purl, filter_flows, get_ln_range
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -108,3 +107,33 @@ def sort_list(lst: List) -> List:
             return sorted(lst, key=lambda x: x['code'])
         return sorted(lst, key=lambda x: x.get('callName'))
     return lst
+
+
+def extract_params(url):
+    params = []
+    if not url:
+        return []
+    if "{" in url or ":" in url:
+        for part in url.split("/"):
+            if part.startswith("{") or part.startswith(":"):
+                param = {
+                    "name": re.sub(r"[:{}]", "", part),
+                    "in": "path",
+                    "required": True
+                }
+                if part == "{id}":
+                    param["schema"] = {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                elif part == "{extra_path}" or part.endswith("*") or part.startswith("*"):
+                    param["schema"] = {
+                        "type": "string",
+                        "format": "path"
+                    }
+                elif part.startswith("{"):
+                    param["schema"] = {
+                        "type": "string"
+                    }
+                params.append(param)
+    return params

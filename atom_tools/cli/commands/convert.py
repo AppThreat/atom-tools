@@ -2,6 +2,7 @@
 Convert Command for the atom-tools CLI.
 """
 import logging
+import os
 import sys
 
 from cleo.helpers import option
@@ -43,7 +44,15 @@ class ConvertCommand(Command):
             'i',
             'Usages slice file',
             flag=False,
+            default='usages.slices.json',
             value_required=True,
+        ),
+        option(
+            'semantics-slice',
+            'e',
+            'Semantics slice file',
+            default='semantics.slices.json',
+            flag=False
         ),
         option(
             'type',
@@ -57,13 +66,14 @@ class ConvertCommand(Command):
             'o',
             'Output file',
             flag=False,
-            default='openapi_from_slice.json',
+            default=os.getenv("OPENAPI_FILENAME", "openapi.json"),
         ),
         option(
             'server',
             's',
             'The server url to be included in the server object.',
             flag=False,
+            default=os.getenv("OPENAPI_SERVER_URL")
         )
     ]
     help = """The convert command converts an atom slice to a different format.
@@ -75,7 +85,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
         """
         Executes the convert command and performs the conversion.
         """
-        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts', "ruby", "rb"}
+        supported_types = {'java', 'jar', 'python', 'py', 'javascript', 'js', 'typescript', 'ts', "ruby", "rb", "scala", "sbt"}
         if self.option('type') not in supported_types:
             raise ValueError(f'Unknown origin type: {self.option("type")}')
         match self.option('format'):
@@ -84,6 +94,7 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                     self.option('format'),
                     self.option('type'),
                     self.option('input-slice'),
+                    self.option('semantics-slice'),
                 )
 
                 if not (result := converter.endpoints_to_openapi(self.option('server'))):
