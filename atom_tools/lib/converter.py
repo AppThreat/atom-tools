@@ -38,7 +38,7 @@ class OpenAPI:
             dest_format: str,
             origin_type: str,
             usages: str,
-            semantics: str,
+            semantics: str = None,
     ) -> None:
         self.usages: AtomSlice = AtomSlice(usages, origin_type)
         self.semantics: AtomSlice = AtomSlice(semantics, origin_type)
