@@ -41,7 +41,7 @@ class OpenAPI:
             semantics: str = None,
     ) -> None:
         self.usages: AtomSlice = AtomSlice(usages, origin_type)
-        self.semantics: AtomSlice = AtomSlice(semantics, origin_type)
+        self.semantics: AtomSlice = AtomSlice(semantics, origin_type) if Path(semantics).exists() else None
         self.openapi_version = dest_format.replace('openapi', '')
         self.title = f'OpenAPI Specification for {Path(usages).parent.stem}' if Path(
             usages).parent.stem else "OpenAPI Specification"

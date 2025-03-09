@@ -13,7 +13,6 @@ import json_flatten  # type: ignore
 
 from atom_tools.lib.regex_utils import FilteringPatternCollection
 
-
 logger = logging.getLogger(__name__)
 patterns = FilteringPatternCollection()
 
@@ -89,7 +88,7 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
     content: Dict = {}
     slice_type = ''
     custom_attr = ''
-    if not filename:
+    if not filename or not Path(filename).exists():
         logger.warning('No filename specified.')
         return content, slice_type, custom_attr
     try:
