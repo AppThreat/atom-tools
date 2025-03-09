@@ -20,6 +20,7 @@ from atom_tools.lib.regex_utils import (
 )
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.ruby_converter import convert as ruby_convert
+from atom_tools.lib.scala_converter import convert as scala_convert
 
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
@@ -33,14 +34,17 @@ class OpenAPI:
     """Represents an OpenAPI converter object."""
 
     def __init__(
-        self,
-        dest_format: str,
-        origin_type: str,
-        usages: str,
+            self,
+            dest_format: str,
+            origin_type: str,
+            usages: str,
+            semantics: str = None,
     ) -> None:
         self.usages: AtomSlice = AtomSlice(usages, origin_type)
+        self.semantics: AtomSlice = AtomSlice(semantics, origin_type)
         self.openapi_version = dest_format.replace('openapi', '')
-        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}' if Path(usages).parent.stem else "OpenAPI Specification"
+        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}' if Path(
+            usages).parent.stem else "OpenAPI Specification"
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
         self.regex_param_count = 0
@@ -52,6 +56,8 @@ class OpenAPI:
         """
         if self.usages.origin_type in ("rb", "ruby"):
             return ruby_convert(self.usages)
+        if self.usages.origin_type in ("scala", "sbt"):
+            return scala_convert(self.usages, self.semantics)
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
         self.target_line_nums = self._identify_target_line_nums(methods)
@@ -215,11 +221,11 @@ class OpenAPI:
             self.regex_param_count += 1
             ele_name = f'regex_param_{self.regex_param_count}'
             params = [{
-                      'in': 'path',
-                      'name': ele_name,
-                      'required': True,
-                      'schema': {'type': 'string', 'pattern': ele}
-                      }]
+                'in': 'path',
+                'name': ele_name,
+                'required': True,
+                'schema': {'type': 'string', 'pattern': ele}
+            }]
 
         return ele, params
 
@@ -298,7 +304,7 @@ class OpenAPI:
         match self.usages.origin_type:
             case 'java' | 'jar':
                 if not (
-                    code.startswith('@') and ('Mapping' in code or 'Path' in code) and '(' in code
+                        code.startswith('@') and ('Mapping' in code or 'Path' in code) and '(' in code
                 ):
                     return filtered_matches
             case 'js' | 'ts' | 'javascript' | 'typescript':
@@ -332,7 +338,7 @@ class OpenAPI:
         if matches := regex.processed_param.findall(endpoint):
             params.extend(
                 [{'name': m, 'in': 'path', 'required': True} for m in matches if
-                    m not in existing_path_params]
+                 m not in existing_path_params]
             )
         return params
 
@@ -491,7 +497,9 @@ class OpenAPI:
             file_name = r['file_name']
             methods = r['resolved_methods']
             if self.usages.origin_type in ("rb", "ruby"):
-                methods = [m for m in methods if m and not m.startswith("<operator>") and m not in ["(...)", "<body>"] and not m.startswith("<tmp-")]
+                methods = [m for m in methods if
+                           m and not m.startswith("<operator>") and m not in ["(...)", "<body>"] and not m.startswith(
+                               "<tmp-")]
             if resolved.get(file_name):
                 resolved[file_name]['resolved_methods'].extend(methods)
             else:

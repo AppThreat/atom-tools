@@ -99,8 +99,14 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
                 custom_attr = 'flask'
             elif 'django' in raw_content:
                 custom_attr = 'django'
+            elif 'play' in raw_content:
+                custom_attr = 'playframework'
+            elif 'akka' in raw_content:
+                custom_attr = 'akka'
             content = json.loads(raw_content)
-        if 'objectSlices' in content:
+        if content.get("config") or "semantics.slices" in filename:
+            slice_type = 'semantics'
+        elif 'objectSlices' in content:
             slice_type = 'usages'
         elif 'reachables' in content:
             slice_type = 'reachables'

@@ -1,39 +1,9 @@
 """
 Ruby converter helper
 """
-import re
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.ruby_semantics import code_to_routes
-
-
-def extract_params(url):
-    params = []
-    if not url:
-        return []
-    if "{" in url or ":" in url:
-        for part in url.split("/"):
-            if part.startswith("{") or part.startswith(":"):
-                param = {
-                    "name": re.sub(r"[:{}]", "", part),
-                    "in": "path",
-                    "required": True
-                }
-                if part == "{id}":
-                    param["schema"] = {
-                        "type": "integer",
-                        "format": "int64"
-                    }
-                elif part == "{extra_path}":
-                    param["schema"] = {
-                        "type": "string",
-                        "format": "path"
-                    }
-                elif part.startswith("{"):
-                    param["schema"] = {
-                        "type": "string"
-                    }
-                params.append(param)
-    return params
+from atom_tools.lib.utils import extract_params
 
 
 def convert(usages: AtomSlice):
@@ -64,7 +34,7 @@ def convert(usages: AtomSlice):
                         },
                         "responses": {
                             "200": {
-                                "description": f""
+                                "description": ""
                             }
                         }
                     }

@@ -67,24 +67,24 @@ Description:
 Usage:
   convert [options]
 
-Options:
-  -f, --format=FORMAT              Destination format [default: "openapi3.1.0"]
-  -i, --input-slice=INPUT-SLICE  Usages slice file
-  -t, --type=TYPE                  Origin type of source on which the atom slice was generated. [default: "java"]
-  -o, --output-file=OUTPUT-FILE    Output file [default: "openapi_from_slice.json"]
-  -s, --server=SERVER              The server url to be included in the server object.
-  -h, --help                       Display help for the given command. When no command is given display help for the list command.
-  -q, --quiet                      Do not output any message.
-  -V, --version                    Display this application version.
-      --ansi                       Force ANSI output.
-      --no-ansi                    Disable ANSI output.
-  -n, --no-interaction             Do not ask any interactive question.
-  -v|vv|vvv, --verbose             Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
+OOptions:
+  -f, --format=FORMAT                    Destination format [default: "openapi3.1.0"]
+  -i, --input-slice=INPUT-SLICE          Usages slice file [default: "usages.slices.json"]
+  -e, --semantics-slice=SEMANTICS-SLICE  Semantics slice file [default: "semantics.slices.json"]
+  -t, --type=TYPE                        Origin type of source on which the atom slice was generated. [default: "java"]
+  -o, --output-file=OUTPUT-FILE          Output file [default: "openapi.json"]
+  -s, --server=SERVER                    The server url to be included in the server object.
+  -h, --help                             Display help for the given command. When no command is given display help for the list command.
+  -q, --quiet                            Do not output any message.
+  -V, --version                          Display this application version.
+      --ansi                             Force ANSI output.
+      --no-ansi                          Disable ANSI output.
+  -n, --no-interaction                   Do not ask any interactive question.
+  -v|vv|vvv, --verbose                   Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
 
 Help:
   The convert command converts an atom slice to a different format.
-      Currently supports outputting an OpenAPI 3.x document based on a usages
-      slice.
+  Currently supports creating an OpenAPI 3.x document based on a usages slice.
 ```
 
 **Example**
