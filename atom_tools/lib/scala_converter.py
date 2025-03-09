@@ -23,7 +23,7 @@ def extract_pattern(route_pattern):
 
 def convert(usages: AtomSlice, semantics: AtomSlice):
     result = {}
-    if not semantics.content:
+    if not semantics or not semantics.content:
         return result
     routes = semantics.content.get("config", {}).get("routes")
     if not routes:
