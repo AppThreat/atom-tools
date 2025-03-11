@@ -10,7 +10,7 @@ current documentation for atom is housed in
 the [AppThreat/atom](https://github.com/AppThreat/atom?tab=readme-ov-file) GitHub repository.
 
 Atom can easily be installed from
-a [native image](https://github.com/AppThreat/atom#atom-native-image) or via
+a [native image](https://github.com/AppThreat/atom#atom-native-image-advanced-users-only) or via
 npm `npm install -g @appthreat/atom`.
 
 ## Atom-tools installation
