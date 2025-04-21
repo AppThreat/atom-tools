@@ -21,6 +21,14 @@ def test_code_to_routes():
                HttpRoute(url_pattern='/password_resets', method='GET'),
                HttpRoute(url_pattern='/password_resets', method='POST'),
                HttpRoute(url_pattern='/dashboard/doc', method='GET')]
+    assert code_to_routes("""Rails.application.routes.draw do root \"home#index\" get \"/articles\", to: \"articles#index\" get '/oauth2-callback', to: 'o_auth#oauth_callback' get '/logout', to: 'o_auth#logout' get '/login', to: 'o_auth#login' get '/register', to: 'o_auth#register' get '/endsession', to: 'o_auth#endsession' end""") == [
+        HttpRoute(url_pattern='/articles', method='GET'),
+        HttpRoute(url_pattern='/oauth2-callback', method='GET'),
+        HttpRoute(url_pattern='/logout', method='GET'),
+        HttpRoute(url_pattern='/login', method='GET'),
+        HttpRoute(url_pattern='/register', method='GET'),
+        HttpRoute(url_pattern='/endsession', method='GET')
+    ]
 
 
 def test_code_to_routes_dangling():
@@ -138,9 +146,9 @@ def test_code_to_routes_advanced():
     assert code_to_routes('resources :photos do member do get "preview" end end') == [
         HttpRoute(url_pattern='/photos/preview', method='GET')]
     assert code_to_routes('get "こんにちは", to: "welcome#index"') == [
-        HttpRoute(url_pattern='/こんにちは,', method='GET')]
+        HttpRoute(url_pattern='/こんにちは', method='GET')]
     assert code_to_routes(
-        'scope ":account_id", as: "account", constraints: { account_id: /\d+/ } do resources :articles end') == [
+        'scope ":account_id", as: "account", constraints: { account_id: /\\d+/ } do resources :articles end') == [
                HttpRoute(url_pattern='/account_id/articles', method='GET'),
                HttpRoute(url_pattern='/account_id/articles/new', method='GET'),
                HttpRoute(url_pattern='/account_id/articles', method='POST'),
@@ -180,7 +188,7 @@ def test_code_to_routes_sinatra():
     assert code_to_routes("get '/download/*.*' do") == [
         HttpRoute(url_pattern='/download/{extra_path}', method='GET')]
     # These two patterns are not supported by swagger, so needs some post-processing
-    assert code_to_routes("get '/hello/([\w]+)/' do") == [
-        HttpRoute(url_pattern='/hello/([\w]+)/', method='GET')]
-    assert code_to_routes("get '%r{/hello/([\w]+)}' do") == [
+    assert code_to_routes("get '/hello/([\\w]+)/' do") == [
+        HttpRoute(url_pattern='/hello/([\\w]+)', method='GET')]
+    assert code_to_routes("get '%r{/hello/([\\w]+)}' do") == [
         HttpRoute(url_pattern='/%r{/hello/([\\w]+)}', method='GET')]

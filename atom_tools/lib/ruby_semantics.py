@@ -36,7 +36,7 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
 
 
 def _clean_url(url_pattern):
-    return re.sub('[,/]$', '', url_pattern)
+    return re.sub('[,/]$', '', url_pattern) if len(url_pattern) > 1 else url_pattern
 
 
 def fix_url_params(path_str):
@@ -118,7 +118,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                 if m == "options" and full_path == "*":
                     full_path = "/"
                 routes.append(
-                    HttpRoute(url_pattern=full_path,
+                    HttpRoute(url_pattern=_clean_url(full_path),
                               method=m.upper() if m != "patch" else "PUT"))
                 break
     if has_resources:
