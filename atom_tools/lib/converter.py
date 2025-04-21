@@ -246,9 +246,9 @@ class OpenAPI:
         if not params and call:
             ptypes = set(call.get('paramTypes', []))
             if len(ptypes) > 1:
-                params = [{'name': param, 'in': 'header'} for param in ptypes if param != 'ANY']
+                params = [{'name': param, 'in': 'header'} for param in ptypes if param != 'ANY' and not param.startswith("__") and param not in ("LAMBDA",)]
             else:
-                params = [{'name': param, 'in': 'header'} for param in ptypes]
+                params = [{'name': param, 'in': 'header'} for param in ptypes if not param.startswith("__") and param not in ("LAMBDA",)]
         return params
 
     def _extract_endpoints(self, method: str) -> List[str]:
@@ -315,6 +315,8 @@ class OpenAPI:
 
         for m in matches:
             if m and m[0] not in ('.', '@', ','):
+                if "/" not in m or "node_modules" in m or "@types" in m:
+                    continue
                 nm = m.replace('"', '').replace("'", '').lstrip('/')
                 filtered_matches.append(f'/{nm}')
 
