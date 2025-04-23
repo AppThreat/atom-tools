@@ -418,9 +418,9 @@ class OpenAPI:
         """
         if '(' in endpoint:
             endpoint = regex.extract_parentheses.sub(fwd_slash_repl, endpoint)
-        endpoint_elements = endpoint.lstrip('/').lstrip("{}").rstrip('$').rstrip('/').split('/')
+        endpoint_elements = endpoint.lstrip('/').rstrip('$').rstrip('/').split('/')
         endpoint_elements = [
-            i.lstrip('/').lstrip("{}").lstrip('^').rstrip('/').rstrip('$').replace('$L@$H', '/')
+            i.lstrip('/').lstrip('^').rstrip('/').rstrip('$').replace('$L@$H', '/')
             for i in endpoint_elements
         ]
         params = []
@@ -429,13 +429,13 @@ class OpenAPI:
             if regex.detect_regex.search(i):
                 e, b = self._check_path_elements_regex(i)
                 if e:
-                    new_endpoint += f'/{e.lstrip("{}")}'
+                    new_endpoint += f'/{e}'
                     params.extend(b)
             elif i:
-                new_endpoint += f'/{i.lstrip("{}")}'
+                new_endpoint += f'/{i}'
         if params:
             self.params[new_endpoint] = params
-        return new_endpoint
+        return new_endpoint.replace("/{}", "/")
 
     def _process_calls(self, method_map: Dict) -> Dict[str, Any]:
         """
