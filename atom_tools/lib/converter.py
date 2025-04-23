@@ -331,7 +331,7 @@ class OpenAPI:
             if m and m[0] not in ('.', '@', ','):
                 if "/" not in m or "node_modules" in m or "@types" in m:
                     continue
-                nm = m.replace('"', '').replace("'", '').lstrip('/')
+                nm = m.replace('"', '').replace("'", '').lstrip('/').lstrip(')}')
                 filtered_matches.append(f'/{nm}')
 
         return filtered_matches
@@ -418,9 +418,9 @@ class OpenAPI:
         """
         if '(' in endpoint:
             endpoint = regex.extract_parentheses.sub(fwd_slash_repl, endpoint)
-        endpoint_elements = endpoint.lstrip('/').rstrip('$').rstrip('/').split('/')
+        endpoint_elements = endpoint.lstrip('/').lstrip("{}").rstrip('$').rstrip('/').split('/')
         endpoint_elements = [
-            i.lstrip('/').lstrip('^').rstrip('/').rstrip('$').replace('$L@$H', '/')
+            i.lstrip('/').lstrip("{}").lstrip('^').rstrip('/').rstrip('$').replace('$L@$H', '/')
             for i in endpoint_elements
         ]
         params = []
@@ -428,10 +428,11 @@ class OpenAPI:
         for i in endpoint_elements:
             if regex.detect_regex.search(i):
                 e, b = self._check_path_elements_regex(i)
-                new_endpoint += f'/{e}'
-                params.extend(b)
-            else:
-                new_endpoint += f'/{i}'
+                if e:
+                    new_endpoint += f'/{e.lstrip("{}")}'
+                    params.extend(b)
+            elif i:
+                new_endpoint += f'/{i.lstrip("{}")}'
         if params:
             self.params[new_endpoint] = params
         return new_endpoint
