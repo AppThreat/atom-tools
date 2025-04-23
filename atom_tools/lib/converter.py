@@ -7,6 +7,7 @@ import logging
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
+from urllib.parse import urlparse
 
 import jmespath
 
@@ -29,6 +30,12 @@ exclusions = ['/content-type', '/application/javascript', '/application/json', '
               '/application/xml', '/*', '/*/*', '/allow', '/get', '/post', '/xml', '/cookie',
               '/usestrict', '/maxage', '/sessionid']
 
+
+def js_filterable(code):
+    for c in ("node_modules", ".js", ".ts", ".vue", "@types", "::", "__"):
+        if c in code:
+            return True
+    return False
 
 class OpenAPI:
     """Represents an OpenAPI converter object."""
@@ -301,7 +308,7 @@ class OpenAPI:
             list[str]: Filtered matches that meet the specified criteria.
         """
         filtered_matches: List[str] = []
-
+        possible_uri_fragment = False
         match self.usages.origin_type:
             case 'java' | 'jar':
                 if not (
@@ -309,8 +316,15 @@ class OpenAPI:
                 ):
                     return filtered_matches
             case 'js' | 'ts' | 'javascript' | 'typescript':
-                if ('app.' not in code and 'route' not in code and 'ftp' not in code) or (
-                        'app.set(' in code):
+                try:
+                    if "/" in code and not js_filterable(code):
+                        url_obj = urlparse(code)
+                        if url_obj.path:
+                            possible_uri_fragment = True
+                except Exception:
+                    pass
+                if not possible_uri_fragment and (('app.' not in code and 'route' not in code and 'ftp' not in code) or (
+                        'app.set(' in code)):
                     return filtered_matches
 
         for m in matches:

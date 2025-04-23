@@ -40,6 +40,11 @@ def js_usages_2():
 
 
 @pytest.fixture
+def js_usages_3():
+    return OpenAPI('openapi3.0.1', 'js', 'test/data/js-cdxgen-usages.json')
+
+
+@pytest.fixture
 def py_usages_1():
     return OpenAPI('openapi3.0.1', 'python', 'test/data/py-django-goat-usages.json')
 
@@ -52,7 +57,7 @@ def py_usages_2():
 def rb_usages_1():
     return OpenAPI('openapi3.0.1', 'rb', 'test/data/rb-railsgoat-usages.json')
 
-def test_populate_endpoints(js_usages_1, js_usages_2):
+def test_populate_endpoints(js_usages_1, js_usages_2, js_usages_3):
     # The populate_endpoints method is the final operation in convert_usages.
     # However, it's difficult to test the output when the order of params can
     # differ.
@@ -63,6 +68,7 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
     methods = js_usages_2._process_methods()
     methods = js_usages_2.methods_to_endpoints(methods)
     assert methods
+    assert methods['file_names']
     methods = js_usages_2._process_calls(methods)
     result = js_usages_2.populate_endpoints(methods)
     assert len(list(result['/login'].keys())) == 3
@@ -82,6 +88,16 @@ def test_populate_endpoints(js_usages_1, js_usages_2):
  '/signup',
  '/tutorial',
  '/tutorial/a1']
+
+def test_populate_endpoints2(js_usages_3):
+    methods = js_usages_3._process_methods()
+    methods = js_usages_3.methods_to_endpoints(methods)
+    assert methods
+    methods = js_usages_3._process_calls(methods)
+    result = js_usages_3.populate_endpoints(methods)
+    assert len(list(result['/sbom'].keys())) == 1
+    result = sorted(result.keys())
+    assert result == ["/", "/health", "/sbom"]
 
 
 def test_usages_class(java_usages_1):
@@ -1313,7 +1329,9 @@ def test_js(js_usages_1):
     js_usages_1.file_endpoint_map = js_usages_1.create_file_to_method_dict(methods)
     file_endpoint_map = sort_openapi_result(js_usages_1.file_endpoint_map)
     assert file_endpoint_map
-    assert js_usages_1.target_line_nums == {'routes/dataErasure.ts': {'()': [80]},
+    assert js_usages_1.target_line_nums == {'frontend/src/app/score-board/score-board.component.ts': {'__whatwg.console:warn': [168],
+                                                           'frontend/src/app/score-board/score-board.component.ts::program:ScoreBoardComponent:rewriteLegacyChallengeDirectLink': [83]},
+ 'routes/dataErasure.ts': {'()': [80]},
  'server.ts': {'()': [694], 'server.ts::program:readyCallback': [702]}}
 
     methods = js_usages_1._process_calls(methods)
