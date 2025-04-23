@@ -431,7 +431,7 @@ class OpenAPI:
                 if e:
                     new_endpoint += f'/{e}'
                     params.extend(b)
-            elif i:
+            else:
                 new_endpoint += f'/{i}'
         if params:
             self.params[new_endpoint] = params
