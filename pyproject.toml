@@ -6,7 +6,7 @@ authors = [
   { name = "Caroline Russell", email = "caroline@appthreat.dev" },
 ]
 dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0", "thefuzz>=0.22.1", "json-flatten>=0.3"]
-license = "Apache-2.0"
+license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -75,5 +75,3 @@ logging-format-style = "new"
 
 [tool.pylint.messages_control]
 disable = "W1203,R0903,E0401"
-
-
