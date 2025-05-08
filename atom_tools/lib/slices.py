@@ -89,7 +89,7 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
     slice_type = ''
     custom_attr = ''
     if not filename or not Path(filename).exists():
-        logger.warning('No filename specified.')
+        logger.warning('No filename specified.', filename)
         return content, slice_type, custom_attr
     try:
         with open(filename, 'r', encoding='utf-8') as f:

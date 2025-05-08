@@ -14,6 +14,8 @@ def convert(usages: AtomSlice):
         if oslice.get('fullName').count("<lambda>") >= 3:
             continue
         file_name = oslice.get("fileName", "")
+        if "step_definitions" in file_name:
+            continue
         line_nums = set()
         if oslice.get("lineNumber"):
             line_nums.add(oslice.get("lineNumber"))
