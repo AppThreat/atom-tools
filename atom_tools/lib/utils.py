@@ -121,12 +121,12 @@ def extract_params(url):
                     "in": "path",
                     "required": True
                 }
-                if part == "{id}":
+                if part == "{id}" or part.endswith("_id}"):
                     param["schema"] = {
                         "type": "integer",
                         "format": "int64"
                     }
-                elif part == "{extra_path}" or part.endswith("*") or part.startswith("*"):
+                elif part in ("{name}", "{extra_path}") or part.endswith("*") or part.startswith("*"):
                     param["schema"] = {
                         "type": "string",
                         "format": "path"
