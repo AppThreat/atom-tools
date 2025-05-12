@@ -280,6 +280,4 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                             i == len(code_parts) - 2 or (len(code_parts) > i + 2 and code_parts[i + 1] != "do")):
                         routes += _get_dangling_routes(i, m, code, code_parts, f"{url_prefix}/" if has_scope else "/")
 
-    if routes:
-        print (code, routes)
     return routes
