@@ -120,14 +120,13 @@ def test_code_to_routes_resources():
  HttpRoute(url_pattern='/admin/dashboard', method='GET'),
  HttpRoute(url_pattern='/admin/get_user', method='GET'),
  HttpRoute(url_pattern='/admin/delete_user', method='POST'),
- HttpRoute(url_pattern='/admin/update_user', method='PUT'),
+ HttpRoute(url_pattern='/admin/{id}/update_user', method='PUT'),
  HttpRoute(url_pattern='/admin/get_all_users', method='GET'),
  HttpRoute(url_pattern='/admin/analytics', method='GET')]
 
 
 def test_code_to_routes_sidekiq():
-    assert code_to_routes("""namespace \"admin\" do #load Sidekiq web UI if IS_SIDEKIQ || IS_SIDEKIQ_COMMERCE || IS_SIDEKIQ_ENTITY_RECOMMENDER || IS_SIDEKIQ_AUCTION mount Sidekiq::Web, :at => '/sidekiq', :constraints => AdminHelper::AdminHttpBasicAuth.new end scope \"templates\", :controller => 'email_templates' do get 'edit', :action => 'edit', :as => 'email_template_edit' end resources :target_tag_groups resources :email_templates resources :email_triggers do get 'show_changelog', controller: 'email_triggers', action: 'show_changelog', as: 'show_changelog' end resources :retail_brand_mappings get '/user_development_notifications', :to => 'user_development_notifications#list_udns', :as => 'user_development_notifications' get '/marketing_campaign_scheduler', :to => 'admin_marketing_campaign#marketing_campaign_scheduler', :as => 'marketing_campaign_scheduler' post '/schedule_marketing_campaign', :to => 'admin_marketing_campaign#schedule_marketing_campaign', :as => 'schedule_marketing_campaign' match \"batch_push_sche...""") == [
-    HttpRoute(url_pattern='/admin/sidekiq', method='GET'),
+    assert code_to_routes("""namespace \"admin\" do #load Sidekiq web UI if IS_SIDEKIQ || IS_SIDEKIQ_COMMERCE || IS_SIDEKIQ_ENTITY_RECOMMENDER || IS_SIDEKIQ_AUCTION mount Sidekiq::Web, :at => '/sidekiq', :constraints => AdminHelper::AdminHttpBasicAuth.new end scope \"templates\", :controller => 'email_templates' do get 'edit', :action => 'edit', :as => 'email_template_edit' end resources :target_tag_groups resources :email_templates resources :email_triggers do get 'show_changelog', controller: 'email_triggers', action: 'show_changelog', as: 'show_changelog' end resources :retail_brand_mappings get '/user_development_notifications', :to => 'user_development_notifications#list_udns', :as => 'user_development_notifications' get '/marketing_campaign_scheduler', :to => 'admin_marketing_campaign#marketing_campaign_scheduler', :as => 'marketing_campaign_scheduler' post '/schedule_marketing_campaign', :to => 'admin_marketing_campaign#schedule_marketing_campaign', :as => 'schedule_marketing_campaign' match \"batch_push_sche...""") == [HttpRoute(url_pattern='/admin/sidekiq', method='GET'),
  HttpRoute(url_pattern='/admin/sidekiq/busy', method='GET'),
  HttpRoute(url_pattern='/admin/sidekiq/queues', method='GET'),
  HttpRoute(url_pattern='/admin/sidekiq/queues/{name}', method='GET'),
@@ -142,39 +141,45 @@ def test_code_to_routes_sidekiq():
  HttpRoute(url_pattern='/admin/sidekiq/scheduled/{id}', method='POST'),
  HttpRoute(url_pattern='/admin/sidekiq/scheduled/all', method='POST'),
  HttpRoute(url_pattern='/admin/templates/edit', method='GET'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups', method='GET'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups/new', method='GET'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups', method='POST'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups/{id}', method='GET'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups/{id}/edit',
+ HttpRoute(url_pattern='/admin/target_tag_groups', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/new', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups', method='POST'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}', method='PUT'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}', method='DELETE'),
+ HttpRoute(url_pattern='/admin/email_templates', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates/new', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates', method='POST'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}', method='PUT'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}', method='DELETE'),
+ HttpRoute(url_pattern='/admin/email_triggers/show_changelog', method='GET'),
+ HttpRoute(url_pattern='/admin/retail_brand_mappings/new', method='GET'),
+ HttpRoute(url_pattern='/admin/retail_brand_mappings', method='POST'),
+ HttpRoute(url_pattern='/admin/retail_brand_mappings/{id}', method='GET'),
+ HttpRoute(url_pattern='/admin/retail_brand_mappings/{id}/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/retail_brand_mappings/{id}', method='PUT'),
+ HttpRoute(url_pattern='/admin/retail_brand_mappings/{id}', method='DELETE'),
+ HttpRoute(url_pattern='/admin/user_development_notifications',
            method='GET'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups/{id}', method='PUT'),
- HttpRoute(url_pattern='/admin/templates/target_tag_groups/{id}',
-           method='DELETE'),
- HttpRoute(url_pattern='/admin/templates/email_templates', method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_templates/new', method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_templates', method='POST'),
- HttpRoute(url_pattern='/admin/templates/email_templates/{id}', method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_templates/{id}/edit',
+ HttpRoute(url_pattern='/admin/marketing_campaign_scheduler',
            method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_templates/{id}', method='PUT'),
- HttpRoute(url_pattern='/admin/templates/email_templates/{id}',
-           method='DELETE'),
- HttpRoute(url_pattern='/admin/templates/email_triggers/show_changelog',
-           method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_triggers/retail_brand_mappings/user_development_notifications',
-           method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_triggers/retail_brand_mappings/marketing_campaign_scheduler',
-           method='GET'),
- HttpRoute(url_pattern='/admin/templates/email_triggers/retail_brand_mappings/schedule_marketing_campaign',
-           method='POST')]
+ HttpRoute(url_pattern='/admin/schedule_marketing_campaign',
+           method='POST'),
+HttpRoute(url_pattern='/admin/batch_push_sche', method='GET')]
 
 def test_code_to_routes_scope_dangling():
+    assert code_to_routes("""resources :consignment_requests, only: [:show] do member do get :print put 'state', to: :update_state, as: :update_state end end""") == [HttpRoute(url_pattern='/consignment_requests/{print}', method='GET'),
+ HttpRoute(url_pattern='/consignment_requests/{id}/state', method='PUT')]
     # Needs development
-    assert code_to_routes("""scope \"payments_gift_card_infos\", :controller => \"admin_payments_gift_card_infos\" do match \"(:gift_card_fingerprint)""") == []
-    assert code_to_routes("""scope \"payments_upi_infos\", :controller => \"admin_payments_upi_infos\" do match \"(:upi_info_id)""") == []
-    assert code_to_routes("""scope \"payments_venmo_infos\", :controller => \"admin_payments_venmo_infos\" do match \"(:venmo_info_id)""") == []
-    assert code_to_routes("""scope \"payments_apple_pay_infos\", :controller => \"admin_payments_apple_pay_infos\" do match \"(:apple_pay_info_id)""") == []
+    assert code_to_routes("""scope \"payments_gift_card_infos\", :controller => \"admin_payments_gift_card_infos\" do match \"(:gift_card_fingerprint)""") == [HttpRoute(url_pattern='/payments_gift_card_infos/{gift_card_fingerprint}',
+           method='GET')]
+    assert code_to_routes("""scope \"payments_upi_infos\", :controller => \"admin_payments_upi_infos\" do match \"(:upi_info_id)""") == [HttpRoute(url_pattern='/payments_upi_infos/{upi_info_id}', method='GET')]
+    assert code_to_routes("""scope \"payments_venmo_infos\", :controller => \"admin_payments_venmo_infos\" do match \"(:venmo_info_id)""") == [HttpRoute(url_pattern='/payments_venmo_infos/{venmo_info_id}', method='GET')]
+    assert code_to_routes("""scope \"payments_apple_pay_infos\", :controller => \"admin_payments_apple_pay_infos\" do match \"(:apple_pay_info_id)""") == [HttpRoute(url_pattern='/payments_apple_pay_infos/{apple_pay_info_id}',
+           method='GET')]
     assert code_to_routes("""scope 'offers/(:offer_id)""") == []
     assert code_to_routes("""scope \"/referral_codes/(:referral_code)""") == []
     assert code_to_routes("""scope 'brands', :controller=>'admin_brands' do get 'list_brands', :action=>'list_brands', :as=>'list_brands' get 'add_brand_form', :action=>'add_brand_form', :as=>'add_brand_form' get 'add_synonym_form', :action=>'add_synonym_form', :as=>'add_synonym_form' post 'recent_brands', :action=>'recent_brands', :as=>'recent_brands' post 'add_brand', :action =>'add_brand', :as=>'add_brand' post 'add_synonym', :action =>'add_synonym', :as=>'add_synonym' get ':brand_id/brand_details', :action =>'brand_details', :as=>'brand_details' post ':brand_id/promoted_user', :action => 'update_promoted_user', :as => 'update_promoted_user' post 'find_brand', :action => 'find_brand', :as => 'find_brand' end""") == [HttpRoute(url_pattern='/brands/list_brands', method='GET'),
@@ -190,10 +195,10 @@ def test_code_to_routes_scope_dangling():
  HttpRoute(url_pattern='/influencer_campaigns/download_jobs', method='POST')]
     assert code_to_routes("""scope 'users/(:user_id)""") == []
     assert code_to_routes("""scope 'bulk_account_actions' do get 'summary', :action => 'bulk_account_actions_summary', :as => 'bulk_account_actions_summary' match 'new', :action => 'new_bulk_account_action', :as => 'ne
-w_bulk_account_action', :via => [:get, :post] end""") == [HttpRoute(url_pattern='/bulk_account_actions/summary', method='GET')]
+w_bulk_account_action', :via => [:get, :post] end""") == [HttpRoute(url_pattern='/bulk_account_actions/summary', method='GET'),
+ HttpRoute(url_pattern='/bulk_account_actions/new', method='GET')]
     assert code_to_routes("""scope \"templates\", :controller => 'email_templates' do get 'edit', :action => 'edit', :as => 'email_template_edit' end""") == [HttpRoute(url_pattern='/templates/edit', method='GET')]
-    assert code_to_routes("""resources :consignment_requests, only: [:show] do member do get :print put 'state', to: :update_state, as: :update_state end end""") == [HttpRoute(url_pattern='/consignment_requests/state', method='PUT')]
-    assert code_to_routes("""member do get :print put 'state', to: :update_state, as: :update_state end""") == [HttpRoute(url_pattern='/state', method='PUT')]
+    assert code_to_routes("""member do get :print put 'state', to: :update_state, as: :update_state end""") == [HttpRoute(url_pattern='/{print}', method='GET'), HttpRoute(url_pattern='/{id}/state', method='PUT')]
     assert code_to_routes("""scope \"posts/(:post_id)""") == []
     assert code_to_routes("""resources :email_triggers do get 'show_changelog', controller: 'email_triggers', action: 'show_changelog', as: 'show_changelog' end""") == [HttpRoute(url_pattern='/email_triggers', method='GET'),
  HttpRoute(url_pattern='/email_triggers/new', method='GET'),
@@ -225,6 +230,8 @@ list_mapping_overrides\", :action => 'list_mapping_overrides', :as => 'list_mapp
  HttpRoute(url_pattern='/', method='GET'),
  HttpRoute(url_pattern='/reset_mapping_overrides', method='POST'),
  HttpRoute(url_pattern='/my_feature_settings', method='GET'),
+ HttpRoute(url_pattern='/feature_settings/{feature_id}', method='GET'),
+ HttpRoute(url_pattern='/feature_settings', method='GET'),
  HttpRoute(url_pattern='/feature_settings/{feature_id}/show_mappings_hi',
            method='GET')]
     assert code_to_routes("""scope :controller => 'admin_service_flags' do get 'list_service_flags', :action => 'list_service_flags', :as => 'list_service_flags' end""") == [HttpRoute(url_pattern='/list_service_flags', method='GET')]
@@ -268,8 +275,8 @@ def test_code_to_routes_scope_multiple_path():
            method='POST'),
  HttpRoute(url_pattern='/inventory_unit/{inventory_unit_id}/order_not_delivered',
            method='POST')]
-    assert code_to_routes("""scope \"payments_card_infos\", :controller=> \"admin_payments_card_infos\" do match \"(:card_info_id)""") == []
-    assert code_to_routes("""scope \"payments_paypal_infos\", :controller => \"admin_payments_paypal_infos\" do match \"(:paypal_info_id)""") == []
+    assert code_to_routes("""scope \"payments_card_infos\", :controller=> \"admin_payments_card_infos\" do match \"(:card_info_id)""") == [HttpRoute(url_pattern='/payments_card_infos/{card_info_id}', method='GET')]
+    assert code_to_routes("""scope \"payments_paypal_infos\", :controller => \"admin_payments_paypal_infos\" do match \"(:paypal_info_id)""") == [HttpRoute(url_pattern='/payments_paypal_infos/{paypal_info_id}', method='GET')]
     assert code_to_routes("""scope :controller=>'search_v2' do get 'brand/:brand', :action => 'listings_by_brand', :as => 'search_by_brand', :constraints => {:brand => /[^//]+/} # MOVED TO NODE, Still referenced
 by Rails application helper end""") == [HttpRoute(url_pattern='/brand/{brand}', method='GET')]
     assert code_to_routes("""scope :controller=>'bundle_v3' do get '/bundles/:bundle_id', :action => 'get_bundle_v3', :as => 'bundle_v3_id'""") == [HttpRoute(url_pattern='/bundles/{bundle_id}', method='GET')]
@@ -335,6 +342,60 @@ def test_code_to_routes_advanced():
                HttpRoute(url_pattern='/kategorien/{id}/bearbeiten', method='GET'),
                HttpRoute(url_pattern='/kategorien/{id}', method='PATCH'),
                HttpRoute(url_pattern='/kategorien/{id}/destroy', method='DELETE')]
+
+def test_code_to_routes_large():
+    assert code_to_routes('match "list_swap_orders", :action => "list_swap_orders", :via => [:get, :post]') == [HttpRoute(url_pattern='/list_swap_orders', method='GET'),
+ HttpRoute(url_pattern='/list_swap_orders', method='POST')]
+    assert code_to_routes("""Web::Application.routes.draw do
+        namespace "admin"  do
+        scope "templates", :controller => 'email_templates' do
+          get 'edit', :action => 'edit', :as => 'email_template_edit'
+        end
+    
+        resources :target_tag_groups
+        resources :email_templates
+        resources :fashion_term_keywords
+        resources :fashion_term_summaries
+        scope "swap_order/(:swap_order_id)" , :controller=>"admin_order" do
+          get "view_swap_order", :action => "view_swap_order", :as => 'view_swap_order'
+          post "buyer_swap_order_reminder", :action =>"buyer_swap_order_reminder", :as =>"buyer_swap_order_reminder"
+          match "list_swap_orders", :action => "list_swap_orders", :via => [:get, :post]
+        end
+        scope 'users/(:user_id)', :constraints => { :user_id => /[^\/]+/ }, :controller => 'admin_user' do
+          get "list_users"
+          get "view_user"
+        end
+    end
+end""") == [HttpRoute(url_pattern='/admin/templates/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/new', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups', method='POST'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}', method='PUT'),
+ HttpRoute(url_pattern='/admin/target_tag_groups/{id}', method='DELETE'),
+ HttpRoute(url_pattern='/admin/email_templates', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates/new', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates', method='POST'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}', method='PUT'),
+ HttpRoute(url_pattern='/admin/email_templates/{id}', method='DELETE'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords', method='GET'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords/new', method='GET'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords', method='POST'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords/{id}', method='GET'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords/{id}/edit', method='GET'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords/{id}', method='PUT'),
+ HttpRoute(url_pattern='/admin/fashion_term_keywords/{id}', method='DELETE'),
+ HttpRoute(url_pattern='/admin/swap_order/{swap_order_id}/view_swap_order',
+           method='GET'),
+ HttpRoute(url_pattern='/admin/swap_order/{swap_order_id}/buyer_swap_order_reminder',
+           method='POST'),
+HttpRoute(url_pattern='/admin/swap_order/{swap_order_id}/list_swap_orders',
+           method='GET'),
+ HttpRoute(url_pattern='/admin/users/{user_id}/list_users', method='GET'),
+ HttpRoute(url_pattern='/admin/users/{user_id}/view_user', method='GET')]
 
 def test_code_to_routes_sinatra():
     assert fix_url_params('/download/*.*') == "/download/{extra_path}"
