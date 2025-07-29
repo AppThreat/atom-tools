@@ -57,6 +57,12 @@ def py_usages_2():
 def rb_usages_1():
     return OpenAPI('openapi3.0.1', 'rb', 'test/data/rb-railsgoat-usages.json')
 
+
+@pytest.fixture
+def rb_usages_2():
+    return OpenAPI('openapi3.0.1', 'rb', 'test/data/ruby-cheatsheet-usages.json')
+
+
 def test_populate_endpoints(js_usages_1, js_usages_2, js_usages_3):
     # The populate_endpoints method is the final operation in convert_usages.
     # However, it's difficult to test the output when the order of params can
@@ -1344,4 +1350,9 @@ def test_js(js_usages_1):
 
 def test_rb(rb_usages_1):
     result = ruby_convert(rb_usages_1.usages)
+    assert result
+
+
+def test_rb_with_endpoints(rb_usages_2):
+    result = ruby_convert(rb_usages_2.usages)
     assert result
