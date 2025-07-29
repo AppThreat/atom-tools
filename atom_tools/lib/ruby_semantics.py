@@ -3,6 +3,7 @@ Ruby semantic utils
 """
 import re
 from typing import List
+from urllib.parse import urlparse
 
 from atom_tools.lib import HttpRoute
 
@@ -191,6 +192,7 @@ def fix_url_params(path_str):
 def code_to_routes(code: str) -> List[HttpRoute]:
     """
     Convert code string to routes
+
     Args:
         code: Code snippet
 
@@ -386,4 +388,38 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                             i == len(code_parts) - 2 or (len(code_parts) > i + 2 and code_parts[i + 1] != "do")):
                         routes += _get_dangling_routes(i, m, code, code_parts, f"{url_prefix_to_use}/{scope_url_prefix}/" if has_scope else "/")
 
+    return routes
+
+
+def endpoints_to_routes(endpoint: str, called_method: str) -> List[HttpRoute]:
+    """
+    Convert http endpoints to routes
+
+    Args:
+        endpoint: http endpoint
+        called_method: Caller name to identify the http verb
+
+    Returns:
+        List of http routes
+    """
+    routes = []
+    if not endpoint:
+        return routes
+    http_verb = called_method.upper() if called_method in HTTP_METHODS else "GET"
+    endpoint = re.sub("""['"]""", "", endpoint)
+    parsed = urlparse(endpoint)
+    base_url = f"{parsed.scheme}://{parsed.netloc}"
+    full_path = parsed.path
+    if base_url == "://" and full_path:
+        if full_path.startswith("/"):
+            base_url = None
+        else:
+            base_url = full_path
+            full_path = "/"
+    elif base_url.startswith("/"):
+        full_path = base_url
+        base_url = None
+    if not full_path and base_url:
+        full_path = "/"
+    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method=http_verb, servers=[base_url] if base_url else None))
     return routes

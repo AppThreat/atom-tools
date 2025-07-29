@@ -1,6 +1,6 @@
 import pytest
 from atom_tools.lib import HttpRoute
-from atom_tools.lib.ruby_semantics import code_to_routes, fix_url_params, find_constraints
+from atom_tools.lib.ruby_semantics import code_to_routes, endpoints_to_routes, fix_url_params, find_constraints
 
 
 def test_find_constraints():
@@ -423,3 +423,15 @@ def test_code_to_routes_sinatra():
     assert code_to_routes("get '%r{/hello/([\\w]+)}' do") == [
         HttpRoute(url_pattern='/%r{/hello/([\\w]+)}', method='GET')]
 
+
+def test_endpoints_to_routes():
+    assert endpoints_to_routes('api.restsite.com', 'initialize') == [HttpRoute(url_pattern='/', method='GET', servers=['api.restsite.com'])]
+    assert endpoints_to_routes('/users', 'initialize') == [HttpRoute(url_pattern='/users', method='GET', servers=None)]
+    assert endpoints_to_routes('/users/1', 'initialize') == [HttpRoute(url_pattern='/users/1', method='GET', servers=None)]
+    assert endpoints_to_routes('"http://google.com/"', 'parse') == [HttpRoute(url_pattern='/', method='GET', servers=['http://google.com'])]
+    assert endpoints_to_routes('http://translate.google.com/', 'parse') == [HttpRoute(url_pattern='/', method='GET', servers=['http://translate.google.com'])]
+    assert endpoints_to_routes('http://something.com/uploads', 'parse') == [HttpRoute(url_pattern='/uploads', method='GET', servers=['http://something.com'])]
+    assert endpoints_to_routes('http://myproxy.com:8080', 'parse') == [HttpRoute(url_pattern='/', method='GET', servers=['http://myproxy.com:8080'])]
+    assert endpoints_to_routes('http://mysite.com/some_api', 'parse') == [HttpRoute(url_pattern='/some_api', method='GET', servers=['http://mysite.com'])]
+    assert endpoints_to_routes('https://mysite.com/thing?foo=bar', 'parse') == [HttpRoute(url_pattern='/thing', method='GET', servers=['https://mysite.com'])]
+    assert endpoints_to_routes('http://foo.com/this/is/everything?query=params', 'parse') == [HttpRoute(url_pattern='/this/is/everything', method='GET', servers=['http://foo.com'])]
