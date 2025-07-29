@@ -11,6 +11,7 @@ from atom_tools.lib.utils import extract_params
 def convert(usages: AtomSlice):
     result = {}
     object_slices = usages.content.get("objectSlices", {})
+    i = 0
     for oslice in object_slices:
         # Nested lambdas lack prefixes
         if oslice.get('fullName').count("<lambda>") >= 3:
@@ -22,7 +23,6 @@ def convert(usages: AtomSlice):
         if oslice.get("lineNumber"):
             line_nums.add(oslice.get("lineNumber"))
         for usage in oslice.get("usages", []):
-            i = 0
             target_obj = usage.get("targetObj", {})
             if target_obj.get("typeFullName", "") == "HttpEndpoint":
                 if target_obj.get("name"):
