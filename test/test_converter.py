@@ -1356,3 +1356,36 @@ def test_rb(rb_usages_1):
 def test_rb_with_endpoints(rb_usages_2):
     result = ruby_convert(rb_usages_2.usages)
     assert result
+
+
+@pytest.fixture
+def ts_usages_1():
+    return OpenAPI('openapi3.0.1', 'typescript',
+                   'test/data/ts-custom-router-usages.json')
+
+
+def test_ts_custom_router(ts_usages_1):
+    result = ts_usages_1.convert_usages()
+    result = sort_openapi_result(result)
+    assert result
+    # Verify HTTP methods are present for endpoints with registerRoute pattern
+    assert '/' in result
+    assert 'get' in result['/']
+    assert 'post' in result['/']
+    assert '/complex' in result
+    assert 'get' in result['/complex']
+
+
+def test_ts_custom_router_openapi(ts_usages_1):
+    result = ts_usages_1.endpoints_to_openapi()
+    result = sort_openapi_result(result)
+    paths = result['paths']
+    # Check that methods from registerRoute are populated
+    assert 'get' in paths['/']
+    assert 'post' in paths['/']
+    assert 'get' in paths['/complex']
+    # Verify the standard paths also exist
+    assert '/api' in paths
+    assert '/items' in paths
+    assert '/users' in paths
+    assert '/render' in paths

@@ -71,7 +71,11 @@ class OpenAPI:
         self.target_line_nums = self._identify_target_line_nums(methods)
         self.file_endpoint_map = self.create_file_to_method_dict(methods)
         methods = self._process_calls(methods)
-        return self.populate_endpoints(methods)
+        paths = self.populate_endpoints(methods)
+        udt_methods = self._extract_methods_from_udt()
+        if udt_methods:
+            paths = merge_path_objects(paths, udt_methods)
+        return paths
 
     def create_file_to_method_dict(self, method_map: Dict[str, Any]) -> Dict[str, List]:
         """
@@ -436,6 +440,53 @@ class OpenAPI:
         if params:
             self.params[new_endpoint] = params
         return new_endpoint.replace("/{}", "/")
+
+    def _extract_methods_from_udt(self) -> Dict[str, Any]:
+        """
+        Extract HTTP method and endpoint pairings from userDefinedTypes fields.
+
+        Handles custom router patterns where HTTP method and path are both
+        fields in the same userDefinedType entry (e.g., registerRoute('get', '/')).
+
+        Returns:
+            dict: A paths object mapping endpoints to their HTTP method operations.
+        """
+        ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
+        pattern = jmespath.compile(
+            'userDefinedTypes[].{file_name: fileName, line_number: lineNumber,'
+            ' fields: fields[].name}'
+        )
+        result = pattern.search(self.usages.content)
+        if not result:
+            return {}
+        paths_object: Dict = {}
+        for entry in result:
+            fields = entry.get('fields') or []
+            file_name = entry.get('file_name', '')
+            line_number = entry.get('line_number')
+            found_ops = [f.strip('"').strip("'") for f in fields
+                         if f and f.strip('"').strip("'").lower() in ops]
+            found_paths = [f.strip('"').strip("'") for f in fields
+                           if f and '/' in f]
+            if not found_ops or not found_paths:
+                continue
+            for ep in found_paths:
+                ep = self._parse_path_regexes(ep)
+                path_item: Dict = {}
+                for op in found_ops:
+                    path_item[op.lower()] = {'responses': {}}
+                if line_number and file_name:
+                    ln_entry = create_ln_entries(
+                        file_name, [line_number], None
+                    )
+                    path_item.update(ln_entry)
+                if paths_object.get(ep):
+                    paths_object[ep] = merge_path_objects(
+                        paths_object[ep], path_item
+                    )
+                else:
+                    paths_object[ep] = path_item
+        return paths_object
 
     def _process_calls(self, method_map: Dict) -> Dict[str, Any]:
         """
