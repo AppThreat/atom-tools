@@ -153,8 +153,16 @@ class OpenAPI:
             dict: A new method map containing endpoints.
         """
         new_method_map: Dict = {'file_names': {}}
+        class_prefixes = self._get_java_class_prefixes()
         for file_name, resolved_methods in method_map.items():
             if new_resolved := self._process_resolved_methods(resolved_methods):
+                prefix = class_prefixes.get(file_name, '')
+                if prefix:
+                    for method_key in new_resolved:
+                        new_resolved[method_key]['endpoints'] = [
+                            prefix.rstrip('/') + ep
+                            for ep in new_resolved[method_key]['endpoints']
+                        ]
                 new_method_map['file_names'][file_name] = {'resolved_methods': new_resolved}
         return new_method_map
 
@@ -487,6 +495,41 @@ class OpenAPI:
                 else:
                     paths_object[ep] = path_item
         return paths_object
+
+    def _get_java_class_prefixes(self) -> Dict[str, str]:
+        """
+        Scans objectSlices for class-level @RequestMapping annotations in
+        Java/Spring Boot and returns a map of {fileName: prefix_path}.
+
+        In Spring Boot, a @RequestMapping on the class itself acts as a URL
+        prefix for all methods in that class. These entries appear in
+        objectSlices with an empty usages list and the annotation text in
+        the 'code' field.
+
+        Returns:
+            dict: A mapping of file name to its class-level URL path prefix.
+                  Empty dict for non-Java origins.
+        """
+        if self.usages.origin_type not in ('java', 'jar'):
+            return {}
+        prefixes: Dict[str, str] = {}
+        object_slices = self.usages.content.get('objectSlices', [])
+        for entry in object_slices:
+            code = entry.get('code', '') or ''
+            file_name = entry.get('fileName', '') or ''
+            usages = entry.get('usages', [])
+            # Class-level annotations appear with empty usages and the
+            # annotation text in 'code'. We only care about @RequestMapping
+            # that carries a URL path (contains '/').
+            if (usages == []
+                    and code.startswith('@RequestMapping')
+                    and '/' in code
+                    and file_name
+                    and file_name not in prefixes):
+                extracted = self._extract_endpoints(code)
+                if extracted:
+                    prefixes[file_name] = extracted[0]
+        return prefixes
 
     def _process_calls(self, method_map: Dict) -> Dict[str, Any]:
         """
