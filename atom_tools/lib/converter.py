@@ -498,10 +498,11 @@ class OpenAPI:
 
     def _get_java_class_prefixes(self) -> Dict[str, str]:
         """
-        Scans objectSlices for class-level @RequestMapping annotations in
+        Scans objectSlices for class-level mapping annotations in
         Java/Spring Boot and returns a map of {fileName: prefix_path}.
 
-        In Spring Boot, a @RequestMapping on the class itself acts as a URL
+        In Spring Boot, a @RequestMapping (or any mapping variant like
+        @GetMapping, @PostMapping, etc.) on the class itself acts as a URL
         prefix for all methods in that class. These entries appear in
         objectSlices with an empty usages list and the annotation text in
         the 'code' field.
@@ -512,6 +513,10 @@ class OpenAPI:
         """
         if self.usages.origin_type not in ('java', 'jar'):
             return {}
+        class_mapping_annotations = (
+            '@RequestMapping', '@GetMapping', '@PostMapping',
+            '@PutMapping', '@DeleteMapping', '@PatchMapping',
+        )
         prefixes: Dict[str, str] = {}
         object_slices = self.usages.content.get('objectSlices', [])
         for entry in object_slices:
@@ -519,10 +524,10 @@ class OpenAPI:
             file_name = entry.get('fileName', '') or ''
             usages = entry.get('usages', [])
             # Class-level annotations appear with empty usages and the
-            # annotation text in 'code'. We only care about @RequestMapping
-            # that carries a URL path (contains '/').
+            # annotation text in 'code'. We check for all Spring Boot
+            # mapping variants that carry a URL path (contains '/').
             if (usages == []
-                    and code.startswith('@RequestMapping')
+                    and code.startswith(class_mapping_annotations)
                     and '/' in code
                     and file_name
                     and file_name not in prefixes):
