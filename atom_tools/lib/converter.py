@@ -30,6 +30,43 @@ exclusions = ['/content-type', '/application/javascript', '/application/json', '
               '/application/xml', '/*', '/*/*', '/allow', '/get', '/post', '/xml', '/cookie',
               '/usestrict', '/maxage', '/sessionid']
 
+# Maps Spring ResponseEntity builder method names to HTTP status codes.
+RESPONSE_ENTITY_STATUS_MAP = {
+    'ok': '200',
+    'created': '201',
+    'accepted': '202',
+    'noContent': '204',
+    'badRequest': '400',
+    'unauthorized': '401',
+    'forbidden': '403',
+    'notFound': '404',
+    'internalServerError': '500',
+}
+
+# Default HTTP status code per HTTP method (standard REST conventions).
+HTTP_METHOD_DEFAULT_STATUS = {
+    'get': '200',
+    'post': '201',
+    'put': '200',
+    'patch': '200',
+    'delete': '204',
+    'head': '200',
+    'options': '200',
+}
+
+# Human-readable descriptions for common HTTP status codes.
+STATUS_DESCRIPTIONS = {
+    '200': 'OK',
+    '201': 'Created',
+    '202': 'Accepted',
+    '204': 'No Content',
+    '400': 'Bad Request',
+    '401': 'Unauthorized',
+    '403': 'Forbidden',
+    '404': 'Not Found',
+    '500': 'Internal Server Error',
+}
+
 
 def js_filterable(code):
     for c in ("node_modules", ".js", ".ts", ".vue", "@types", "::", "__"):
@@ -202,7 +239,7 @@ class OpenAPI:
                 paths_item_object, {'get': {'responses': {}}, 'post': {'responses': {}}})
         return paths_item_object
 
-    def _calls_to_params(self, ep: str, orig_ep: str, call: Dict | None) -> Dict[str, Any]:
+    def _calls_to_params(self, ep: str, orig_ep: str, call: Dict | None, filename: str = '') -> Dict[str, Any]:
         """
         Transforms a call and endpoint into a parameter object and organizes it
         into a dictionary based on the call name.
@@ -210,6 +247,7 @@ class OpenAPI:
             call (dict): The call object
             ep (str): The endpoint
             orig_ep (str): The original endpoint
+            filename (str): The source file name, used to infer response codes for Java.
         Returns:
             dict: The operation object
         """
@@ -220,11 +258,19 @@ class OpenAPI:
         params = []
         if call_name in ops:
             params = self._create_param_object(ep, orig_ep, call)
-            result: Dict[str, Dict] = {call_name: {'responses': {}}}
+            responses = self._infer_java_response_codes(filename, call.get('lineNumber'), call_name)
+            result: Dict[str, Dict] = {call_name: {'responses': responses}}
             if params:
                 result[call_name] |= {'parameters': params}
             return result
-        return determine_operations(call, params)
+        inferred: Dict = {}
+        if self.usages.origin_type in ('java', 'jar'):
+            resolved = call.get('resolvedMethod', '').lower()
+            for op in ops:
+                if op in resolved:
+                    inferred = self._infer_java_response_codes(filename, call.get('lineNumber'), op)
+                    break
+        return determine_operations(call, params, inferred)
 
     def _check_path_elements_regex(self, ele: str) -> Tuple[str, List]:
         """Try to interpret regexes in the path"""
@@ -411,7 +457,7 @@ class OpenAPI:
         if calls:
             for call in calls:
                 paths_item_object = merge_path_objects(
-                    paths_item_object, self._calls_to_params(ep, orig_ep, call)
+                    paths_item_object, self._calls_to_params(ep, orig_ep, call, filename)
                 )
         if (call_line_numbers or line_number) and (line_nos := create_ln_entries(
                 filename, list(set(call_line_numbers)), line_number)):
@@ -535,6 +581,40 @@ class OpenAPI:
                 if extracted:
                     prefixes[file_name] = extracted[0]
         return prefixes
+
+    def _infer_java_response_codes(self, file_name: str, line_number: int | None, http_method: str) -> Dict:
+        """
+        Infer HTTP response codes for a Java/Spring controller method from slice data.
+
+        Priority:
+          1. ResponseEntity builder methods (ok, notFound, etc.) found in invokedCalls.
+          2. Default by HTTP method if no explicit ResponseEntity call is found.
+
+        Args:
+            file_name (str): The source file containing the controller method.
+            line_number (int | None): The line number of the method/annotation in the slice.
+            http_method (str): The HTTP verb (get, post, put, patch, delete, ...).
+
+        Returns:
+            dict: OpenAPI responses object, e.g. {"200": {"description": "OK"}}.
+                  Returns {} for non-Java origins so existing behaviour is unchanged.
+        """
+        if self.usages.origin_type not in ('java', 'jar'):
+            return {}
+        for s in self.usages.content.get('objectSlices', []):
+            if s.get('fileName') == file_name and s.get('lineNumber') == line_number:
+                found: set = set()
+                for usage in s.get('usages', []):
+                    for call in usage.get('invokedCalls', []):
+                        resolved = call.get('resolvedMethod') or ''
+                        call_name = call.get('callName') or ''
+                        if 'ResponseEntity' in resolved and call_name in RESPONSE_ENTITY_STATUS_MAP:
+                            found.add(RESPONSE_ENTITY_STATUS_MAP[call_name])
+                if found:
+                    return {code: {'description': STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
+                break
+        status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
+        return {status: {'description': STATUS_DESCRIPTIONS.get(status, 'OK')}}
 
     def _process_calls(self, method_map: Dict) -> Dict[str, Any]:
         """
@@ -733,23 +813,27 @@ def create_ln_entries(filename: str, call_line_numbers: List, line_number: int |
     return x_atom
 
 
-def determine_operations(call: Dict, params: List) -> Dict[str, Any]:
+def determine_operations(call: Dict, params: List, responses: Dict | None = None) -> Dict[str, Any]:
     """
     Determine the supported operations based on the call and parameters.
 
     Args:
         call (dict): The call information.
         params (list): The parameters for the call.
+        responses (dict | None): Pre-inferred responses dict (e.g. {"200": {"description": "OK"}}).
+                                 Defaults to None which is treated as {} to preserve existing behaviour
+                                 for non-Java callers that do not pass this argument.
 
     Returns:
         dict: A dictionary containing the supported operations and their
         parameters and responses.
     """
     ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
+    r = responses if responses is not None else {}
     if found := [op for op in ops if op in call.get('resolvedMethod', '').lower()]:
         if params:
-            return {op: {'parameters': params, 'responses': {}} for op in found}
-        return {op: {'responses': {}} for op in found}
+            return {op: {'parameters': params, 'responses': r} for op in found}
+        return {op: {'responses': r} for op in found}
     return {'parameters': params} if params else {}
 
 
