@@ -1,0 +1,265 @@
+{
+  "objectSlices": [
+    {
+      "code": "@GetMapping(\"/users/{id}\")",
+      "fullName": "com.example.controller.UserController.getUser:<unresolvedSignature>(1)",
+      "signature": "<unresolvedSignature>(1)",
+      "fileName": "src/main/java/com/example/controller/UserController.java",
+      "lineNumber": 20,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "GetMapping",
+            "typeFullName": "<unresolvedNamespace>.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/users/{id}\")",
+            "isExternal": false,
+            "lineNumber": 20,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "GetMapping",
+            "typeFullName": "<unresolvedNamespace>.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/users/{id}\")",
+            "isExternal": false,
+            "lineNumber": 20,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "GetMapping",
+              "resolvedMethod": "@GetMapping(\"/users/{id}\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 20,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "user",
+            "typeFullName": "com.example.dto.User",
+            "lineNumber": 22,
+            "columnNumber": 5,
+            "label": "LOCAL"
+          },
+          "definedBy": {
+            "name": "userService.findById",
+            "typeFullName": "com.example.dto.User",
+            "resolvedMethod": "com.example.service.UserService.findById:com.example.dto.User(java.lang.Long)",
+            "isExternal": false,
+            "lineNumber": 22,
+            "columnNumber": 14,
+            "label": "CALL"
+          },
+          "invokedCalls": [
+            {
+              "callName": "ok",
+              "resolvedMethod": "org.springframework.http.ResponseEntity.ok:<unresolvedSignature>(1)",
+              "paramTypes": ["com.example.dto.User"],
+              "returnType": "ANY",
+              "isExternal": true,
+              "lineNumber": 23,
+              "columnNumber": 12
+            }
+          ],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "@PostMapping(\"/users\")",
+      "fullName": "com.example.controller.UserController.createUser:<unresolvedSignature>(1)",
+      "signature": "<unresolvedSignature>(1)",
+      "fileName": "src/main/java/com/example/controller/UserController.java",
+      "lineNumber": 30,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "PostMapping",
+            "typeFullName": "<unresolvedNamespace>.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/users\")",
+            "isExternal": false,
+            "lineNumber": 30,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "PostMapping",
+            "typeFullName": "<unresolvedNamespace>.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/users\")",
+            "isExternal": false,
+            "lineNumber": 30,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "PostMapping",
+              "resolvedMethod": "@PostMapping(\"/users\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 30,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "saved",
+            "typeFullName": "com.example.dto.User",
+            "lineNumber": 32,
+            "columnNumber": 5,
+            "label": "LOCAL"
+          },
+          "definedBy": {
+            "name": "userService.create",
+            "typeFullName": "com.example.dto.User",
+            "resolvedMethod": "com.example.service.UserService.create:com.example.dto.User(com.example.dto.User)",
+            "isExternal": false,
+            "lineNumber": 32,
+            "columnNumber": 14,
+            "label": "CALL"
+          },
+          "invokedCalls": [
+            {
+              "callName": "created",
+              "resolvedMethod": "org.springframework.http.ResponseEntity.created:<unresolvedSignature>(1)",
+              "paramTypes": ["java.net.URI"],
+              "returnType": "ANY",
+              "isExternal": true,
+              "lineNumber": 33,
+              "columnNumber": 12
+            }
+          ],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "@DeleteMapping(\"/users/{id}\")",
+      "fullName": "com.example.controller.UserController.deleteUser:<unresolvedSignature>(1)",
+      "signature": "<unresolvedSignature>(1)",
+      "fileName": "src/main/java/com/example/controller/UserController.java",
+      "lineNumber": 40,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "DeleteMapping",
+            "typeFullName": "<unresolvedNamespace>.DeleteMapping",
+            "resolvedMethod": "@DeleteMapping(\"/users/{id}\")",
+            "isExternal": false,
+            "lineNumber": 40,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "DeleteMapping",
+            "typeFullName": "<unresolvedNamespace>.DeleteMapping",
+            "resolvedMethod": "@DeleteMapping(\"/users/{id}\")",
+            "isExternal": false,
+            "lineNumber": 40,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "DeleteMapping",
+              "resolvedMethod": "@DeleteMapping(\"/users/{id}\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 40,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "noContent",
+            "typeFullName": "ANY",
+            "resolvedMethod": "org.springframework.http.ResponseEntity.noContent:<unresolvedSignature>(0)",
+            "isExternal": true,
+            "lineNumber": 42,
+            "columnNumber": 12,
+            "label": "CALL"
+          },
+          "definedBy": {
+            "name": "noContent",
+            "typeFullName": "ANY",
+            "resolvedMethod": "org.springframework.http.ResponseEntity.noContent:<unresolvedSignature>(0)",
+            "isExternal": true,
+            "lineNumber": 42,
+            "columnNumber": 12,
+            "label": "CALL"
+          },
+          "invokedCalls": [
+            {
+              "callName": "noContent",
+              "resolvedMethod": "org.springframework.http.ResponseEntity.noContent:<unresolvedSignature>(0)",
+              "paramTypes": [],
+              "returnType": "ANY",
+              "isExternal": true,
+              "lineNumber": 42,
+              "columnNumber": 12
+            }
+          ],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "@GetMapping(\"/users/{id}/status\")",
+      "fullName": "com.example.controller.UserController.getUserStatus:<unresolvedSignature>(1)",
+      "signature": "<unresolvedSignature>(1)",
+      "fileName": "src/main/java/com/example/controller/UserController.java",
+      "lineNumber": 50,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "GetMapping",
+            "typeFullName": "<unresolvedNamespace>.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/users/{id}/status\")",
+            "isExternal": false,
+            "lineNumber": 50,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "GetMapping",
+            "typeFullName": "<unresolvedNamespace>.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/users/{id}/status\")",
+            "isExternal": false,
+            "lineNumber": 50,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "GetMapping",
+              "resolvedMethod": "@GetMapping(\"/users/{id}/status\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 50,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        }
+      ]
+    }
+  ],
+  "userDefinedTypes": []
+}
