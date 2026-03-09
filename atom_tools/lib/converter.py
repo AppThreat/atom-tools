@@ -115,8 +115,10 @@ class OpenAPI:
         param_annotation_paths = self._enrich_from_param_annotations()
         if param_annotation_paths:
             paths = merge_path_objects(paths, param_annotation_paths)
-        # Remove paths that are not valid OpenAPI path strings
-        paths = {k: v for k, v in paths.items() if re.match(r'^/[A-Za-z0-9_.~\-{}/]*$', k)}
+        # Remove paths that are not valid OpenAPI path strings.
+        # Must match valid characters AND either be root '/' or contain at least one alphanumeric.
+        paths = {k: v for k, v in paths.items()
+                 if re.match(r'^/[A-Za-z0-9_.~\-{}/]*$', k) and (k == '/' or re.search(r'[A-Za-z0-9]', k))}
         # Upgrade path-item level parameter schemas using types resolved from
         # operation-level annotation data (e.g. @PathVariable Long id -> int64)
         for path_item in paths.values():
