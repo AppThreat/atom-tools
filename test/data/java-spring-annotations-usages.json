@@ -1,0 +1,309 @@
+{
+  "objectSlices": [
+    {
+      "code": "@RequestMapping(\"/api/orders\")",
+      "fullName": "com.example.controller.OrderController",
+      "signature": "",
+      "fileName": "src/main/java/com/example/controller/OrderController.java",
+      "lineNumber": 5,
+      "columnNumber": 1,
+      "usages": []
+    },
+    {
+      "code": "@PostMapping",
+      "fullName": "com.example.controller.OrderController.createOrder:org.springframework.http.ResponseEntity(com.example.dto.OrderRequest)",
+      "signature": "org.springframework.http.ResponseEntity(com.example.dto.OrderRequest)",
+      "fileName": "src/main/java/com/example/controller/OrderController.java",
+      "lineNumber": 10,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping",
+            "isExternal": false,
+            "lineNumber": 10,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping",
+            "isExternal": false,
+            "lineNumber": 10,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "PostMapping",
+              "resolvedMethod": "@PostMapping",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 10,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "com.example.dto.OrderRequest",
+            "position": 1,
+            "lineNumber": 11,
+            "columnNumber": 34,
+            "label": "PARAM",
+            "annotations": [
+              "org.springframework.web.bind.annotation.RequestBody"
+            ]
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "com.example.dto.OrderRequest",
+            "position": 1,
+            "lineNumber": 11,
+            "columnNumber": 34,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "@GetMapping(\"/{id}\")",
+      "fullName": "com.example.controller.OrderController.getOrder:org.springframework.http.ResponseEntity(java.lang.Long)",
+      "signature": "org.springframework.http.ResponseEntity(java.lang.Long)",
+      "fileName": "src/main/java/com/example/controller/OrderController.java",
+      "lineNumber": 16,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "GetMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/{id}\")",
+            "isExternal": false,
+            "lineNumber": 16,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "GetMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/{id}\")",
+            "isExternal": false,
+            "lineNumber": 16,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "GetMapping",
+              "resolvedMethod": "@GetMapping(\"/{id}\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 16,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "id",
+            "typeFullName": "java.lang.Long",
+            "position": 1,
+            "lineNumber": 17,
+            "columnNumber": 29,
+            "label": "PARAM",
+            "annotations": [
+              "org.springframework.web.bind.annotation.PathVariable"
+            ]
+          },
+          "definedBy": {
+            "name": "id",
+            "typeFullName": "java.lang.Long",
+            "position": 1,
+            "lineNumber": 17,
+            "columnNumber": 29,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "@GetMapping(\"/search\")",
+      "fullName": "com.example.controller.OrderController.searchOrders:org.springframework.http.ResponseEntity(java.lang.String)",
+      "signature": "org.springframework.http.ResponseEntity(java.lang.String)",
+      "fileName": "src/main/java/com/example/controller/OrderController.java",
+      "lineNumber": 22,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "GetMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/search\")",
+            "isExternal": false,
+            "lineNumber": 22,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "GetMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/search\")",
+            "isExternal": false,
+            "lineNumber": 22,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "GetMapping",
+              "resolvedMethod": "@GetMapping(\"/search\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 22,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "status",
+            "typeFullName": "java.lang.String",
+            "position": 1,
+            "lineNumber": 23,
+            "columnNumber": 30,
+            "label": "PARAM",
+            "annotations": [
+              "org.springframework.web.bind.annotation.RequestParam"
+            ]
+          },
+          "definedBy": {
+            "name": "status",
+            "typeFullName": "java.lang.String",
+            "position": 1,
+            "lineNumber": 23,
+            "columnNumber": 30,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "@PostMapping(\"/confirm\")",
+      "fullName": "com.example.controller.OrderController.confirmOrder:org.springframework.http.ResponseEntity(com.example.dto.OrderRequest,java.lang.String)",
+      "signature": "org.springframework.http.ResponseEntity(com.example.dto.OrderRequest,java.lang.String)",
+      "fileName": "src/main/java/com/example/controller/OrderController.java",
+      "lineNumber": 29,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/confirm\")",
+            "isExternal": false,
+            "lineNumber": 29,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/confirm\")",
+            "isExternal": false,
+            "lineNumber": 29,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [
+            {
+              "callName": "PostMapping",
+              "resolvedMethod": "@PostMapping(\"/confirm\")",
+              "paramTypes": [],
+              "returnType": "",
+              "isExternal": false,
+              "lineNumber": 29,
+              "columnNumber": 3
+            }
+          ],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "com.example.dto.OrderRequest",
+            "position": 1,
+            "lineNumber": 30,
+            "columnNumber": 34,
+            "label": "PARAM",
+            "annotations": [
+              "org.springframework.web.bind.annotation.RequestBody"
+            ]
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "com.example.dto.OrderRequest",
+            "position": 1,
+            "lineNumber": 30,
+            "columnNumber": 34,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "idempotencyKey",
+            "typeFullName": "java.lang.String",
+            "position": 2,
+            "lineNumber": 31,
+            "columnNumber": 42,
+            "label": "PARAM",
+            "annotations": [
+              "org.springframework.web.bind.annotation.RequestHeader"
+            ]
+          },
+          "definedBy": {
+            "name": "idempotencyKey",
+            "typeFullName": "java.lang.String",
+            "position": 2,
+            "lineNumber": 31,
+            "columnNumber": 42,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    }
+  ],
+  "userDefinedTypes": [
+    {
+      "name": "com.example.dto.OrderRequest",
+      "fields": [
+        {"name": "productId", "typeFullName": "java.lang.String", "lineNumber": 5, "columnNumber": 3, "label": "LOCAL"},
+        {"name": "quantity",  "typeFullName": "int",              "lineNumber": 6, "columnNumber": 3, "label": "LOCAL"}
+      ],
+      "procedures": [],
+      "fileName": "src/main/java/com/example/dto/OrderRequest.java",
+      "lineNumber": 3,
+      "columnNumber": 1
+    }
+  ]
+}
