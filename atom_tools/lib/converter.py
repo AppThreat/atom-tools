@@ -1142,6 +1142,7 @@ def _java_type_to_openapi_schema(
         'bool': {'type': 'boolean'},
         'double': {'type': 'number', 'format': 'double'},
         'float': {'type': 'number', 'format': 'float'},
+        'uuid': {'type': 'string', 'format': 'uuid'},
     }
     if simple in type_map:
         return type_map[simple]
