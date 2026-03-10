@@ -112,28 +112,6 @@ class OpenAPI:
         udt_methods = self._extract_methods_from_udt()
         if udt_methods:
             paths = merge_path_objects(paths, udt_methods)
-        param_annotation_paths = self._enrich_from_param_annotations()
-        if param_annotation_paths:
-            paths = merge_path_objects(paths, param_annotation_paths)
-        # Remove paths that are not valid OpenAPI path strings.
-        # Must match valid characters AND either be root '/' or contain at least one alphanumeric.
-        paths = {k: v for k, v in paths.items()
-                 if re.match(r'^/[A-Za-z0-9_.~\-{}/]*$', k) and (k == '/' or re.search(r'[A-Za-z0-9]', k))}
-        # Upgrade path-item level parameter schemas using types resolved from
-        # operation-level annotation data (e.g. @PathVariable Long id -> int64)
-        for path_item in paths.values():
-            path_params = path_item.get('parameters', [])
-            if not path_params:
-                continue
-            op_param_schemas: Dict[str, Dict] = {}
-            for method in ('get', 'post', 'put', 'patch', 'delete', 'head', 'options'):
-                for p in path_item.get(method, {}).get('parameters', []):
-                    if p.get('name') and p.get('schema'):
-                        op_param_schemas[p['name']] = p['schema']
-            for p in path_params:
-                name = p.get('name')
-                if name and name in op_param_schemas:
-                    p['schema'] = op_param_schemas[name]
         return paths
 
     def create_file_to_method_dict(self, method_map: Dict[str, Any]) -> Dict[str, List]:
@@ -434,8 +412,8 @@ class OpenAPI:
             existing_path_params = {i['name'] for i in params}
         if matches := regex.processed_param.findall(endpoint):
             params.extend(
-                [{'name': m, 'in': 'path', 'required': True, 'schema': {'type': 'string'}}
-                 for m in matches if m not in existing_path_params]
+                [{'name': m, 'in': 'path', 'required': True} for m in matches if
+                 m not in existing_path_params]
             )
         return params
 
@@ -813,120 +791,6 @@ class OpenAPI:
         result += result2
         return result
 
-    def _enrich_from_param_annotations(self) -> Dict[str, Any]:
-        """
-        Enrich the paths object with requestBody and parameters derived from
-        Spring parameter annotations captured in PARAM targetObj entries.
-
-        For each objectSlice that contains an ANNOTATION usage (the Spring
-        HTTP mapping like @PostMapping) alongside PARAM usages that carry
-        annotations (@RequestBody, @PathVariable, @RequestParam, @RequestHeader),
-        this method generates the corresponding OpenAPI requestBody or parameter
-        entries and returns them as a paths object ready to be merged.
-
-        Only applies to Java/jar origin types. Returns {} for all others.
-        """
-        if self.usages.origin_type not in ('java', 'jar'):
-            return {}
-        class_prefixes = self._get_java_class_prefixes()
-        udt_map: Dict[str, List] = {
-            udt['name']: udt.get('fields', [])
-            for udt in self.usages.content.get('userDefinedTypes', [])
-            if udt.get('name') and udt.get('fields')
-        }
-        paths_object: Dict = {}
-
-        for entry in self.usages.content.get('objectSlices', []):
-            file_name = entry.get('fileName', '') or ''
-            usages = entry.get('usages', [])
-
-            # Find the Spring HTTP mapping annotation for this method.
-            # It may appear either as the targetObj resolvedMethod directly
-            # (simple case) or inside invokedCalls of an ANNOTATION usage
-            # (e.g. when @PostMapping is listed alongside @Auditable etc.).
-            mapping_str = ''
-            for usage in usages:
-                target = usage.get('targetObj', {})
-                if target.get('label') != 'ANNOTATION':
-                    continue
-                resolved = target.get('resolvedMethod', '')
-                if resolved.startswith('@') and 'Mapping' in resolved:
-                    mapping_str = resolved
-                    break
-                # Fall back: scan invokedCalls of this annotation usage
-                for call in usage.get('invokedCalls', []):
-                    r = call.get('resolvedMethod', '')
-                    if r.startswith('@') and 'Mapping' in r:
-                        mapping_str = r
-                        break
-                if mapping_str:
-                    break
-            if not mapping_str:
-                continue
-
-            http_method = _spring_annotation_to_http_method(mapping_str)
-            if not http_method:
-                continue
-
-            # Determine the full endpoint path (apply class-level prefix)
-            prefix = class_prefixes.get(file_name, '')
-            endpoints = self._extract_endpoints(mapping_str)
-            if endpoints:
-                full_endpoints = [
-                    (prefix.rstrip('/') + ep) if prefix else ep
-                    for ep in endpoints
-                ]
-            elif prefix:
-                # e.g. @PostMapping with no path — endpoint is the class prefix
-                full_endpoints = [prefix.rstrip('/') or '/']
-            else:
-                continue
-
-            # Collect requestBody / parameters from PARAM annotations
-            request_body = None
-            params: List[Dict] = []
-            for usage in usages:
-                target = usage.get('targetObj', {})
-                if target.get('label') != 'PARAM':
-                    continue
-                annotations = target.get('annotations', [])
-                if not annotations:
-                    continue
-                param_name = target.get('name', '') or ''
-                schema = _java_type_to_openapi_schema(target.get('typeFullName', '') or '', udt_map)
-                for ann in annotations:
-                    ann_short = ann.rsplit('.', 1)[-1]
-                    if ann_short == 'RequestBody':
-                        if request_body is None:
-                            request_body = {
-                                'required': True,
-                                'content': {'application/json': {'schema': schema}}
-                            }
-                    elif ann_short == 'PathVariable':
-                        params.append({'name': param_name, 'in': 'path', 'required': True, 'schema': schema})
-                    elif ann_short == 'RequestParam':
-                        params.append({'name': param_name, 'in': 'query', 'schema': schema})
-                    elif ann_short == 'RequestHeader':
-                        params.append({'name': param_name, 'in': 'header', 'schema': schema})
-
-            if request_body is None and not params:
-                continue
-
-            # Merge into paths_object
-            for ep in full_endpoints:
-                ep = self._parse_path_regexes(ep)
-                paths_object.setdefault(ep, {}).setdefault(http_method, {})
-                op = paths_object[ep][http_method]
-                if request_body is not None and 'requestBody' not in op:
-                    op['requestBody'] = request_body
-                if params:
-                    if 'parameters' in op:
-                        op['parameters'] = merge_params(op['parameters'], params)
-                    else:
-                        op['parameters'] = list(params)
-
-        return paths_object
-
 
 def create_ln_entries(filename: str, call_line_numbers: List, line_number: int | None) -> Dict:
     """
@@ -1106,65 +970,6 @@ def merge_x_atom(x1: Dict, x2: Dict) -> Dict:
             else:
                 x1[key][k] = v
     return x1
-
-
-def _spring_annotation_to_http_method(annotation_str: str) -> str:
-    """Maps a Spring HTTP mapping annotation string to its HTTP method verb."""
-    s = annotation_str
-    if '@PostMapping' in s:
-        return 'post'
-    if '@GetMapping' in s:
-        return 'get'
-    if '@PutMapping' in s:
-        return 'put'
-    if '@DeleteMapping' in s:
-        return 'delete'
-    if '@PatchMapping' in s:
-        return 'patch'
-    if '@RequestMapping' in s:
-        for m in ('POST', 'GET', 'PUT', 'DELETE', 'PATCH'):
-            if f'RequestMethod.{m}' in s:
-                return m.lower()
-    return ''
-
-
-def _java_type_to_openapi_schema(
-        type_full_name: str,
-        udt_map: Dict[str, List] | None = None,
-        _visited: frozenset | None = None,
-) -> Dict:
-    """Converts a Java fully-qualified type name to an OpenAPI schema dict."""
-    simple = type_full_name.rsplit('.', 1)[-1].lower()
-    type_map = {
-        'string': {'type': 'string'},
-        'integer': {'type': 'integer'},
-        'int': {'type': 'integer'},
-        'long': {'type': 'integer', 'format': 'int64'},
-        'boolean': {'type': 'boolean'},
-        'bool': {'type': 'boolean'},
-        'double': {'type': 'number', 'format': 'double'},
-        'float': {'type': 'number', 'format': 'float'},
-        'uuid': {'type': 'string', 'format': 'uuid'},
-    }
-    if simple in type_map:
-        return type_map[simple]
-    if udt_map and type_full_name in udt_map:
-        if _visited is None:
-            _visited = frozenset()
-        if type_full_name in _visited:
-            return {'type': 'object'}  # circular reference guard
-        _visited = _visited | {type_full_name}
-        fields = udt_map[type_full_name]
-        if fields:
-            properties = {}
-            for field in fields:
-                field_name = field.get('name', '')
-                field_type = field.get('typeFullName', '')
-                if field_name:
-                    properties[field_name] = _java_type_to_openapi_schema(field_type, udt_map, _visited)
-            if properties:
-                return {'type': 'object', 'properties': properties}
-    return {'type': 'object'}
 
 
 def remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
