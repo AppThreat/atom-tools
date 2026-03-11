@@ -1,0 +1,384 @@
+{
+  "objectSlices": [
+    {
+      "code": "",
+      "fullName": "com.example.ChargeController.charge:<unresolvedSignature>(2)",
+      "signature": "<unresolvedSignature>(2)",
+      "fileName": "src/main/java/com/example/ChargeController.java",
+      "lineNumber": 15,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/charge\")",
+            "isExternal": false,
+            "lineNumber": 15,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/charge\")",
+            "isExternal": false,
+            "lineNumber": 15,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "com.example.ChargeRequest",
+            "position": 1,
+            "lineNumber": 16,
+            "columnNumber": 40,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "com.example.ChargeRequest",
+            "position": 1,
+            "lineNumber": 16,
+            "columnNumber": 40,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestBody",
+            "resolvedMethod": "@RequestBody",
+            "isExternal": false,
+            "lineNumber": 16,
+            "columnNumber": 40,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestBody",
+            "resolvedMethod": "@RequestBody",
+            "isExternal": false,
+            "lineNumber": 16,
+            "columnNumber": 40,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "apiKey",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestHeader",
+            "resolvedMethod": "@RequestHeader(\"X-Api-Key\")",
+            "isExternal": false,
+            "lineNumber": 16,
+            "columnNumber": 70,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "apiKey",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestHeader",
+            "resolvedMethod": "@RequestHeader(\"X-Api-Key\")",
+            "isExternal": false,
+            "lineNumber": 16,
+            "columnNumber": 70,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "apiKey",
+            "typeFullName": "java.lang.String",
+            "position": 2,
+            "lineNumber": 16,
+            "columnNumber": 70,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "apiKey",
+            "typeFullName": "java.lang.String",
+            "position": 2,
+            "lineNumber": 16,
+            "columnNumber": 70,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "",
+      "fullName": "com.example.OrderController.getOrder:<unresolvedSignature>(2)",
+      "signature": "<unresolvedSignature>(2)",
+      "fileName": "src/main/java/com/example/OrderController.java",
+      "lineNumber": 10,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "GetMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/orders/{orderId}\")",
+            "isExternal": false,
+            "lineNumber": 10,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "GetMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.GetMapping",
+            "resolvedMethod": "@GetMapping(\"/orders/{orderId}\")",
+            "isExternal": false,
+            "lineNumber": 10,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "orderId",
+            "typeFullName": "java.lang.String",
+            "position": 1,
+            "lineNumber": 11,
+            "columnNumber": 45,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "orderId",
+            "typeFullName": "java.lang.String",
+            "position": 1,
+            "lineNumber": 11,
+            "columnNumber": 45,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "orderId",
+            "typeFullName": "org.springframework.web.bind.annotation.PathVariable",
+            "resolvedMethod": "@PathVariable",
+            "isExternal": false,
+            "lineNumber": 11,
+            "columnNumber": 45,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "orderId",
+            "typeFullName": "org.springframework.web.bind.annotation.PathVariable",
+            "resolvedMethod": "@PathVariable",
+            "isExternal": false,
+            "lineNumber": 11,
+            "columnNumber": 45,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "expand",
+            "typeFullName": "java.lang.Boolean",
+            "position": 2,
+            "lineNumber": 11,
+            "columnNumber": 80,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "expand",
+            "typeFullName": "java.lang.Boolean",
+            "position": 2,
+            "lineNumber": 11,
+            "columnNumber": 80,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "expand",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestParam",
+            "resolvedMethod": "@RequestParam(required = false)",
+            "isExternal": false,
+            "lineNumber": 11,
+            "columnNumber": 80,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "expand",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestParam",
+            "resolvedMethod": "@RequestParam(required = false)",
+            "isExternal": false,
+            "lineNumber": 11,
+            "columnNumber": 80,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "",
+      "fullName": "com.example.OrderController.deleteOrder:<unresolvedSignature>(2)",
+      "signature": "<unresolvedSignature>(2)",
+      "fileName": "src/main/java/com/example/OrderController.java",
+      "lineNumber": 20,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "DeleteMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.DeleteMapping",
+            "resolvedMethod": "@DeleteMapping(\"/orders/{orderId}\")",
+            "isExternal": false,
+            "lineNumber": 20,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "DeleteMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.DeleteMapping",
+            "resolvedMethod": "@DeleteMapping(\"/orders/{orderId}\")",
+            "isExternal": false,
+            "lineNumber": 20,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "orderId",
+            "typeFullName": "java.lang.String",
+            "position": 1,
+            "lineNumber": 21,
+            "columnNumber": 45,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "orderId",
+            "typeFullName": "java.lang.String",
+            "position": 1,
+            "lineNumber": 21,
+            "columnNumber": 45,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "orderId",
+            "typeFullName": "org.springframework.web.bind.annotation.PathVariable",
+            "resolvedMethod": "@PathVariable",
+            "isExternal": false,
+            "lineNumber": 21,
+            "columnNumber": 45,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "orderId",
+            "typeFullName": "org.springframework.web.bind.annotation.PathVariable",
+            "resolvedMethod": "@PathVariable",
+            "isExternal": false,
+            "lineNumber": 21,
+            "columnNumber": 45,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "authToken",
+            "typeFullName": "java.lang.String",
+            "position": 2,
+            "lineNumber": 21,
+            "columnNumber": 80,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "authToken",
+            "typeFullName": "java.lang.String",
+            "position": 2,
+            "lineNumber": 21,
+            "columnNumber": 80,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "authToken",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestHeader",
+            "resolvedMethod": "@RequestHeader(value = \"X-Auth-Token\")",
+            "isExternal": false,
+            "lineNumber": 21,
+            "columnNumber": 80,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "authToken",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestHeader",
+            "resolvedMethod": "@RequestHeader(value = \"X-Auth-Token\")",
+            "isExternal": false,
+            "lineNumber": 21,
+            "columnNumber": 80,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    }
+  ],
+  "userDefinedTypes": [
+    {
+      "name": "com.example.ChargeRequest",
+      "fields": [
+        {
+          "name": "amount",
+          "typeFullName": "java.lang.Long",
+          "lineNumber": 5,
+          "columnNumber": 18,
+          "label": "LOCAL"
+        },
+        {
+          "name": "currency",
+          "typeFullName": "java.lang.String",
+          "lineNumber": 6,
+          "columnNumber": 18,
+          "label": "LOCAL"
+        },
+        {
+          "name": "description",
+          "typeFullName": "java.lang.String",
+          "lineNumber": 7,
+          "columnNumber": 18,
+          "label": "LOCAL"
+        }
+      ],
+      "procedures": [],
+      "fileName": "src/main/java/com/example/ChargeRequest.java",
+      "lineNumber": 3,
+      "columnNumber": 1
+    }
+  ]
+}
