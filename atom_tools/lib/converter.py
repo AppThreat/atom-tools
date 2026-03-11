@@ -75,6 +75,44 @@ def _java_type_to_schema(type_full_name: str) -> Dict:
     return dict(_JAVA_TYPE_SCHEMA.get(type_full_name, {'type': 'object'}))
 
 
+def _properties_from_getters(arg_to_calls: List[Dict]) -> Dict:
+    """
+    Build an OpenAPI object schema from getter methods in argToCalls.
+
+    For each entry like getEmail → property 'email', using returnType for
+    the schema.  Falls back to {'type': 'string'} when returnType is 'ANY'
+    or unresolved, since DTO properties are usually primitives/strings.
+    Deduplicates properties; non-getter callNames are ignored.
+
+    Returns {'type': 'object', 'properties': {...}} when at least one getter
+    is found, otherwise {'type': 'object'} (no properties key).
+    """
+    properties: Dict[str, Dict] = {}
+    for call in arg_to_calls:
+        call_name = call.get('callName') or ''
+        if len(call_name) <= 3 or not call_name.startswith('get'):
+            continue
+        prop_name = call_name[3].lower() + call_name[4:]
+        if prop_name in properties:
+            continue
+        return_type = call.get('returnType') or ''
+        if return_type and return_type not in ('ANY', 'void'):
+            schema = _java_type_to_schema(return_type)
+        else:
+            # Try to extract return type from 'Class.method:ReturnType(n)' signature
+            resolved = call.get('resolvedMethod') or ''
+            m = re.match(r'.+:([^<(][^(]*)\(\d+\)$', resolved)
+            if m:
+                extracted = m.group(1).strip()
+                schema = _java_type_to_schema(extracted) if extracted else {'type': 'string'}
+            else:
+                schema = {'type': 'string'}
+        properties[prop_name] = schema
+    if not properties:
+        return {'type': 'object'}
+    return {'type': 'object', 'properties': properties}
+
+
 def _extract_annotation_string_value(resolved_method: str) -> str:
     """
     Extract the quoted string value from an annotation, e.g.
@@ -84,6 +122,62 @@ def _extract_annotation_string_value(resolved_method: str) -> str:
     """
     m = re.search(r'["\']([^"\']+)["\']', resolved_method)
     return m.group(1) if m else ''
+
+_PRIMITIVE_TYPES = {
+    'int', 'long', 'boolean', 'double', 'float', 'char', 'byte', 'short',
+    'void', 'ANY', 'null', '',
+}
+_STDLIB_PREFIXES = (
+    'java.', 'javax.', 'jakarta.', 'org.springframework.', 'sun.', 'com.sun.',
+)
+
+
+def _is_custom_dto(type_full_name: str) -> bool:
+    """Return True if type_full_name looks like an application-level DTO class."""
+    if not type_full_name or type_full_name in _PRIMITIVE_TYPES:
+        return False
+    return not any(type_full_name.startswith(p) for p in _STDLIB_PREFIXES)
+
+
+def _extract_response_dto_key(usages_list: list) -> str:
+    """
+    Derive a camelCase key name from the response DTO type found in a slice.
+
+    Priority:
+      1. paramTypes[0] from ResponseEntity builder invokedCalls
+         (e.g. ResponseEntity.ok(productDTO) → 'productDTO').
+      2. The variable name (name field) of the first LOCAL-label targetObj
+         whose typeFullName is a custom DTO.
+
+    Returns the camelCase key string, or '' if no custom DTO is found.
+    The returned value is used as the key inside the response object
+    instead of the hard-coded 'description'.
+    """
+    for usage in usages_list:
+        for call in usage.get('invokedCalls', []):
+            # Builder pattern: ResponseEntity.ok(dto), ResponseEntity.created(), etc.
+            if ('ResponseEntity' in (call.get('resolvedMethod') or '')
+                    and call.get('callName') in RESPONSE_ENTITY_STATUS_MAP):
+                param_types = call.get('paramTypes') or []
+                if param_types and _is_custom_dto(param_types[0]):
+                    simple = param_types[0].rsplit('.', 1)[-1]
+                    return simple[0].lower() + simple[1:] if simple else ''
+            # Constructor pattern: new ResponseEntity<>(dto, HttpStatus.X)
+            # resolvedMethod is null for constructors; HttpStatus appears as "ANY"
+            if call.get('callName') == '<init>':
+                param_types = call.get('paramTypes') or []
+                if (len(param_types) >= 2
+                        and _is_custom_dto(param_types[0])
+                        and param_types[1] == 'ANY'):
+                    simple = param_types[0].rsplit('.', 1)[-1]
+                    return simple[0].lower() + simple[1:] if simple else ''
+    for usage in usages_list:
+        tgt = usage.get('targetObj', {})
+        if tgt.get('label') == 'LOCAL' and _is_custom_dto(tgt.get('typeFullName', '')):
+            name = tgt.get('name', '')
+            if name:
+                return name
+    return ''
 
 
 exclusions = ['/content-type', '/application/javascript', '/application/json', '/application/text',
@@ -148,7 +242,7 @@ class OpenAPI:
         self.semantics: AtomSlice = AtomSlice(semantics, origin_type) if semantics and Path(
             semantics).exists() else None
         self.openapi_version = dest_format.replace('openapi', '')
-        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}' if Path(
+        self.title = f'{Path(usages).parent.stem} OpenAPI Specification' if Path(
             usages).parent.stem else "OpenAPI Specification"
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
@@ -717,6 +811,7 @@ class OpenAPI:
 
             # ── collect PARAM and ANNOTATION entries from this objectSlice ──
             params_by_name: Dict[str, Dict] = {}
+            param_arg_calls: Dict[str, List] = {}
             annotations_by_name: Dict[str, str] = {}  # param_name → resolvedMethod
 
             endpoint: str | None = None
@@ -730,6 +825,7 @@ class OpenAPI:
 
                 if label == 'PARAM' and name:
                     params_by_name[name] = target
+                    param_arg_calls[name] = usage.get('argToCalls') or []
                 elif label == 'ANNOTATION' and name:
                     if any(resolved.startswith(p) for p in _PARAM_ANNOTATION_PREFIXES):
                         annotations_by_name[name] = resolved
@@ -762,6 +858,8 @@ class OpenAPI:
 
                 if ann_resolved.startswith('@RequestBody'):
                     schema = self._build_schema_from_type(type_full_name, udt_map)
+                    if 'properties' not in schema:
+                        schema = _properties_from_getters(param_arg_calls.get(param_name, []))
                     request_body = {
                         'content': {'application/json': {'schema': schema}},
                         'required': True,
@@ -859,6 +957,7 @@ class OpenAPI:
 
             # Collect PARAM entries and ANNOTATION entries for parameter annotations
             params_by_name: Dict[str, Dict] = {}
+            param_arg_calls: Dict[str, List] = {}
             path_params: List[Dict] = []
             query_params: List[Dict] = []
             header_params: List[Dict] = []
@@ -870,6 +969,7 @@ class OpenAPI:
                 name = t.get('name', '') or ''
                 if label == 'PARAM' and name:
                     params_by_name[name] = t
+                    param_arg_calls[name] = u.get('argToCalls') or []
 
             for u in usages:
                 t = u.get('targetObj') or {}
@@ -884,6 +984,8 @@ class OpenAPI:
                 type_full_name = param_entry.get('typeFullName', '') or ''
                 if resolved.startswith('@RequestBody'):
                     schema = self._build_schema_from_type(type_full_name, udt_map)
+                    if 'properties' not in schema:
+                        schema = _properties_from_getters(param_arg_calls.get(name, []))
                     request_body = {'content': {'application/json': {'schema': schema}}, 'required': True}
                 elif resolved.startswith('@PathVariable'):
                     path_params.append({'in': 'path', 'name': name, 'required': True,
@@ -947,17 +1049,23 @@ class OpenAPI:
         if self.usages.origin_type not in ('java', 'jar'):
             return {}
         for s in self.usages.content.get('objectSlices', []):
-            if s.get('fileName') == file_name and s.get('lineNumber') == line_number:
+            s_line = s.get('lineNumber') or 0
+            # Allow ±1 line tolerance: atom records the slice at the @Mapping annotation line
+            # but call references use the method signature line (one line below).
+            if s.get('fileName') == file_name and abs(s_line - (line_number or 0)) <= 1:
                 found: set = set()
-                for usage in s.get('usages', []):
+                slice_usages = s.get('usages', [])
+                for usage in slice_usages:
                     for call in usage.get('invokedCalls', []):
                         resolved = call.get('resolvedMethod') or ''
                         call_name = call.get('callName') or ''
                         if 'ResponseEntity' in resolved and call_name in RESPONSE_ENTITY_STATUS_MAP:
                             found.add(RESPONSE_ENTITY_STATUS_MAP[call_name])
+                dto_key = _extract_response_dto_key(slice_usages) or 'description'
                 if found:
-                    return {code: {'description': STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
-                break
+                    return {code: {dto_key: STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
+                status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
+                return {status: {dto_key: STATUS_DESCRIPTIONS.get(status, 'OK')}}
         status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
         return {status: {'description': STATUS_DESCRIPTIONS.get(status, 'OK')}}
 

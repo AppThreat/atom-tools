@@ -47,7 +47,17 @@
             "columnNumber": 40,
             "label": "PARAM"
           },
-          "invokedCalls": [],
+          "invokedCalls": [
+            {
+              "callName": "ok",
+              "resolvedMethod": "org.springframework.http.ResponseEntity.ok:<unresolvedSignature>(1)",
+              "paramTypes": ["com.example.ChargeResponse"],
+              "returnType": "ANY",
+              "isExternal": true,
+              "lineNumber": 18,
+              "columnNumber": 12
+            }
+          ],
           "argToCalls": []
         },
         {
@@ -341,6 +351,206 @@
             "isExternal": false,
             "lineNumber": 21,
             "columnNumber": 80,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "",
+      "fullName": "com.example.ApproveController.approve:<unresolvedSignature>(1)",
+      "signature": "<unresolvedSignature>(1)",
+      "fileName": "src/main/java/com/example/ApproveController.java",
+      "lineNumber": 10,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/approve\")",
+            "isExternal": false,
+            "lineNumber": 10,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/approve\")",
+            "isExternal": false,
+            "lineNumber": 10,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "com.example.ApproveRequest",
+            "position": 1,
+            "lineNumber": 11,
+            "columnNumber": 40,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "com.example.ApproveRequest",
+            "position": 1,
+            "lineNumber": 11,
+            "columnNumber": 40,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": [
+            {
+              "callName": "getRequestId",
+              "resolvedMethod": "com.example.ApproveRequest.getRequestId:java.util.UUID(0)",
+              "paramTypes": [],
+              "returnType": "java.util.UUID",
+              "position": 0,
+              "isExternal": true,
+              "lineNumber": 14,
+              "columnNumber": 20
+            },
+            {
+              "callName": "getComment",
+              "resolvedMethod": "com.example.ApproveRequest.getComment:java.lang.String(0)",
+              "paramTypes": [],
+              "returnType": "java.lang.String",
+              "position": 0,
+              "isExternal": true,
+              "lineNumber": 15,
+              "columnNumber": 20
+            },
+            {
+              "callName": "getComment",
+              "resolvedMethod": "com.example.ApproveRequest.getComment:java.lang.String(0)",
+              "paramTypes": [],
+              "returnType": "java.lang.String",
+              "position": 0,
+              "isExternal": true,
+              "lineNumber": 18,
+              "columnNumber": 20
+            }
+          ]
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestBody",
+            "resolvedMethod": "@RequestBody",
+            "isExternal": false,
+            "lineNumber": 11,
+            "columnNumber": 40,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestBody",
+            "resolvedMethod": "@RequestBody",
+            "isExternal": false,
+            "lineNumber": 11,
+            "columnNumber": 40,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        }
+      ]
+    },
+    {
+      "code": "",
+      "fullName": "com.example.MigrateController.migrate:<unresolvedSignature>(1)",
+      "signature": "<unresolvedSignature>(1)",
+      "fileName": "src/main/java/com/example/MigrateController.java",
+      "lineNumber": 5,
+      "columnNumber": 3,
+      "usages": [
+        {
+          "targetObj": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/migrate\")",
+            "isExternal": false,
+            "lineNumber": 5,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "PostMapping",
+            "typeFullName": "org.springframework.web.bind.annotation.PostMapping",
+            "resolvedMethod": "@PostMapping(\"/migrate\")",
+            "isExternal": false,
+            "lineNumber": 5,
+            "columnNumber": 3,
+            "label": "ANNOTATION"
+          },
+          "invokedCalls": [],
+          "argToCalls": []
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "<unresolvedNamespace>.MigrateRequest",
+            "position": 1,
+            "lineNumber": 6,
+            "columnNumber": 30,
+            "label": "PARAM"
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "<unresolvedNamespace>.MigrateRequest",
+            "position": 1,
+            "lineNumber": 6,
+            "columnNumber": 30,
+            "label": "PARAM"
+          },
+          "invokedCalls": [],
+          "argToCalls": [
+            {
+              "callName": "getOrganizationId",
+              "resolvedMethod": "<unresolvedNamespace>.MigrateRequest.getOrganizationId:<unresolvedSignature>(0)",
+              "paramTypes": [],
+              "returnType": "ANY",
+              "position": 0,
+              "isExternal": true,
+              "lineNumber": 8,
+              "columnNumber": 20
+            },
+            {
+              "callName": "getOrganizationName",
+              "resolvedMethod": "<unresolvedNamespace>.MigrateRequest.getOrganizationName:<unresolvedSignature>(0)",
+              "paramTypes": [],
+              "returnType": "ANY",
+              "position": 0,
+              "isExternal": true,
+              "lineNumber": 9,
+              "columnNumber": 20
+            }
+          ]
+        },
+        {
+          "targetObj": {
+            "name": "body",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestBody",
+            "resolvedMethod": "@RequestBody",
+            "isExternal": false,
+            "lineNumber": 6,
+            "columnNumber": 30,
+            "label": "ANNOTATION"
+          },
+          "definedBy": {
+            "name": "body",
+            "typeFullName": "org.springframework.web.bind.annotation.RequestBody",
+            "resolvedMethod": "@RequestBody",
+            "isExternal": false,
+            "lineNumber": 6,
+            "columnNumber": 30,
             "label": "ANNOTATION"
           },
           "invokedCalls": [],

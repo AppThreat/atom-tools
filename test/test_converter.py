@@ -107,7 +107,7 @@ def test_populate_endpoints2(js_usages_3):
 
 
 def test_usages_class(java_usages_1):
-    assert java_usages_1.title == 'OpenAPI Specification for data'
+    assert java_usages_1.title == 'data OpenAPI Specification'
 
 
 def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, py_usages_1, py_usages_2):
@@ -122,7 +122,7 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
 
 def test_endpoints_to_openapi(java_usages_1):
     result = sort_openapi_result(java_usages_1.endpoints_to_openapi())
-    assert result == {'info': {'title': 'OpenAPI Specification for data', 'version': '1.0.0'},
+    assert result == {'info': {'title': 'data OpenAPI Specification', 'version': '1.0.0'},
  'openapi': '3.1.0',
  'paths': {'/': {'post': {'responses': {'201': {'description': 'Created'}}},
                  'x-atom-usages': {'call': {'account-service/src/main/java/com/piggymetrics/account/controller/AccountController.java': [35]}}},
