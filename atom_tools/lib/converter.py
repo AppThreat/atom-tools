@@ -26,6 +26,160 @@ from atom_tools.lib.scala_converter import convert as scala_convert
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
 
+# Maps fully-qualified Java types to OpenAPI schema dicts.
+_JAVA_TYPE_SCHEMA: Dict[str, Dict] = {
+    'java.lang.String': {'type': 'string'},
+    'java.lang.CharSequence': {'type': 'string'},
+    'java.lang.Integer': {'type': 'integer'},
+    'int': {'type': 'integer'},
+    'java.lang.Long': {'type': 'integer', 'format': 'int64'},
+    'long': {'type': 'integer', 'format': 'int64'},
+    'java.lang.Short': {'type': 'integer'},
+    'short': {'type': 'integer'},
+    'java.lang.Double': {'type': 'number', 'format': 'double'},
+    'double': {'type': 'number', 'format': 'double'},
+    'java.lang.Float': {'type': 'number', 'format': 'float'},
+    'float': {'type': 'number', 'format': 'float'},
+    'java.lang.Boolean': {'type': 'boolean'},
+    'boolean': {'type': 'boolean'},
+    'java.util.UUID': {'type': 'string', 'format': 'uuid'},
+    'java.util.List': {'type': 'array'},
+    'java.util.ArrayList': {'type': 'array'},
+    'java.util.Set': {'type': 'array'},
+    'java.util.Collection': {'type': 'array'},
+    'java.util.Map': {'type': 'object'},
+    'java.util.HashMap': {'type': 'object'},
+    'java.time.Instant': {'type': 'string', 'format': 'date-time'},
+    'java.time.LocalDate': {'type': 'string', 'format': 'date'},
+    'java.time.LocalDateTime': {'type': 'string', 'format': 'date-time'},
+    'java.time.OffsetDateTime': {'type': 'string', 'format': 'date-time'},
+    'java.math.BigDecimal': {'type': 'number'},
+    'java.math.BigInteger': {'type': 'integer'},
+}
+
+# Annotations that indicate a Spring parameter annotation.
+_PARAM_ANNOTATION_PREFIXES = ('@RequestBody', '@PathVariable', '@RequestParam', '@RequestHeader')
+
+# Spring HTTP-method mapping annotations and their OpenAPI verbs.
+_SPRING_METHOD_ANNOTATIONS = [
+    ('post', 'PostMapping'),
+    ('put', 'PutMapping'),
+    ('patch', 'PatchMapping'),
+    ('get', 'GetMapping'),
+    ('delete', 'DeleteMapping'),
+]
+
+
+def _java_type_to_schema(type_full_name: str) -> Dict:
+    """Return an OpenAPI schema dict for a Java type, defaulting to object."""
+    return dict(_JAVA_TYPE_SCHEMA.get(type_full_name, {'type': 'object'}))
+
+
+def _properties_from_getters(arg_to_calls: List[Dict]) -> Dict:
+    """
+    Build an OpenAPI object schema from getter methods in argToCalls.
+
+    For each entry like getEmail → property 'email', using returnType for
+    the schema.  Falls back to {'type': 'string'} when returnType is 'ANY'
+    or unresolved, since DTO properties are usually primitives/strings.
+    Deduplicates properties; non-getter callNames are ignored.
+
+    Returns {'type': 'object', 'properties': {...}} when at least one getter
+    is found, otherwise {'type': 'object'} (no properties key).
+    """
+    properties: Dict[str, Dict] = {}
+    for call in arg_to_calls:
+        call_name = call.get('callName') or ''
+        if len(call_name) <= 3 or not call_name.startswith('get'):
+            continue
+        prop_name = call_name[3].lower() + call_name[4:]
+        if prop_name in properties:
+            continue
+        return_type = call.get('returnType') or ''
+        if return_type and return_type not in ('ANY', 'void'):
+            schema = _java_type_to_schema(return_type)
+        else:
+            # Try to extract return type from 'Class.method:ReturnType(n)' signature
+            resolved = call.get('resolvedMethod') or ''
+            m = re.match(r'.+:([^<(][^(]*)\(\d+\)$', resolved)
+            if m:
+                extracted = m.group(1).strip()
+                schema = _java_type_to_schema(extracted) if extracted else {'type': 'string'}
+            else:
+                schema = {'type': 'string'}
+        properties[prop_name] = schema
+    if not properties:
+        return {'type': 'object'}
+    return {'type': 'object', 'properties': properties}
+
+
+def _extract_annotation_string_value(resolved_method: str) -> str:
+    """
+    Extract the quoted string value from an annotation, e.g.
+    '@RequestHeader("X-Key")' → 'X-Key'
+    '@RequestHeader(value = "X-Auth-Token")' → 'X-Auth-Token'
+    Returns empty string if no quoted value is present.
+    """
+    m = re.search(r'["\']([^"\']+)["\']', resolved_method)
+    return m.group(1) if m else ''
+
+_PRIMITIVE_TYPES = {
+    'int', 'long', 'boolean', 'double', 'float', 'char', 'byte', 'short',
+    'void', 'ANY', 'null', '',
+}
+_STDLIB_PREFIXES = (
+    'java.', 'javax.', 'jakarta.', 'org.springframework.', 'sun.', 'com.sun.',
+)
+
+
+def _is_custom_dto(type_full_name: str) -> bool:
+    """Return True if type_full_name looks like an application-level DTO class."""
+    if not type_full_name or type_full_name in _PRIMITIVE_TYPES:
+        return False
+    return not any(type_full_name.startswith(p) for p in _STDLIB_PREFIXES)
+
+
+def _extract_response_dto_key(usages_list: list) -> str:
+    """
+    Derive a camelCase key name from the response DTO type found in a slice.
+
+    Priority:
+      1. paramTypes[0] from ResponseEntity builder invokedCalls
+         (e.g. ResponseEntity.ok(productDTO) → 'productDTO').
+      2. The variable name (name field) of the first LOCAL-label targetObj
+         whose typeFullName is a custom DTO.
+
+    Returns the camelCase key string, or '' if no custom DTO is found.
+    The returned value is used as the key inside the response object
+    instead of the hard-coded 'description'.
+    """
+    for usage in usages_list:
+        for call in usage.get('invokedCalls', []):
+            # Builder pattern: ResponseEntity.ok(dto), ResponseEntity.created(), etc.
+            if ('ResponseEntity' in (call.get('resolvedMethod') or '')
+                    and call.get('callName') in RESPONSE_ENTITY_STATUS_MAP):
+                param_types = call.get('paramTypes') or []
+                if param_types and _is_custom_dto(param_types[0]):
+                    simple = param_types[0].rsplit('.', 1)[-1]
+                    return simple[0].lower() + simple[1:] if simple else ''
+            # Constructor pattern: new ResponseEntity<>(dto, HttpStatus.X)
+            # resolvedMethod is null for constructors; HttpStatus appears as "ANY"
+            if call.get('callName') == '<init>':
+                param_types = call.get('paramTypes') or []
+                if (len(param_types) >= 2
+                        and _is_custom_dto(param_types[0])
+                        and param_types[1] == 'ANY'):
+                    simple = param_types[0].rsplit('.', 1)[-1]
+                    return simple[0].lower() + simple[1:] if simple else ''
+    for usage in usages_list:
+        tgt = usage.get('targetObj', {})
+        if tgt.get('label') == 'LOCAL' and _is_custom_dto(tgt.get('typeFullName', '')):
+            name = tgt.get('name', '')
+            if name:
+                return name
+    return ''
+
+
 exclusions = ['/content-type', '/application/javascript', '/application/json', '/application/text',
               '/application/xml', '/*', '/*/*', '/allow', '/get', '/post', '/xml', '/cookie',
               '/usestrict', '/maxage', '/sessionid']
@@ -88,7 +242,7 @@ class OpenAPI:
         self.semantics: AtomSlice = AtomSlice(semantics, origin_type) if semantics and Path(
             semantics).exists() else None
         self.openapi_version = dest_format.replace('openapi', '')
-        self.title = f'OpenAPI Specification for {Path(usages).parent.stem}' if Path(
+        self.title = f'{Path(usages).parent.stem} OpenAPI Specification' if Path(
             usages).parent.stem else "OpenAPI Specification"
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
@@ -112,6 +266,14 @@ class OpenAPI:
         udt_methods = self._extract_methods_from_udt()
         if udt_methods:
             paths = merge_path_objects(paths, udt_methods)
+        param_annotation_paths = self._enrich_from_param_annotation()
+        if param_annotation_paths:
+            paths = merge_path_objects(paths, param_annotation_paths)
+        paths = self._backfill_from_annotation_slices(paths)
+        # Remove paths that are not valid OpenAPI path strings.
+        # Must contain only valid characters AND either be root '/' or contain at least one alphanumeric.
+        paths = {k: v for k, v in paths.items()
+                 if re.match(r'^/[A-Za-z0-9_.~\-{}/]*$', k) and (k == '/' or re.search(r'[A-Za-z0-9]', k))}
         return paths
 
     def create_file_to_method_dict(self, method_map: Dict[str, Any]) -> Dict[str, List]:
@@ -412,7 +574,7 @@ class OpenAPI:
             existing_path_params = {i['name'] for i in params}
         if matches := regex.processed_param.findall(endpoint):
             params.extend(
-                [{'name': m, 'in': 'path', 'required': True} for m in matches if
+                [{'name': m, 'in': 'path', 'required': True, 'schema': {'type': 'string'}} for m in matches if
                  m not in existing_path_params]
             )
         return params
@@ -582,6 +744,291 @@ class OpenAPI:
                     prefixes[file_name] = extracted[0]
         return prefixes
 
+    def _build_udt_schema_map(self) -> Dict[str, List[Dict]]:
+        """Return a map of {typeFullName: fields list} from userDefinedTypes."""
+        result: Dict[str, List[Dict]] = {}
+        for udt in self.usages.content.get('userDefinedTypes', []):
+            name = udt.get('name', '') or ''
+            fields = udt.get('fields') or []
+            if name and fields:
+                result[name] = fields
+        return result
+
+    def _build_schema_from_type(self, type_full_name: str, udt_map: Dict[str, List[Dict]]) -> Dict:
+        """
+        Build an OpenAPI schema for a Java type.
+
+        If the type has a UDT entry, its fields become object properties.
+        Nested types with their own UDT entries are expanded one level deep.
+        Everything else falls back to _java_type_to_schema.
+        """
+        fields = udt_map.get(type_full_name)
+        if not fields:
+            return _java_type_to_schema(type_full_name)
+        properties: Dict[str, Dict] = {}
+        for field in fields:
+            field_name = field.get('name', '') or ''
+            field_type = field.get('typeFullName', '') or ''
+            if not field_name:
+                continue
+            nested_fields = udt_map.get(field_type)
+            if nested_fields:
+                nested_props = {
+                    nf['name']: _java_type_to_schema(nf.get('typeFullName', '') or '')
+                    for nf in nested_fields
+                    if nf.get('name')
+                }
+                properties[field_name] = {'type': 'object', 'properties': nested_props}
+            else:
+                properties[field_name] = _java_type_to_schema(field_type)
+        return {'type': 'object', 'properties': properties}
+
+    def _enrich_from_param_annotation(self) -> Dict[str, Any]:
+        """
+        Scan objectSlices for Spring parameter annotations emitted as separate
+        ANNOTATION usage entries (new atom format) and produce OpenAPI
+        requestBody / parameter objects.
+
+        New atom format per usage entry:
+          - label == "PARAM"      → parameter definition (name, typeFullName, position)
+          - label == "ANNOTATION" → annotation for the parameter whose name matches;
+                                    resolvedMethod starts with @RequestBody,
+                                    @PathVariable, @RequestParam, or @RequestHeader.
+
+        HTTP-method annotations (PostMapping, GetMapping, …) appear as ANNOTATION
+        entries with name == the annotation short name (e.g. "PostMapping").
+        """
+        if self.usages.origin_type not in ('java', 'jar'):
+            return {}
+        udt_map = self._build_udt_schema_map()
+        class_prefixes = self._get_java_class_prefixes()
+        paths: Dict[str, Any] = {}
+
+        for obj_slice in self.usages.content.get('objectSlices', []):
+            file_name = obj_slice.get('fileName', '') or ''
+            line_number = obj_slice.get('lineNumber')
+            usages = obj_slice.get('usages') or []
+
+            # ── collect PARAM and ANNOTATION entries from this objectSlice ──
+            params_by_name: Dict[str, Dict] = {}
+            param_arg_calls: Dict[str, List] = {}
+            annotations_by_name: Dict[str, str] = {}  # param_name → resolvedMethod
+
+            endpoint: str | None = None
+            http_method: str | None = None
+
+            for usage in usages:
+                target = usage.get('targetObj') or {}
+                label = target.get('label', '')
+                name = target.get('name', '') or ''
+                resolved = target.get('resolvedMethod', '') or ''
+
+                if label == 'PARAM' and name:
+                    params_by_name[name] = target
+                    param_arg_calls[name] = usage.get('argToCalls') or []
+                elif label == 'ANNOTATION' and name:
+                    if any(resolved.startswith(p) for p in _PARAM_ANNOTATION_PREFIXES):
+                        annotations_by_name[name] = resolved
+                    elif endpoint is None:
+                        for verb, ann_name in _SPRING_METHOD_ANNOTATIONS:
+                            if ann_name in resolved or ann_name in name:
+                                extracted = self._extract_endpoints(resolved)
+                                if extracted:
+                                    endpoint = extracted[0]
+                                    http_method = verb
+                                    break
+
+            if not annotations_by_name or not endpoint or not http_method:
+                continue
+
+            # Apply class-level URL prefix
+            prefix = class_prefixes.get(file_name, '')
+            if prefix:
+                endpoint = prefix.rstrip('/') + endpoint
+
+            # ── build parameters and requestBody from annotation↔param pairs ──
+            path_params: List[Dict] = []
+            query_params: List[Dict] = []
+            header_params: List[Dict] = []
+            request_body: Dict | None = None
+
+            for param_name, ann_resolved in annotations_by_name.items():
+                param_entry = params_by_name.get(param_name, {})
+                type_full_name = param_entry.get('typeFullName', '') or ''
+
+                if ann_resolved.startswith('@RequestBody'):
+                    schema = self._build_schema_from_type(type_full_name, udt_map)
+                    if 'properties' not in schema:
+                        schema = _properties_from_getters(param_arg_calls.get(param_name, []))
+                    request_body = {
+                        'content': {'application/json': {'schema': schema}},
+                        'required': True,
+                    }
+                elif ann_resolved.startswith('@PathVariable'):
+                    path_params.append({
+                        'in': 'path',
+                        'name': param_name,
+                        'required': True,
+                        'schema': _java_type_to_schema(type_full_name),
+                    })
+                elif ann_resolved.startswith('@RequestParam'):
+                    query_params.append({
+                        'in': 'query',
+                        'name': param_name,
+                        'schema': _java_type_to_schema(type_full_name),
+                    })
+                elif ann_resolved.startswith('@RequestHeader'):
+                    header_name = param_name
+                    header_params.append({
+                        'in': 'header',
+                        'name': header_name,
+                        'schema': _java_type_to_schema(type_full_name),
+                    })
+
+            all_params = path_params + query_params + header_params
+            if not all_params and request_body is None:
+                continue
+
+            operation: Dict = {
+                'responses': self._infer_java_response_codes(file_name, line_number, http_method)
+            }
+            if all_params:
+                operation['parameters'] = all_params
+            if request_body:
+                operation['requestBody'] = request_body
+
+            if endpoint not in paths:
+                paths[endpoint] = {}
+            existing_op = paths[endpoint].get(http_method)
+            if existing_op is None:
+                paths[endpoint][http_method] = operation
+            else:
+                if request_body and 'requestBody' not in existing_op:
+                    existing_op['requestBody'] = request_body
+                if all_params:
+                    existing_op.setdefault('parameters', [])
+                    existing_op['parameters'] = merge_params(existing_op['parameters'], all_params)
+
+        return paths
+
+    def _backfill_from_annotation_slices(self, paths: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Second-pass enrichment for Spring methods whose HTTP-mapping annotation
+        (@PostMapping, @GetMapping, etc.) was NOT emitted in their objectSlice.
+
+        Atom sometimes omits the method-level mapping annotation while still
+        emitting @RequestBody / @PathVariable / @RequestParam / @RequestHeader
+        annotations.  The existing call-detection code already found the correct
+        endpoint URL for these methods (stored in x-atom-usages).  We link the
+        two by observing that:
+
+            x-atom-usages "call" line  ==  objectSlice.lineNumber + 1
+
+        For each POST/PUT/PATCH/DELETE/GET operation that already has a path but
+        is missing requestBody and/or parameters, we look up the objectSlice
+        whose lineNumber+1 matches the call line and whose file name matches,
+        then extract parameters and requestBody from its ANNOTATION entries.
+        """
+        if self.usages.origin_type not in ('java', 'jar'):
+            return paths
+
+        udt_map = self._build_udt_schema_map()
+
+        # Build lookup: (posix_file_name, call_line) -> enrichment dict
+        # call_line = objectSlice.lineNumber + 1
+        enrichment: Dict[tuple, Dict] = {}
+
+        for obj_slice in self.usages.content.get('objectSlices', []):
+            file_name = obj_slice.get('fileName', '') or ''
+            line_number = obj_slice.get('lineNumber')
+            if not file_name or line_number is None:
+                continue
+
+            usages = obj_slice.get('usages') or []
+
+            # Skip slices that already have a method annotation (handled in first pass)
+            if any(
+                any(ann_name in (u.get('targetObj', {}).get('resolvedMethod', '') or '')
+                    for _, ann_name in _SPRING_METHOD_ANNOTATIONS)
+                for u in usages
+                if u.get('targetObj', {}).get('label') == 'ANNOTATION'
+            ):
+                continue
+
+            # Collect PARAM entries and ANNOTATION entries for parameter annotations
+            params_by_name: Dict[str, Dict] = {}
+            param_arg_calls: Dict[str, List] = {}
+            path_params: List[Dict] = []
+            query_params: List[Dict] = []
+            header_params: List[Dict] = []
+            request_body: Dict | None = None
+
+            for u in usages:
+                t = u.get('targetObj') or {}
+                label = t.get('label', '')
+                name = t.get('name', '') or ''
+                if label == 'PARAM' and name:
+                    params_by_name[name] = t
+                    param_arg_calls[name] = u.get('argToCalls') or []
+
+            for u in usages:
+                t = u.get('targetObj') or {}
+                label = t.get('label', '')
+                name = t.get('name', '') or ''
+                resolved = t.get('resolvedMethod', '') or ''
+                if label != 'ANNOTATION' or not name:
+                    continue
+                if not any(resolved.startswith(p) for p in _PARAM_ANNOTATION_PREFIXES):
+                    continue
+                param_entry = params_by_name.get(name, {})
+                type_full_name = param_entry.get('typeFullName', '') or ''
+                if resolved.startswith('@RequestBody'):
+                    schema = self._build_schema_from_type(type_full_name, udt_map)
+                    if 'properties' not in schema:
+                        schema = _properties_from_getters(param_arg_calls.get(name, []))
+                    request_body = {'content': {'application/json': {'schema': schema}}, 'required': True}
+                elif resolved.startswith('@PathVariable'):
+                    path_params.append({'in': 'path', 'name': name, 'required': True,
+                                        'schema': _java_type_to_schema(type_full_name)})
+                elif resolved.startswith('@RequestParam'):
+                    query_params.append({'in': 'query', 'name': name,
+                                         'schema': _java_type_to_schema(type_full_name)})
+                elif resolved.startswith('@RequestHeader'):
+                    header_params.append({'in': 'header', 'name': name,
+                                          'schema': _java_type_to_schema(type_full_name)})
+
+            all_params = path_params + query_params + header_params
+            if not all_params and request_body is None:
+                continue
+
+            posix_file = Path(file_name).as_posix()
+            entry = {'requestBody': request_body, 'parameters': all_params}
+            # Register under both line_number and line_number+1 since atom uses either offset
+            enrichment[(posix_file, line_number)] = entry
+            enrichment[(posix_file, line_number + 1)] = entry
+
+        # Apply enrichment to paths that are missing requestBody/parameters
+        for path_key, path_item in paths.items():
+            call_data = path_item.get('x-atom-usages', {}).get('call', {})
+            for call_file, line_nums in call_data.items():
+                posix_call_file = Path(call_file).as_posix()
+                for ln in (line_nums or []):
+                    info = enrichment.get((posix_call_file, ln))
+                    if not info:
+                        continue
+                    # Apply to all POST/PUT/PATCH operations (request bodies) or any HTTP method (params)
+                    for method in ('post', 'put', 'patch', 'delete', 'get'):
+                        op = path_item.get(method)
+                        if not isinstance(op, dict):
+                            continue
+                        if info['requestBody'] and method in ('post', 'put', 'patch') and 'requestBody' not in op:
+                            op['requestBody'] = info['requestBody']
+                        if info['parameters']:
+                            op.setdefault('parameters', [])
+                            op['parameters'] = merge_params(op['parameters'], info['parameters'])
+
+        return paths
+
     def _infer_java_response_codes(self, file_name: str, line_number: int | None, http_method: str) -> Dict:
         """
         Infer HTTP response codes for a Java/Spring controller method from slice data.
@@ -602,17 +1049,23 @@ class OpenAPI:
         if self.usages.origin_type not in ('java', 'jar'):
             return {}
         for s in self.usages.content.get('objectSlices', []):
-            if s.get('fileName') == file_name and s.get('lineNumber') == line_number:
+            s_line = s.get('lineNumber') or 0
+            # Allow ±1 line tolerance: atom records the slice at the @Mapping annotation line
+            # but call references use the method signature line (one line below).
+            if s.get('fileName') == file_name and abs(s_line - (line_number or 0)) <= 1:
                 found: set = set()
-                for usage in s.get('usages', []):
+                slice_usages = s.get('usages', [])
+                for usage in slice_usages:
                     for call in usage.get('invokedCalls', []):
                         resolved = call.get('resolvedMethod') or ''
                         call_name = call.get('callName') or ''
                         if 'ResponseEntity' in resolved and call_name in RESPONSE_ENTITY_STATUS_MAP:
                             found.add(RESPONSE_ENTITY_STATUS_MAP[call_name])
+                dto_key = _extract_response_dto_key(slice_usages) or 'description'
                 if found:
-                    return {code: {'description': STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
-                break
+                    return {code: {dto_key: STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
+                status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
+                return {status: {dto_key: STATUS_DESCRIPTIONS.get(status, 'OK')}}
         status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
         return {status: {'description': STATUS_DESCRIPTIONS.get(status, 'OK')}}
 
@@ -892,10 +1345,17 @@ def merge_params(p1: List, p2: List) -> List:
     Returns:
         list: The merged list of parameters.
     """
-    names = [i.get('name') for i in p1]
+    p1_by_name = {i.get('name'): i for i in p1}
     for i in p2:
-        if i.get('name', '') not in names:
+        name = i.get('name', '')
+        if name not in p1_by_name:
             p1.append(i)
+        else:
+            # Enrich existing entry with any fields the incoming entry has that are missing
+            existing = p1_by_name[name]
+            for k, v in i.items():
+                if k not in existing:
+                    existing[k] = v
     return p1
 
 

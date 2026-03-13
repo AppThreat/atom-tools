@@ -101,21 +101,21 @@ def test_infer_non_java_returns_empty(js_converter):
 
 
 def test_infer_response_entity_ok(java_response_codes_converter):
-    """GET /users/{id} slice has ResponseEntity.ok -> should return 200."""
+    """GET /users/{id} slice has ResponseEntity.ok(User) -> 200 keyed by DTO name 'user'."""
     result = java_response_codes_converter._infer_java_response_codes(
         'src/main/java/com/example/controller/UserController.java', 20, 'get'
     )
     assert '200' in result
-    assert result['200']['description'] == 'OK'
+    assert result['200']['user'] == 'OK'
 
 
 def test_infer_response_entity_created(java_response_codes_converter):
-    """POST /users slice has ResponseEntity.created -> should return 201."""
+    """POST /users slice has ResponseEntity.created + LOCAL 'saved' DTO -> 201 keyed by 'saved'."""
     result = java_response_codes_converter._infer_java_response_codes(
         'src/main/java/com/example/controller/UserController.java', 30, 'post'
     )
     assert '201' in result
-    assert result['201']['description'] == 'Created'
+    assert result['201']['saved'] == 'Created'
 
 
 def test_infer_response_entity_no_content(java_response_codes_converter):
