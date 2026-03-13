@@ -197,6 +197,28 @@ RESPONSE_ENTITY_STATUS_MAP = {
     'internalServerError': '500',
 }
 
+# Maps Spring HttpStatus enum constant names to HTTP status codes.
+# Used when code uses new ResponseEntity<>(body, HttpStatus.BAD_REQUEST) constructor pattern.
+HTTPSTATUS_ENUM_MAP = {
+    'OK': '200',
+    'CREATED': '201',
+    'ACCEPTED': '202',
+    'NO_CONTENT': '204',
+    'BAD_REQUEST': '400',
+    'UNAUTHORIZED': '401',
+    'FORBIDDEN': '403',
+    'NOT_FOUND': '404',
+    'METHOD_NOT_ALLOWED': '405',
+    'CONFLICT': '409',
+    'GONE': '410',
+    'UNPROCESSABLE_ENTITY': '422',
+    'TOO_MANY_REQUESTS': '429',
+    'INTERNAL_SERVER_ERROR': '500',
+    'NOT_IMPLEMENTED': '501',
+    'BAD_GATEWAY': '502',
+    'SERVICE_UNAVAILABLE': '503',
+}
+
 # Default HTTP status code per HTTP method (standard REST conventions).
 HTTP_METHOD_DEFAULT_STATUS = {
     'get': '200',
@@ -218,7 +240,15 @@ STATUS_DESCRIPTIONS = {
     '401': 'Unauthorized',
     '403': 'Forbidden',
     '404': 'Not Found',
+    '405': 'Method Not Allowed',
+    '409': 'Conflict',
+    '410': 'Gone',
+    '422': 'Unprocessable Entity',
+    '429': 'Too Many Requests',
     '500': 'Internal Server Error',
+    '501': 'Not Implemented',
+    '502': 'Bad Gateway',
+    '503': 'Service Unavailable',
 }
 
 
@@ -1056,11 +1086,20 @@ class OpenAPI:
                 found: set = set()
                 slice_usages = s.get('usages', [])
                 for usage in slice_usages:
+                    # Pattern 1: ResponseEntity builder — ResponseEntity.ok(body), ResponseEntity.badRequest()...
                     for call in usage.get('invokedCalls', []):
                         resolved = call.get('resolvedMethod') or ''
                         call_name = call.get('callName') or ''
                         if 'ResponseEntity' in resolved and call_name in RESPONSE_ENTITY_STATUS_MAP:
                             found.add(RESPONSE_ENTITY_STATUS_MAP[call_name])
+                    # Pattern 2: ResponseEntity constructor — new ResponseEntity<>(body, HttpStatus.BAD_REQUEST)
+                    # Atom records the HttpStatus enum arg as targetObj/definedBy with typeFullName org.springframework.http.HttpStatus
+                    for field in ('targetObj', 'definedBy'):
+                        obj = usage.get(field) or {}
+                        if obj.get('typeFullName') == 'org.springframework.http.HttpStatus':
+                            enum_name = obj.get('name') or ''
+                            if enum_name in HTTPSTATUS_ENUM_MAP:
+                                found.add(HTTPSTATUS_ENUM_MAP[enum_name])
                 dto_key = _extract_response_dto_key(slice_usages) or 'description'
                 if found:
                     return {code: {dto_key: STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
