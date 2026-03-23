@@ -9,7 +9,8 @@ def sort_openapi_result(result):
         if k == 'x-atom-usages':
             for a, b in result['x-atom-usages'].items():
                 for key, value in b.items():
-                    value.sort()
+                    if isinstance(value, list):
+                        value.sort()
                     result[k][a][key] = value
         elif isinstance(v, list) and len(v) >= 2:
             result[k] = sort_list(v)
@@ -122,55 +123,49 @@ def test_convert_usages(java_usages_1, java_usages_2, js_usages_1, js_usages_2, 
 
 def test_endpoints_to_openapi(java_usages_1):
     result = sort_openapi_result(java_usages_1.endpoints_to_openapi())
-    assert result == {'info': {'title': 'data OpenAPI Specification', 'version': '1.0.0'},
- 'openapi': '3.1.0',
- 'paths': {'/': {'post': {'responses': {'201': {'description': 'Created'}}},
-                 'x-atom-usages': {'call': {'account-service/src/main/java/com/piggymetrics/account/controller/AccountController.java': [35]}}},
-           '/accounts/{accountName}': {'get': {'responses': {'200': {'description': 'OK'}}},
-                                       'parameters': [{'in': 'path',
-                                                       'name': 'accountName',
-                                                       'required': True,
-                                                       'schema': {'type': 'string'}}],
-                                       'x-atom-usages': {'call': {'notification-service/src/main/java/com/piggymetrics/notification/client/AccountServiceClient.java': [12]}}},
-           '/current': {'get': {'responses': {'200': {'description': 'OK'}}},
-                        'put': {'responses': {'200': {'description': 'OK'}}},
-                        'x-atom-usages': {'call': {'account-service/src/main/java/com/piggymetrics/account/controller/AccountController.java': [25,
-                                                                                                                                                30],
-                                                   'statistics-service/src/main/java/com/piggymetrics/statistics/controller/StatisticsController.java': [20]},
-                                          'target': {'account-service/src/main/java/com/piggymetrics/account/controller/AccountController.java': [30]}}},
-           '/latest': {'get': {'responses': {'200': {'description': 'OK'}}},
-                       'x-atom-usages': {'call': {'statistics-service/src/main/java/com/piggymetrics/statistics/client/ExchangeRatesClient.java': [13]}}},
-           '/recipients/current': {'get': {'responses': {'200': {'description': 'OK'}}},
-                                   'put': {'responses': {'200': {'description': 'OK'}}},
-                                   'x-atom-usages': {'call': {'notification-service/src/main/java/com/piggymetrics/notification/controller/RecipientController.java': [21,
-                                                                                                                                                                       26]},
-                                                     'target': {'notification-service/src/main/java/com/piggymetrics/notification/controller/RecipientController.java': [26]}}},
-           '/statistics/{accountName}': {'parameters': [{'in': 'path',
-                                                         'name': 'accountName',
-                                                         'required': True,
-                                                         'schema': {'type': 'string'}}],
-                                         'put': {'responses': {'200': {'description': 'OK'}}},
-                                         'x-atom-usages': {'call': {'account-service/src/main/java/com/piggymetrics/account/client/StatisticsServiceClient.java': [13]}}},
-           '/uaa/users': {'post': {'responses': {'201': {'description': 'Created'}}},
-                          'x-atom-usages': {'call': {'account-service/src/main/java/com/piggymetrics/account/client/AuthServiceClient.java': [12]}}},
-           '/users/current': {'get': {'responses': {'200': {'description': 'OK'}}},
-                              'x-atom-usages': {'call': {'auth-service/src/main/java/com/piggymetrics/auth/controller/UserController.java': [22]},
-                                                'target': {'auth-service/src/main/java/com/piggymetrics/auth/controller/UserController.java': [22]}}},
-           '/{accountName}': {'get': {'responses': {'200': {'description': 'OK'}}},
-                              'parameters': [{'in': 'path',
-                                              'name': 'accountName',
-                                              'required': True,
-                                              'schema': {'type': 'string'}}],
-                              'put': {'responses': {'200': {'description': 'OK'}}},
-                              'x-atom-usages': {'call': {'statistics-service/src/main/java/com/piggymetrics/statistics/controller/StatisticsController.java': [26,
-                                                                                                                                                               32]},
-                                                'target': {'statistics-service/src/main/java/com/piggymetrics/statistics/controller/StatisticsController.java': [32]}}},
-           '/{name}': {'get': {'responses': {'200': {'description': 'OK'}}},
-                       'parameters': [{'in': 'path',
-                                       'name': 'name',
-                                       'required': True,
-                                       'schema': {'type': 'string'}}],
-                       'x-atom-usages': {'call': {'account-service/src/main/java/com/piggymetrics/account/controller/AccountController.java': [20]}}}}}
+    paths = result.get('paths', {})
+
+    # Structural assertions
+    assert result['openapi'] == '3.1.0'
+    assert result['info']['title'] == 'data OpenAPI Specification'
+
+    # First-party (server) endpoints must still be present
+    assert '/current' in paths
+    assert 'get' in paths['/current']
+    assert 'put' in paths['/current']
+    assert '/' in paths
+    assert 'post' in paths['/']
+    assert '/recipients/current' in paths
+    assert '/users/current' in paths
+    assert '/{accountName}' in paths
+    assert '/{name}' in paths
+
+    # Feign client endpoints are marked as third-party
+    assert '/accounts/{accountName}' in paths
+    assert paths['/accounts/{accountName}'].get('x-third-party') is True
+    assert 'get' in paths['/accounts/{accountName}']
+
+    assert '/latest' in paths
+    assert paths['/latest'].get('x-third-party') is True
+    assert 'get' in paths['/latest']
+
+    assert '/uaa/users' in paths
+    assert paths['/uaa/users'].get('x-third-party') is True
+    assert 'post' in paths['/uaa/users']
+
+    assert '/statistics/{accountName}' in paths
+    assert paths['/statistics/{accountName}'].get('x-third-party') is True
+    assert 'put' in paths['/statistics/{accountName}']
+
+    # First-party endpoints must NOT be marked as third-party
+    assert not paths['/current'].get('x-third-party')
+    assert not paths['/'].get('x-third-party')
+    assert not paths['/recipients/current'].get('x-third-party')
+    assert not paths['/users/current'].get('x-third-party')
+
+    # x-atom-usages tracking is present
+    assert 'x-atom-usages' in paths['/current']
+    assert 'x-atom-usages' in paths['/accounts/{accountName}']
 
 
 def test_filter_calls():

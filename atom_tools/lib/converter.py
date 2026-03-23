@@ -258,6 +258,81 @@ def js_filterable(code):
             return True
     return False
 
+
+# --- Third-party API discovery constants ---
+
+# Patterns in resolvedMethod that indicate an outbound HTTP client call.
+# Each tuple: (substring_to_match_in_resolvedMethod, default_http_method_or_None)
+_HTTP_CLIENT_CALL_PATTERNS: List[Tuple[str, str | None]] = [
+    # Java - Spring RestTemplate
+    ('RestTemplate.getForObject', 'get'),
+    ('RestTemplate.getForEntity', 'get'),
+    ('RestTemplate.postForObject', 'post'),
+    ('RestTemplate.postForEntity', 'post'),
+    ('RestTemplate.put', 'put'),
+    ('RestTemplate.patchForObject', 'patch'),
+    ('RestTemplate.delete', 'delete'),
+    ('RestTemplate.exchange', None),  # method determined from context
+    # Java - Spring WebClient
+    ('WebClient.get', 'get'),
+    ('WebClient.post', 'post'),
+    ('WebClient.put', 'put'),
+    ('WebClient.patch', 'patch'),
+    ('WebClient.delete', 'delete'),
+    # Java - java.net.HttpURLConnection
+    ('HttpURLConnection.connect', None),
+    ('HttpURLConnection.getInputStream', 'get'),
+    # Java - java.net.http.HttpClient
+    ('HttpClient.send', None),
+    ('HttpClient.sendAsync', None),
+    # Java - Apache HttpClient
+    ('CloseableHttpClient.execute', None),
+    ('HttpClient.execute', None),
+    # Java - OkHttp
+    ('OkHttpClient.newCall', None),
+    # JavaScript/TypeScript - Angular HttpClient
+    ('this.http.get', 'get'),
+    ('this.http.post', 'post'),
+    ('this.http.put', 'put'),
+    ('this.http.delete', 'delete'),
+    ('this.http.patch', 'patch'),
+    # JavaScript - fetch / axios
+    ('axios.get', 'get'),
+    ('axios.post', 'post'),
+    ('axios.put', 'put'),
+    ('axios.delete', 'delete'),
+    ('axios.patch', 'patch'),
+    # Python - requests
+    ('requests.get', 'get'),
+    ('requests.post', 'post'),
+    ('requests.put', 'put'),
+    ('requests.delete', 'delete'),
+    ('requests.patch', 'patch'),
+    ('requests.head', 'head'),
+    # Python - httpx
+    ('httpx.get', 'get'),
+    ('httpx.post', 'post'),
+    ('httpx.put', 'put'),
+    ('httpx.delete', 'delete'),
+    ('httpx.patch', 'patch'),
+    ('httpx.Client', None),
+]
+
+# callName values that directly indicate an HTTP method (for isExternal calls).
+_HTTP_METHOD_CALL_NAMES = {
+    'get': 'get', 'post': 'post', 'put': 'put', 'delete': 'delete',
+    'patch': 'patch', 'head': 'head', 'options': 'options',
+    'getForObject': 'get', 'getForEntity': 'get',
+    'postForObject': 'post', 'postForEntity': 'post',
+    'patchForObject': 'patch', 'exchange': None,
+}
+
+# File name patterns that indicate a client/consumer (not a server endpoint handler).
+_CLIENT_FILE_INDICATORS = re.compile(
+    r'(Client|Service[Cc]lient|Feign|Gateway|Proxy|HttpService|ApiClient|Sdk)',
+    re.IGNORECASE
+)
+
 class OpenAPI:
     """Represents an OpenAPI converter object."""
 
@@ -300,6 +375,10 @@ class OpenAPI:
         if param_annotation_paths:
             paths = merge_path_objects(paths, param_annotation_paths)
         paths = self._backfill_from_annotation_slices(paths)
+        # Discover third-party / outbound API calls and merge them in.
+        third_party_paths = self._discover_third_party_apis()
+        if third_party_paths:
+            paths = merge_path_objects(paths, third_party_paths)
         # Remove paths that are not valid OpenAPI path strings.
         # Must contain only valid characters AND either be root '/' or contain at least one alphanumeric.
         paths = {k: v for k, v in paths.items()
@@ -686,6 +765,235 @@ class OpenAPI:
         if params:
             self.params[new_endpoint] = params
         return new_endpoint.replace("/{}", "/")
+
+    def _discover_third_party_apis(self) -> Dict[str, Any]:
+        """
+        Discover third-party / outbound API calls from objectSlices.
+
+        Scans all objectSlices for:
+          1. Direct HTTP client library calls (RestTemplate, WebClient, HttpClient,
+             fetch, axios, requests, httpx, etc.) identified by resolvedMethod patterns.
+          2. Calls with isExternal=true whose callName is an HTTP verb.
+          3. Feign-style client interfaces whose file name contains "Client" and
+             whose annotations represent consumed (not served) endpoints.
+
+        Returns:
+            dict: An OpenAPI paths object where every path item carries the
+                  'x-third-party' extension set to True.
+        """
+        third_party_paths: Dict[str, Any] = {}
+        object_slices = self.usages.content.get('objectSlices', [])
+
+        for obj_slice in object_slices:
+            file_name = obj_slice.get('fileName', '') or ''
+            full_name = obj_slice.get('fullName', '') or ''
+            line_number = obj_slice.get('lineNumber')
+            usages = obj_slice.get('usages') or []
+
+            is_client_file = bool(_CLIENT_FILE_INDICATORS.search(file_name)
+                                  or _CLIENT_FILE_INDICATORS.search(full_name))
+
+            for usage in usages:
+                # Collect all calls from both invokedCalls and argToCalls
+                all_calls = list(usage.get('invokedCalls') or [])
+                all_calls.extend(usage.get('argToCalls') or [])
+
+                for call in all_calls:
+                    resolved = call.get('resolvedMethod') or ''
+                    call_name = call.get('callName') or ''
+                    is_external = call.get('isExternal')
+                    call_line = call.get('lineNumber') or line_number
+
+                    # --- Detection Strategy 1: known HTTP client library pattern ---
+                    matched_method = None
+                    is_http_client_call = False
+                    for pattern, default_method in _HTTP_CLIENT_CALL_PATTERNS:
+                        if pattern in resolved:
+                            is_http_client_call = True
+                            matched_method = default_method
+                            break
+
+                    # --- Detection Strategy 2: isExternal + HTTP-verb callName ---
+                    if not is_http_client_call and is_external is True:
+                        if call_name in _HTTP_METHOD_CALL_NAMES:
+                            is_http_client_call = True
+                            matched_method = _HTTP_METHOD_CALL_NAMES[call_name]
+
+                    if not is_http_client_call:
+                        continue
+
+                    # Determine the HTTP method
+                    http_method = matched_method
+                    if not http_method and call_name:
+                        http_method = _HTTP_METHOD_CALL_NAMES.get(call_name)
+                    if not http_method:
+                        # Try to infer from resolvedMethod text
+                        resolved_lower = resolved.lower()
+                        for verb in ('get', 'post', 'put', 'delete', 'patch', 'head'):
+                            if verb in resolved_lower:
+                                http_method = verb
+                                break
+                    if not http_method:
+                        http_method = 'get'  # safe default
+
+                    # Build a descriptive endpoint path from context.
+                    # Use the calling class and method to create a meaningful path.
+                    endpoint = self._build_third_party_endpoint(
+                        full_name, call_name, resolved, file_name)
+
+                    if not endpoint:
+                        continue
+
+                    # Build the operation
+                    operation: Dict[str, Any] = {'responses': {}}
+                    param_types = call.get('paramTypes') or []
+                    if param_types:
+                        params = [
+                            {'name': pt.rsplit('.', 1)[-1], 'in': 'query'}
+                            for pt in param_types
+                            if pt and pt != 'ANY' and not pt.startswith('__')
+                        ]
+                        if params:
+                            operation['parameters'] = params
+
+                    # Build the path item with x-third-party marker
+                    path_item: Dict[str, Any] = {
+                        'x-third-party': True,
+                        http_method: operation,
+                    }
+
+                    # Add source location tracking
+                    if file_name and call_line:
+                        ln_entry = create_ln_entries(file_name, [call_line], line_number)
+                        path_item.update(ln_entry)
+
+                    if endpoint in third_party_paths:
+                        existing = third_party_paths[endpoint]
+                        # Preserve x-third-party marker during merge
+                        merged = merge_path_objects(existing, path_item)
+                        merged['x-third-party'] = True
+                        third_party_paths[endpoint] = merged
+                    else:
+                        third_party_paths[endpoint] = path_item
+
+        # Also mark paths from Feign-style client files that were already
+        # extracted by the normal annotation pipeline.  We detect these by
+        # checking if any objectSlice in a client-named file contains Spring
+        # mapping annotations.
+        self._mark_feign_client_paths(third_party_paths, object_slices)
+
+        return third_party_paths
+
+    def _build_third_party_endpoint(
+            self, full_name: str, call_name: str, resolved: str, file_name: str
+    ) -> str:
+        """
+        Derive a meaningful endpoint path for a third-party API call.
+
+        Priority:
+          1. If the resolved method text itself contains a URL-like path (e.g.,
+             from a Feign annotation), extract it.
+          2. Build a synthetic path from the client class and method name,
+             e.g. /weather-client/get-forecast.
+        """
+        # Strategy 1: look for a URL path in resolved (handles Feign annotations)
+        if '/' in resolved and ('@' in resolved or 'http' in resolved.lower()):
+            matches = re.findall(r'[\'"](\S*?)[\'"]', resolved)
+            for m in matches:
+                if m and '/' in m and not m.startswith('@'):
+                    clean = m.strip('"').strip("'").lstrip('/')
+                    if clean:
+                        return f'/{clean}'
+
+        # Strategy 2: build from the class + method context
+        # Extract the class name from fullName (e.g., "com.example.PaymentGatewayClient.createCharge:...")
+        class_method = full_name.rsplit(':', 1)[0] if ':' in full_name else full_name
+        parts = class_method.split('.')
+        if len(parts) >= 2:
+            class_name = parts[-2]
+            method_name = parts[-1]
+        elif len(parts) == 1:
+            class_name = parts[0]
+            method_name = call_name
+        else:
+            class_name = file_name.rsplit('/', 1)[-1].rsplit('\\', 1)[-1].replace('.java', '')
+            method_name = call_name
+
+        # Convert CamelCase to kebab-case for readability
+        class_slug = re.sub(r'(?<=[a-z0-9])([A-Z])', r'-\1', class_name).lower()
+        method_slug = re.sub(r'(?<=[a-z0-9])([A-Z])', r'-\1', method_name).lower()
+
+        # Remove generic prefixes
+        for prefix in ('external-', 'service-', '<init>', '<'):
+            if method_slug.startswith(prefix):
+                method_slug = method_slug[len(prefix):]
+
+        if not method_slug or method_slug.startswith('<'):
+            return ''
+
+        return f'/{class_slug}/{method_slug}'
+
+    def _mark_feign_client_paths(
+            self, third_party_paths: Dict, object_slices: List
+    ) -> None:
+        """
+        Scan objectSlices from client-named files for Spring mapping annotations
+        and add their endpoints to third_party_paths with x-third-party marker.
+        """
+        mapping_annotations = (
+            '@RequestMapping', '@GetMapping', '@PostMapping',
+            '@PutMapping', '@DeleteMapping', '@PatchMapping',
+        )
+        for obj_slice in object_slices:
+            file_name = obj_slice.get('fileName', '') or ''
+            full_name = obj_slice.get('fullName', '') or ''
+            line_number = obj_slice.get('lineNumber')
+
+            if not (_CLIENT_FILE_INDICATORS.search(file_name)
+                    or _CLIENT_FILE_INDICATORS.search(full_name)):
+                continue
+
+            usages = obj_slice.get('usages') or []
+            for usage in usages:
+                for call in (usage.get('invokedCalls') or []):
+                    resolved = call.get('resolvedMethod') or ''
+                    if not any(resolved.startswith(a) or a in resolved
+                               for a in mapping_annotations):
+                        continue
+
+                    # Extract endpoint from annotation text
+                    endpoints = self._extract_endpoints(resolved)
+                    if not endpoints:
+                        continue
+
+                    # Determine HTTP method from annotation
+                    http_method = 'get'
+                    resolved_lower = resolved.lower()
+                    for verb in ('post', 'put', 'delete', 'patch', 'head', 'options'):
+                        if verb in resolved_lower:
+                            http_method = verb
+                            break
+
+                    for ep in endpoints:
+                        ep = self._parse_path_regexes(ep)
+                        path_item: Dict[str, Any] = {
+                            'x-third-party': True,
+                            http_method: {'responses': {}},
+                        }
+                        if file_name and line_number:
+                            ln_entry = create_ln_entries(
+                                file_name, [call.get('lineNumber') or line_number],
+                                line_number
+                            )
+                            path_item.update(ln_entry)
+
+                        if ep in third_party_paths:
+                            existing = third_party_paths[ep]
+                            merged = merge_path_objects(existing, path_item)
+                            merged['x-third-party'] = True
+                            third_party_paths[ep] = merged
+                        else:
+                            third_party_paths[ep] = path_item
 
     def _extract_methods_from_udt(self) -> Dict[str, Any]:
         """
@@ -1413,6 +1721,12 @@ def merge_path_objects(p1: Dict, p2: Dict) -> Dict:
         if key not in p1:
             p1[key] = value
             continue
+        if not isinstance(value, dict):
+            p1[key] = value
+            continue
+        if not isinstance(p1[key], dict):
+            p1[key] = value
+            continue
         for k, v in value.items():
             if p1[key].get(k):
                 if k == 'resolved_methods':
@@ -1464,8 +1778,16 @@ def merge_x_atom(x1: Dict, x2: Dict) -> Dict:
             x1[key] = value
             continue
         for k, v in value.items():
-            if x1[key].get(k):
-                x1[key][k].extend(v)
+            existing = x1[key].get(k)
+            if existing is not None:
+                if isinstance(existing, list) and isinstance(v, list):
+                    existing.extend(v)
+                elif isinstance(existing, list):
+                    existing.append(v)
+                elif isinstance(v, list):
+                    x1[key][k] = [existing] + v
+                else:
+                    x1[key][k] = v
             else:
                 x1[key][k] = v
     return x1
