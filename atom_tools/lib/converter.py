@@ -1327,7 +1327,7 @@ def merge_operations(op1: Dict, op2: Dict) -> Dict:
         dict: The merged dictionary of operations.
     """
     for k, v in op2.items():
-        if v and not op1.get(k) or op1[k] == {}:
+        if v and (not op1.get(k) or op1[k] == {}):
             op1[k] = v
         elif k == 'parameters' and v:
             op1[k] = merge_params(op1[k], v)
