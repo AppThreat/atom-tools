@@ -109,6 +109,11 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
             slice_type = 'usages'
         elif 'reachables' in content:
             slice_type = 'reachables'
+        elif 'api_endpoints' in content:
+            # Rusi (cdxgen-plugins-bin) reports — Rust analyzer output.
+            # The api_endpoints array is the structured endpoint table
+            # produced by rusi's api-discovery pass.
+            slice_type = 'api_endpoints'
     except (json.decoder.JSONDecodeError, UnicodeDecodeError):
         logger.warning(
             f'Failed to load usages slice: {filename}\nPlease check that you specified a valid'

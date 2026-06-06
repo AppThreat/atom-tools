@@ -1,0 +1,268 @@
+{
+  "api_endpoints": [
+    {
+      "id": "api-endpoint-213077a1e1ef9c6d",
+      "method": "GET",
+      "path": "/api/v1/users",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::users::list_users",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 7,
+        "column": 5
+      },
+      "parameters": [
+        {
+          "name": "Query(params)",
+          "location": "query",
+          "type_name": "UserListQuery"
+        }
+      ],
+      "request_body_type": null,
+      "response_type": "Vec<User>",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-614640de83de05ed",
+      "method": "GET",
+      "path": "/health",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::health::health",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 35,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": null,
+      "response_type": "serde_json::Value",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-6476823847972e4b",
+      "method": "GET",
+      "path": "/api/v1/orders/:id",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::orders::get_order",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 18,
+        "column": 5
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "type_name": "i32"
+        }
+      ],
+      "request_body_type": null,
+      "response_type": "Order",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-6ad513f2c8d1a1cc",
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::auth::login",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 24,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": "LoginRequest",
+      "response_type": "LoginResponse",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-832d671c71b6927e",
+      "method": "POST",
+      "path": "/api/v1/orders",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::orders::create_order",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 18,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": "CreateOrderRequest",
+      "response_type": "Order",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-9c7f9e9bbe71d0bc",
+      "method": "GET",
+      "path": "/ready",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::health::ready",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 35,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": null,
+      "response_type": "serde_json::Value",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-a00510906b73bdd0",
+      "method": "GET",
+      "path": "/api/v1/orders",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::orders::list_orders",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 18,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": null,
+      "response_type": "Vec<Order>",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-a434220637508ea9",
+      "method": "POST",
+      "path": "/api/v1/users",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::users::create_user",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 7,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": "CreateUserRequest",
+      "response_type": "User",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-af5bb00482908b9c",
+      "method": "PATCH",
+      "path": "/api/v1/users/:id",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::users::update_user",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 7,
+        "column": 5
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "type_name": "i32"
+        }
+      ],
+      "request_body_type": "UpdateUserRequest",
+      "response_type": "User",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-b705fcbc56704a65",
+      "method": "DELETE",
+      "path": "/api/v1/users/:id",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::users::delete_user",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 7,
+        "column": 5
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "type_name": "i32"
+        }
+      ],
+      "request_body_type": null,
+      "response_type": "StatusCode",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-ca48c86cf465942f",
+      "method": "GET",
+      "path": "/api/v1/users/:id",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::users::get_user",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 7,
+        "column": 5
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "type_name": "i32"
+        }
+      ],
+      "request_body_type": null,
+      "response_type": "User",
+      "properties": {}
+    },
+    {
+      "id": "api-endpoint-ec8f27a00f74615c",
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "framework": "axum",
+      "handler": "sample_rust_api::handlers::auth::logout",
+      "package_path": "sample_rust_api",
+      "purl": "pkg:cargo/axum@0.7.9",
+      "file_path": "src/routes.rs",
+      "position": {
+        "filename": "src/routes.rs",
+        "line": 24,
+        "column": 5
+      },
+      "parameters": [],
+      "request_body_type": null,
+      "response_type": "StatusCode",
+      "properties": {}
+    }
+  ],
+  "tool": {
+    "name": "rusi",
+    "version": "2.4.0",
+    "description": "Rust source analysis inspector"
+  },
+  "schema_version": "https://appthreat.github.io/rusi/schema/report-0.1"
+}

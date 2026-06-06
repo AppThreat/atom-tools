@@ -1391,3 +1391,95 @@ def test_ts_custom_router_openapi(ts_usages_1):
     assert '/items' in paths
     assert '/users' in paths
     assert '/render' in paths
+
+
+@pytest.fixture
+def rust_usages_1():
+    # Real rusi report (cdxgen-plugins-bin v2.4.0+) emitted by the
+    # api-discovery pass against a small axum service: 12 endpoints
+    # nested under /api/v1 plus /health and /ready at the root.
+    return OpenAPI('openapi3.0.1', 'rust',
+                   'test/data/rust-axum-sample-rusi.json')
+
+
+def test_rust_axum_convert_emits_expected_paths(rust_usages_1):
+    """The rust converter should produce one OpenAPI path entry per
+    rusi endpoint, with framework-native placeholders (axum's ``:id``)
+    normalised to OpenAPI's ``{id}``."""
+    result = rust_usages_1.convert_usages()
+    result = sort_openapi_result(result)
+
+    expected_paths = {
+        '/health',
+        '/ready',
+        '/api/v1/users',
+        '/api/v1/users/{id}',
+        '/api/v1/orders',
+        '/api/v1/orders/{id}',
+        '/api/v1/auth/login',
+        '/api/v1/auth/logout',
+    }
+    assert set(result.keys()) == expected_paths
+
+
+def test_rust_axum_methods_per_path(rust_usages_1):
+    """All HTTP methods registered against a path should appear in
+    the converted operation map. For ``/api/v1/users/{id}`` the
+    fixture registers GET, PATCH, and DELETE."""
+    result = rust_usages_1.convert_usages()
+    user_by_id = result['/api/v1/users/{id}']
+    assert set(user_by_id.keys()) == {'get', 'patch', 'delete'}
+    users = result['/api/v1/users']
+    assert set(users.keys()) == {'get', 'post'}
+
+
+def test_rust_axum_path_param_extraction(rust_usages_1):
+    """Path parameters should be lifted out of the handler signature
+    with the correct name, location, and OpenAPI scalar schema."""
+    result = rust_usages_1.convert_usages()
+    op = result['/api/v1/users/{id}']['get']
+    params = op.get('parameters', [])
+    assert len(params) == 1
+    param = params[0]
+    assert param['name'] == 'id'
+    assert param['in'] == 'path'
+    assert param['required'] is True
+    assert param['schema'] == {'type': 'integer', 'format': 'int32'}
+
+
+def test_rust_axum_request_body_and_response_types(rust_usages_1):
+    """A handler with ``Json<CreateUserRequest>`` should map to a
+    ``requestBody`` referencing the body type via $ref; the return
+    type should appear as the 200 response content schema."""
+    result = rust_usages_1.convert_usages()
+    create_user = result['/api/v1/users']['post']
+
+    body = create_user['requestBody']
+    assert body['required'] is True
+    body_schema = body['content']['application/json']['schema']
+    assert body_schema == {'$ref': '#/components/schemas/CreateUserRequest'}
+
+    response_schema = create_user['responses']['200']['content']['application/json']['schema']
+    assert response_schema == {'$ref': '#/components/schemas/User'}
+
+
+def test_rust_axum_framework_attribution(rust_usages_1):
+    """Each operation carries the framework name and the framework
+    crate's purl so downstream tooling can correlate endpoints with
+    their dependency."""
+    result = rust_usages_1.convert_usages()
+    op = result['/api/v1/users/{id}']['get']
+    assert op.get('x-rust-framework') == 'axum'
+    purl = op.get('x-rust-purl', '')
+    assert purl.startswith('pkg:cargo/axum')
+
+
+def test_rust_axum_endpoints_to_openapi(rust_usages_1):
+    """The full OpenAPI-document export wraps the rust converter's
+    paths dict in the standard envelope."""
+    result = rust_usages_1.endpoints_to_openapi()
+    result = sort_openapi_result(result)
+    assert result['openapi'] == '3.0.1'
+    paths = result['paths']
+    assert '/health' in paths
+    assert '/api/v1/users/{id}' in paths
