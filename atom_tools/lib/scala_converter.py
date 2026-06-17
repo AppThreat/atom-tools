@@ -1,6 +1,7 @@
 """
 Scala converter helper
 """
+
 import re
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.utils import extract_params
@@ -31,26 +32,18 @@ def convert(usages: AtomSlice, semantics: AtomSlice):
     i = 0
     for route in routes:
         i = i + 1
-        route_pattern, params = extract_pattern(route.get('pattern'))
-        controller_method = route.get('controllerMethod')
+        route_pattern, params = extract_pattern(route.get("pattern"))
+        controller_method = route.get("controllerMethod")
         amethod = {
             "operationId": f"{controller_method if controller_method else route.get('method')}-{str(i)}",
-            "responses": {
-                "200": {
-                    "description": ""
-                }
-            }
+            "responses": {"200": {"description": ""}},
         }
         if controller_method:
             amethod["x-atom-usages"] = {"method": controller_method}
         if params:
             amethod["parameters"] = params
         if not result.get(route_pattern):
-            result[route_pattern] = {
-                route.get('method').lower(): amethod
-            }
+            result[route_pattern] = {route.get("method").lower(): amethod}
         else:
-            result[route_pattern].update({
-                route.get('method').lower(): amethod
-            })
+            result[route_pattern].update({route.get("method").lower(): amethod})
     return result

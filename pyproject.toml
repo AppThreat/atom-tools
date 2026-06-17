@@ -1,11 +1,11 @@
 [project]
 name = "atom-tools"
-version = "0.8.6"
+version = "0.9.0"
 description = "Collection of tools for use with AppThreat/atom."
 authors = [
-  { name = "Caroline Russell", email = "caroline@appthreat.dev" },
+  { name = "Team AppThreat", email = "cloud@appthreat.com" },
 ]
-dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0", "thefuzz>=0.22.1", "json-flatten>=0.3"]
+dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0", "thefuzz>=0.22.1", "json-flatten>=0.3", "rich>=13.0.0"]
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,6 +14,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Topic :: Security",

@@ -1,4 +1,5 @@
 """Utility functions"""
+
 import json
 import logging
 import re
@@ -10,23 +11,24 @@ from atom_tools.lib.filtering import check_reachable_purl, filter_flows, get_ln_
 logger = logging.getLogger(__name__)
 
 
-def add_params_to_cmd(cmd: str, outfile: str, origin_type: str = '') -> Tuple[str, str]:
+def add_params_to_cmd(cmd: str, outfile: str, origin_type: str = "") -> Tuple[str, str]:
     """
     Adds the outfile to the command.
     """
     # Check that the input slice has not already been specified
-    args = ''
-    if origin_type and '-t ' not in cmd and '--type' not in cmd:
-        cmd += f' -t {origin_type}'
-    if '-i ' in cmd or '--input-slice' in cmd:
+    args = ""
+    if origin_type and "-t " not in cmd and "--type" not in cmd:
+        cmd += f" -t {origin_type}"
+    if "-i " in cmd or "--input-slice" in cmd:
         logging.warning(
-            'Input slice specified in command to be filtered. Replacing with filtered slice.')
-        if match := re.search(r'((?:-i|--input-slice)\s\S+)', cmd):
-            cmd = cmd.replace(match[1], f'-i {Path(outfile)}')
+            "Input slice specified in command to be filtered. Replacing with filtered slice."
+        )
+        if match := re.search(r"((?:-i|--input-slice)\s\S+)", cmd):
+            cmd = cmd.replace(match[1], f"-i {Path(outfile)}")
     else:
-        cmd += f' -i {Path(outfile)}'
+        cmd += f" -i {Path(outfile)}"
     if not args:
-        cmd, args = cmd.split(' ', 1)
+        cmd, args = cmd.split(" ", 1)
     return cmd, args
 
 
@@ -34,38 +36,44 @@ def check_reachable(data: Dict, pkg: str, loc: str) -> bool:
     """Checks if package is reachable"""
     if pkg:
         return check_reachable_purl(data, pkg)
-    if match := re.search(r'(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)', loc):
-        return filter_flows(data.get('reachables', []), match['file'], get_ln_range(match['line']))
-    raise ValueError(f'Invalid location: {loc}')
+    if match := re.search(r"(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)", loc):
+        return filter_flows(
+            data.get("reachables", []), match["file"], get_ln_range(match["line"])
+        )
+    raise ValueError(f"Invalid location: {loc}")
 
 
 def export_json(data: Dict, outfile: str, indent: int | None = None) -> None:
     """Exports data to json"""
-    with open(outfile, 'w', encoding='utf-8') as f:
+    with open(outfile, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=indent, sort_keys=True)
 
 
-def output_endpoints(data: Dict, sparse: bool, line_range: Tuple[int, int] | Tuple) -> str:
+def output_endpoints(
+    data: Dict, sparse: bool, line_range: Tuple[int, int] | Tuple
+) -> str:
     """Outputs endpoints"""
-    to_print = ''
-    for endpoint, values in data.get('paths', {}).items():
+    to_print = ""
+    for endpoint, values in data.get("paths", {}).items():
         if result := filter_endpoint_ln(endpoint, values, sparse, line_range):
-            to_print += f'{result}\n'
+            to_print += f"{result}\n"
     return to_print
 
 
-def filter_endpoint_ln(ep: str, values: Dict, sparse: bool, ln_range: Tuple[int, int]) -> str:
+def filter_endpoint_ln(
+    ep: str, values: Dict, sparse: bool, ln_range: Tuple[int, int]
+) -> str:
     """Filters endpoint line numbers"""
-    to_print = ''
-    usages = values.get("x-atom-usages", {}).get('call', {})
+    to_print = ""
+    usages = values.get("x-atom-usages", {}).get("call", {})
     for k, v in usages.items():
         for i in v:
             if not ln_range or ln_range[0] <= i <= ln_range[1]:
                 if sparse:
-                    return f'{ep}'
-                to_print += f':{k}:{i}'
+                    return f"{ep}"
+                to_print += f":{k}:{i}"
     if to_print:
-        to_print = f'{ep}{to_print}'
+        to_print = f"{ep}{to_print}"
     return to_print
 
 
@@ -101,11 +109,11 @@ def sort_list(lst: List) -> List:
         lst.sort()
         return lst
     if isinstance(lst[0], dict):
-        if lst[0].get('name'):
-            return sorted(lst, key=lambda x: x['name'])
-        if lst[0].get('fullName'):
-            return sorted(lst, key=lambda x: x['code'])
-        return sorted(lst, key=lambda x: x.get('callName'))
+        if lst[0].get("name"):
+            return sorted(lst, key=lambda x: x["name"])
+        if lst[0].get("fullName"):
+            return sorted(lst, key=lambda x: x["code"])
+        return sorted(lst, key=lambda x: x.get("callName"))
     return lst
 
 
@@ -119,21 +127,17 @@ def extract_params(url):
                 param = {
                     "name": re.sub(r"[:{}]", "", part),
                     "in": "path",
-                    "required": True
+                    "required": True,
                 }
                 if part == "{id}" or part.endswith("_id}"):
-                    param["schema"] = {
-                        "type": "integer",
-                        "format": "int64"
-                    }
-                elif part in ("{name}", "{extra_path}") or part.endswith("*") or part.startswith("*"):
-                    param["schema"] = {
-                        "type": "string",
-                        "format": "path"
-                    }
+                    param["schema"] = {"type": "integer", "format": "int64"}
+                elif (
+                    part in ("{name}", "{extra_path}")
+                    or part.endswith("*")
+                    or part.startswith("*")
+                ):
+                    param["schema"] = {"type": "string", "format": "path"}
                 elif part.startswith("{"):
-                    param["schema"] = {
-                        "type": "string"
-                    }
+                    param["schema"] = {"type": "string"}
                 params.append(param)
     return params

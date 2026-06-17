@@ -1,6 +1,7 @@
 """
 Command Loader for the atom-tools CLI.
 """
+
 from collections.abc import Callable
 
 from cleo.commands.command import Command
@@ -13,7 +14,9 @@ class CommandLoader(FactoryCommandLoader):
     Command Loader for the atom-tools CLI.
     """
 
-    def register_factory(self, command_name: str, factory: Callable[[], Command]) -> None:
+    def register_factory(
+        self, command_name: str, factory: Callable[[], Command]
+    ) -> None:
         """
         Register a command factory.
 

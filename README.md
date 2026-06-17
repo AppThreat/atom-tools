@@ -42,6 +42,7 @@ Options:
   -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug.
 
 Available commands:
+  apk-analysis     Analyse Android apps (apk/apkm/aab) using blint and atom.
   check-reachable  Find out if there are hits for a given package:version or file:linenumber in an atom slice.
   convert          Convert an atom slice to a different format.
   filter           Filter an atom slice based on specified criteria.
@@ -52,6 +53,31 @@ Available commands:
 ```
 
 ## Features
+
+### APK Analysis
+
+The apk-analysis command analyses an Android application end to end by driving blint and atom as
+subprocesses and presenting a consolidated report. It accepts a single apk, apkm, or aab file, or a
+directory containing them. blint generates the CycloneDX SBOM and atom generates the usage and
+reachable slices, then atom-tools merges the two views.
+
+blint runs in deep mode by default so the dex classes are parsed. This is what enables service and
+tracker detection and the Dalvik behavioural review. atom-tools reads the behavioural findings back
+from the BOM and presents them as static behaviours, and it promotes the services that atom proves
+reachable into the SBOM with their observed data flow direction and flow counts. A single blint
+invocation with disassembly enabled produces both the BOM and the Dalvik callgraph sidecar, so there
+is no need for a second run.
+
+Use `--no-deep` to skip dex parsing, `--skip-atom` to generate only the SBOM, `--blint-venv` to
+point at a blint installed in its own virtual environment, and `--format json` to write a
+consolidated analysis document instead of rendering tables.
+
+For the custom properties that the analysis reads from and writes to the BOM, see the
+[blint Custom Properties documentation](https://github.com/owasp-dep-scan/blint/blob/main/docs/CUSTOM_PROPERTIES.md).
+
+**Example**
+
+> `atom-tools apk-analysis -i /path/to/app.apkm -o reports`
 
 ### Convert
 
@@ -67,7 +93,7 @@ Description:
 Usage:
   convert [options]
 
-OOptions:
+Options:
   -f, --format=FORMAT                    Destination format [default: "openapi3.1.0"]
   -i, --input-slice=INPUT-SLICE          Usages slice file [default: "usages.slices.json"]
   -e, --semantics-slice=SEMANTICS-SLICE  Semantics slice file [default: "semantics.slices.json"]
@@ -96,7 +122,7 @@ Help:
 The filter command can be run on its own to produce a filtered slice or used before another command
 to filter a slice before executing another command against the results.
 
->**Filters operate on an inclusive-or basis. If you want to operate on an 'and' basis,
+> **Filters operate on an inclusive-or basis. If you want to operate on an 'and' basis,
 > [chain](#chaining-filter-commands) the filter commands.**
 
 **Mode**
@@ -116,7 +142,7 @@ Regex word boundaries can be used if you only want to be exact about the filenam
 
 This will filter files named server.ts - without the \b, files like ftpserver.ts would also be matched.
 
->Note: You can search for a file name without including the path if needed and fuzzing ratios will be computed based
+> Note: You can search for a file name without including the path if needed and fuzzing ratios will be computed based
 > only on the file name.
 
 ##### Chaining filter commands
@@ -134,7 +160,8 @@ This would be equivalent to
 
 ##### Available attributes (not case-sensitive):
 
-*For usages slices*
+_For usages slices_
+
 - callName
 - fileName
 - fullName
@@ -143,14 +170,14 @@ This would be equivalent to
 - signature
 
 | attribute      | locations searched                                                                                                                                                      | reachables locations                       |
-|----------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------|
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------- | --- | --- |
 | callName       | objectSlices.usages.argToCalls<br/>objectSlices.usages.invokedCalls<br/>userDefinedTypes.procedures,                                                                    |                                            |
-| fileName       | objectSlices<br/>userDefinedTypes                                                                                                               |                                            |                                                                                                                          |
+| fileName       | objectSlices<br/>userDefinedTypes                                                                                                                                       |                                            |     |
 | fullName       | objectSlices                                                                                                                                                            |                                            |
 | name           | objectSlices.usages.targetObj<br/>objectSlices.usages.definedBy<br/>userDefinedTypes.fields                                                                             |                                            |
 | purl           |                                                                                                                                                                         | reachables.purls<br/>reachables.flows.tags |
 | resolvedMethod | objectSlices.usages.targetObj<br/>objectSlices.usages.definedBy<br/>objectSlices.usages.argToCalls<br/>objectSlices.usages.invokedCalls<br/>userDefinedTypes.procedures |                                            |
-| signature      | objectSlices                                                                                                                                                            |                                            |                                                                                                                                                         |                      |
+| signature      | objectSlices                                                                                                                                                            |                                            |     |     |
 
 #### Searching reachables for package name/version
 
@@ -215,15 +242,16 @@ the following:**_
 
 `atom-tools filter --criteria fileName!=server.ts usages.slices.json convert -f openapi3.0.1 -o openapi_usages.json -t java `
 
-****_Multiple filter criteria may be included. The following example will produce a filtered slice based
-only on server.ts and router.ts slices._****
+\***\*_Multiple filter criteria may be included. The following example will produce a filtered slice based
+only on server.ts and router.ts slices._\*\***
 
 `atom-tools filter --criteria fileName=server.ts,callName=router.ts usages.slices.json`
 
 ### Query Endpoints
+
 Query endpoints generates a list of endpoints and returns the output directly to the console.
 
->Note: To suppress logging messages and ONLY output the results, use --quiet/-q
+> Note: To suppress logging messages and ONLY output the results, use --quiet/-q
 
 **_Examples_**
 
@@ -309,4 +337,5 @@ Help:
 ```
 
 **Example**
+
 > `atom-tools validate-lines -t java -j project_json_report.json -i usages.slices.json -d /home/my_project_dir`

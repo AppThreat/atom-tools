@@ -17,65 +17,65 @@ from atom_tools.lib.utils import export_json, remove_duplicates_list
 logger = logging.getLogger(__name__)
 regex: ValidationRegexCollection = ValidationRegexCollection()
 operator_map: Dict[str, List[str]] = {
-    '<operator>.addition': ['+'],
-    '<operator>.minus': ['-'],
-    '<operator>.multiplication': ['*'],
-    '<operator>.division': ['/'],
-    '<operator>.lessThan': ['<'],
-    '<operator>.notEquals': ['!='],
-    '<operator>.indexAccess': [':'],
-    '<operator>.logicalNot': ['!', ' not '],
-    '<operator>.logicalOr': ['||', ' or '],
-    '<operator>.throw': ['throw'],
-    '<operator>.plus': ['+'],
-    '<operator>.formatString': ['`$', 'f"', "f'"],
-    '<operator>.conditional': ['?', 'if ', 'elif ', ' else '],
-    '<operator>.new': ['new ', '<init>'],
-    '<operator>.assignmentDivision': ['/='],
-    '<operator>.in': [' in '],
-    '<operator>.listLiteral': ['= []', '= ['],
-    '<operator>.starredUnpack': ['*'],
-    '<operator>.greaterThan': ['>'],
-    '<operator>.logicalAnd': ['&&', ' and '],
-    '<operator>.postIncrement': ['++'],
-    '<operator>.fieldAccess': [':'],
-    '<operator>.assignmentMinus': ['-='],
-    '<operator>.assignmentMultiplication': ['*='],
-    '<operator>.modulo': ['%'],
-    '<operator>.iterator': ['for'],
-    '<operator>.assignmentPlus': ['+='],
-    '<operator>.instanceOf': ['instanceof'],
-    '<operator>.subtraction': ['-'],
-    '<operator>.equals': ['='],
+    "<operator>.addition": ["+"],
+    "<operator>.minus": ["-"],
+    "<operator>.multiplication": ["*"],
+    "<operator>.division": ["/"],
+    "<operator>.lessThan": ["<"],
+    "<operator>.notEquals": ["!="],
+    "<operator>.indexAccess": [":"],
+    "<operator>.logicalNot": ["!", " not "],
+    "<operator>.logicalOr": ["||", " or "],
+    "<operator>.throw": ["throw"],
+    "<operator>.plus": ["+"],
+    "<operator>.formatString": ["`$", 'f"', "f'"],
+    "<operator>.conditional": ["?", "if ", "elif ", " else "],
+    "<operator>.new": ["new ", "<init>"],
+    "<operator>.assignmentDivision": ["/="],
+    "<operator>.in": [" in "],
+    "<operator>.listLiteral": ["= []", "= ["],
+    "<operator>.starredUnpack": ["*"],
+    "<operator>.greaterThan": [">"],
+    "<operator>.logicalAnd": ["&&", " and "],
+    "<operator>.postIncrement": ["++"],
+    "<operator>.fieldAccess": [":"],
+    "<operator>.assignmentMinus": ["-="],
+    "<operator>.assignmentMultiplication": ["*="],
+    "<operator>.modulo": ["%"],
+    "<operator>.iterator": ["for"],
+    "<operator>.assignmentPlus": ["+="],
+    "<operator>.instanceOf": ["instanceof"],
+    "<operator>.subtraction": ["-"],
+    "<operator>.equals": ["="],
 }
 ecma_map: Dict[str, List[str]] = {
-    '__ecma.Array.factory': ['[]'],
-    '__ecma.Set:<operator>.new': ['new Set('],
-    '__ecma.String[]:sort': ['.sort'],
-    '__ecma.Array.factory:splice': ['.splice'],
-    '__ecma.Array.factory:push': ['.push'],
-    '__ecma.Number:toString': ['.toString'],
-    '__ecma.Math:floor': ['.floor'],
-    '__ecma.String:toLowerCase': ['.toLowerCase'],
+    "__ecma.Array.factory": ["[]"],
+    "__ecma.Set:<operator>.new": ["new Set("],
+    "__ecma.String[]:sort": [".sort"],
+    "__ecma.Array.factory:splice": [".splice"],
+    "__ecma.Array.factory:push": [".push"],
+    "__ecma.Number:toString": [".toString"],
+    "__ecma.Math:floor": [".floor"],
+    "__ecma.String:toLowerCase": [".toLowerCase"],
 }
-init_map: List[str] = ['new ', 'super ', 'private ', 'public ', 'constructor ']
+init_map: List[str] = ["new ", "super ", "private ", "public ", "constructor "]
 py_builtins: Dict[str, str] = {
-    '__builtin.str.split': '.split(',
-    '__builtin.str.join': '.join(',
-    '__builtin.getattr': 'getattr(',
-    '__builtin.open': 'with open(',
-    '__builtin.print': 'print(',
-    '__builtin.str.format': '.format(',
-    '__builtin.list': '= [',
-    '__builtin.str.replace': '.replace(',
-    '__builtin.set<meta>': 'set(',
-    '__builtin.len': 'len(',
-    '__builtin.list.append': '.append(',
-    '__builtin.str.startswith': '.startswith(',
-    '__builtin.list<meta>': 'list(',
-    '__builtin.set.add': '.add(',
-    '__builtin.str.lstrip': '.lstrip(',
-    '__builtin.list.extend': '.extend(',
+    "__builtin.str.split": ".split(",
+    "__builtin.str.join": ".join(",
+    "__builtin.getattr": "getattr(",
+    "__builtin.open": "with open(",
+    "__builtin.print": "print(",
+    "__builtin.str.format": ".format(",
+    "__builtin.list": "= [",
+    "__builtin.str.replace": ".replace(",
+    "__builtin.set<meta>": "set(",
+    "__builtin.len": "len(",
+    "__builtin.list.append": ".append(",
+    "__builtin.str.startswith": ".startswith(",
+    "__builtin.list<meta>": "list(",
+    "__builtin.set.add": ".add(",
+    "__builtin.str.lstrip": ".lstrip(",
+    "__builtin.list.extend": ".extend(",
 }
 
 
@@ -128,17 +128,19 @@ def check_py_module_members(code: str, line: str) -> bool:
     match = regex.py_mod_members.search(code)
     if not match:
         return False
-    if func := match.group('func'):
-        obj_type = f'def {func}('
-    elif a_class := match.group('class'):
-        obj_type = f'class {a_class}'
+    if func := match.group("func"):
+        obj_type = f"def {func}("
+    elif a_class := match.group("class"):
+        obj_type = f"class {a_class}"
     else:
         return False
 
     return bool(line.startswith(obj_type))
 
 
-def cleanup_usages(usages: Dict[str, List[Dict[str, str]]]) -> Dict[str, List[Dict[str, str]]]:
+def cleanup_usages(
+    usages: Dict[str, List[Dict[str, str]]],
+) -> Dict[str, List[Dict[str, str]]]:
     """
     Removes entries with no code, function_name, or line_number as there is nothing to validate.
 
@@ -152,7 +154,9 @@ def cleanup_usages(usages: Dict[str, List[Dict[str, str]]]) -> Dict[str, List[Di
         if keep := [
             entries[e]
             for e in range(len(entries) - 1)
-            if entries[e]['code'] or entries[e]['function_name'] or entries[e]['line_number']
+            if entries[e]["code"]
+            or entries[e]["function_name"]
+            or entries[e]["line_number"]
         ]:
             usages[fn] = keep
 
@@ -163,7 +167,7 @@ def consolidate_reachable_slices(data: List[Dict]) -> Dict[str, List[Dict[str, s
     """Consolidate reachables by parent file name."""
     consolidated: Dict[str, List[Dict]] = {}
     for i in data:
-        fn = i.get('file_name') or 'unknown'
+        fn = i.get("file_name") or "unknown"
         if fn in consolidated:
             consolidated[fn].append(i)
         else:
@@ -183,17 +187,17 @@ def consolidate_usage_slices(data: List[Dict]) -> Dict[str, List[Dict[str, str]]
     """
     consolidated: Dict = {}
     for i in data:
-        fn = i.get('file_name') or 'unknown'
+        fn = i.get("file_name") or "unknown"
         root_entry = {
-            'function_name': i.get('signature'),
-            'code': i.get('code'),
-            'line_number': i.get('line_number'),
+            "function_name": i.get("signature"),
+            "code": i.get("code"),
+            "line_number": i.get("line_number"),
         }
         if fn in consolidated:
             consolidated[fn].append(root_entry)
         else:
             consolidated[fn] = [root_entry]
-        consolidated[fn].extend(i.get('usages', []))
+        consolidated[fn].extend(i.get("usages", []))
     return cleanup_usages(consolidated)
 
 
@@ -209,10 +213,10 @@ def java_validation_helper(func: str, line: str) -> bool:
         bool: True if the line contains a match, False otherwise.
     """
     if match := regex.java_lib_type.search(func):
-        if match.group('type') in line:
+        if match.group("type") in line:
             return True
     elif match := regex.java_udt_regex.search(func):
-        if match.group('udt') in line:
+        if match.group("udt") in line:
             return True
     return False
 
@@ -229,22 +233,22 @@ def js_validation_helper(function_name: str, code: str, line: str) -> bool:
     Returns:
         bool: True if the line matches the specified patterns, False otherwise.
     """
-    if function_name == 'require':
-        if line == 'import {' or not code.startswith('require'):
+    if function_name == "require":
+        if line == "import {" or not code.startswith("require"):
             return True
-        code = code.replace('"', '').replace("'", "")
+        code = code.replace('"', "").replace("'", "")
         a = regex.js_require_extract.search(code)
         b = regex.js_import.search(line)
-        if a and b and a.group('mod') in b.group('lib'):
+        if a and b and a.group("mod") in b.group("lib"):
             return True
-    elif function_name.startswith('__ecma'):
+    elif function_name.startswith("__ecma"):
         return check_mapping_type(function_name, code, line, ecma_map)
     # elif function_name.startswith('_tmp') and '.' in function_name:
     #     a = function_name.split('.')[1]
     #     if a in line:
     #         return True
-    elif line.endswith('{') and '{' in function_name:
-        function_name = function_name.split('{')[0]
+    elif line.endswith("{") and "{" in function_name:
+        function_name = function_name.split("{")[0]
         if function_name in line:
             return True
 
@@ -263,21 +267,21 @@ def py_validation_helper(function_name: str, code: str, line: str) -> bool:
     Returns:
         bool: True if the line contains a match, False otherwise.
     """
-    if '<module>' in code:
+    if "<module>" in code:
         return check_py_module_members(code, line)
     found = False
-    if code.startswith('__builtin'):
+    if code.startswith("__builtin"):
         return check_py_builtins(code, line)
-    if code.startswith('class '):
-        code = code.replace('<meta>', '')
+    if code.startswith("class "):
+        code = code.replace("<meta>", "")
         found = code in line
-    if function_name.startswith('__newInstance') and '__init__(' in line:
+    if function_name.startswith("__newInstance") and "__init__(" in line:
         return True
-    if function_name.startswith('tmp'):
-        for i in ('.get', '.keys', '.values', '.items', 'return ['):
+    if function_name.startswith("tmp"):
+        for i in (".get", ".keys", ".values", ".items", "return ["):
             if i in line:
                 return True
-    if ('__iter__' in function_name or '__next__' in function_name) and 'for ' in line:
+    if ("__iter__" in function_name or "__next__" in function_name) and "for " in line:
         found = True
     return found
 
@@ -303,6 +307,7 @@ class LineStats:
         total_valid (int): matched_ct + close_match_ct
         unmatched_perc (tuple): percentage of total_invalid for each type of invalid
     """
+
     close_match_ct: int = 0
     file_error_ct: int = 0
     invalid_ln_ct: int = 0
@@ -313,13 +318,13 @@ class LineStats:
     @property
     def accuracy(self) -> str:
         """Returns accuracy in percentage format"""
-        return f'{self.total_valid / self.total_analyzed:.2%}'
+        return f"{self.total_valid / self.total_analyzed:.2%}"
 
     @property
     def matched_perc(self) -> Tuple[str, str]:
         """Returns validated percentage breakdown"""
-        matched = f'{self.matched_ct / self.total_valid:.2%}'
-        close = f'{self.close_match_ct / self.total_valid:.2%}'
+        matched = f"{self.matched_ct / self.total_valid:.2%}"
+        close = f"{self.close_match_ct / self.total_valid:.2%}"
         return matched, close
 
     @property
@@ -330,7 +335,9 @@ class LineStats:
     @property
     def total_invalid(self) -> int:
         """Returns total not validated"""
-        return self.unmatched_ct + self.invalid_ln_ct + self.no_ln_ct + self.file_error_ct
+        return (
+            self.unmatched_ct + self.invalid_ln_ct + self.no_ln_ct + self.file_error_ct
+        )
 
     @property
     def total_valid(self) -> int:
@@ -340,14 +347,21 @@ class LineStats:
     @property
     def unmatched_perc(self) -> Tuple[str, str, str]:
         """Returns invalid percentage breakdown"""
-        unmatched = f'{self.unmatched_ct / self.total_invalid:.2%}'
-        invalid_ln = f'{self.invalid_ln_ct / self.total_invalid:.2%}'
-        no_ln = f'{self.no_ln_ct / self.total_invalid:.2%}'
+        unmatched = f"{self.unmatched_ct / self.total_invalid:.2%}"
+        invalid_ln = f"{self.invalid_ln_ct / self.total_invalid:.2%}"
+        no_ln = f"{self.no_ln_ct / self.total_invalid:.2%}"
         # file_err = '{:.2%}'.format(self.file_error_ct / self.total_invalid)
         return unmatched, invalid_ln, no_ln
 
-    def update(self, matched_count: int, unmatched_count: int, close_match_count: int,  # pylint: disable=too-many-arguments
-               no_ln_count: int, file_error_count: int, invalid_ln_count: int) -> None:
+    def update(
+        self,
+        matched_count: int,
+        unmatched_count: int,
+        close_match_count: int,  # pylint: disable=too-many-arguments
+        no_ln_count: int,
+        file_error_count: int,
+        invalid_ln_count: int,
+    ) -> None:
         """
         Sets counts for statistic calculations
         """
@@ -377,13 +391,24 @@ class LineValidator:
         slc (AtomSlice): An instance of AtomSlice representing the slice file.
         unverifiable (dict): A dictionary containing unverifiable line numbers grouped by type.
     """
-    def __init__(self, slice_file: Path, base_path: Path, interval: int, origin_type: str) -> None:
+
+    def __init__(
+        self, slice_file: Path, base_path: Path, interval: int, origin_type: str
+    ) -> None:
         self.slc = AtomSlice(slice_file, origin_type)
         self.base_path = base_path if isinstance(base_path, Path) else Path(base_path)
         self.matches: Dict[str, List[Dict]] = {
-            'matched': [], 'unmatched': [], 'close': [], 'likely_ok': []}
+            "matched": [],
+            "unmatched": [],
+            "close": [],
+            "likely_ok": [],
+        }
         self.unverifiable: Dict[str, List[Dict]] = {
-            'missing': [], 'file': [], 'range': [], 'no_data': []}
+            "missing": [],
+            "file": [],
+            "range": [],
+            "no_data": [],
+        }
         self.problem_files: List[str] = []
         self.interval = interval
 
@@ -397,21 +422,25 @@ class LineValidator:
         Returns:
             str: A summary of the results of the line number validation.
         """
-        summary = f'\n*** VALIDATION SUMMARY ***\nAccuracy: {stats.accuracy}\n'
+        summary = f"\n*** VALIDATION SUMMARY ***\nAccuracy: {stats.accuracy}\n"
         if stats.file_error_ct > 0:
-            summary += (f'{stats.file_error_ct} line numbers could not be checked due to issues '
-                        f'with the source file.\n')
+            summary += (
+                f"{stats.file_error_ct} line numbers could not be checked due to issues "
+                f"with the source file.\n"
+            )
         summary += (
-            f'\n*** MATCHED ***\n{stats.total_valid} slice line numbers were validated.\n\t'
-            f'{stats.matched_perc[0]} were matches at exact line numbers.\n\t'
-            f'{stats.matched_perc[1]} were inexact matches within {self.interval} lines of the '
-            f'expected line number.\n'
+            f"\n*** MATCHED ***\n{stats.total_valid} slice line numbers were validated.\n\t"
+            f"{stats.matched_perc[0]} were matches at exact line numbers.\n\t"
+            f"{stats.matched_perc[1]} were inexact matches within {self.interval} lines of the "
+            f"expected line number.\n"
         )
-        summary += (f'\n*** UNMATCHED ***\n{stats.total_invalid} line numbers were invalid.\n\t'
-                    f'{stats.unmatched_perc[0]} of these were just not found in the expected range'
-                    f' of line numbers.\n\t{stats.unmatched_perc[1]} of these had line numbers '
-                    f'exceeding the lines in the given file.\n\t{stats.unmatched_perc[2]} of these'
-                    f' had missing line numbers.\n')
+        summary += (
+            f"\n*** UNMATCHED ***\n{stats.total_invalid} line numbers were invalid.\n\t"
+            f"{stats.unmatched_perc[0]} of these were just not found in the expected range"
+            f" of line numbers.\n\t{stats.unmatched_perc[1]} of these had line numbers "
+            f"exceeding the lines in the given file.\n\t{stats.unmatched_perc[2]} of these"
+            f" had missing line numbers.\n"
+        )
         return summary
 
     def export_validation_results(self, json_report_path):
@@ -419,21 +448,23 @@ class LineValidator:
         Export details for the validation results to a JSON file.
         """
         results = {
-            'valid': {'exact': self.matches['matched'], 'close': self.matches['close']},
-            'invalid': {
-                'missing_line_number': self.unverifiable['missing'],
-                'not_found': self.matches['unmatched'],
-                'invalid_line_number': self.unverifiable['range']
+            "valid": {"exact": self.matches["matched"], "close": self.matches["close"]},
+            "invalid": {
+                "missing_line_number": self.unverifiable["missing"],
+                "not_found": self.matches["unmatched"],
+                "invalid_line_number": self.unverifiable["range"],
             },
-            'inaccessible_files': [str(i) for i in self.problem_files]
+            "inaccessible_files": [str(i) for i in self.problem_files],
         }
         export_json(results, json_report_path, 4)
 
     def find_reachables(self) -> Dict[str, List[Dict[str, str]]]:
         """Collect reachables for analysis."""
-        reachables_pattern = jmespath.compile('reachables[].flows[].{function_name: fullName, '
-                                              'code: code, file_name: parentFileName, '
-                                              'line_number: lineNumber}')
+        reachables_pattern = jmespath.compile(
+            "reachables[].flows[].{function_name: fullName, "
+            "code: code, file_name: parentFileName, "
+            "line_number: lineNumber}"
+        )
         res = reachables_pattern.search(self.slc.content)
         return consolidate_reachable_slices(res)
 
@@ -443,14 +474,18 @@ class LineValidator:
         Returns:
              Dict[str, List[Dict[str, str]]]: A list of usage slices
         """
-        usages_pattern = jmespath.compile('objectSlices[].{signature: signature, code: code, '
-                                          'file_name: fileName, line_number: lineNumber, '
-                                          'usages: usages[].*[][].{function_name: name || '
-                                          'callName, line_number: lineNumber, '
-                                          'code: resolvedMethod || code}}')
-        udts_pattern = jmespath.compile('userDefinedTypes[].{file_name: fileName, usages: *[].{'
-                                        'function_name: name || callName, code: typeFullName || '
-                                        'resolvedMethod, line_number: lineNumber}}')
+        usages_pattern = jmespath.compile(
+            "objectSlices[].{signature: signature, code: code, "
+            "file_name: fileName, line_number: lineNumber, "
+            "usages: usages[].*[][].{function_name: name || "
+            "callName, line_number: lineNumber, "
+            "code: resolvedMethod || code}}"
+        )
+        udts_pattern = jmespath.compile(
+            "userDefinedTypes[].{file_name: fileName, usages: *[].{"
+            "function_name: name || callName, code: typeFullName || "
+            "resolvedMethod, line_number: lineNumber}}"
+        )
         res = usages_pattern.search(self.slc.content)
         res.extend(udts_pattern.search(self.slc.content))
         return consolidate_usage_slices(res)
@@ -466,15 +501,15 @@ class LineValidator:
             close_match_count=len(self.matches["close"]),
             no_ln_count=len(self.unverifiable["missing"]),
             file_error_count=len(self.unverifiable["file"]),
-            invalid_ln_count=len(self.unverifiable["range"])
+            invalid_ln_count=len(self.unverifiable["range"]),
         )
         return self.create_summary(stats)
 
     def validate_line_numbers(self) -> None:
         """Validate line numbers in the slice file"""
-        if self.slc.slice_type == 'reachables':
+        if self.slc.slice_type == "reachables":
             data = self.find_reachables()
-        elif self.slc.slice_type == 'usages':
+        elif self.slc.slice_type == "usages":
             data = self.find_usages()
         else:
             print("Cannot analyze unidentified slice type.")
@@ -486,27 +521,29 @@ class LineValidator:
             file_path = self.base_path / fn
 
             if regex.tests_regex.search(fn):
-                logger.debug(f'Skipping test file: {file_path}',)
+                logger.debug(
+                    f"Skipping test file: {file_path}",
+                )
                 continue
 
             if not file_path or not os.path.isfile(file_path):
                 self.problem_files.append(file_path)
-                self.unverifiable['file'].extend(val)
-                logger.warning(f'Could not locate {file_path}.')
+                self.unverifiable["file"].extend(val)
+                logger.warning(f"Could not locate {file_path}.")
                 continue
 
             try:
-                with open(file_path, 'r', encoding='utf-8') as file:
+                with open(file_path, "r", encoding="utf-8") as file:
                     lines = file.readlines()
             except UnicodeDecodeError:
                 try:
-                    with open(file_path, 'rb') as file:
+                    with open(file_path, "rb") as file:
                         lines = file.readlines()  # type: ignore[assignment]
                     if lines and isinstance(lines[0], bytes):
                         lines = [i.decode for i in lines]
                 except Exception:  # pylint: disable=broad-exception-caught
                     self.problem_files.append(file_path)
-                    self.unverifiable['file'].extend(val)
+                    self.unverifiable["file"].extend(val)
                     continue
             file_path = str(file_path)
             for v in val:
@@ -517,11 +554,16 @@ class LineValidator:
         logger.debug(f"Writing report to {report_file}.")
         if verbose and (vresults := self._get_verbose_results()):
             summary += vresults
-        with open(report_file, 'w', encoding='utf-8') as f:
+        with open(report_file, "w", encoding="utf-8") as f:
             f.write(summary)
 
     def _expand_search(
-            self, code: str, function_name: str, line_number: int, lines: List[str], file_name: str
+        self,
+        code: str,
+        function_name: str,
+        line_number: int,
+        lines: List[str],
+        file_name: str,
     ) -> bool:
         """
         Expand the search range.
@@ -532,14 +574,14 @@ class LineValidator:
         end = min(line_number + self.interval, len(lines))
         for n in range(start, end):
             if self._find_line(code.strip(), function_name.strip(), lines[n]):
-                self.matches['close'].append(
+                self.matches["close"].append(
                     {
-                        'function_name': function_name,
-                        'code': code,
-                        'line_number': line_number,
-                        'actual_number': n - 1,
-                        'file_name': file_name,
-                        'found_line': lines[n].strip()
+                        "function_name": function_name,
+                        "code": code,
+                        "line_number": line_number,
+                        "actual_number": n - 1,
+                        "file_name": file_name,
+                        "found_line": lines[n].strip(),
                     }
                 )
                 return True
@@ -559,13 +601,13 @@ class LineValidator:
                 found = True
         elif function_name in line and len(function_name) >= 2:
             found = True
-        elif function_name == '<init>' or function_name.startswith('__init__'):
+        elif function_name == "<init>" or function_name.startswith("__init__"):
             found = check_init(line)
-        elif function_name.startswith('<operator>.') or code.startswith('<operator>.'):
+        elif function_name.startswith("<operator>.") or code.startswith("<operator>."):
             found = check_mapping_type(function_name, code, line, operator_map)
-        elif function_name.startswith('$obj') and 'new ' in line:
+        elif function_name.startswith("$obj") and "new " in line:
             found = True
-        elif code.startswith(line) or code.startswith(line.replace('return ', '')):
+        elif code.startswith(line) or code.startswith(line.replace("return ", "")):
             found = True
         return found or self._match_by_lang(code, function_name, line)
 
@@ -573,33 +615,33 @@ class LineValidator:
         """
         Add the verbose results of the line number validation.
         """
-        verbose_results = '\n*** INVALID ENTRIES ***\n'
-        for i in self.matches['unmatched']:
+        verbose_results = "\n*** INVALID ENTRIES ***\n"
+        for i in self.matches["unmatched"]:
             for k, v in i.items():
                 try:
-                    verbose_results += f'{k}: {v}\n'
+                    verbose_results += f"{k}: {v}\n"
                 except UnicodeEncodeError:
-                    new_v = v.encode('utf-8')
-                    verbose_results += f'{k}: {new_v}\n'
-            verbose_results += '\n'
-        verbose_results += '\n\n*** VALID BUT INEXACT ENTRIES ***\n'
-        for i in self.matches['close']:
+                    new_v = v.encode("utf-8")
+                    verbose_results += f"{k}: {new_v}\n"
+            verbose_results += "\n"
+        verbose_results += "\n\n*** VALID BUT INEXACT ENTRIES ***\n"
+        for i in self.matches["close"]:
             for k, v in i.items():
                 try:
-                    verbose_results += f'{k}: {v}\n'
+                    verbose_results += f"{k}: {v}\n"
                 except UnicodeEncodeError:
-                    new_v = v.encode('utf-8')
-                    verbose_results += f'{k}: {new_v}\n'
-            verbose_results += '\n'
-        verbose_results += '\n\n*** VALID ENTRIES ***\n'
+                    new_v = v.encode("utf-8")
+                    verbose_results += f"{k}: {new_v}\n"
+            verbose_results += "\n"
+        verbose_results += "\n\n*** VALID ENTRIES ***\n"
         for i in self.matches["matched"]:
             for k, v in i.items():
                 try:
-                    verbose_results += f'{k}: {v}\n'
+                    verbose_results += f"{k}: {v}\n"
                 except UnicodeEncodeError:
-                    new_v = v.encode('utf-8')
-                    verbose_results += f'{k}: {new_v}\n'
-            verbose_results += '\n'
+                    new_v = v.encode("utf-8")
+                    verbose_results += f"{k}: {new_v}\n"
+            verbose_results += "\n"
         return verbose_results
 
     def _match_by_lang(self, code: str, function_name: str, line: str) -> bool:
@@ -608,11 +650,11 @@ class LineValidator:
         """
         found = False
         match self.slc.origin_type:
-            case 'java':
+            case "java":
                 found = java_validation_helper(function_name, line)
-            case 'js' | 'javascript' | 'ts' | 'typescript':
+            case "js" | "javascript" | "ts" | "typescript":
                 found = js_validation_helper(function_name, code, line)
-            case 'py' | 'python':
+            case "py" | "python":
                 found = py_validation_helper(function_name, code, line)
         return found
 
@@ -623,41 +665,44 @@ class LineValidator:
             result[fn] = remove_duplicates_list(val)
         return result
 
-    def _validate_line_number(self, result: Dict, lines: List[str], file_name: str) -> None:
+    def _validate_line_number(
+        self, result: Dict, lines: List[str], file_name: str
+    ) -> None:
         """
         Run validation for a slice line number.
         """
-        function_name = result.get('function_name') or ''
-        function_name = function_name.lstrip().replace('this.', '')
-        code = result.get('code') or ''
+        function_name = result.get("function_name") or ""
+        function_name = function_name.lstrip().replace("this.", "")
+        code = result.get("code") or ""
         code = code.lstrip()
-        line_number = result.get('line_number')
+        line_number = result.get("line_number")
 
-        if (not function_name or function_name == '<empty>') and not code:
-            self.unverifiable['no_data'].append(result)
+        if (not function_name or function_name == "<empty>") and not code:
+            self.unverifiable["no_data"].append(result)
             return
 
         if not line_number:
-            self.unverifiable['missing'].append(result)
+            self.unverifiable["missing"].append(result)
             return
 
         if len(lines) < line_number:
-            self.unverifiable['range'].append(result)
+            self.unverifiable["range"].append(result)
             return
 
         line = lines[line_number - 1].strip()
         if self._find_line(code.strip(), function_name.strip(), line):
-            self.matches['matched'].append(result)
+            self.matches["matched"].append(result)
             return
         if self.interval > 0 and self._expand_search(
-                code, function_name, line_number, lines, file_name):
+            code, function_name, line_number, lines, file_name
+        ):
             return
-        self.matches['unmatched'].append(
+        self.matches["unmatched"].append(
             {
-                'function_name': function_name,
-                'code': code,
-                'line_number': line_number,
-                'file_name': file_name,
-                'file_line': line
+                "function_name": function_name,
+                "code": code,
+                "line_number": line_number,
+                "file_name": file_name,
+                "file_line": line,
             }
         )

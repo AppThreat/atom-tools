@@ -36,7 +36,9 @@ class IOFormatter(Formatter):
 
         if not ATOM_TOOLS_FILTER.filter(record):
             # prefix all lines from third-party packages for easier debugging
-            formatted = textwrap.indent(formatted, f"[{_log_prefix(record)}] ", lambda line: True)
+            formatted = textwrap.indent(
+                formatted, f"[{_log_prefix(record)}] ", lambda line: True
+            )
 
         return formatted
 

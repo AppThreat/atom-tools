@@ -1,6 +1,7 @@
 """
 Classes and functions used to convert slices.
 """
+
 import contextlib
 import json.encoder
 import logging
@@ -17,7 +18,7 @@ from atom_tools.lib.regex_utils import (
     regex_match_helper,
     js_helper,
     fwd_slash_repl,
-    OpenAPIRegexCollection
+    OpenAPIRegexCollection,
 )
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.ruby_converter import convert as ruby_convert
@@ -29,51 +30,56 @@ regex = OpenAPIRegexCollection()
 
 # Maps fully-qualified Java types to OpenAPI schema dicts.
 _JAVA_TYPE_SCHEMA: Dict[str, Dict] = {
-    'java.lang.String': {'type': 'string'},
-    'java.lang.CharSequence': {'type': 'string'},
-    'java.lang.Integer': {'type': 'integer'},
-    'int': {'type': 'integer'},
-    'java.lang.Long': {'type': 'integer', 'format': 'int64'},
-    'long': {'type': 'integer', 'format': 'int64'},
-    'java.lang.Short': {'type': 'integer'},
-    'short': {'type': 'integer'},
-    'java.lang.Double': {'type': 'number', 'format': 'double'},
-    'double': {'type': 'number', 'format': 'double'},
-    'java.lang.Float': {'type': 'number', 'format': 'float'},
-    'float': {'type': 'number', 'format': 'float'},
-    'java.lang.Boolean': {'type': 'boolean'},
-    'boolean': {'type': 'boolean'},
-    'java.util.UUID': {'type': 'string', 'format': 'uuid'},
-    'java.util.List': {'type': 'array'},
-    'java.util.ArrayList': {'type': 'array'},
-    'java.util.Set': {'type': 'array'},
-    'java.util.Collection': {'type': 'array'},
-    'java.util.Map': {'type': 'object'},
-    'java.util.HashMap': {'type': 'object'},
-    'java.time.Instant': {'type': 'string', 'format': 'date-time'},
-    'java.time.LocalDate': {'type': 'string', 'format': 'date'},
-    'java.time.LocalDateTime': {'type': 'string', 'format': 'date-time'},
-    'java.time.OffsetDateTime': {'type': 'string', 'format': 'date-time'},
-    'java.math.BigDecimal': {'type': 'number'},
-    'java.math.BigInteger': {'type': 'integer'},
+    "java.lang.String": {"type": "string"},
+    "java.lang.CharSequence": {"type": "string"},
+    "java.lang.Integer": {"type": "integer"},
+    "int": {"type": "integer"},
+    "java.lang.Long": {"type": "integer", "format": "int64"},
+    "long": {"type": "integer", "format": "int64"},
+    "java.lang.Short": {"type": "integer"},
+    "short": {"type": "integer"},
+    "java.lang.Double": {"type": "number", "format": "double"},
+    "double": {"type": "number", "format": "double"},
+    "java.lang.Float": {"type": "number", "format": "float"},
+    "float": {"type": "number", "format": "float"},
+    "java.lang.Boolean": {"type": "boolean"},
+    "boolean": {"type": "boolean"},
+    "java.util.UUID": {"type": "string", "format": "uuid"},
+    "java.util.List": {"type": "array"},
+    "java.util.ArrayList": {"type": "array"},
+    "java.util.Set": {"type": "array"},
+    "java.util.Collection": {"type": "array"},
+    "java.util.Map": {"type": "object"},
+    "java.util.HashMap": {"type": "object"},
+    "java.time.Instant": {"type": "string", "format": "date-time"},
+    "java.time.LocalDate": {"type": "string", "format": "date"},
+    "java.time.LocalDateTime": {"type": "string", "format": "date-time"},
+    "java.time.OffsetDateTime": {"type": "string", "format": "date-time"},
+    "java.math.BigDecimal": {"type": "number"},
+    "java.math.BigInteger": {"type": "integer"},
 }
 
 # Annotations that indicate a Spring parameter annotation.
-_PARAM_ANNOTATION_PREFIXES = ('@RequestBody', '@PathVariable', '@RequestParam', '@RequestHeader')
+_PARAM_ANNOTATION_PREFIXES = (
+    "@RequestBody",
+    "@PathVariable",
+    "@RequestParam",
+    "@RequestHeader",
+)
 
 # Spring HTTP-method mapping annotations and their OpenAPI verbs.
 _SPRING_METHOD_ANNOTATIONS = [
-    ('post', 'PostMapping'),
-    ('put', 'PutMapping'),
-    ('patch', 'PatchMapping'),
-    ('get', 'GetMapping'),
-    ('delete', 'DeleteMapping'),
+    ("post", "PostMapping"),
+    ("put", "PutMapping"),
+    ("patch", "PatchMapping"),
+    ("get", "GetMapping"),
+    ("delete", "DeleteMapping"),
 ]
 
 
 def _java_type_to_schema(type_full_name: str) -> Dict:
     """Return an OpenAPI schema dict for a Java type, defaulting to object."""
-    return dict(_JAVA_TYPE_SCHEMA.get(type_full_name, {'type': 'object'}))
+    return dict(_JAVA_TYPE_SCHEMA.get(type_full_name, {"type": "object"}))
 
 
 def _properties_from_getters(arg_to_calls: List[Dict]) -> Dict:
@@ -90,28 +96,30 @@ def _properties_from_getters(arg_to_calls: List[Dict]) -> Dict:
     """
     properties: Dict[str, Dict] = {}
     for call in arg_to_calls:
-        call_name = call.get('callName') or ''
-        if len(call_name) <= 3 or not call_name.startswith('get'):
+        call_name = call.get("callName") or ""
+        if len(call_name) <= 3 or not call_name.startswith("get"):
             continue
         prop_name = call_name[3].lower() + call_name[4:]
         if prop_name in properties:
             continue
-        return_type = call.get('returnType') or ''
-        if return_type and return_type not in ('ANY', 'void'):
+        return_type = call.get("returnType") or ""
+        if return_type and return_type not in ("ANY", "void"):
             schema = _java_type_to_schema(return_type)
         else:
             # Try to extract return type from 'Class.method:ReturnType(n)' signature
-            resolved = call.get('resolvedMethod') or ''
-            m = re.match(r'.+:([^<(][^(]*)\(\d+\)$', resolved)
+            resolved = call.get("resolvedMethod") or ""
+            m = re.match(r".+:([^<(][^(]*)\(\d+\)$", resolved)
             if m:
                 extracted = m.group(1).strip()
-                schema = _java_type_to_schema(extracted) if extracted else {'type': 'string'}
+                schema = (
+                    _java_type_to_schema(extracted) if extracted else {"type": "string"}
+                )
             else:
-                schema = {'type': 'string'}
+                schema = {"type": "string"}
         properties[prop_name] = schema
     if not properties:
-        return {'type': 'object'}
-    return {'type': 'object', 'properties': properties}
+        return {"type": "object"}
+    return {"type": "object", "properties": properties}
 
 
 def _extract_annotation_string_value(resolved_method: str) -> str:
@@ -122,14 +130,30 @@ def _extract_annotation_string_value(resolved_method: str) -> str:
     Returns empty string if no quoted value is present.
     """
     m = re.search(r'["\']([^"\']+)["\']', resolved_method)
-    return m.group(1) if m else ''
+    return m.group(1) if m else ""
+
 
 _PRIMITIVE_TYPES = {
-    'int', 'long', 'boolean', 'double', 'float', 'char', 'byte', 'short',
-    'void', 'ANY', 'null', '',
+    "int",
+    "long",
+    "boolean",
+    "double",
+    "float",
+    "char",
+    "byte",
+    "short",
+    "void",
+    "ANY",
+    "null",
+    "",
 }
 _STDLIB_PREFIXES = (
-    'java.', 'javax.', 'jakarta.', 'org.springframework.', 'sun.', 'com.sun.',
+    "java.",
+    "javax.",
+    "jakarta.",
+    "org.springframework.",
+    "sun.",
+    "com.sun.",
 )
 
 
@@ -155,71 +179,89 @@ def _extract_response_dto_key(usages_list: list) -> str:
     instead of the hard-coded 'description'.
     """
     for usage in usages_list:
-        for call in usage.get('invokedCalls', []):
+        for call in usage.get("invokedCalls", []):
             # Builder pattern: ResponseEntity.ok(dto), ResponseEntity.created(), etc.
-            if ('ResponseEntity' in (call.get('resolvedMethod') or '')
-                    and call.get('callName') in RESPONSE_ENTITY_STATUS_MAP):
-                param_types = call.get('paramTypes') or []
+            if (
+                "ResponseEntity" in (call.get("resolvedMethod") or "")
+                and call.get("callName") in RESPONSE_ENTITY_STATUS_MAP
+            ):
+                param_types = call.get("paramTypes") or []
                 if param_types and _is_custom_dto(param_types[0]):
-                    simple = param_types[0].rsplit('.', 1)[-1]
-                    return simple[0].lower() + simple[1:] if simple else ''
+                    simple = param_types[0].rsplit(".", 1)[-1]
+                    return simple[0].lower() + simple[1:] if simple else ""
             # Constructor pattern: new ResponseEntity<>(dto, HttpStatus.X)
             # resolvedMethod is null for constructors; HttpStatus appears as "ANY"
-            if call.get('callName') == '<init>':
-                param_types = call.get('paramTypes') or []
-                if (len(param_types) >= 2
-                        and _is_custom_dto(param_types[0])
-                        and param_types[1] == 'ANY'):
-                    simple = param_types[0].rsplit('.', 1)[-1]
-                    return simple[0].lower() + simple[1:] if simple else ''
+            if call.get("callName") == "<init>":
+                param_types = call.get("paramTypes") or []
+                if (
+                    len(param_types) >= 2
+                    and _is_custom_dto(param_types[0])
+                    and param_types[1] == "ANY"
+                ):
+                    simple = param_types[0].rsplit(".", 1)[-1]
+                    return simple[0].lower() + simple[1:] if simple else ""
     for usage in usages_list:
-        tgt = usage.get('targetObj', {})
-        if tgt.get('label') == 'LOCAL' and _is_custom_dto(tgt.get('typeFullName', '')):
-            name = tgt.get('name', '')
+        tgt = usage.get("targetObj", {})
+        if tgt.get("label") == "LOCAL" and _is_custom_dto(tgt.get("typeFullName", "")):
+            name = tgt.get("name", "")
             if name:
                 return name
-    return ''
+    return ""
 
 
-exclusions = ['/content-type', '/application/javascript', '/application/json', '/application/text',
-              '/application/xml', '/*', '/*/*', '/allow', '/get', '/post', '/xml', '/cookie',
-              '/usestrict', '/maxage', '/sessionid']
+exclusions = [
+    "/content-type",
+    "/application/javascript",
+    "/application/json",
+    "/application/text",
+    "/application/xml",
+    "/*",
+    "/*/*",
+    "/allow",
+    "/get",
+    "/post",
+    "/xml",
+    "/cookie",
+    "/usestrict",
+    "/maxage",
+    "/sessionid",
+]
 
 # Maps Spring ResponseEntity builder method names to HTTP status codes.
 RESPONSE_ENTITY_STATUS_MAP = {
-    'ok': '200',
-    'created': '201',
-    'accepted': '202',
-    'noContent': '204',
-    'badRequest': '400',
-    'unauthorized': '401',
-    'forbidden': '403',
-    'notFound': '404',
-    'internalServerError': '500',
+    "ok": "200",
+    "created": "201",
+    "accepted": "202",
+    "noContent": "204",
+    "badRequest": "400",
+    "unauthorized": "401",
+    "forbidden": "403",
+    "notFound": "404",
+    "internalServerError": "500",
 }
 
 # Default HTTP status code per HTTP method (standard REST conventions).
 HTTP_METHOD_DEFAULT_STATUS = {
-    'get': '200',
-    'post': '201',
-    'put': '200',
-    'patch': '200',
-    'delete': '204',
-    'head': '200',
-    'options': '200',
+    "get": "200",
+    "post": "201",
+    "put": "200",
+    "patch": "200",
+    "delete": "204",
+    "head": "200",
+    "options": "200",
 }
 
 # Human-readable descriptions for common HTTP status codes.
 STATUS_DESCRIPTIONS = {
-    '200': 'OK',
-    '201': 'Created',
-    '202': 'Accepted',
-    '204': 'No Content',
-    '400': 'Bad Request',
-    '401': 'Unauthorized',
-    '403': 'Forbidden',
-    '404': 'Not Found',
-    '500': 'Internal Server Error',
+    "200": "OK",
+    "201": "Created",
+    "202": "Accepted",
+    "204": "No Content",
+    "400": "Bad Request",
+    "401": "Unauthorized",
+    "403": "Forbidden",
+    "404": "Not Found",
+    "500": "Internal Server Error",
 }
 
 
@@ -236,72 +278,80 @@ def js_filterable(code):
 # Each tuple: (substring_to_match_in_resolvedMethod, default_http_method_or_None)
 _HTTP_CLIENT_CALL_PATTERNS: List[Tuple[str, str | None]] = [
     # Java - Spring RestTemplate
-    ('RestTemplate.getForObject', 'get'),
-    ('RestTemplate.getForEntity', 'get'),
-    ('RestTemplate.postForObject', 'post'),
-    ('RestTemplate.postForEntity', 'post'),
-    ('RestTemplate.put', 'put'),
-    ('RestTemplate.patchForObject', 'patch'),
-    ('RestTemplate.delete', 'delete'),
-    ('RestTemplate.exchange', None),
+    ("RestTemplate.getForObject", "get"),
+    ("RestTemplate.getForEntity", "get"),
+    ("RestTemplate.postForObject", "post"),
+    ("RestTemplate.postForEntity", "post"),
+    ("RestTemplate.put", "put"),
+    ("RestTemplate.patchForObject", "patch"),
+    ("RestTemplate.delete", "delete"),
+    ("RestTemplate.exchange", None),
     # Java - Spring WebClient
-    ('WebClient.get', 'get'),
-    ('WebClient.post', 'post'),
-    ('WebClient.put', 'put'),
-    ('WebClient.patch', 'patch'),
-    ('WebClient.delete', 'delete'),
+    ("WebClient.get", "get"),
+    ("WebClient.post", "post"),
+    ("WebClient.put", "put"),
+    ("WebClient.patch", "patch"),
+    ("WebClient.delete", "delete"),
     # Java - java.net.HttpURLConnection
-    ('HttpURLConnection.connect', None),
-    ('HttpURLConnection.getInputStream', 'get'),
+    ("HttpURLConnection.connect", None),
+    ("HttpURLConnection.getInputStream", "get"),
     # Java - java.net.http.HttpClient
-    ('HttpClient.send', None),
-    ('HttpClient.sendAsync', None),
+    ("HttpClient.send", None),
+    ("HttpClient.sendAsync", None),
     # Java - Apache HttpClient
-    ('CloseableHttpClient.execute', None),
-    ('HttpClient.execute', None),
+    ("CloseableHttpClient.execute", None),
+    ("HttpClient.execute", None),
     # Java - OkHttp
-    ('OkHttpClient.newCall', None),
+    ("OkHttpClient.newCall", None),
     # JavaScript/TypeScript - Angular HttpClient
-    ('this.http.get', 'get'),
-    ('this.http.post', 'post'),
-    ('this.http.put', 'put'),
-    ('this.http.delete', 'delete'),
-    ('this.http.patch', 'patch'),
+    ("this.http.get", "get"),
+    ("this.http.post", "post"),
+    ("this.http.put", "put"),
+    ("this.http.delete", "delete"),
+    ("this.http.patch", "patch"),
     # JavaScript - axios
-    ('axios.get', 'get'),
-    ('axios.post', 'post'),
-    ('axios.put', 'put'),
-    ('axios.delete', 'delete'),
-    ('axios.patch', 'patch'),
+    ("axios.get", "get"),
+    ("axios.post", "post"),
+    ("axios.put", "put"),
+    ("axios.delete", "delete"),
+    ("axios.patch", "patch"),
     # Python - requests
-    ('requests.get', 'get'),
-    ('requests.post', 'post'),
-    ('requests.put', 'put'),
-    ('requests.delete', 'delete'),
-    ('requests.patch', 'patch'),
-    ('requests.head', 'head'),
+    ("requests.get", "get"),
+    ("requests.post", "post"),
+    ("requests.put", "put"),
+    ("requests.delete", "delete"),
+    ("requests.patch", "patch"),
+    ("requests.head", "head"),
     # Python - httpx
-    ('httpx.get', 'get'),
-    ('httpx.post', 'post'),
-    ('httpx.put', 'put'),
-    ('httpx.delete', 'delete'),
-    ('httpx.patch', 'patch'),
-    ('httpx.Client', None),
+    ("httpx.get", "get"),
+    ("httpx.post", "post"),
+    ("httpx.put", "put"),
+    ("httpx.delete", "delete"),
+    ("httpx.patch", "patch"),
+    ("httpx.Client", None),
 ]
 
 # callName values that directly indicate an HTTP method (for isExternal calls).
 _HTTP_METHOD_CALL_NAMES = {
-    'get': 'get', 'post': 'post', 'put': 'put', 'delete': 'delete',
-    'patch': 'patch', 'head': 'head', 'options': 'options',
-    'getForObject': 'get', 'getForEntity': 'get',
-    'postForObject': 'post', 'postForEntity': 'post',
-    'patchForObject': 'patch', 'exchange': None,
+    "get": "get",
+    "post": "post",
+    "put": "put",
+    "delete": "delete",
+    "patch": "patch",
+    "head": "head",
+    "options": "options",
+    "getForObject": "get",
+    "getForEntity": "get",
+    "postForObject": "post",
+    "postForEntity": "post",
+    "patchForObject": "patch",
+    "exchange": None,
 }
 
 # File name patterns that indicate a client/consumer (not a server endpoint handler).
 _CLIENT_FILE_INDICATORS = re.compile(
-    r'(Client|Service[Cc]lient|Feign|Gateway|Proxy|HttpService|ApiClient|Sdk)',
-    re.IGNORECASE
+    r"(Client|Service[Cc]lient|Feign|Gateway|Proxy|HttpService|ApiClient|Sdk)",
+    re.IGNORECASE,
 )
 
 
@@ -309,18 +359,24 @@ class OpenAPI:
     """Represents an OpenAPI converter object."""
 
     def __init__(
-            self,
-            dest_format: str,
-            origin_type: str,
-            usages: str,
-            semantics: str = None,
+        self,
+        dest_format: str,
+        origin_type: str,
+        usages: str,
+        semantics: str = None,
     ) -> None:
         self.usages: AtomSlice = AtomSlice(usages, origin_type)
-        self.semantics: AtomSlice = AtomSlice(semantics, origin_type) if semantics and Path(
-            semantics).exists() else None
-        self.openapi_version = dest_format.replace('openapi', '')
-        self.title = f'{Path(usages).parent.stem} OpenAPI Specification' if Path(
-            usages).parent.stem else "OpenAPI Specification"
+        self.semantics: AtomSlice = (
+            AtomSlice(semantics, origin_type)
+            if semantics and Path(semantics).exists()
+            else None
+        )
+        self.openapi_version = dest_format.replace("openapi", "")
+        self.title = (
+            f"{Path(usages).parent.stem} OpenAPI Specification"
+            if Path(usages).parent.stem
+            else "OpenAPI Specification"
+        )
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
         self.regex_param_count = 0
@@ -355,8 +411,12 @@ class OpenAPI:
             paths = merge_path_objects(paths, third_party_paths)
         # Remove paths that are not valid OpenAPI path strings.
         # Must contain only valid characters AND either be root '/' or contain at least one alphanumeric.
-        paths = {k: v for k, v in paths.items()
-                 if re.match(r'^/[A-Za-z0-9_.~\-{}/]*$', k) and (k == '/' or re.search(r'[A-Za-z0-9]', k))}
+        paths = {
+            k: v
+            for k, v in paths.items()
+            if re.match(r"^/[A-Za-z0-9_.~\-{}/]*$", k)
+            and (k == "/" or re.search(r"[A-Za-z0-9]", k))
+        }
         return paths
 
     def create_file_to_method_dict(self, method_map: Dict[str, Any]) -> Dict[str, List]:
@@ -365,11 +425,13 @@ class OpenAPI:
         """
         if not method_map:
             return {}
-        file_names = list(method_map.get('file_names', {}).keys())
+        file_names = list(method_map.get("file_names", {}).keys())
         file_endpoint_map: Dict = {i: [] for i in file_names}
         for full_name in file_names:
-            for values in method_map['file_names'][full_name]['resolved_methods'].values():
-                file_endpoint_map[full_name].extend(values.get('endpoints'))
+            for values in method_map["file_names"][full_name][
+                "resolved_methods"
+            ].values():
+                file_endpoint_map[full_name].extend(values.get("endpoints"))
         for k, v in file_endpoint_map.items():
             endpoints = set(v)
             for i in endpoints:
@@ -388,9 +450,9 @@ class OpenAPI:
         Returns:
             dict: The paths item object
         """
-        endpoints = paths_dict[1].get('endpoints')
-        calls = paths_dict[1].get('calls')
-        call_line_numbers = paths_dict[1].get('line_nos')
+        endpoints = paths_dict[1].get("endpoints")
+        calls = paths_dict[1].get("calls")
+        call_line_numbers = paths_dict[1].get("line_nos")
         target_line_number = None
         if self.target_line_nums:
             with contextlib.suppress(KeyError):
@@ -403,24 +465,26 @@ class OpenAPI:
                 calls, ep, filename, call_line_numbers, target_line_number
             )
             if paths_object.get(ep):
-                paths_object[ep] = merge_path_objects(paths_object[ep], paths_item_object)
+                paths_object[ep] = merge_path_objects(
+                    paths_object[ep], paths_item_object
+                )
             else:
                 paths_object |= {ep: paths_item_object}
 
         return remove_nested_parameters(paths_object)
 
-    def endpoints_to_openapi(self, server: str = '') -> Any:
+    def endpoints_to_openapi(self, server: str = "") -> Any:
         """
         Generates an OpenAPI document with paths from usages.
         """
         paths_obj = self.convert_usages()
         output = {
-            'openapi': self.openapi_version,
-            'info': {'title': self.title, 'version': '1.0.0'},
-            'paths': paths_obj
+            "openapi": self.openapi_version,
+            "info": {"title": self.title, "version": "1.0.0"},
+            "paths": paths_obj,
         }
         if server:
-            output['servers'] = [{'url': server}]  # type: ignore[list-item]
+            output["servers"] = [{"url": server}]  # type: ignore[list-item]
 
         return output
 
@@ -434,18 +498,20 @@ class OpenAPI:
         Returns:
             dict: A new method map containing endpoints.
         """
-        new_method_map: Dict = {'file_names': {}}
+        new_method_map: Dict = {"file_names": {}}
         class_prefixes = self._get_java_class_prefixes()
         for file_name, resolved_methods in method_map.items():
             if new_resolved := self._process_resolved_methods(resolved_methods):
-                prefix = class_prefixes.get(file_name, '')
+                prefix = class_prefixes.get(file_name, "")
                 if prefix:
                     for method_key in new_resolved:
-                        new_resolved[method_key]['endpoints'] = [
-                            prefix.rstrip('/') + ep
-                            for ep in new_resolved[method_key]['endpoints']
+                        new_resolved[method_key]["endpoints"] = [
+                            prefix.rstrip("/") + ep
+                            for ep in new_resolved[method_key]["endpoints"]
                         ]
-                new_method_map['file_names'][file_name] = {'resolved_methods': new_resolved}
+                new_method_map["file_names"][file_name] = {
+                    "resolved_methods": new_resolved
+                }
         return new_method_map
 
     def populate_endpoints(self, method_map: Dict) -> Dict[str, Any]:
@@ -461,7 +527,7 @@ class OpenAPI:
         paths_object: Dict = {}
         for resolved_methods in method_map.values():
             for key, value in resolved_methods.items():
-                for m in value['resolved_methods'].items():
+                for m in value["resolved_methods"].items():
                     new_path_item = self.create_paths_item(key, m)
                     if paths_object:
                         paths_object = merge_path_objects(paths_object, new_path_item)
@@ -471,20 +537,23 @@ class OpenAPI:
 
     def _add_py_request_methods(self, paths_item_object: Dict) -> Dict:
         """Add default request methods for flask and django"""
-        if self.usages.custom_attr == 'flask':
+        if self.usages.custom_attr == "flask":
             paths_item_object = merge_path_objects(
                 paths_item_object,
-                {'head': {'responses': {}}, 'options': {'responses': {}}}
+                {"head": {"responses": {}}, "options": {"responses": {}}},
             )
             pio_ct = len(paths_item_object.keys())
-            if pio_ct == 2 or (pio_ct == 3 and 'x-atom-usages' in paths_item_object):
-                paths_item_object['get'] = {'responses': {}}
-        elif self.usages.custom_attr == 'django':
+            if pio_ct == 2 or (pio_ct == 3 and "x-atom-usages" in paths_item_object):
+                paths_item_object["get"] = {"responses": {}}
+        elif self.usages.custom_attr == "django":
             paths_item_object = merge_path_objects(
-                paths_item_object, {'get': {'responses': {}}, 'post': {'responses': {}}})
+                paths_item_object, {"get": {"responses": {}}, "post": {"responses": {}}}
+            )
         return paths_item_object
 
-    def _calls_to_params(self, ep: str, orig_ep: str, call: Dict | None, filename: str = '') -> Dict[str, Any]:
+    def _calls_to_params(
+        self, ep: str, orig_ep: str, call: Dict | None, filename: str = ""
+    ) -> Dict[str, Any]:
         """
         Transforms a call and endpoint into a parameter object and organizes it
         into a dictionary based on the call name.
@@ -498,28 +567,32 @@ class OpenAPI:
         """
         if not call:
             call = {}
-        ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
-        call_name = call.get('callName', '')
+        ops = {"get", "put", "post", "delete", "options", "head", "patch"}
+        call_name = call.get("callName", "")
         params = []
         if call_name in ops:
             params = self._create_param_object(ep, orig_ep, call)
-            responses = self._infer_java_response_codes(filename, call.get('lineNumber'), call_name)
-            result: Dict[str, Dict] = {call_name: {'responses': responses}}
+            responses = self._infer_java_response_codes(
+                filename, call.get("lineNumber"), call_name
+            )
+            result: Dict[str, Dict] = {call_name: {"responses": responses}}
             if params:
-                result[call_name] |= {'parameters': params}
+                result[call_name] |= {"parameters": params}
             return result
         inferred: Dict = {}
-        if self.usages.origin_type in ('java', 'jar'):
-            resolved = call.get('resolvedMethod', '').lower()
+        if self.usages.origin_type in ("java", "jar"):
+            resolved = call.get("resolvedMethod", "").lower()
             for op in ops:
                 if op in resolved:
-                    inferred = self._infer_java_response_codes(filename, call.get('lineNumber'), op)
+                    inferred = self._infer_java_response_codes(
+                        filename, call.get("lineNumber"), op
+                    )
                     break
         return determine_operations(call, params, inferred)
 
     def _check_path_elements_regex(self, ele: str) -> Tuple[str, List]:
         """Try to interpret regexes in the path"""
-        if '<' in ele:
+        if "<" in ele:
             matches = regex.named_param_generic_extract.findall(ele)
             named = True
         else:
@@ -530,17 +603,21 @@ class OpenAPI:
             ele, params = self._process_regex_matches(ele, named, matches)
         else:
             self.regex_param_count += 1
-            ele_name = f'regex_param_{self.regex_param_count}'
-            params = [{
-                'in': 'path',
-                'name': ele_name,
-                'required': True,
-                'schema': {'type': 'string', 'pattern': ele}
-            }]
+            ele_name = f"regex_param_{self.regex_param_count}"
+            params = [
+                {
+                    "in": "path",
+                    "name": ele_name,
+                    "required": True,
+                    "schema": {"type": "string", "pattern": ele},
+                }
+            ]
 
         return ele, params
 
-    def _create_param_object(self, ep: str, orig_ep: str, call: Dict | None) -> List[Dict]:
+    def _create_param_object(
+        self, ep: str, orig_ep: str, call: Dict | None
+    ) -> List[Dict]:
         """
         Create a parameter object for each parameter in the input list.
 
@@ -552,13 +629,23 @@ class OpenAPI:
             list[dict]: The list of parameter objects
 
         """
-        params = self._generic_params_helper(ep, orig_ep) if '{' in ep else []
+        params = self._generic_params_helper(ep, orig_ep) if "{" in ep else []
         if not params and call:
-            ptypes = set(call.get('paramTypes', []))
+            ptypes = set(call.get("paramTypes", []))
             if len(ptypes) > 1:
-                params = [{'name': param, 'in': 'header'} for param in ptypes if param != 'ANY' and not param.startswith("__") and param not in ("LAMBDA",)]
+                params = [
+                    {"name": param, "in": "header"}
+                    for param in ptypes
+                    if param != "ANY"
+                    and not param.startswith("__")
+                    and param not in ("LAMBDA",)
+                ]
             else:
-                params = [{'name': param, 'in': 'header'} for param in ptypes if not param.startswith("__") and param not in ("LAMBDA",)]
+                params = [
+                    {"name": param, "in": "header"}
+                    for param in ptypes
+                    if not param.startswith("__") and param not in ("LAMBDA",)
+                ]
         return params
 
     def _extract_endpoints(self, method: str) -> List[str]:
@@ -576,26 +663,27 @@ class OpenAPI:
             return []
         matches = self._filter_matches(matches, method)
         return [
-            v for v in matches
-            if v and v.lower() not in exclusions and not v.lower().startswith('/x-')
+            v
+            for v in matches
+            if v and v.lower() not in exclusions and not v.lower().startswith("/x-")
         ]
 
     def _extract_params(self, ep: str) -> Tuple[str, bool, List]:
         tmp_params: List = []
         py_special_case = False
-        if self.usages.origin_type in ('js', 'ts', 'javascript', 'typescript'):
+        if self.usages.origin_type in ("js", "ts", "javascript", "typescript"):
             ep = js_helper(ep)
-        elif self.usages.origin_type in ('py', 'python'):
+        elif self.usages.origin_type in ("py", "python"):
             ep, tmp_params = py_helper(ep, regex)
             py_special_case = True
         return ep, py_special_case, tmp_params
 
     def _extract_unparsed_params(
-            self, ep: str, orig_ep: str, py_special_case: bool, tmp_params: List
+        self, ep: str, orig_ep: str, py_special_case: bool, tmp_params: List
     ) -> Tuple[str, List]:
-        if ':' in ep or '<' in ep:
+        if ":" in ep or "<" in ep:
             ep, py_special_case, tmp_params = self._extract_params(ep)
-        if '{' in ep and not py_special_case:
+        if "{" in ep and not py_special_case:
             tmp_params = self._generic_params_helper(ep, orig_ep)
         return ep, tmp_params
 
@@ -613,12 +701,14 @@ class OpenAPI:
         filtered_matches: List[str] = []
         possible_uri_fragment = False
         match self.usages.origin_type:
-            case 'java' | 'jar':
+            case "java" | "jar":
                 if not (
-                        code.startswith('@') and ('Mapping' in code or 'Path' in code) and '(' in code
+                    code.startswith("@")
+                    and ("Mapping" in code or "Path" in code)
+                    and "(" in code
                 ):
                     return filtered_matches
-            case 'js' | 'ts' | 'javascript' | 'typescript':
+            case "js" | "ts" | "javascript" | "typescript":
                 try:
                     if "/" in code and not js_filterable(code):
                         url_obj = urlparse(code)
@@ -626,20 +716,24 @@ class OpenAPI:
                             possible_uri_fragment = True
                 except Exception:
                     pass
-                if not possible_uri_fragment and (('app.' not in code and 'route' not in code and 'ftp' not in code) or (
-                        'app.set(' in code)):
+                if not possible_uri_fragment and (
+                    ("app." not in code and "route" not in code and "ftp" not in code)
+                    or ("app.set(" in code)
+                ):
                     return filtered_matches
 
         for m in matches:
-            if m and m[0] not in ('.', '@', ','):
+            if m and m[0] not in (".", "@", ","):
                 if "/" not in m or "node_modules" in m or "@types" in m:
                     continue
-                nm = m.replace('"', '').replace("'", '').lstrip('/').lstrip(')}')
-                filtered_matches.append(f'/{nm}')
+                nm = m.replace('"', "").replace("'", "").lstrip("/").lstrip(")}")
+                filtered_matches.append(f"/{nm}")
 
         return filtered_matches
 
-    def _generic_params_helper(self, endpoint: str, orig_endpoint: str) -> List[Dict[str, Any]]:
+    def _generic_params_helper(
+        self, endpoint: str, orig_endpoint: str
+    ) -> List[Dict[str, Any]]:
         """
         Extracts generic path parameters from the given endpoint.
 
@@ -654,40 +748,55 @@ class OpenAPI:
         existing_path_params = set()
         if self.params.get(orig_endpoint):
             params.extend(self.params[orig_endpoint])
-            existing_path_params = {i['name'] for i in params}
+            existing_path_params = {i["name"] for i in params}
         if matches := regex.processed_param.findall(endpoint):
             params.extend(
-                [{'name': m, 'in': 'path', 'required': True, 'schema': {'type': 'string'}} for m in matches if
-                 m not in existing_path_params]
+                [
+                    {
+                        "name": m,
+                        "in": "path",
+                        "required": True,
+                        "schema": {"type": "string"},
+                    }
+                    for m in matches
+                    if m not in existing_path_params
+                ]
             )
         return params
 
     def _identify_target_line_nums(self, methods: Dict[str, Any]) -> Dict:
-        file_names = list(methods['file_names'].keys())
+        file_names = list(methods["file_names"].keys())
         if not file_names:
             return {}
-        file_names = [f'fileName==`{i}`' for i in file_names]
-        conditional = '*[?' + ' || '.join(file_names) + (
-            '][].{file_name: fileName, methods: usages[].targetObj[].{resolved_method: '
-            'resolvedMethod || callName || code || name, line_number: lineNumber}}')
+        file_names = [f"fileName==`{i}`" for i in file_names]
+        conditional = (
+            "*[?"
+            + " || ".join(file_names)
+            + (
+                "][].{file_name: fileName, methods: usages[].targetObj[].{resolved_method: "
+                "resolvedMethod || callName || code || name, line_number: lineNumber}}"
+            )
+        )
         pattern = jmespath.compile(conditional)  # type: ignore
         result = pattern.search(self.usages.content)
-        result = {i['file_name']: i['methods'] for i in result if i['methods']}
+        result = {i["file_name"]: i["methods"] for i in result if i["methods"]}
         targets: Dict = {i: {} for i in result}
 
         for k, v in result.items():
             for i in v:
-                targets[k] = merge_targets(targets[k], {i['resolved_method']: i['line_number']})
+                targets[k] = merge_targets(
+                    targets[k], {i["resolved_method"]: i["line_number"]}
+                )
 
         return targets
 
     def _paths_object_helper(
-            self,
-            calls: List,
-            ep: str,
-            filename: str,
-            call_line_numbers: List,
-            line_number: int | None
+        self,
+        calls: List,
+        ep: str,
+        filename: str,
+        call_line_numbers: List,
+        line_number: int | None,
     ) -> Tuple[str, Dict]:
         """
         Creates a paths item object.
@@ -696,22 +805,29 @@ class OpenAPI:
         tmp_params: List = []
         py_special_case = False
         orig_ep = ep
-        ep, tmp_params = self._extract_unparsed_params(ep, orig_ep, py_special_case, tmp_params)
+        ep, tmp_params = self._extract_unparsed_params(
+            ep, orig_ep, py_special_case, tmp_params
+        )
         if tmp_params:
-            paths_item_object['parameters'] = tmp_params
+            paths_item_object["parameters"] = tmp_params
         if calls:
             for call in calls:
                 paths_item_object = merge_path_objects(
-                    paths_item_object, self._calls_to_params(ep, orig_ep, call, filename)
+                    paths_item_object,
+                    self._calls_to_params(ep, orig_ep, call, filename),
                 )
-        if (call_line_numbers or line_number) and (line_nos := create_ln_entries(
-                filename, list(set(call_line_numbers)), line_number)):
-            if 'x-atom-usages' in paths_item_object:
-                paths_item_object['x-atom-usages'] = merge_x_atom(
-                    paths_item_object['x-atom-usages'], line_nos)
+        if (call_line_numbers or line_number) and (
+            line_nos := create_ln_entries(
+                filename, list(set(call_line_numbers)), line_number
+            )
+        ):
+            if "x-atom-usages" in paths_item_object:
+                paths_item_object["x-atom-usages"] = merge_x_atom(
+                    paths_item_object["x-atom-usages"], line_nos
+                )
             else:
                 paths_item_object |= line_nos
-        if self.usages.origin_type in ('py', 'python'):
+        if self.usages.origin_type in ("py", "python"):
             paths_item_object = self._add_py_request_methods(paths_item_object)
         return ep, paths_item_object
 
@@ -719,23 +835,23 @@ class OpenAPI:
         """
         Parses path regexes in the endpoint, extracts params for later use.
         """
-        if '(' in endpoint:
+        if "(" in endpoint:
             endpoint = regex.extract_parentheses.sub(fwd_slash_repl, endpoint)
-        endpoint_elements = endpoint.lstrip('/').rstrip('$').rstrip('/').split('/')
+        endpoint_elements = endpoint.lstrip("/").rstrip("$").rstrip("/").split("/")
         endpoint_elements = [
-            i.lstrip('/').lstrip('^').rstrip('/').rstrip('$').replace('$L@$H', '/')
+            i.lstrip("/").lstrip("^").rstrip("/").rstrip("$").replace("$L@$H", "/")
             for i in endpoint_elements
         ]
         params = []
-        new_endpoint = ''
+        new_endpoint = ""
         for i in endpoint_elements:
             if regex.detect_regex.search(i):
                 e, b = self._check_path_elements_regex(i)
                 if e:
-                    new_endpoint += f'/{e}'
+                    new_endpoint += f"/{e}"
                     params.extend(b)
             else:
-                new_endpoint += f'/{i}'
+                new_endpoint += f"/{i}"
         if params:
             self.params[new_endpoint] = params
         return new_endpoint.replace("/{}", "/")
@@ -756,23 +872,23 @@ class OpenAPI:
                   'x-third-party' extension set to True.
         """
         third_party_paths: Dict[str, Any] = {}
-        object_slices = self.usages.content.get('objectSlices', [])
+        object_slices = self.usages.content.get("objectSlices", [])
 
         for obj_slice in object_slices:
-            file_name = obj_slice.get('fileName', '') or ''
-            full_name = obj_slice.get('fullName', '') or ''
-            line_number = obj_slice.get('lineNumber')
-            usages = obj_slice.get('usages') or []
+            file_name = obj_slice.get("fileName", "") or ""
+            full_name = obj_slice.get("fullName", "") or ""
+            line_number = obj_slice.get("lineNumber")
+            usages = obj_slice.get("usages") or []
 
             for usage in usages:
-                all_calls = list(usage.get('invokedCalls') or [])
-                all_calls.extend(usage.get('argToCalls') or [])
+                all_calls = list(usage.get("invokedCalls") or [])
+                all_calls.extend(usage.get("argToCalls") or [])
 
                 for call in all_calls:
-                    resolved = call.get('resolvedMethod') or ''
-                    call_name = call.get('callName') or ''
-                    is_external = call.get('isExternal')
-                    call_line = call.get('lineNumber') or line_number
+                    resolved = call.get("resolvedMethod") or ""
+                    call_name = call.get("callName") or ""
+                    is_external = call.get("isExternal")
+                    call_line = call.get("lineNumber") or line_number
 
                     # Detection Strategy 1: known HTTP client library pattern
                     matched_method = None
@@ -798,44 +914,47 @@ class OpenAPI:
                         http_method = _HTTP_METHOD_CALL_NAMES.get(call_name)
                     if not http_method:
                         resolved_lower = resolved.lower()
-                        for verb in ('get', 'post', 'put', 'delete', 'patch', 'head'):
+                        for verb in ("get", "post", "put", "delete", "patch", "head"):
                             if verb in resolved_lower:
                                 http_method = verb
                                 break
                     if not http_method:
-                        http_method = 'get'
+                        http_method = "get"
 
                     # Build a descriptive endpoint path from context
                     endpoint = self._build_third_party_endpoint(
-                        full_name, call_name, resolved, file_name)
+                        full_name, call_name, resolved, file_name
+                    )
                     if not endpoint:
                         continue
 
                     # Build the operation
-                    operation: Dict[str, Any] = {'responses': {}}
-                    param_types = call.get('paramTypes') or []
+                    operation: Dict[str, Any] = {"responses": {}}
+                    param_types = call.get("paramTypes") or []
                     if param_types:
                         params = [
-                            {'name': pt.rsplit('.', 1)[-1], 'in': 'query'}
+                            {"name": pt.rsplit(".", 1)[-1], "in": "query"}
                             for pt in param_types
-                            if pt and pt != 'ANY' and not pt.startswith('__')
+                            if pt and pt != "ANY" and not pt.startswith("__")
                         ]
                         if params:
-                            operation['parameters'] = params
+                            operation["parameters"] = params
 
                     path_item: Dict[str, Any] = {
-                        'x-third-party': True,
+                        "x-third-party": True,
                         http_method: operation,
                     }
 
                     if file_name and call_line:
-                        ln_entry = create_ln_entries(file_name, [call_line], line_number)
+                        ln_entry = create_ln_entries(
+                            file_name, [call_line], line_number
+                        )
                         path_item.update(ln_entry)
 
                     if endpoint in third_party_paths:
                         existing = third_party_paths[endpoint]
                         merged = merge_path_objects(existing, path_item)
-                        merged['x-third-party'] = True
+                        merged["x-third-party"] = True
                         third_party_paths[endpoint] = merged
                     else:
                         third_party_paths[endpoint] = path_item
@@ -846,23 +965,23 @@ class OpenAPI:
         return third_party_paths
 
     def _build_third_party_endpoint(
-            self, full_name: str, call_name: str, resolved: str, file_name: str
+        self, full_name: str, call_name: str, resolved: str, file_name: str
     ) -> str:
         """
         Derive a meaningful endpoint path for a third-party API call.
         """
         # Strategy 1: look for a URL path in resolved (handles Feign annotations)
-        if '/' in resolved and ('@' in resolved or 'http' in resolved.lower()):
+        if "/" in resolved and ("@" in resolved or "http" in resolved.lower()):
             matches = re.findall(r'[\'"](\S*?)[\'"]', resolved)
             for m in matches:
-                if m and '/' in m and not m.startswith('@'):
-                    clean = m.strip('"').strip("'").lstrip('/')
+                if m and "/" in m and not m.startswith("@"):
+                    clean = m.strip('"').strip("'").lstrip("/")
                     if clean:
-                        return f'/{clean}'
+                        return f"/{clean}"
 
         # Strategy 2: build from the class + method context
-        class_method = full_name.rsplit(':', 1)[0] if ':' in full_name else full_name
-        parts = class_method.split('.')
+        class_method = full_name.rsplit(":", 1)[0] if ":" in full_name else full_name
+        parts = class_method.split(".")
         if len(parts) >= 2:
             class_name = parts[-2]
             method_name = parts[-1]
@@ -870,57 +989,67 @@ class OpenAPI:
             class_name = parts[0]
             method_name = call_name
         else:
-            class_name = file_name.rsplit('/', 1)[-1].rsplit('\\', 1)[-1].replace('.java', '')
+            class_name = (
+                file_name.rsplit("/", 1)[-1].rsplit("\\", 1)[-1].replace(".java", "")
+            )
             method_name = call_name
 
         # Convert CamelCase to kebab-case
-        class_slug = re.sub(r'(?<=[a-z0-9])([A-Z])', r'-\1', class_name).lower()
-        method_slug = re.sub(r'(?<=[a-z0-9])([A-Z])', r'-\1', method_name).lower()
+        class_slug = re.sub(r"(?<=[a-z0-9])([A-Z])", r"-\1", class_name).lower()
+        method_slug = re.sub(r"(?<=[a-z0-9])([A-Z])", r"-\1", method_name).lower()
 
-        for prefix in ('external-', 'service-', '<init>', '<'):
+        for prefix in ("external-", "service-", "<init>", "<"):
             if method_slug.startswith(prefix):
-                method_slug = method_slug[len(prefix):]
+                method_slug = method_slug[len(prefix) :]
 
-        if not method_slug or method_slug.startswith('<'):
-            return ''
+        if not method_slug or method_slug.startswith("<"):
+            return ""
 
-        return f'/{class_slug}/{method_slug}'
+        return f"/{class_slug}/{method_slug}"
 
     def _mark_feign_client_paths(
-            self, third_party_paths: Dict, object_slices: List
+        self, third_party_paths: Dict, object_slices: List
     ) -> None:
         """
         Scan objectSlices from client-named files for Spring mapping annotations
         and add their endpoints to third_party_paths with x-third-party marker.
         """
         mapping_annotations = (
-            '@RequestMapping', '@GetMapping', '@PostMapping',
-            '@PutMapping', '@DeleteMapping', '@PatchMapping',
+            "@RequestMapping",
+            "@GetMapping",
+            "@PostMapping",
+            "@PutMapping",
+            "@DeleteMapping",
+            "@PatchMapping",
         )
         for obj_slice in object_slices:
-            file_name = obj_slice.get('fileName', '') or ''
-            full_name = obj_slice.get('fullName', '') or ''
-            line_number = obj_slice.get('lineNumber')
+            file_name = obj_slice.get("fileName", "") or ""
+            full_name = obj_slice.get("fullName", "") or ""
+            line_number = obj_slice.get("lineNumber")
 
-            if not (_CLIENT_FILE_INDICATORS.search(file_name)
-                    or _CLIENT_FILE_INDICATORS.search(full_name)):
+            if not (
+                _CLIENT_FILE_INDICATORS.search(file_name)
+                or _CLIENT_FILE_INDICATORS.search(full_name)
+            ):
                 continue
 
-            usages = obj_slice.get('usages') or []
+            usages = obj_slice.get("usages") or []
             for usage in usages:
-                for call in (usage.get('invokedCalls') or []):
-                    resolved = call.get('resolvedMethod') or ''
-                    if not any(resolved.startswith(a) or a in resolved
-                               for a in mapping_annotations):
+                for call in usage.get("invokedCalls") or []:
+                    resolved = call.get("resolvedMethod") or ""
+                    if not any(
+                        resolved.startswith(a) or a in resolved
+                        for a in mapping_annotations
+                    ):
                         continue
 
                     endpoints = self._extract_endpoints(resolved)
                     if not endpoints:
                         continue
 
-                    http_method = 'get'
+                    http_method = "get"
                     resolved_lower = resolved.lower()
-                    for verb in ('post', 'put', 'delete', 'patch', 'head', 'options'):
+                    for verb in ("post", "put", "delete", "patch", "head", "options"):
                         if verb in resolved_lower:
                             http_method = verb
                             break
@@ -928,20 +1057,21 @@ class OpenAPI:
                     for ep in endpoints:
                         ep = self._parse_path_regexes(ep)
                         path_item: Dict[str, Any] = {
-                            'x-third-party': True,
-                            http_method: {'responses': {}},
+                            "x-third-party": True,
+                            http_method: {"responses": {}},
                         }
                         if file_name and line_number:
                             ln_entry = create_ln_entries(
-                                file_name, [call.get('lineNumber') or line_number],
-                                line_number
+                                file_name,
+                                [call.get("lineNumber") or line_number],
+                                line_number,
                             )
                             path_item.update(ln_entry)
 
                         if ep in third_party_paths:
                             existing = third_party_paths[ep]
                             merged = merge_path_objects(existing, path_item)
-                            merged['x-third-party'] = True
+                            merged["x-third-party"] = True
                             third_party_paths[ep] = merged
                         else:
                             third_party_paths[ep] = path_item
@@ -956,39 +1086,37 @@ class OpenAPI:
         Returns:
             dict: A paths object mapping endpoints to their HTTP method operations.
         """
-        ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
+        ops = {"get", "put", "post", "delete", "options", "head", "patch"}
         pattern = jmespath.compile(
-            'userDefinedTypes[].{file_name: fileName, line_number: lineNumber,'
-            ' fields: fields[].name}'
+            "userDefinedTypes[].{file_name: fileName, line_number: lineNumber,"
+            " fields: fields[].name}"
         )
         result = pattern.search(self.usages.content)
         if not result:
             return {}
         paths_object: Dict = {}
         for entry in result:
-            fields = entry.get('fields') or []
-            file_name = entry.get('file_name', '')
-            line_number = entry.get('line_number')
-            found_ops = [f.strip('"').strip("'") for f in fields
-                         if f and f.strip('"').strip("'").lower() in ops]
-            found_paths = [f.strip('"').strip("'") for f in fields
-                           if f and '/' in f]
+            fields = entry.get("fields") or []
+            file_name = entry.get("file_name", "")
+            line_number = entry.get("line_number")
+            found_ops = [
+                f.strip('"').strip("'")
+                for f in fields
+                if f and f.strip('"').strip("'").lower() in ops
+            ]
+            found_paths = [f.strip('"').strip("'") for f in fields if f and "/" in f]
             if not found_ops or not found_paths:
                 continue
             for ep in found_paths:
                 ep = self._parse_path_regexes(ep)
                 path_item: Dict = {}
                 for op in found_ops:
-                    path_item[op.lower()] = {'responses': {}}
+                    path_item[op.lower()] = {"responses": {}}
                 if line_number and file_name:
-                    ln_entry = create_ln_entries(
-                        file_name, [line_number], None
-                    )
+                    ln_entry = create_ln_entries(file_name, [line_number], None)
                     path_item.update(ln_entry)
                 if paths_object.get(ep):
-                    paths_object[ep] = merge_path_objects(
-                        paths_object[ep], path_item
-                    )
+                    paths_object[ep] = merge_path_objects(paths_object[ep], path_item)
                 else:
                     paths_object[ep] = path_item
         return paths_object
@@ -1008,26 +1136,32 @@ class OpenAPI:
             dict: A mapping of file name to its class-level URL path prefix.
                   Empty dict for non-Java origins.
         """
-        if self.usages.origin_type not in ('java', 'jar'):
+        if self.usages.origin_type not in ("java", "jar"):
             return {}
         class_mapping_annotations = (
-            '@RequestMapping', '@GetMapping', '@PostMapping',
-            '@PutMapping', '@DeleteMapping', '@PatchMapping',
+            "@RequestMapping",
+            "@GetMapping",
+            "@PostMapping",
+            "@PutMapping",
+            "@DeleteMapping",
+            "@PatchMapping",
         )
         prefixes: Dict[str, str] = {}
-        object_slices = self.usages.content.get('objectSlices', [])
+        object_slices = self.usages.content.get("objectSlices", [])
         for entry in object_slices:
-            code = entry.get('code', '') or ''
-            file_name = entry.get('fileName', '') or ''
-            usages = entry.get('usages', [])
+            code = entry.get("code", "") or ""
+            file_name = entry.get("fileName", "") or ""
+            usages = entry.get("usages", [])
             # Class-level annotations appear with empty usages and the
             # annotation text in 'code'. We check for all Spring Boot
             # mapping variants that carry a URL path (contains '/').
-            if (usages == []
-                    and code.startswith(class_mapping_annotations)
-                    and '/' in code
-                    and file_name
-                    and file_name not in prefixes):
+            if (
+                usages == []
+                and code.startswith(class_mapping_annotations)
+                and "/" in code
+                and file_name
+                and file_name not in prefixes
+            ):
                 extracted = self._extract_endpoints(code)
                 if extracted:
                     prefixes[file_name] = extracted[0]
@@ -1036,14 +1170,16 @@ class OpenAPI:
     def _build_udt_schema_map(self) -> Dict[str, List[Dict]]:
         """Return a map of {typeFullName: fields list} from userDefinedTypes."""
         result: Dict[str, List[Dict]] = {}
-        for udt in self.usages.content.get('userDefinedTypes', []):
-            name = udt.get('name', '') or ''
-            fields = udt.get('fields') or []
+        for udt in self.usages.content.get("userDefinedTypes", []):
+            name = udt.get("name", "") or ""
+            fields = udt.get("fields") or []
             if name and fields:
                 result[name] = fields
         return result
 
-    def _build_schema_from_type(self, type_full_name: str, udt_map: Dict[str, List[Dict]]) -> Dict:
+    def _build_schema_from_type(
+        self, type_full_name: str, udt_map: Dict[str, List[Dict]]
+    ) -> Dict:
         """
         Build an OpenAPI schema for a Java type.
 
@@ -1056,21 +1192,21 @@ class OpenAPI:
             return _java_type_to_schema(type_full_name)
         properties: Dict[str, Dict] = {}
         for field in fields:
-            field_name = field.get('name', '') or ''
-            field_type = field.get('typeFullName', '') or ''
+            field_name = field.get("name", "") or ""
+            field_type = field.get("typeFullName", "") or ""
             if not field_name:
                 continue
             nested_fields = udt_map.get(field_type)
             if nested_fields:
                 nested_props = {
-                    nf['name']: _java_type_to_schema(nf.get('typeFullName', '') or '')
+                    nf["name"]: _java_type_to_schema(nf.get("typeFullName", "") or "")
                     for nf in nested_fields
-                    if nf.get('name')
+                    if nf.get("name")
                 }
-                properties[field_name] = {'type': 'object', 'properties': nested_props}
+                properties[field_name] = {"type": "object", "properties": nested_props}
             else:
                 properties[field_name] = _java_type_to_schema(field_type)
-        return {'type': 'object', 'properties': properties}
+        return {"type": "object", "properties": properties}
 
     def _enrich_from_param_annotation(self) -> Dict[str, Any]:
         """
@@ -1087,16 +1223,16 @@ class OpenAPI:
         HTTP-method annotations (PostMapping, GetMapping, …) appear as ANNOTATION
         entries with name == the annotation short name (e.g. "PostMapping").
         """
-        if self.usages.origin_type not in ('java', 'jar'):
+        if self.usages.origin_type not in ("java", "jar"):
             return {}
         udt_map = self._build_udt_schema_map()
         class_prefixes = self._get_java_class_prefixes()
         paths: Dict[str, Any] = {}
 
-        for obj_slice in self.usages.content.get('objectSlices', []):
-            file_name = obj_slice.get('fileName', '') or ''
-            line_number = obj_slice.get('lineNumber')
-            usages = obj_slice.get('usages') or []
+        for obj_slice in self.usages.content.get("objectSlices", []):
+            file_name = obj_slice.get("fileName", "") or ""
+            line_number = obj_slice.get("lineNumber")
+            usages = obj_slice.get("usages") or []
 
             # ── collect PARAM and ANNOTATION entries from this objectSlice ──
             params_by_name: Dict[str, Dict] = {}
@@ -1107,15 +1243,15 @@ class OpenAPI:
             http_method: str | None = None
 
             for usage in usages:
-                target = usage.get('targetObj') or {}
-                label = target.get('label', '')
-                name = target.get('name', '') or ''
-                resolved = target.get('resolvedMethod', '') or ''
+                target = usage.get("targetObj") or {}
+                label = target.get("label", "")
+                name = target.get("name", "") or ""
+                resolved = target.get("resolvedMethod", "") or ""
 
-                if label == 'PARAM' and name:
+                if label == "PARAM" and name:
                     params_by_name[name] = target
-                    param_arg_calls[name] = usage.get('argToCalls') or []
-                elif label == 'ANNOTATION' and name:
+                    param_arg_calls[name] = usage.get("argToCalls") or []
+                elif label == "ANNOTATION" and name:
                     if any(resolved.startswith(p) for p in _PARAM_ANNOTATION_PREFIXES):
                         annotations_by_name[name] = resolved
                     elif endpoint is None:
@@ -1131,9 +1267,9 @@ class OpenAPI:
                 continue
 
             # Apply class-level URL prefix
-            prefix = class_prefixes.get(file_name, '')
+            prefix = class_prefixes.get(file_name, "")
             if prefix:
-                endpoint = prefix.rstrip('/') + endpoint
+                endpoint = prefix.rstrip("/") + endpoint
 
             # ── build parameters and requestBody from annotation↔param pairs ──
             path_params: List[Dict] = []
@@ -1143,48 +1279,58 @@ class OpenAPI:
 
             for param_name, ann_resolved in annotations_by_name.items():
                 param_entry = params_by_name.get(param_name, {})
-                type_full_name = param_entry.get('typeFullName', '') or ''
+                type_full_name = param_entry.get("typeFullName", "") or ""
 
-                if ann_resolved.startswith('@RequestBody'):
+                if ann_resolved.startswith("@RequestBody"):
                     schema = self._build_schema_from_type(type_full_name, udt_map)
-                    if 'properties' not in schema:
-                        schema = _properties_from_getters(param_arg_calls.get(param_name, []))
+                    if "properties" not in schema:
+                        schema = _properties_from_getters(
+                            param_arg_calls.get(param_name, [])
+                        )
                     request_body = {
-                        'content': {'application/json': {'schema': schema}},
-                        'required': True,
+                        "content": {"application/json": {"schema": schema}},
+                        "required": True,
                     }
-                elif ann_resolved.startswith('@PathVariable'):
-                    path_params.append({
-                        'in': 'path',
-                        'name': param_name,
-                        'required': True,
-                        'schema': _java_type_to_schema(type_full_name),
-                    })
-                elif ann_resolved.startswith('@RequestParam'):
-                    query_params.append({
-                        'in': 'query',
-                        'name': param_name,
-                        'schema': _java_type_to_schema(type_full_name),
-                    })
-                elif ann_resolved.startswith('@RequestHeader'):
+                elif ann_resolved.startswith("@PathVariable"):
+                    path_params.append(
+                        {
+                            "in": "path",
+                            "name": param_name,
+                            "required": True,
+                            "schema": _java_type_to_schema(type_full_name),
+                        }
+                    )
+                elif ann_resolved.startswith("@RequestParam"):
+                    query_params.append(
+                        {
+                            "in": "query",
+                            "name": param_name,
+                            "schema": _java_type_to_schema(type_full_name),
+                        }
+                    )
+                elif ann_resolved.startswith("@RequestHeader"):
                     header_name = param_name
-                    header_params.append({
-                        'in': 'header',
-                        'name': header_name,
-                        'schema': _java_type_to_schema(type_full_name),
-                    })
+                    header_params.append(
+                        {
+                            "in": "header",
+                            "name": header_name,
+                            "schema": _java_type_to_schema(type_full_name),
+                        }
+                    )
 
             all_params = path_params + query_params + header_params
             if not all_params and request_body is None:
                 continue
 
             operation: Dict = {
-                'responses': self._infer_java_response_codes(file_name, line_number, http_method)
+                "responses": self._infer_java_response_codes(
+                    file_name, line_number, http_method
+                )
             }
             if all_params:
-                operation['parameters'] = all_params
+                operation["parameters"] = all_params
             if request_body:
-                operation['requestBody'] = request_body
+                operation["requestBody"] = request_body
 
             if endpoint not in paths:
                 paths[endpoint] = {}
@@ -1192,11 +1338,13 @@ class OpenAPI:
             if existing_op is None:
                 paths[endpoint][http_method] = operation
             else:
-                if request_body and 'requestBody' not in existing_op:
-                    existing_op['requestBody'] = request_body
+                if request_body and "requestBody" not in existing_op:
+                    existing_op["requestBody"] = request_body
                 if all_params:
-                    existing_op.setdefault('parameters', [])
-                    existing_op['parameters'] = merge_params(existing_op['parameters'], all_params)
+                    existing_op.setdefault("parameters", [])
+                    existing_op["parameters"] = merge_params(
+                        existing_op["parameters"], all_params
+                    )
 
         return paths
 
@@ -1218,7 +1366,7 @@ class OpenAPI:
         whose lineNumber+1 matches the call line and whose file name matches,
         then extract parameters and requestBody from its ANNOTATION entries.
         """
-        if self.usages.origin_type not in ('java', 'jar'):
+        if self.usages.origin_type not in ("java", "jar"):
             return paths
 
         udt_map = self._build_udt_schema_map()
@@ -1227,20 +1375,22 @@ class OpenAPI:
         # call_line = objectSlice.lineNumber + 1
         enrichment: Dict[tuple, Dict] = {}
 
-        for obj_slice in self.usages.content.get('objectSlices', []):
-            file_name = obj_slice.get('fileName', '') or ''
-            line_number = obj_slice.get('lineNumber')
+        for obj_slice in self.usages.content.get("objectSlices", []):
+            file_name = obj_slice.get("fileName", "") or ""
+            line_number = obj_slice.get("lineNumber")
             if not file_name or line_number is None:
                 continue
 
-            usages = obj_slice.get('usages') or []
+            usages = obj_slice.get("usages") or []
 
             # Skip slices that already have a method annotation (handled in first pass)
             if any(
-                any(ann_name in (u.get('targetObj', {}).get('resolvedMethod', '') or '')
-                    for _, ann_name in _SPRING_METHOD_ANNOTATIONS)
+                any(
+                    ann_name in (u.get("targetObj", {}).get("resolvedMethod", "") or "")
+                    for _, ann_name in _SPRING_METHOD_ANNOTATIONS
+                )
                 for u in usages
-                if u.get('targetObj', {}).get('label') == 'ANNOTATION'
+                if u.get("targetObj", {}).get("label") == "ANNOTATION"
             ):
                 continue
 
@@ -1253,72 +1403,99 @@ class OpenAPI:
             request_body: Dict | None = None
 
             for u in usages:
-                t = u.get('targetObj') or {}
-                label = t.get('label', '')
-                name = t.get('name', '') or ''
-                if label == 'PARAM' and name:
+                t = u.get("targetObj") or {}
+                label = t.get("label", "")
+                name = t.get("name", "") or ""
+                if label == "PARAM" and name:
                     params_by_name[name] = t
-                    param_arg_calls[name] = u.get('argToCalls') or []
+                    param_arg_calls[name] = u.get("argToCalls") or []
 
             for u in usages:
-                t = u.get('targetObj') or {}
-                label = t.get('label', '')
-                name = t.get('name', '') or ''
-                resolved = t.get('resolvedMethod', '') or ''
-                if label != 'ANNOTATION' or not name:
+                t = u.get("targetObj") or {}
+                label = t.get("label", "")
+                name = t.get("name", "") or ""
+                resolved = t.get("resolvedMethod", "") or ""
+                if label != "ANNOTATION" or not name:
                     continue
                 if not any(resolved.startswith(p) for p in _PARAM_ANNOTATION_PREFIXES):
                     continue
                 param_entry = params_by_name.get(name, {})
-                type_full_name = param_entry.get('typeFullName', '') or ''
-                if resolved.startswith('@RequestBody'):
+                type_full_name = param_entry.get("typeFullName", "") or ""
+                if resolved.startswith("@RequestBody"):
                     schema = self._build_schema_from_type(type_full_name, udt_map)
-                    if 'properties' not in schema:
+                    if "properties" not in schema:
                         schema = _properties_from_getters(param_arg_calls.get(name, []))
-                    request_body = {'content': {'application/json': {'schema': schema}}, 'required': True}
-                elif resolved.startswith('@PathVariable'):
-                    path_params.append({'in': 'path', 'name': name, 'required': True,
-                                        'schema': _java_type_to_schema(type_full_name)})
-                elif resolved.startswith('@RequestParam'):
-                    query_params.append({'in': 'query', 'name': name,
-                                         'schema': _java_type_to_schema(type_full_name)})
-                elif resolved.startswith('@RequestHeader'):
-                    header_params.append({'in': 'header', 'name': name,
-                                          'schema': _java_type_to_schema(type_full_name)})
+                    request_body = {
+                        "content": {"application/json": {"schema": schema}},
+                        "required": True,
+                    }
+                elif resolved.startswith("@PathVariable"):
+                    path_params.append(
+                        {
+                            "in": "path",
+                            "name": name,
+                            "required": True,
+                            "schema": _java_type_to_schema(type_full_name),
+                        }
+                    )
+                elif resolved.startswith("@RequestParam"):
+                    query_params.append(
+                        {
+                            "in": "query",
+                            "name": name,
+                            "schema": _java_type_to_schema(type_full_name),
+                        }
+                    )
+                elif resolved.startswith("@RequestHeader"):
+                    header_params.append(
+                        {
+                            "in": "header",
+                            "name": name,
+                            "schema": _java_type_to_schema(type_full_name),
+                        }
+                    )
 
             all_params = path_params + query_params + header_params
             if not all_params and request_body is None:
                 continue
 
             posix_file = Path(file_name).as_posix()
-            entry = {'requestBody': request_body, 'parameters': all_params}
+            entry = {"requestBody": request_body, "parameters": all_params}
             # Register under both line_number and line_number+1 since atom uses either offset
             enrichment[(posix_file, line_number)] = entry
             enrichment[(posix_file, line_number + 1)] = entry
 
         # Apply enrichment to paths that are missing requestBody/parameters
         for path_key, path_item in paths.items():
-            call_data = path_item.get('x-atom-usages', {}).get('call', {})
+            call_data = path_item.get("x-atom-usages", {}).get("call", {})
             for call_file, line_nums in call_data.items():
                 posix_call_file = Path(call_file).as_posix()
-                for ln in (line_nums or []):
+                for ln in line_nums or []:
                     info = enrichment.get((posix_call_file, ln))
                     if not info:
                         continue
                     # Apply to all POST/PUT/PATCH operations (request bodies) or any HTTP method (params)
-                    for method in ('post', 'put', 'patch', 'delete', 'get'):
+                    for method in ("post", "put", "patch", "delete", "get"):
                         op = path_item.get(method)
                         if not isinstance(op, dict):
                             continue
-                        if info['requestBody'] and method in ('post', 'put', 'patch') and 'requestBody' not in op:
-                            op['requestBody'] = info['requestBody']
-                        if info['parameters']:
-                            op.setdefault('parameters', [])
-                            op['parameters'] = merge_params(op['parameters'], info['parameters'])
+                        if (
+                            info["requestBody"]
+                            and method in ("post", "put", "patch")
+                            and "requestBody" not in op
+                        ):
+                            op["requestBody"] = info["requestBody"]
+                        if info["parameters"]:
+                            op.setdefault("parameters", [])
+                            op["parameters"] = merge_params(
+                                op["parameters"], info["parameters"]
+                            )
 
         return paths
 
-    def _infer_java_response_codes(self, file_name: str, line_number: int | None, http_method: str) -> Dict:
+    def _infer_java_response_codes(
+        self, file_name: str, line_number: int | None, http_method: str
+    ) -> Dict:
         """
         Infer HTTP response codes for a Java/Spring controller method from slice data.
 
@@ -1335,28 +1512,34 @@ class OpenAPI:
             dict: OpenAPI responses object, e.g. {"200": {"description": "OK"}}.
                   Returns {} for non-Java origins so existing behaviour is unchanged.
         """
-        if self.usages.origin_type not in ('java', 'jar'):
+        if self.usages.origin_type not in ("java", "jar"):
             return {}
-        for s in self.usages.content.get('objectSlices', []):
-            s_line = s.get('lineNumber') or 0
+        for s in self.usages.content.get("objectSlices", []):
+            s_line = s.get("lineNumber") or 0
             # Allow ±1 line tolerance: atom records the slice at the @Mapping annotation line
             # but call references use the method signature line (one line below).
-            if s.get('fileName') == file_name and abs(s_line - (line_number or 0)) <= 1:
+            if s.get("fileName") == file_name and abs(s_line - (line_number or 0)) <= 1:
                 found: set = set()
-                slice_usages = s.get('usages', [])
+                slice_usages = s.get("usages", [])
                 for usage in slice_usages:
-                    for call in usage.get('invokedCalls', []):
-                        resolved = call.get('resolvedMethod') or ''
-                        call_name = call.get('callName') or ''
-                        if 'ResponseEntity' in resolved and call_name in RESPONSE_ENTITY_STATUS_MAP:
+                    for call in usage.get("invokedCalls", []):
+                        resolved = call.get("resolvedMethod") or ""
+                        call_name = call.get("callName") or ""
+                        if (
+                            "ResponseEntity" in resolved
+                            and call_name in RESPONSE_ENTITY_STATUS_MAP
+                        ):
                             found.add(RESPONSE_ENTITY_STATUS_MAP[call_name])
-                dto_key = _extract_response_dto_key(slice_usages) or 'description'
+                dto_key = _extract_response_dto_key(slice_usages) or "description"
                 if found:
-                    return {code: {dto_key: STATUS_DESCRIPTIONS.get(code, 'Success')} for code in sorted(found)}
-                status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
-                return {status: {dto_key: STATUS_DESCRIPTIONS.get(status, 'OK')}}
-        status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, '200')
-        return {status: {'description': STATUS_DESCRIPTIONS.get(status, 'OK')}}
+                    return {
+                        code: {dto_key: STATUS_DESCRIPTIONS.get(code, "Success")}
+                        for code in sorted(found)
+                    }
+                status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, "200")
+                return {status: {dto_key: STATUS_DESCRIPTIONS.get(status, "OK")}}
+        status = HTTP_METHOD_DEFAULT_STATUS.get(http_method, "200")
+        return {status: {"description": STATUS_DESCRIPTIONS.get(status, "OK")}}
 
     def _process_calls(self, method_map: Dict) -> Dict[str, Any]:
         """
@@ -1366,13 +1549,17 @@ class OpenAPI:
         Returns:
             dict: A new method map containing calls.
         """
-        for file_name, resolved_methods in method_map['file_names'].items():
-            if res := self._query_calls(file_name, resolved_methods['resolved_methods'].keys()):
+        for file_name, resolved_methods in method_map["file_names"].items():
+            if res := self._query_calls(
+                file_name, resolved_methods["resolved_methods"].keys()
+            ):
                 mmap = filter_calls(res, resolved_methods)
             else:
                 mmap = filter_calls([], resolved_methods)
 
-            method_map['file_names'][file_name]['resolved_methods'] = mmap.get('resolved_methods')
+            method_map["file_names"][file_name]["resolved_methods"] = mmap.get(
+                "resolved_methods"
+            )
 
         return method_map
 
@@ -1381,35 +1568,45 @@ class OpenAPI:
         Create a dictionary of file names and their corresponding methods.
         """
         method_map = self._process_methods_helper(
-            'objectSlices[].{file_name: fileName, resolved_methods: usages[].*.resolvedMethod[]}')
+            "objectSlices[].{file_name: fileName, resolved_methods: usages[].*.resolvedMethod[]}"
+        )
 
         calls = self._process_methods_helper(
-            'objectSlices[].{file_name: fileName, resolved_methods: usages[].*[?resolvedMethod][]'
-            '[].resolvedMethod[]}')
+            "objectSlices[].{file_name: fileName, resolved_methods: usages[].*[?resolvedMethod][]"
+            "[].resolvedMethod[]}"
+        )
 
         user_defined_types = self._process_methods_helper(
-            'userDefinedTypes[].{file_name: fileName, resolved_methods: fields[].name}')
+            "userDefinedTypes[].{file_name: fileName, resolved_methods: fields[].name}"
+        )
 
-        if self.usages.origin_type in ('py', 'python'):
+        if self.usages.origin_type in ("py", "python"):
             user_defined_types = merge_path_objects(
                 user_defined_types,
-                self._process_methods_helper('userDefinedTypes[].{file_name: fileName, '
-                                             'resolved_methods: procedures[].resolvedMethod}'))
+                self._process_methods_helper(
+                    "userDefinedTypes[].{file_name: fileName, "
+                    "resolved_methods: procedures[].resolvedMethod}"
+                ),
+            )
 
         for key, value in calls.items():
             if method_map.get(key):
-                method_map[key]['resolved_methods'].extend(value.get('resolved_methods'))
+                method_map[key]["resolved_methods"].extend(
+                    value.get("resolved_methods")
+                )
             else:
-                method_map[key] = {'resolved_methods': value.get('resolved_methods')}
+                method_map[key] = {"resolved_methods": value.get("resolved_methods")}
 
         for key, value in user_defined_types.items():
             if method_map.get(key):
-                method_map[key]['resolved_methods'].extend(value.get('resolved_methods'))
+                method_map[key]["resolved_methods"].extend(
+                    value.get("resolved_methods")
+                )
             else:
-                method_map[key] = {'resolved_methods': value.get('resolved_methods')}
+                method_map[key] = {"resolved_methods": value.get("resolved_methods")}
 
         for k, v in method_map.items():
-            method_map[k] = list(set(v.get('resolved_methods')))
+            method_map[k] = list(set(v.get("resolved_methods")))
 
         return method_map
 
@@ -1427,30 +1624,29 @@ class OpenAPI:
         dict_resolved_pattern = jmespath.compile(pattern)
         result = []
         if matches := dict_resolved_pattern.search(self.usages.content):
-            result = [
-                i for i in matches
-                if i.get('resolved_methods')
-            ]
+            result = [i for i in matches if i.get("resolved_methods")]
         resolved: Dict = {}
         for r in result:
-            file_name = r['file_name']
-            methods = r['resolved_methods']
+            file_name = r["file_name"]
+            methods = r["resolved_methods"]
             if self.usages.origin_type in ("rb", "ruby"):
-                methods = [m for m in methods if
-                           m and not m.startswith("<operator>") and m not in ["(...)", "<body>"] and not m.startswith(
-                               "<tmp-")]
+                methods = [
+                    m
+                    for m in methods
+                    if m
+                    and not m.startswith("<operator>")
+                    and m not in ["(...)", "<body>"]
+                    and not m.startswith("<tmp-")
+                ]
             if resolved.get(file_name):
-                resolved[file_name]['resolved_methods'].extend(methods)
+                resolved[file_name]["resolved_methods"].extend(methods)
             else:
-                resolved[file_name] = {'resolved_methods': methods}
+                resolved[file_name] = {"resolved_methods": methods}
 
         return resolved
 
     def _process_regex_matches(
-            self,
-            element: str,
-            param_named: bool,
-            matches: List[Tuple[str, str]]
+        self, element: str, param_named: bool, matches: List[Tuple[str, str]]
     ) -> Tuple[str, List[Dict[str, Any]]]:
         """
         Processes regex matches and generates parameters for a path element.
@@ -1466,12 +1662,15 @@ class OpenAPI:
         """
         orig_element = element
         if param_named:
-            element = re.sub(regex.named_param_generic_extract, path_param_repl, element)
+            element = re.sub(
+                regex.named_param_generic_extract, path_param_repl, element
+            )
 
         params = []
         for m in matches:
             element, p, self.regex_param_count = regex_match_helper(
-                element, m, orig_element, param_named, self.regex_param_count)
+                element, m, orig_element, param_named, self.regex_param_count
+            )
 
             params.append(p)
 
@@ -1491,7 +1690,7 @@ class OpenAPI:
         for method in resolved_methods:
             if endpoints := self._extract_endpoints(method):
                 eps = [self._parse_path_regexes(ep) for ep in endpoints]
-                resolved_map[method] = {'endpoints': eps}
+                resolved_map[method] = {"endpoints": eps}
         return resolved_map
 
     def _query_calls(self, file_name: str, resolved_methods: List[str]) -> List:
@@ -1508,7 +1707,7 @@ class OpenAPI:
         result = self._query_calls_helper(file_name)
         calls = []
         for call in result:
-            m = call.get('resolvedMethod', '')
+            m = call.get("resolvedMethod", "")
             if m and m in resolved_methods:
                 calls.append(call)
         return calls
@@ -1523,18 +1722,22 @@ class OpenAPI:
         Returns:
              list: The result of searching for the calls pattern in the usages.
         """
-        pattern = (f'objectSlices[?fileName==`{json.dumps(file_name.encode().decode())}`].usages[]'
-                   f'.*[?callName][][]')
+        pattern = (
+            f"objectSlices[?fileName==`{json.dumps(file_name.encode().decode())}`].usages[]"
+            f".*[?callName][][]"
+        )
         compiled_pattern = jmespath.compile(pattern)
         result = compiled_pattern.search(self.usages.content)
-        pattern = (f'userDefinedTypes[?fileName==`{json.dumps(file_name.encode().decode())}`][].procedures[]')
+        pattern = f"userDefinedTypes[?fileName==`{json.dumps(file_name.encode().decode())}`][].procedures[]"
         compiled_pattern = jmespath.compile(pattern)
         result2 = compiled_pattern.search(self.usages.content)
         result += result2
         return result
 
 
-def create_ln_entries(filename: str, call_line_numbers: List, line_number: int | None) -> Dict:
+def create_ln_entries(
+    filename: str, call_line_numbers: List, line_number: int | None
+) -> Dict:
     """
     Creates line number entries for a given filename and line numbers.
 
@@ -1546,16 +1749,18 @@ def create_ln_entries(filename: str, call_line_numbers: List, line_number: int |
     Returns:
         dict: A dictionary containing line number entries.
     """
-    fn = filename.split(':')[0]
-    x_atom: Dict = {'x-atom-usages': {}}
+    fn = filename.split(":")[0]
+    x_atom: Dict = {"x-atom-usages": {}}
     if call_line_numbers:
-        x_atom['x-atom-usages']['call'] = {fn: call_line_numbers}
+        x_atom["x-atom-usages"]["call"] = {fn: call_line_numbers}
     if line_number:
-        x_atom['x-atom-usages']['target'] = {fn: line_number}
+        x_atom["x-atom-usages"]["target"] = {fn: line_number}
     return x_atom
 
 
-def determine_operations(call: Dict, params: List, responses: Dict | None = None) -> Dict[str, Any]:
+def determine_operations(
+    call: Dict, params: List, responses: Dict | None = None
+) -> Dict[str, Any]:
     """
     Determine the supported operations based on the call and parameters.
 
@@ -1570,17 +1775,18 @@ def determine_operations(call: Dict, params: List, responses: Dict | None = None
         dict: A dictionary containing the supported operations and their
         parameters and responses.
     """
-    ops = {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}
+    ops = {"get", "put", "post", "delete", "options", "head", "patch"}
     r = responses if responses is not None else {}
-    if found := [op for op in ops if op in call.get('resolvedMethod', '').lower()]:
+    if found := [op for op in ops if op in call.get("resolvedMethod", "").lower()]:
         if params:
-            return {op: {'parameters': params, 'responses': r} for op in found}
-        return {op: {'responses': r} for op in found}
-    return {'parameters': params} if params else {}
+            return {op: {"parameters": params, "responses": r} for op in found}
+        return {op: {"responses": r} for op in found}
+    return {"parameters": params} if params else {}
 
 
 def filter_calls(
-        queried_calls: List[Dict[str, Any]], resolved_methods: Dict) -> Dict[str, List]:
+    queried_calls: List[Dict[str, Any]], resolved_methods: Dict
+) -> Dict[str, List]:
     """
     Iterate through the invokedCalls and argToCalls and create a relevant
     dictionary of endpoints and calls.
@@ -1590,17 +1796,16 @@ def filter_calls(
     Returns:
         dict: Dictionary of relevant endpoints and calls
     """
-    for method in resolved_methods['resolved_methods'].keys():
-        calls = [
-            i for i in queried_calls
-            if i.get('resolvedMethod', '') == method
-        ]
+    for method in resolved_methods["resolved_methods"].keys():
+        calls = [i for i in queried_calls if i.get("resolvedMethod", "") == method]
         lns = [
-            i.get('lineNumber')
+            i.get("lineNumber")
             for i in calls
-            if i.get('lineNumber') and i.get('resolvedMethod', '') == method
+            if i.get("lineNumber") and i.get("resolvedMethod", "") == method
         ]
-        resolved_methods['resolved_methods'][method].update({'calls': calls, 'line_nos': lns})
+        resolved_methods["resolved_methods"][method].update(
+            {"calls": calls, "line_nos": lns}
+        )
     return resolved_methods
 
 
@@ -1618,7 +1823,7 @@ def merge_operations(op1: Dict, op2: Dict) -> Dict:
     for k, v in op2.items():
         if v and (not op1.get(k) or op1[k] == {}):
             op1[k] = v
-        elif k == 'parameters' and v:
+        elif k == "parameters" and v:
             op1[k] = merge_params(op1[k], v)
     return op1
 
@@ -1634,9 +1839,9 @@ def merge_params(p1: List, p2: List) -> List:
     Returns:
         list: The merged list of parameters.
     """
-    p1_by_name = {i.get('name'): i for i in p1}
+    p1_by_name = {i.get("name"): i for i in p1}
     for i in p2:
-        name = i.get('name', '')
+        name = i.get("name", "")
         if name not in p1_by_name:
             p1.append(i)
         else:
@@ -1671,13 +1876,13 @@ def merge_path_objects(p1: Dict, p2: Dict) -> Dict:
             continue
         for k, v in value.items():
             if p1[key].get(k):
-                if k == 'resolved_methods':
+                if k == "resolved_methods":
                     p1[key][k].extend(v)
-                elif k == 'x-atom-usages':
+                elif k == "x-atom-usages":
                     p1[key][k] = merge_x_atom(p1[key][k], v)
-                elif k == 'parameters':
+                elif k == "parameters":
                     p1[key][k] = merge_params(p1[key][k], v)
-                elif k in {'get', 'put', 'post', 'delete', 'options', 'head', 'patch'}:
+                elif k in {"get", "put", "post", "delete", "options", "head", "patch"}:
                     p1[key][k] = merge_operations(p1[key][k], v)
                 continue
             p1[key][k] = v
@@ -1747,7 +1952,12 @@ def remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
     """
     for value in data.values():
         for v in value.values():
-            if isinstance(v, dict) and 'parameters' in v and isinstance(v['parameters'], list):
-                v['parameters'] = [param for param in v['parameters'] if
-                                   param.get('in') != 'path']
+            if (
+                isinstance(v, dict)
+                and "parameters" in v
+                and isinstance(v["parameters"], list)
+            ):
+                v["parameters"] = [
+                    param for param in v["parameters"] if param.get("in") != "path"
+                ]
     return data
