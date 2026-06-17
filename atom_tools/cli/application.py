@@ -1,6 +1,7 @@
 """
 Base console application.
 """
+
 import logging
 import sys
 from importlib import import_module
@@ -40,10 +41,12 @@ def load_command(name: str) -> Callable[[], Command]:
     """
 
     def _load() -> Command:
-        words = name.split(' ')
-        module = import_module('atom_tools.cli.commands.' + '.'.join(words).replace('-', '_'))
+        words = name.split(" ")
+        module = import_module(
+            "atom_tools.cli.commands." + ".".join(words).replace("-", "_")
+        )
         command_class = getattr(
-            module, ''.join(c.title() for c in words).replace('-', '') + 'Command'
+            module, "".join(c.title() for c in words).replace("-", "") + "Command"
         )
         command: Command = command_class()
         return command
@@ -52,11 +55,12 @@ def load_command(name: str) -> Callable[[], Command]:
 
 
 COMMANDS = [
-    'convert',
-    'filter',
-    'query-endpoints',
-    'check-reachable',
-    'validate-lines',
+    "apk-analysis",
+    "convert",
+    "filter",
+    "query-endpoints",
+    "check-reachable",
+    "validate-lines",
 ]
 
 
@@ -70,7 +74,7 @@ class Application(BaseApplication):
     """
 
     def __init__(self) -> None:
-        super().__init__('atom-tools', __version__)
+        super().__init__("atom-tools", __version__)
         self._io: IO | None = None
         dispatcher = EventDispatcher()
         dispatcher.add_listener(COMMAND, self.register_command_loggers)
@@ -98,7 +102,9 @@ class Application(BaseApplication):
         return IO(input, output, error_output)
 
     @staticmethod
-    def register_command_loggers(event: Event, event_name: str, _: EventDispatcher) -> None:  # pylint: disable=unused-argument
+    def register_command_loggers(
+        event: Event, event_name: str, _: EventDispatcher
+    ) -> None:  # pylint: disable=unused-argument
         """
         Register command loggers. Based heavily on Poetry's implementation.
 
@@ -153,5 +159,5 @@ def main() -> int:
     return exit_code
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

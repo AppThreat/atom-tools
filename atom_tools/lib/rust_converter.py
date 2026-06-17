@@ -26,6 +26,7 @@ framework JSON wrappers are recognised; custom types are emitted as a
 tooling can still match by type name even when the field-level schema
 is not (yet) available.
 """
+
 import re
 from typing import Dict, Optional
 
@@ -193,14 +194,16 @@ def _build_operation(endpoint: Dict) -> Dict:
         if not name or location not in ("path", "query"):
             continue
         is_optional = type_name.strip().startswith("Option<")
-        parameters.append({
-            "name": name,
-            "in": location,
-            # Path params are always required in OpenAPI; query params
-            # follow the Rust signature's optionality.
-            "required": location == "path" or not is_optional,
-            "schema": _parameter_schema(type_name),
-        })
+        parameters.append(
+            {
+                "name": name,
+                "in": location,
+                # Path params are always required in OpenAPI; query params
+                # follow the Rust signature's optionality.
+                "required": location == "path" or not is_optional,
+                "schema": _parameter_schema(type_name),
+            }
+        )
     if parameters:
         operation["parameters"] = parameters
 
