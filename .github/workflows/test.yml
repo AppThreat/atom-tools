@@ -38,7 +38,7 @@ jobs:
       if: ${{ github.event_name == 'pull_request' || github.ref_type == 'tag' }}
       shell: bash
       run: |
-        init_version=$(head -n 4 atom_tools/__init__.py | tail -1 | cut -d"'" -f2)
+        init_version=$(head -n 5 atom_tools/__init__.py | tail -1 | cut -d"'" -f2)
         toml_version=$(head -n 3 pyproject.toml | tail -1 | cut -d'"' -f2)
         if [ "$init_version" != "$toml_version" ]; then
           echo "Version in atom_tools.__init__.py does not match pyproject.toml."
