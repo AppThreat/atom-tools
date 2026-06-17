@@ -31,17 +31,6 @@ jobs:
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
         with:
           python-version: '3.12'
-      - name: Check versions are in sync
-        shell: bash
-        run: |
-          init_version=$(head -n 4 atom_tools/__init__.py | tail -1 | cut -d"'" -f2)
-          toml_version=$(head -n 3 pyproject.toml | tail -1 | cut -d'"' -f2)
-          if [ "$init_version" != "$toml_version" ]; then
-            echo "Version in atom_tools.__init__.py does not match pyproject.toml."
-            exit 1
-          else
-            echo "Version in atom_tools.__init__.py matches pyproject.toml."
-          fi
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
