@@ -115,14 +115,10 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                     self.option("semantics-slice"),
                 )
 
-                if not (
-                    result := converter.endpoints_to_openapi(self.option("server"))
-                ):
+                if not (result := converter.endpoints_to_openapi(self.option("server"))):
                     logging.warning("No results produced!")
                     sys.exit(1)
                 export_json(result, self.option("output-file"), 4)
-                logger.info(
-                    f"OpenAPI document written to {self.option('output-file')}."
-                )
+                logger.info(f"OpenAPI document written to {self.option('output-file')}.")
             case _:
                 raise ValueError(f"Unknown destination format: {self.option('format')}")

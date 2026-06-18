@@ -111,9 +111,7 @@ def _properties_from_getters(arg_to_calls: List[Dict]) -> Dict:
             m = re.match(r".+:([^<(][^(]*)\(\d+\)$", resolved)
             if m:
                 extracted = m.group(1).strip()
-                schema = (
-                    _java_type_to_schema(extracted) if extracted else {"type": "string"}
-                )
+                schema = _java_type_to_schema(extracted) if extracted else {"type": "string"}
             else:
                 schema = {"type": "string"}
         properties[prop_name] = schema
@@ -367,9 +365,7 @@ class OpenAPI:
     ) -> None:
         self.usages: AtomSlice = AtomSlice(usages, origin_type)
         self.semantics: AtomSlice = (
-            AtomSlice(semantics, origin_type)
-            if semantics and Path(semantics).exists()
-            else None
+            AtomSlice(semantics, origin_type) if semantics and Path(semantics).exists() else None
         )
         self.openapi_version = dest_format.replace("openapi", "")
         self.title = (
@@ -428,9 +424,7 @@ class OpenAPI:
         file_names = list(method_map.get("file_names", {}).keys())
         file_endpoint_map: Dict = {i: [] for i in file_names}
         for full_name in file_names:
-            for values in method_map["file_names"][full_name][
-                "resolved_methods"
-            ].values():
+            for values in method_map["file_names"][full_name]["resolved_methods"].values():
                 file_endpoint_map[full_name].extend(values.get("endpoints"))
         for k, v in file_endpoint_map.items():
             endpoints = set(v)
@@ -465,9 +459,7 @@ class OpenAPI:
                 calls, ep, filename, call_line_numbers, target_line_number
             )
             if paths_object.get(ep):
-                paths_object[ep] = merge_path_objects(
-                    paths_object[ep], paths_item_object
-                )
+                paths_object[ep] = merge_path_objects(paths_object[ep], paths_item_object)
             else:
                 paths_object |= {ep: paths_item_object}
 
@@ -506,12 +498,9 @@ class OpenAPI:
                 if prefix:
                     for method_key in new_resolved:
                         new_resolved[method_key]["endpoints"] = [
-                            prefix.rstrip("/") + ep
-                            for ep in new_resolved[method_key]["endpoints"]
+                            prefix.rstrip("/") + ep for ep in new_resolved[method_key]["endpoints"]
                         ]
-                new_method_map["file_names"][file_name] = {
-                    "resolved_methods": new_resolved
-                }
+                new_method_map["file_names"][file_name] = {"resolved_methods": new_resolved}
         return new_method_map
 
     def populate_endpoints(self, method_map: Dict) -> Dict[str, Any]:
@@ -615,9 +604,7 @@ class OpenAPI:
 
         return ele, params
 
-    def _create_param_object(
-        self, ep: str, orig_ep: str, call: Dict | None
-    ) -> List[Dict]:
+    def _create_param_object(self, ep: str, orig_ep: str, call: Dict | None) -> List[Dict]:
         """
         Create a parameter object for each parameter in the input list.
 
@@ -636,9 +623,7 @@ class OpenAPI:
                 params = [
                     {"name": param, "in": "header"}
                     for param in ptypes
-                    if param != "ANY"
-                    and not param.startswith("__")
-                    and param not in ("LAMBDA",)
+                    if param != "ANY" and not param.startswith("__") and param not in ("LAMBDA",)
                 ]
             else:
                 params = [
@@ -703,9 +688,7 @@ class OpenAPI:
         match self.usages.origin_type:
             case "java" | "jar":
                 if not (
-                    code.startswith("@")
-                    and ("Mapping" in code or "Path" in code)
-                    and "(" in code
+                    code.startswith("@") and ("Mapping" in code or "Path" in code) and "(" in code
                 ):
                     return filtered_matches
             case "js" | "ts" | "javascript" | "typescript":
@@ -731,9 +714,7 @@ class OpenAPI:
 
         return filtered_matches
 
-    def _generic_params_helper(
-        self, endpoint: str, orig_endpoint: str
-    ) -> List[Dict[str, Any]]:
+    def _generic_params_helper(self, endpoint: str, orig_endpoint: str) -> List[Dict[str, Any]]:
         """
         Extracts generic path parameters from the given endpoint.
 
@@ -784,9 +765,7 @@ class OpenAPI:
 
         for k, v in result.items():
             for i in v:
-                targets[k] = merge_targets(
-                    targets[k], {i["resolved_method"]: i["line_number"]}
-                )
+                targets[k] = merge_targets(targets[k], {i["resolved_method"]: i["line_number"]})
 
         return targets
 
@@ -805,9 +784,7 @@ class OpenAPI:
         tmp_params: List = []
         py_special_case = False
         orig_ep = ep
-        ep, tmp_params = self._extract_unparsed_params(
-            ep, orig_ep, py_special_case, tmp_params
-        )
+        ep, tmp_params = self._extract_unparsed_params(ep, orig_ep, py_special_case, tmp_params)
         if tmp_params:
             paths_item_object["parameters"] = tmp_params
         if calls:
@@ -817,9 +794,7 @@ class OpenAPI:
                     self._calls_to_params(ep, orig_ep, call, filename),
                 )
         if (call_line_numbers or line_number) and (
-            line_nos := create_ln_entries(
-                filename, list(set(call_line_numbers)), line_number
-            )
+            line_nos := create_ln_entries(filename, list(set(call_line_numbers)), line_number)
         ):
             if "x-atom-usages" in paths_item_object:
                 paths_item_object["x-atom-usages"] = merge_x_atom(
@@ -946,9 +921,7 @@ class OpenAPI:
                     }
 
                     if file_name and call_line:
-                        ln_entry = create_ln_entries(
-                            file_name, [call_line], line_number
-                        )
+                        ln_entry = create_ln_entries(file_name, [call_line], line_number)
                         path_item.update(ln_entry)
 
                     if endpoint in third_party_paths:
@@ -989,9 +962,7 @@ class OpenAPI:
             class_name = parts[0]
             method_name = call_name
         else:
-            class_name = (
-                file_name.rsplit("/", 1)[-1].rsplit("\\", 1)[-1].replace(".java", "")
-            )
+            class_name = file_name.rsplit("/", 1)[-1].rsplit("\\", 1)[-1].replace(".java", "")
             method_name = call_name
 
         # Convert CamelCase to kebab-case
@@ -1007,9 +978,7 @@ class OpenAPI:
 
         return f"/{class_slug}/{method_slug}"
 
-    def _mark_feign_client_paths(
-        self, third_party_paths: Dict, object_slices: List
-    ) -> None:
+    def _mark_feign_client_paths(self, third_party_paths: Dict, object_slices: List) -> None:
         """
         Scan objectSlices from client-named files for Spring mapping annotations
         and add their endpoints to third_party_paths with x-third-party marker.
@@ -1038,8 +1007,7 @@ class OpenAPI:
                 for call in usage.get("invokedCalls") or []:
                     resolved = call.get("resolvedMethod") or ""
                     if not any(
-                        resolved.startswith(a) or a in resolved
-                        for a in mapping_annotations
+                        resolved.startswith(a) or a in resolved for a in mapping_annotations
                     ):
                         continue
 
@@ -1177,9 +1145,7 @@ class OpenAPI:
                 result[name] = fields
         return result
 
-    def _build_schema_from_type(
-        self, type_full_name: str, udt_map: Dict[str, List[Dict]]
-    ) -> Dict:
+    def _build_schema_from_type(self, type_full_name: str, udt_map: Dict[str, List[Dict]]) -> Dict:
         """
         Build an OpenAPI schema for a Java type.
 
@@ -1284,9 +1250,7 @@ class OpenAPI:
                 if ann_resolved.startswith("@RequestBody"):
                     schema = self._build_schema_from_type(type_full_name, udt_map)
                     if "properties" not in schema:
-                        schema = _properties_from_getters(
-                            param_arg_calls.get(param_name, [])
-                        )
+                        schema = _properties_from_getters(param_arg_calls.get(param_name, []))
                     request_body = {
                         "content": {"application/json": {"schema": schema}},
                         "required": True,
@@ -1323,9 +1287,7 @@ class OpenAPI:
                 continue
 
             operation: Dict = {
-                "responses": self._infer_java_response_codes(
-                    file_name, line_number, http_method
-                )
+                "responses": self._infer_java_response_codes(file_name, line_number, http_method)
             }
             if all_params:
                 operation["parameters"] = all_params
@@ -1342,9 +1304,7 @@ class OpenAPI:
                     existing_op["requestBody"] = request_body
                 if all_params:
                     existing_op.setdefault("parameters", [])
-                    existing_op["parameters"] = merge_params(
-                        existing_op["parameters"], all_params
-                    )
+                    existing_op["parameters"] = merge_params(existing_op["parameters"], all_params)
 
         return paths
 
@@ -1487,9 +1447,7 @@ class OpenAPI:
                             op["requestBody"] = info["requestBody"]
                         if info["parameters"]:
                             op.setdefault("parameters", [])
-                            op["parameters"] = merge_params(
-                                op["parameters"], info["parameters"]
-                            )
+                            op["parameters"] = merge_params(op["parameters"], info["parameters"])
 
         return paths
 
@@ -1550,16 +1508,12 @@ class OpenAPI:
             dict: A new method map containing calls.
         """
         for file_name, resolved_methods in method_map["file_names"].items():
-            if res := self._query_calls(
-                file_name, resolved_methods["resolved_methods"].keys()
-            ):
+            if res := self._query_calls(file_name, resolved_methods["resolved_methods"].keys()):
                 mmap = filter_calls(res, resolved_methods)
             else:
                 mmap = filter_calls([], resolved_methods)
 
-            method_map["file_names"][file_name]["resolved_methods"] = mmap.get(
-                "resolved_methods"
-            )
+            method_map["file_names"][file_name]["resolved_methods"] = mmap.get("resolved_methods")
 
         return method_map
 
@@ -1591,17 +1545,13 @@ class OpenAPI:
 
         for key, value in calls.items():
             if method_map.get(key):
-                method_map[key]["resolved_methods"].extend(
-                    value.get("resolved_methods")
-                )
+                method_map[key]["resolved_methods"].extend(value.get("resolved_methods"))
             else:
                 method_map[key] = {"resolved_methods": value.get("resolved_methods")}
 
         for key, value in user_defined_types.items():
             if method_map.get(key):
-                method_map[key]["resolved_methods"].extend(
-                    value.get("resolved_methods")
-                )
+                method_map[key]["resolved_methods"].extend(value.get("resolved_methods"))
             else:
                 method_map[key] = {"resolved_methods": value.get("resolved_methods")}
 
@@ -1662,9 +1612,7 @@ class OpenAPI:
         """
         orig_element = element
         if param_named:
-            element = re.sub(
-                regex.named_param_generic_extract, path_param_repl, element
-            )
+            element = re.sub(regex.named_param_generic_extract, path_param_repl, element)
 
         params = []
         for m in matches:
@@ -1735,9 +1683,7 @@ class OpenAPI:
         return result
 
 
-def create_ln_entries(
-    filename: str, call_line_numbers: List, line_number: int | None
-) -> Dict:
+def create_ln_entries(filename: str, call_line_numbers: List, line_number: int | None) -> Dict:
     """
     Creates line number entries for a given filename and line numbers.
 
@@ -1784,9 +1730,7 @@ def determine_operations(
     return {"parameters": params} if params else {}
 
 
-def filter_calls(
-    queried_calls: List[Dict[str, Any]], resolved_methods: Dict
-) -> Dict[str, List]:
+def filter_calls(queried_calls: List[Dict[str, Any]], resolved_methods: Dict) -> Dict[str, List]:
     """
     Iterate through the invokedCalls and argToCalls and create a relevant
     dictionary of endpoints and calls.
@@ -1803,9 +1747,7 @@ def filter_calls(
             for i in calls
             if i.get("lineNumber") and i.get("resolvedMethod", "") == method
         ]
-        resolved_methods["resolved_methods"][method].update(
-            {"calls": calls, "line_nos": lns}
-        )
+        resolved_methods["resolved_methods"][method].update({"calls": calls, "line_nos": lns})
     return resolved_methods
 
 
@@ -1952,12 +1894,6 @@ def remove_nested_parameters(data: Dict) -> Dict[str, Dict | List]:
     """
     for value in data.values():
         for v in value.values():
-            if (
-                isinstance(v, dict)
-                and "parameters" in v
-                and isinstance(v["parameters"], list)
-            ):
-                v["parameters"] = [
-                    param for param in v["parameters"] if param.get("in") != "path"
-                ]
+            if isinstance(v, dict) and "parameters" in v and isinstance(v["parameters"], list):
+                v["parameters"] = [param for param in v["parameters"] if param.get("in") != "path"]
     return data

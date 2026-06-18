@@ -135,9 +135,7 @@ at a blint installed in its own virtual environment."""
 
         apps = find_apps(input_path)
         if not apps:
-            self.line_error(
-                f"<error>No apk/apkm/aab files found at {input_path}</error>"
-            )
+            self.line_error(f"<error>No apk/apkm/aab files found at {input_path}</error>")
             return 1
         os.makedirs(reports_dir, exist_ok=True)
 
@@ -158,9 +156,7 @@ at a blint installed in its own virtual environment."""
             behaviours = collect_behaviours(bom_doc)
             tags = categorize_tags(reachables)
             if output_format == "json":
-                self._write_json(
-                    analysis, bom, tags, services, trackers, behaviours, reports_dir
-                )
+                self._write_json(analysis, bom, tags, services, trackers, behaviours, reports_dir)
             else:
                 self._render(analysis, bom, tags, services, trackers, behaviours)
         return 0
@@ -182,9 +178,7 @@ at a blint installed in its own virtual environment."""
             return False
         return True
 
-    def _write_json(
-        self, analysis, bom, tags, services, trackers, behaviours, reports_dir
-    ):
+    def _write_json(self, analysis, bom, tags, services, trackers, behaviours, reports_dir):
         """Write a consolidated analysis document to disk."""
         out_file = os.path.join(
             reports_dir, f"{os.path.basename(analysis.app_file)}.analysis.json"
@@ -226,12 +220,8 @@ at a blint installed in its own virtual environment."""
             f"[bold]Permissions[/bold]: {len(bom['permissions'])}",
         ]
         if meta.get("internal:architectures"):
-            summary_lines.append(
-                f"[bold]Architectures[/bold]: {meta['internal:architectures']}"
-            )
-        console.print(
-            Panel("\n".join(summary_lines), title=os.path.basename(analysis.app_file))
-        )
+            summary_lines.append(f"[bold]Architectures[/bold]: {meta['internal:architectures']}")
+        console.print(Panel("\n".join(summary_lines), title=os.path.basename(analysis.app_file)))
 
         if bom["permissions"]:
             perm_table = Table(title="Permissions", show_lines=False)
@@ -255,9 +245,7 @@ at a blint installed in its own virtual environment."""
                     findings.add_row(category, tag, str(count))
             console.print(findings)
         elif analysis.reachables_file:
-            console.print(
-                "[dim]No android-specific tags found in reachable slices.[/dim]"
-            )
+            console.print("[dim]No android-specific tags found in reachable slices.[/dim]")
 
         if services:
             svc_table = Table(title="Reachable services (data egress / ingress)")
@@ -314,9 +302,7 @@ at a blint installed in its own virtual environment."""
             console.print(beh_table)
 
         if analysis.callgraph_file:
-            console.print(
-                f"[dim]Dalvik callgraph written to {analysis.callgraph_file}[/dim]"
-            )
+            console.print(f"[dim]Dalvik callgraph written to {analysis.callgraph_file}[/dim]")
 
         for error in analysis.errors:
             console.print(f"[yellow]Warning:[/yellow] {error}")

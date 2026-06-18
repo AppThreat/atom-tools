@@ -21,13 +21,9 @@ patterns = FilteringPatternCollection()
 class AttributeFilter:
     """Attribute filter class"""
 
-    def __init__(
-        self, key: str, value: str, condition: str, fuzz_pct: int | None
-    ) -> None:
+    def __init__(self, key: str, value: str, condition: str, fuzz_pct: int | None) -> None:
         self.attribute = key.lower()
-        self.value, self.line_numbers, self.fn_only = create_attribute_filter(
-            key, value, fuzz_pct
-        )
+        self.value, self.line_numbers, self.fn_only = create_attribute_filter(key, value, fuzz_pct)
         self.condition = condition
 
 
@@ -57,8 +53,7 @@ class Filter:
                 raise ValueError(f"Unknown filter target: {target}")
             a_filter = AttributeFilter(target, value, condition, self.fuzz)
             logger.debug(
-                f"Adding attribute filter -> {a_filter.attribute} {condition} "
-                f"{a_filter.value}"
+                f"Adding attribute filter -> {a_filter.attribute} {condition} {a_filter.value}"
             )
             self.attribute_filters.append(a_filter)
 
@@ -151,8 +146,7 @@ class Filter:
         search_values = self.slc.attrib_dicts.get(f.attribute, {}).keys()
         if f.fn_only:
             search_values = {
-                i: f"{pathlib.Path(i).stem}{pathlib.Path(i).suffix}"
-                for i in search_values
+                i: f"{pathlib.Path(i).stem}{pathlib.Path(i).suffix}" for i in search_values
             }
         else:
             search_values = {i: i for i in search_values}
@@ -176,11 +170,7 @@ def create_attribute_filter(key: str, value: str, fuzz_pct: int | None) -> Tuple
     """Create an attribute filter"""
     lns = ()
     fn_only = False
-    if (
-        (key.lower() in {"filename", "parentfilename"})
-        and "/" not in value
-        and "\\" not in value
-    ):
+    if (key.lower() in {"filename", "parentfilename"}) and "/" not in value and "\\" not in value:
         fn_only = True
     if ":" in value and (match := patterns.attribute_and_line.search(value)):
         value = match.group("attrib")

@@ -6,9 +6,10 @@ from atom_tools.lib.utils import (
 
 
 def test_add_params_to_cmd():
-    assert add_params_to_cmd(
-        "convert -i usages.json -f openapi3.1.0 -t java", "test.json"
-    ) == ("convert", "-i test.json -f openapi3.1.0 -t java")
+    assert add_params_to_cmd("convert -i usages.json -f openapi3.1.0 -t java", "test.json") == (
+        "convert",
+        "-i test.json -f openapi3.1.0 -t java",
+    )
     assert add_params_to_cmd("convert -f openapi3.1.0", "usages.json", "java") == (
         "convert",
         "-f openapi3.1.0 -t java -i usages.json",

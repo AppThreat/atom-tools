@@ -155,25 +155,11 @@ def test_check_reachable():
     assert check_reachable(atom_slice.content, "@colors/colors:1.9.0", "") == False
 
     # Test filename:linenumber
-    assert (
-        check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:29")
-        == True
-    )
+    assert check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:29") == True
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:29") == True
-    assert (
-        check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:25-30")
-        == True
-    )
+    assert check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:25-30") == True
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:25-30") == True
-    assert (
-        check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:400")
-        == False
-    )
+    assert check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:400") == False
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:400") == False
-    assert (
-        check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:400-600")
-        == False
-    )
-    assert (
-        check_reachable(atom_slice.content, "", "updateUserProfile.ts:400-600") == False
-    )
+    assert check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:400-600") == False
+    assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:400-600") == False

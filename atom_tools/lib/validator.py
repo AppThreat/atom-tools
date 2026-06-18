@@ -154,9 +154,7 @@ def cleanup_usages(
         if keep := [
             entries[e]
             for e in range(len(entries) - 1)
-            if entries[e]["code"]
-            or entries[e]["function_name"]
-            or entries[e]["line_number"]
+            if entries[e]["code"] or entries[e]["function_name"] or entries[e]["line_number"]
         ]:
             usages[fn] = keep
 
@@ -335,9 +333,7 @@ class LineStats:
     @property
     def total_invalid(self) -> int:
         """Returns total not validated"""
-        return (
-            self.unmatched_ct + self.invalid_ln_ct + self.no_ln_ct + self.file_error_ct
-        )
+        return self.unmatched_ct + self.invalid_ln_ct + self.no_ln_ct + self.file_error_ct
 
     @property
     def total_valid(self) -> int:
@@ -392,9 +388,7 @@ class LineValidator:
         unverifiable (dict): A dictionary containing unverifiable line numbers grouped by type.
     """
 
-    def __init__(
-        self, slice_file: Path, base_path: Path, interval: int, origin_type: str
-    ) -> None:
+    def __init__(self, slice_file: Path, base_path: Path, interval: int, origin_type: str) -> None:
         self.slc = AtomSlice(slice_file, origin_type)
         self.base_path = base_path if isinstance(base_path, Path) else Path(base_path)
         self.matches: Dict[str, List[Dict]] = {
@@ -665,9 +659,7 @@ class LineValidator:
             result[fn] = remove_duplicates_list(val)
         return result
 
-    def _validate_line_number(
-        self, result: Dict, lines: List[str], file_name: str
-    ) -> None:
+    def _validate_line_number(self, result: Dict, lines: List[str], file_name: str) -> None:
         """
         Run validation for a slice line number.
         """

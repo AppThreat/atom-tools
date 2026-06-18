@@ -113,8 +113,7 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
     current_path = re.sub("^:", "", code_parts[i + 1])
     new_path = (
         f"{url_prefix}{current_path}"
-        if not url_prefix.endswith(current_path)
-        and not url_prefix.endswith(f"{current_path}/")
+        if not url_prefix.endswith(current_path) and not url_prefix.endswith(f"{current_path}/")
         else url_prefix
     )
     url_pattern = _clean_url(new_path)
@@ -137,18 +136,10 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
             if needs_expansion:
                 routes.append(HttpRoute(url_pattern=f"{url_pattern}/new", method="GET"))
                 routes.append(HttpRoute(url_pattern=url_pattern, method="POST"))
-                routes.append(
-                    HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="GET")
-                )
-                routes.append(
-                    HttpRoute(url_pattern=f"{url_pattern}" + "/{id}/edit", method="GET")
-                )
-                routes.append(
-                    HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="PUT")
-                )
-                routes.append(
-                    HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="DELETE")
-                )
+                routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="GET"))
+                routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}/edit", method="GET"))
+                routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="PUT"))
+                routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="DELETE"))
                 return routes
     if ("match " in code and "via: :all" in code) or (
         "only: [" not in code and "shallow:" not in code
@@ -156,13 +147,9 @@ def _get_dangling_routes(i, kind, code, code_parts, url_prefix="/"):
         routes.append(HttpRoute(url_pattern=f"{url_pattern}/new", method="GET"))
         routes.append(HttpRoute(url_pattern=url_pattern, method="POST"))
         routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="GET"))
-        routes.append(
-            HttpRoute(url_pattern=f"{url_pattern}" + "/{id}/edit", method="GET")
-        )
+        routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}/edit", method="GET"))
         routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="PUT"))
-        routes.append(
-            HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="DELETE")
-        )
+        routes.append(HttpRoute(url_pattern=f"{url_pattern}" + "/{id}", method="DELETE"))
     return routes
 
 
@@ -178,35 +165,17 @@ def _semantic_mounts(mount_path):
     if mount_path.endswith("sidekiq"):
         routes.append(HttpRoute(url_pattern=f"{mount_path}/busy", method="GET"))
         routes.append(HttpRoute(url_pattern=f"{mount_path}/queues", method="GET"))
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/queues/" + "{name}", method="GET")
-        )
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/queues/" + "{name}", method="POST")
-        )
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/queues/" + "{name}", method="GET"))
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/queues/" + "{name}", method="POST"))
         routes.append(HttpRoute(url_pattern=f"{mount_path}/retries", method="GET"))
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/retries/" + "{id}", method="GET")
-        )
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/retries/" + "{id}", method="POST")
-        )
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/retries/all/delete", method="POST")
-        )
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/retries/all/retry", method="POST")
-        )
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/retries/" + "{id}", method="GET"))
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/retries/" + "{id}", method="POST"))
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/retries/all/delete", method="POST"))
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/retries/all/retry", method="POST"))
         routes.append(HttpRoute(url_pattern=f"{mount_path}/scheduled", method="GET"))
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/scheduled/" + "{id}", method="GET")
-        )
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/scheduled/" + "{id}", method="POST")
-        )
-        routes.append(
-            HttpRoute(url_pattern=f"{mount_path}/scheduled/all", method="POST")
-        )
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/scheduled/" + "{id}", method="GET"))
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/scheduled/" + "{id}", method="POST"))
+        routes.append(HttpRoute(url_pattern=f"{mount_path}/scheduled/all", method="POST"))
     return routes
 
 
@@ -339,25 +308,15 @@ def code_to_routes(code: str) -> List[HttpRoute]:
         # Support for nested scope block
         if is_in_scope_block:
             # Reset namespace_url_prefix with nested scope
-            if (
-                part in ("scope",)
-                and url_prefix_to_use
-                and url_prefix_to_use != scope_url_prefix
-            ):
+            if part in ("scope",) and url_prefix_to_use and url_prefix_to_use != scope_url_prefix:
                 scope_url_prefix = url_prefix_to_use
             elif part in ("end",):
                 is_in_scope_block = False
                 scope_url_prefix = (
-                    last_url_prefix_to_use
-                    if is_in_resource_do_block
-                    else namespace_url_prefix
+                    last_url_prefix_to_use if is_in_resource_do_block else namespace_url_prefix
                 )
                 url_prefix_to_use = namespace_url_prefix
-        elif (
-            part in ("scope",)
-            and url_prefix_to_use
-            and url_prefix_to_use != scope_url_prefix
-        ):
+        elif part in ("scope",) and url_prefix_to_use and url_prefix_to_use != scope_url_prefix:
             is_in_scope_block = True
             # Did we just end a block
             if last_part in ("end",):
@@ -366,11 +325,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                 url_prefix_to_use = namespace_url_prefix
             else:
                 scope_url_prefix = url_prefix_to_use
-        if (
-            not handled_with_translate
-            and part in ("scope",)
-            or part.startswith("scope(")
-        ):
+        if not handled_with_translate and part in ("scope",) or part.startswith("scope("):
             has_scope = True
             if len(code_parts) >= i + 1:
                 tmp_parts = code_parts[i + 1]
@@ -393,23 +348,15 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                 fragment = re.sub("""[",']""", "", tmp_parts)
                 if fragment == "{":
                     continue
-                if (
-                    fragment
-                    and constraints_dict
-                    and fragment in constraints_dict.keys()
-                ):
+                if fragment and constraints_dict and fragment in constraints_dict.keys():
                     fragment = "{" + fragment + "}"
                 # Check if this fragment could be pattern
                 if scope_url_prefix:
                     last_url_prefix_to_use = url_prefix_to_use
-                    url_prefix_to_use = (
-                        f"""{scope_url_prefix}/{fragment.removeprefix("/")}"""
-                    )
+                    url_prefix_to_use = f"""{scope_url_prefix}/{fragment.removeprefix("/")}"""
                 else:
                     last_url_prefix_to_use = url_prefix_to_use
-                    url_prefix_to_use = (
-                        f"""{url_prefix_to_use}/{fragment.removeprefix("/")}"""
-                    )
+                    url_prefix_to_use = f"""{url_prefix_to_use}/{fragment.removeprefix("/")}"""
                 continue
         if part in ("mount",) and len(code_parts) >= i + 4:
             if code_parts[i + 2] in (":at",):
@@ -424,9 +371,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
         ):
             if code_parts[i + 1] in ("do", "if", "()", "([^]*)"):
                 continue
-            has_do_block_next = len(code_parts) > (i + 2) and code_parts[i + 2] in (
-                "do",
-            )
+            has_do_block_next = len(code_parts) > (i + 2) and code_parts[i + 2] in ("do",)
             tmp_pattern = f"/{re.sub('^:', '', code_parts[i + 1])}"
             tmp_pattern = re.sub("""['"]""", "", tmp_pattern)
             url_pattern = _clean_url(tmp_pattern)
@@ -454,9 +399,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                     code_parts[i + 2],
                     code,
                     code_parts,
-                    f"{scope_url_prefix}/"
-                    if scope_url_prefix
-                    else f"{url_prefix_to_use}/",
+                    f"{scope_url_prefix}/" if scope_url_prefix else f"{url_prefix_to_use}/",
                 )
                 url_prefix_to_use = last_url_prefix_to_use
                 if code_parts[i + 2] in ("get", "post", "delete", "match"):
@@ -468,17 +411,14 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                     part,
                     code,
                     code_parts,
-                    f"{scope_url_prefix}/"
-                    if scope_url_prefix
-                    else f"{url_prefix_to_use}/",
+                    f"{scope_url_prefix}/" if scope_url_prefix else f"{url_prefix_to_use}/",
                 )
             else:
                 if not namespace_url_prefix:
                     namespace_url_prefix = f"{namespace_url_prefix}{url_pattern}"
                 last_url_prefix_to_use = url_prefix_to_use
                 if (
-                    is_in_resource_block
-                    and (is_in_resource_do_block or has_do_block_next)
+                    is_in_resource_block and (is_in_resource_do_block or has_do_block_next)
                 ) or not is_in_resource_block:
                     url_prefix_to_use = (
                         namespace_url_prefix + url_pattern
@@ -508,28 +448,16 @@ def code_to_routes(code: str) -> List[HttpRoute]:
             routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="GET"))
             for part in match_via_parts:
                 if "all" in part:
-                    routes.append(
-                        HttpRoute(url_pattern=_clean_url(full_path), method="POST")
-                    )
-                    routes.append(
-                        HttpRoute(url_pattern=_clean_url(full_path), method="PUT")
-                    )
-                    routes.append(
-                        HttpRoute(url_pattern=_clean_url(full_path), method="DELETE")
-                    )
+                    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="POST"))
+                    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="PUT"))
+                    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="DELETE"))
                     break
                 elif "post" in part:
-                    routes.append(
-                        HttpRoute(url_pattern=_clean_url(full_path), method="POST")
-                    )
+                    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="POST"))
                 elif "put" in part:
-                    routes.append(
-                        HttpRoute(url_pattern=_clean_url(full_path), method="PUT")
-                    )
+                    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="PUT"))
                 elif "delete" in part:
-                    routes.append(
-                        HttpRoute(url_pattern=_clean_url(full_path), method="DELETE")
-                    )
+                    routes.append(HttpRoute(url_pattern=_clean_url(full_path), method="DELETE"))
         # Are we dealing with an http method
         if part in HTTP_METHODS:
             for m in HTTP_METHODS:
@@ -579,9 +507,7 @@ def code_to_routes(code: str) -> List[HttpRoute]:
                             m,
                             code,
                             code_parts,
-                            f"{url_prefix_to_use}/{scope_url_prefix}/"
-                            if has_scope
-                            else "/",
+                            f"{url_prefix_to_use}/{scope_url_prefix}/" if has_scope else "/",
                         )
 
     return routes

@@ -877,9 +877,7 @@ def test_java(java_usages_1):
             "sso",
         ],
         "statistics-service/src/main/java/com/piggymetrics/statistics/controller/StatisticsController.java": [
-            "@PreAuthorize(\"#oauth2.hasScope('server') "
-            "or "
-            "#accountName.equals('demo')\")",
+            "@PreAuthorize(\"#oauth2.hasScope('server') or #accountName.equals('demo')\")",
             "@PreAuthorize(\"#oauth2.hasScope('server')\")",
             '@RequestMapping(value = "/current", method = RequestMethod.GET)',
             '@RequestMapping(value = "/{accountName}", method = RequestMethod.GET)',
@@ -1498,9 +1496,7 @@ def test_rb_with_endpoints(rb_usages_2):
 
 @pytest.fixture
 def ts_usages_1():
-    return OpenAPI(
-        "openapi3.0.1", "typescript", "test/data/ts-custom-router-usages.json"
-    )
+    return OpenAPI("openapi3.0.1", "typescript", "test/data/ts-custom-router-usages.json")
 
 
 def test_ts_custom_router(ts_usages_1):
@@ -1595,9 +1591,7 @@ def test_rust_axum_request_body_and_response_types(rust_usages_1):
     body_schema = body["content"]["application/json"]["schema"]
     assert body_schema == {"$ref": "#/components/schemas/CreateUserRequest"}
 
-    response_schema = create_user["responses"]["200"]["content"]["application/json"][
-        "schema"
-    ]
+    response_schema = create_user["responses"]["200"]["content"]["application/json"]["schema"]
     assert response_schema == {"$ref": "#/components/schemas/User"}
 
 

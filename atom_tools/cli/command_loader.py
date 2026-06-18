@@ -14,9 +14,7 @@ class CommandLoader(FactoryCommandLoader):
     Command Loader for the atom-tools CLI.
     """
 
-    def register_factory(
-        self, command_name: str, factory: Callable[[], Command]
-    ) -> None:
+    def register_factory(self, command_name: str, factory: Callable[[], Command]) -> None:
         """
         Register a command factory.
 

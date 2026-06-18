@@ -1,6 +1,6 @@
 [project]
 name = "atom-tools"
-version = "0.9.0"
+version = "0.9.1"
 description = "Collection of tools for use with AppThreat/atom."
 authors = [
   { name = "Team AppThreat", email = "cloud@appthreat.com" },
@@ -35,10 +35,9 @@ atom-tools = "atom_tools.cli.application:main"
 dev = [
 "coverage",
 "flake8",
-"isort",
+"ruff>=0.14.0",
 "mypy",
 "pre-commit",
-"pylint",
 "pytest",
 "tox",
 ]
@@ -56,11 +55,13 @@ packages = [
 ]
 include-package-data = true
 
-[tool.black]
+[tool.ruff]
 line-length = 99
 
-[tool.isort]
-profile = "black"
+[tool.ruff.format]
+# Match the previous formatter defaults so existing files are not churned.
+quote-style = "double"
+indent-style = "space"
 
 [tool.pylint]
 ignore-long-lines = "[r|f][\"']"

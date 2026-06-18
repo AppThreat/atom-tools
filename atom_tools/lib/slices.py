@@ -38,9 +38,7 @@ def create_attrib_dicts(data: Dict) -> Dict[str, Dict]:
         elif "name" in k:
             attributes["name"] = process_attrib_dict(attributes["name"], k, v)
         elif k.endswith("lineNumber$int"):
-            attributes["linenumber"] = process_attrib_dict(
-                attributes["linenumber"], k, v
-            )
+            attributes["linenumber"] = process_attrib_dict(attributes["linenumber"], k, v)
         elif "signature" in k:
             attributes["signature"] = process_attrib_dict(attributes["signature"], k, v)
 

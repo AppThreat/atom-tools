@@ -204,9 +204,7 @@ def run_command(args: List[str]) -> subprocess.CompletedProcess:
     )
 
 
-def run_blint_sbom(
-    blint_cmd: str, app_file: str, reports_dir: str, deep: bool
-) -> Optional[str]:
+def run_blint_sbom(blint_cmd: str, app_file: str, reports_dir: str, deep: bool) -> Optional[str]:
     """
     Generate a CycloneDX SBOM for an application using blint.
 
@@ -229,9 +227,7 @@ def run_blint_sbom(
     args = [blint_cmd, "sbom", "--src", app_file, "--output-file", bom_file]
     if deep:
         # Deep mode parses dex classes (needed for service / behaviour detection);
-        # disassembly additionally emits the Dalvik callgraph sidecar.
         args.append("--deep")
-        args.append("--disassembly")
     cp = run_command(args)
     if cp.returncode != 0 or not os.path.exists(bom_file):
         logger.warning("blint failed for %s: %s", app_file, (cp.stdout or "").strip())
@@ -253,9 +249,7 @@ def dex_callgraph_path(bom_file: str, app_file: str) -> Optional[str]:
     return candidate if os.path.exists(candidate) else None
 
 
-def run_atom_slices(
-    atom_cmd: str, app_file: str, reports_dir: str
-) -> Dict[str, Optional[str]]:
+def run_atom_slices(atom_cmd: str, app_file: str, reports_dir: str) -> Dict[str, Optional[str]]:
     """
     Generate usage and reachable slices for an application using atom.
 
@@ -313,9 +307,7 @@ def run_atom_slices(
     if usages_cp.returncode == 0 and os.path.exists(usages_file):
         result["usages"] = usages_file
     else:
-        logger.warning(
-            "atom usages failed for %s: %s", app_file, (usages_cp.stdout or "").strip()
-        )
+        logger.warning("atom usages failed for %s: %s", app_file, (usages_cp.stdout or "").strip())
     return result
 
 
@@ -591,9 +583,7 @@ def collect_attribution(reachables: Optional[dict]):
             for t in tagset
             if t.startswith("service-") and t not in (SERVICE_EGRESS, SERVICE_INGRESS)
         )
-        tracker_cats = sorted(
-            t[len("tracker-") :] for t in tagset if t.startswith("tracker-")
-        )
+        tracker_cats = sorted(t[len("tracker-") :] for t in tagset if t.startswith("tracker-"))
         for tag in tags:
             if tag.startswith("service:"):
                 name = tag.split(":", 1)[1]
@@ -660,16 +650,12 @@ def build_cyclonedx_services(services: Dict[str, dict]) -> List[dict]:
         if categories:
             service["group"] = categories[0]
         if info["local"]:
-            service["properties"].append(
-                {"name": "internal:onDeviceAi", "value": "true"}
-            )
+            service["properties"].append({"name": "internal:onDeviceAi", "value": "true"})
         result.append(service)
     return result
 
 
-def enrich_bom_with_services(
-    bom: Optional[dict], services: List[dict]
-) -> Optional[dict]:
+def enrich_bom_with_services(bom: Optional[dict], services: List[dict]) -> Optional[dict]:
     """
     Merge detected CycloneDX services into a SBOM document.
 
@@ -687,9 +673,7 @@ def enrich_bom_with_services(
         return None
     if not services:
         return bom
-    existing = {
-        s.get("bom-ref"): s for s in bom.get("services", []) if s.get("bom-ref")
-    }
+    existing = {s.get("bom-ref"): s for s in bom.get("services", []) if s.get("bom-ref")}
     for service in services:
         existing[service["bom-ref"]] = service
     unkeyed = [s for s in bom.get("services", []) if not s.get("bom-ref")]
@@ -713,9 +697,7 @@ def categorize_tags(reachables: Optional[dict]) -> Dict[str, Dict[str, int]]:
         collect_tags(reachables, found)
     categorized: Dict[str, Dict[str, int]] = {}
     for category, prefixes in TAG_CATEGORIES.items():
-        matches = {
-            tag: count for tag, count in found.items() if tag.startswith(prefixes)
-        }
+        matches = {tag: count for tag, count in found.items() if tag.startswith(prefixes)}
         if matches:
             categorized[category] = dict(sorted(matches.items()))
     return categorized

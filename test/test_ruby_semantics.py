@@ -31,9 +31,9 @@ def test_code_to_routes():
         )
         == []
     )
-    assert code_to_routes(
-        'Railsgoat::Application.routes.draw do get "login" => ...'
-    ) == [HttpRoute(url_pattern="/login", method="GET")]
+    assert code_to_routes('Railsgoat::Application.routes.draw do get "login" => ...') == [
+        HttpRoute(url_pattern="/login", method="GET")
+    ]
     assert code_to_routes(
         'Railsgoat::Application.routes.draw do get "login" => "sessions#new" get "signup" => "users#new" get "logout" => "sessions#destroy" get "forgot_password" => "password_resets#forgot_password" post "forgot_password" => "password_resets#send_forgot_password" get "password_resets" => "password_resets#confirm_token" post "password_resets" => "password_resets#reset_password" get "dashboard/doc" => "dashboard#doc"'
     ) == [
@@ -130,9 +130,9 @@ def test_code_to_routes_resources():
         HttpRoute(url_pattern="/users/pay/update_dd_info", method="POST"),
         HttpRoute(url_pattern="/users/pay/decrypted_bank_acct_num", method="POST"),
     ]
-    assert code_to_routes(
-        'resources :tutorials do collection do get "credentials" end end'
-    ) == [HttpRoute(url_pattern="/tutorials/credentials", method="GET")]
+    assert code_to_routes('resources :tutorials do collection do get "credentials" end end') == [
+        HttpRoute(url_pattern="/tutorials/credentials", method="GET")
+    ]
     assert code_to_routes(
         'resources :schedule do collection do get "get_pto_schedule" end end'
     ) == [HttpRoute(url_pattern="/schedule/get_pto_schedule", method="GET")]
@@ -219,11 +219,7 @@ def test_code_to_routes_scope_dangling():
     ) == [HttpRoute(url_pattern="/payments_venmo_infos/{venmo_info_id}", method="GET")]
     assert code_to_routes(
         """scope \"payments_apple_pay_infos\", :controller => \"admin_payments_apple_pay_infos\" do match \"(:apple_pay_info_id)"""
-    ) == [
-        HttpRoute(
-            url_pattern="/payments_apple_pay_infos/{apple_pay_info_id}", method="GET"
-        )
-    ]
+    ) == [HttpRoute(url_pattern="/payments_apple_pay_infos/{apple_pay_info_id}", method="GET")]
     assert code_to_routes("""scope 'offers/(:offer_id)""") == []
     assert code_to_routes("""scope \"/referral_codes/(:referral_code)""") == []
     assert code_to_routes(
@@ -404,13 +400,9 @@ def test_code_to_routes_scope_multiple_path():
     ) == [HttpRoute(url_pattern="/payments_card_infos/{card_info_id}", method="GET")]
     assert code_to_routes(
         """scope \"payments_paypal_infos\", :controller => \"admin_payments_paypal_infos\" do match \"(:paypal_info_id)"""
-    ) == [
-        HttpRoute(url_pattern="/payments_paypal_infos/{paypal_info_id}", method="GET")
-    ]
+    ) == [HttpRoute(url_pattern="/payments_paypal_infos/{paypal_info_id}", method="GET")]
     assert code_to_routes("""scope :controller=>'search_v2' do get 'brand/:brand', :action => 'listings_by_brand', :as => 'search_by_brand', :constraints => {:brand => /[^//]+/} # MOVED TO NODE, Still referenced
-by Rails application helper end""") == [
-        HttpRoute(url_pattern="/brand/{brand}", method="GET")
-    ]
+by Rails application helper end""") == [HttpRoute(url_pattern="/brand/{brand}", method="GET")]
     assert code_to_routes(
         """scope :controller=>'bundle_v3' do get '/bundles/:bundle_id', :action => 'get_bundle_v3', :as => 'bundle_v3_id'"""
     ) == [HttpRoute(url_pattern="/bundles/{bundle_id}", method="GET")]
@@ -441,9 +433,7 @@ def test_code_to_routes_namespace():
         HttpRoute(url_pattern="/api/v1/users/{id}", method="DELETE"),
     ]
 
-    assert code_to_routes(
-        "namespace :v1 do resources :users resources :mobile end"
-    ) == [
+    assert code_to_routes("namespace :v1 do resources :users resources :mobile end") == [
         HttpRoute(url_pattern="/v1/users", method="GET"),
         HttpRoute(url_pattern="/v1/users/new", method="GET"),
         HttpRoute(url_pattern="/v1/users", method="POST"),
@@ -566,9 +556,9 @@ end""") == [
 
 def test_code_to_routes_sinatra():
     assert fix_url_params("/download/*.*") == "/download/{extra_path}"
-    assert code_to_routes(
-        "get '/' do Sinatra::RestApi::Router.list_routes.to_json end"
-    ) == [HttpRoute(url_pattern="/", method="GET")]
+    assert code_to_routes("get '/' do Sinatra::RestApi::Router.list_routes.to_json end") == [
+        HttpRoute(url_pattern="/", method="GET")
+    ]
     assert code_to_routes("get '/' do @details = OpenStruct.new( attributes: {} )") == [
         HttpRoute(url_pattern="/", method="GET")
     ]
@@ -616,14 +606,10 @@ def test_endpoints_to_routes():
         HttpRoute(url_pattern="/", method="GET", servers=["http://google.com"])
     ]
     assert endpoints_to_routes("http://translate.google.com/", "parse") == [
-        HttpRoute(
-            url_pattern="/", method="GET", servers=["http://translate.google.com"]
-        )
+        HttpRoute(url_pattern="/", method="GET", servers=["http://translate.google.com"])
     ]
     assert endpoints_to_routes("http://something.com/uploads", "parse") == [
-        HttpRoute(
-            url_pattern="/uploads", method="GET", servers=["http://something.com"]
-        )
+        HttpRoute(url_pattern="/uploads", method="GET", servers=["http://something.com"])
     ]
     assert endpoints_to_routes("http://myproxy.com:8080", "parse") == [
         HttpRoute(url_pattern="/", method="GET", servers=["http://myproxy.com:8080"])
@@ -634,10 +620,6 @@ def test_endpoints_to_routes():
     assert endpoints_to_routes("https://mysite.com/thing?foo=bar", "parse") == [
         HttpRoute(url_pattern="/thing", method="GET", servers=["https://mysite.com"])
     ]
-    assert endpoints_to_routes(
-        "http://foo.com/this/is/everything?query=params", "parse"
-    ) == [
-        HttpRoute(
-            url_pattern="/this/is/everything", method="GET", servers=["http://foo.com"]
-        )
+    assert endpoints_to_routes("http://foo.com/this/is/everything?query=params", "parse") == [
+        HttpRoute(url_pattern="/this/is/everything", method="GET", servers=["http://foo.com"])
     ]
