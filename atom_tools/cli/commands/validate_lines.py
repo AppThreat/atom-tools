@@ -76,9 +76,7 @@ class ValidateLinesCommand(Command):
             flag=False,
         ),
     ]
-    help = (
-        """Validate source file line numbers in an atom usages or reachables slice."""
-    )
+    help = """Validate source file line numbers in an atom usages or reachables slice."""
     loggers = [
         "atom_tools.lib.validator",
         "atom_tools.lib.regex_utils",

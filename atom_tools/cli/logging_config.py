@@ -36,9 +36,7 @@ class IOFormatter(Formatter):
 
         if not ATOM_TOOLS_FILTER.filter(record):
             # prefix all lines from third-party packages for easier debugging
-            formatted = textwrap.indent(
-                formatted, f"[{_log_prefix(record)}] ", lambda line: True
-            )
+            formatted = textwrap.indent(formatted, f"[{_log_prefix(record)}] ", lambda line: True)
 
         return formatted
 
@@ -57,9 +55,9 @@ def _path_to_package(path: Path) -> str | None:
     # We have to search the entire sys.path because a subsequent path might be
     # a sub path of the first match and thereby a better match.
     for syspath in sys.path:
-        if (
-            prefix and prefix in (p := Path(syspath)).parents and p in path.parents
-        ) or (not prefix and (p := Path(syspath)) in path.parents):
+        if (prefix and prefix in (p := Path(syspath)).parents and p in path.parents) or (
+            not prefix and (p := Path(syspath)) in path.parents
+        ):
             prefix = p
     if not prefix:
         # this is unexpected, but let's play it safe

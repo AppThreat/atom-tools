@@ -68,8 +68,4 @@ class CheckReachableCommand(Command):
         Executes the query command and performs the search.
         """
         atom_slice = AtomSlice(self.option("input-slice"))
-        print(
-            check_reachable(
-                atom_slice.content, self.option("pkg"), self.option("location")
-            )
-        )
+        print(check_reachable(atom_slice.content, self.option("pkg"), self.option("location")))

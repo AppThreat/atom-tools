@@ -56,12 +56,8 @@ def convert(usages: AtomSlice):
                     if not result.get(route.url_pattern):
                         result[route.url_pattern] = {route.method.lower(): amethod}
                     else:
-                        existing_method = result[route.url_pattern].get(
-                            route.method.lower(), {}
-                        )
-                        existing_servers: list[dict[str, str]] = existing_method.get(
-                            "servers", []
-                        )
+                        existing_method = result[route.url_pattern].get(route.method.lower(), {})
+                        existing_servers: list[dict[str, str]] = existing_method.get("servers", [])
                         existing_usages = existing_method.get("x-atom-usages", {})
                         if not isinstance(existing_usages, list):
                             existing_usages = [existing_usages]
@@ -69,9 +65,7 @@ def convert(usages: AtomSlice):
                         new_usages = amethod.get("x-atom-usages", {})
                         combined_servers = [
                             dict(t)
-                            for t in {
-                                tuple(d.items()) for d in existing_servers + new_servers
-                            }
+                            for t in {tuple(d.items()) for d in existing_servers + new_servers}
                         ]
                         if new_usages:
                             existing_usages.append(new_usages)
@@ -81,11 +75,8 @@ def convert(usages: AtomSlice):
                             amethod["x-atom-usages"] = [
                                 json.loads(item)
                                 for item in set(
-                                    json.dumps(d, sort_keys=True)
-                                    for d in existing_usages
+                                    json.dumps(d, sort_keys=True) for d in existing_usages
                                 )
                             ]
-                        result[route.url_pattern].update(
-                            {route.method.lower(): amethod}
-                        )
+                        result[route.url_pattern].update({route.method.lower(): amethod})
     return result

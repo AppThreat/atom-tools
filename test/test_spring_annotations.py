@@ -55,9 +55,7 @@ def test_java_type_to_schema_unknown_defaults_to_object():
 
 
 def test_extract_annotation_string_value_double_quotes():
-    assert (
-        _extract_annotation_string_value('@RequestHeader("X-Api-Key")') == "X-Api-Key"
-    )
+    assert _extract_annotation_string_value('@RequestHeader("X-Api-Key")') == "X-Api-Key"
 
 
 def test_extract_annotation_string_value_named_attribute():
@@ -77,9 +75,7 @@ def test_extract_annotation_string_value_no_value():
 
 @pytest.fixture
 def spring_annotations():
-    return OpenAPI(
-        "openapi3.1.0", "java", "test/data/java-spring-annotations-usages.json"
-    )
+    return OpenAPI("openapi3.1.0", "java", "test/data/java-spring-annotations-usages.json")
 
 
 # ── _build_udt_schema_map ─────────────────────────────────────────────────────
@@ -100,9 +96,7 @@ def test_build_udt_schema_map(spring_annotations):
 
 def test_build_schema_from_type_known_udt(spring_annotations):
     udt_map = spring_annotations._build_udt_schema_map()
-    schema = spring_annotations._build_schema_from_type(
-        "com.example.ChargeRequest", udt_map
-    )
+    schema = spring_annotations._build_schema_from_type("com.example.ChargeRequest", udt_map)
     assert schema["type"] == "object"
     props = schema["properties"]
     assert props["amount"] == {"type": "integer", "format": "int64"}
@@ -282,9 +276,7 @@ def test_enrich_requestbody_properties_from_getters_unresolved(spring_annotation
     """@RequestBody DTO with unresolved returnType=ANY falls back to string properties."""
     paths = spring_annotations._enrich_from_param_annotation()
     assert "/migrate" in paths
-    schema = paths["/migrate"]["post"]["requestBody"]["content"]["application/json"][
-        "schema"
-    ]
+    schema = paths["/migrate"]["post"]["requestBody"]["content"]["application/json"]["schema"]
     assert schema["type"] == "object"
     assert "properties" in schema
     assert schema["properties"]["organizationId"] == {"type": "string"}

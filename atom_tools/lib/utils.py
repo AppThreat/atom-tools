@@ -37,9 +37,7 @@ def check_reachable(data: Dict, pkg: str, loc: str) -> bool:
     if pkg:
         return check_reachable_purl(data, pkg)
     if match := re.search(r"(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)", loc):
-        return filter_flows(
-            data.get("reachables", []), match["file"], get_ln_range(match["line"])
-        )
+        return filter_flows(data.get("reachables", []), match["file"], get_ln_range(match["line"]))
     raise ValueError(f"Invalid location: {loc}")
 
 
@@ -49,9 +47,7 @@ def export_json(data: Dict, outfile: str, indent: int | None = None) -> None:
         json.dump(data, f, indent=indent, sort_keys=True)
 
 
-def output_endpoints(
-    data: Dict, sparse: bool, line_range: Tuple[int, int] | Tuple
-) -> str:
+def output_endpoints(data: Dict, sparse: bool, line_range: Tuple[int, int] | Tuple) -> str:
     """Outputs endpoints"""
     to_print = ""
     for endpoint, values in data.get("paths", {}).items():
@@ -60,9 +56,7 @@ def output_endpoints(
     return to_print
 
 
-def filter_endpoint_ln(
-    ep: str, values: Dict, sparse: bool, ln_range: Tuple[int, int]
-) -> str:
+def filter_endpoint_ln(ep: str, values: Dict, sparse: bool, ln_range: Tuple[int, int]) -> str:
     """Filters endpoint line numbers"""
     to_print = ""
     usages = values.get("x-atom-usages", {}).get("call", {})

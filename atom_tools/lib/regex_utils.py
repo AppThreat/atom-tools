@@ -41,9 +41,7 @@ class OpenAPIRegexCollection:
     # This regex is used to extract named parameters regardless of language
     named_param_generic_extract = re.compile(r"\(\?P?:?<?(?P<pname>[^\[]+)>([^)]+\))")
     # This regex will extract regexes not in a group.
-    unnamed_param_generic_extract = re.compile(
-        r"(?P<pattern>\(?\?[:!][^\s)]+[^\w(/.]+)"
-    )
+    unnamed_param_generic_extract = re.compile(r"(?P<pattern>\(?\?[:!][^\s)]+[^\w(/.]+)")
 
 
 @dataclass(init=True)
@@ -63,17 +61,13 @@ class ValidationRegexCollection:  # pylint: disable=too-many-instance-attributes
     """
 
     java_lib_type = re.compile(r"java.[^.\s]+.(?P<type>\w+)")
-    java_udt_regex = re.compile(
-        r"(?:(void\()?com|org)[a-z0-9.]+(?P<udt>([A-Z]\w+)*)(?=\(?\))"
-    )
+    java_udt_regex = re.compile(r"(?:(void\()?com|org)[a-z0-9.]+(?P<udt>([A-Z]\w+)*)(?=\(?\))")
     tests_regex = re.compile(r"test.|tests.|/test/|/tests/", re.IGNORECASE)
     single_char_var = re.compile(r"(?<=[(\s])[a-z](?=[\s),.\[])")
     js_import = re.compile(r"import \{ (?P<lib>[\w,\s]+) } from (?P<mod>\S+)")
     js_require_extract = re.compile(r"require\((?P<lib>\S+)\).(?P<mod>\S+)")
     py_func_name = re.compile(r"(?<=\().+?(?=\))")
-    py_mod_members = re.compile(
-        r"(?<=:<module>.)(?P<class>[A-Z][^<.]+)?\.?(?P<func>[^<.]+)?"
-    )
+    py_mod_members = re.compile(r"(?<=:<module>.)(?P<class>[A-Z][^<.]+)?\.?(?P<func>[^<.]+)?")
 
 
 @dataclass
@@ -139,10 +133,7 @@ def js_helper(endpoint: str) -> str:
 
     """
     return "/".join(
-        [
-            f"{{{comp[1:]}}}" if comp.startswith(":") else comp
-            for comp in endpoint.split("/")
-        ]
+        [f"{{{comp[1:]}}}" if comp.startswith(":") else comp for comp in endpoint.split("/")]
     )
 
 
@@ -175,9 +166,7 @@ def regex_match_helper(
     return element, p, count
 
 
-def create_tmp_regex_name(
-    element: str, m: Tuple | str, count: int
-) -> Tuple[str, str, int]:
+def create_tmp_regex_name(element: str, m: Tuple | str, count: int) -> Tuple[str, str, int]:
     """
     Handles regex parameters without named groups.
     """

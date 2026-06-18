@@ -42,9 +42,7 @@ def load_command(name: str) -> Callable[[], Command]:
 
     def _load() -> Command:
         words = name.split(" ")
-        module = import_module(
-            "atom_tools.cli.commands." + ".".join(words).replace("-", "_")
-        )
+        module = import_module("atom_tools.cli.commands." + ".".join(words).replace("-", "_"))
         command_class = getattr(
             module, "".join(c.title() for c in words).replace("-", "") + "Command"
         )
@@ -102,9 +100,7 @@ class Application(BaseApplication):
         return IO(input, output, error_output)
 
     @staticmethod
-    def register_command_loggers(
-        event: Event, event_name: str, _: EventDispatcher
-    ) -> None:  # pylint: disable=unused-argument
+    def register_command_loggers(event: Event, event_name: str, _: EventDispatcher) -> None:  # pylint: disable=unused-argument
         """
         Register command loggers. Based heavily on Poetry's implementation.
 

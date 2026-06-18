@@ -194,9 +194,7 @@ def test_full_converter_delete_with_no_content(java_response_codes_converter):
     """DELETE /users/{id} should produce 204 in the OpenAPI output."""
     result = java_response_codes_converter.endpoints_to_openapi()
     paths = result.get("paths", {})
-    delete_responses = (
-        paths.get("/users/{id}", {}).get("delete", {}).get("responses", {})
-    )
+    delete_responses = paths.get("/users/{id}", {}).get("delete", {}).get("responses", {})
     assert "204" in delete_responses
 
 
@@ -204,9 +202,7 @@ def test_full_converter_get_default_fallback(java_response_codes_converter):
     """GET /users/{id}/status has no ResponseEntity -> should fall back to default 200."""
     result = java_response_codes_converter.endpoints_to_openapi()
     paths = result.get("paths", {})
-    get_responses = (
-        paths.get("/users/{id}/status", {}).get("get", {}).get("responses", {})
-    )
+    get_responses = paths.get("/users/{id}/status", {}).get("get", {}).get("responses", {})
     assert "200" in get_responses
 
 

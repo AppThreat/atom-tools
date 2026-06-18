@@ -93,9 +93,7 @@ class FilterCommand(Command):
         outfile = self.option("outfile")
         if not outfile:
             slice_file = Path(self.option("input-slice"))
-            outfile = str(
-                slice_file.parent / f"{slice_file.stem}_filtered{slice_file.suffix}"
-            )
+            outfile = str(slice_file.parent / f"{slice_file.stem}_filtered{slice_file.suffix}")
         cmd, args = "export", ""
         if self.option("execute") != "export":
             cmd, args = add_params_to_cmd(self.option("execute"), outfile)
