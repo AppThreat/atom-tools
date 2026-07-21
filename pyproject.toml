@@ -39,7 +39,6 @@ dev = [
 "mypy",
 "pre-commit",
 "pytest",
-"tox",
 ]
 
 [build-system]
