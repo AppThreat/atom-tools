@@ -38,8 +38,7 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip setuptools
         python3 -m pip install .[dev]
-    - name: Tox
+    - name: Test
       run: |
-        python3 -m tox
         coverage run -m pytest test
         coverage report

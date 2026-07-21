@@ -1700,7 +1700,10 @@ def create_ln_entries(filename: str, call_line_numbers: List, line_number: int |
     if call_line_numbers:
         x_atom["x-atom-usages"]["call"] = {fn: call_line_numbers}
     if line_number:
-        x_atom["x-atom-usages"]["target"] = {fn: line_number}
+        # Keep the same shape as "call": a per-file list of line numbers, so
+        # consumers can iterate both uniformly instead of special-casing a
+        # scalar target line.
+        x_atom["x-atom-usages"]["target"] = {fn: [line_number]}
     return x_atom
 
 
