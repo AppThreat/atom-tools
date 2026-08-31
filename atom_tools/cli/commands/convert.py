@@ -103,6 +103,10 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
             "rb",
             "scala",
             "sbt",
+            "rs",
+            "rust",
+            "go",
+            "golang",
         }
         if self.option("type") not in supported_types:
             raise ValueError(f"Unknown origin type: {self.option('type')}")

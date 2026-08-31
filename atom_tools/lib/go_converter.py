@@ -15,6 +15,8 @@ OpenAPI shape atom-tools' callers expect.
 Path placeholders are normalised across the supported frameworks:
 
 - Gin / Echo / iris ``:id`` → OpenAPI ``{id}``.
+- Gin catch-all ``*filepath`` → OpenAPI ``{filepath}`` (mirrors the
+  rust converter's handling of axum/rocket's ``<id..>`` catch-all).
 - chi / gorilla/mux ``{id}`` and ``{id:regex}`` → OpenAPI ``{id}``.
 - net/http ``{id}`` (Go 1.22+ pattern syntax) → OpenAPI ``{id}``.
 
@@ -66,9 +68,13 @@ _GO_SCALAR_SCHEMA: Dict[str, Dict] = {
 # Path-placeholder patterns. Golem emits the framework-native placeholder
 # verbatim, so we look for each shape and normalise to ``{name}``.
 #   Gin / Echo / iris: ``:id`` (colon prefix)
+#   Gin catch-all:     ``*filepath`` (asterisk prefix, matches the rest
+#                      of the path segment) — mirrors the rust converter's
+#                      handling of axum/rocket's ``<id..>`` catch-all.
 #   chi / gorilla/mux: ``{id}`` or ``{id:regex}`` (already {}-wrapped)
 #   net/http 1.22+:    ``{id}`` (already correct — left alone)
 _PLACEHOLDER_COLON = re.compile(r":([A-Za-z_][A-Za-z0-9_]*)")
+_PLACEHOLDER_STAR = re.compile(r"\*([A-Za-z_][A-Za-z0-9_]*)")
 _PLACEHOLDER_REGEX_BRACE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*):[^}]+\}")
 
 
@@ -80,6 +86,7 @@ def normalize_path(path: str) -> str:
     if not path:
         return ""
     path = _PLACEHOLDER_COLON.sub(r"{\1}", path)
+    path = _PLACEHOLDER_STAR.sub(r"{\1}", path)
     path = _PLACEHOLDER_REGEX_BRACE.sub(r"{\1}", path)
     return path
 
@@ -95,7 +102,13 @@ def go_type_to_schema(type_name: str) -> Dict:
     """
     if not type_name:
         return {"type": "object"}
-    name = type_name.strip()
+    # Collapse internal whitespace so source-shaped spellings such as
+    # ``interface {}`` or ``map[string] int`` match the scalar/wrapper
+    # lookups below the same way their whitespace-free variants do.
+    # Without this, ``interface {}`` bypasses the ``any``/``interface{}``
+    # scalar entries and falls through to the $ref branch, producing an
+    # invalid schema name ``interface {}``.
+    name = type_name.strip().replace(" ", "")
 
     # Pointer types ``*T`` describe the same shape as T for OpenAPI.
     while name.startswith("*"):

@@ -1710,13 +1710,17 @@ def test_go_gin_gin_h_maps_to_free_form_object(go_usages_1):
     should surface as a free-form ``object`` schema rather than a
     $ref to something with no declaration to point at. Golem
     collapses gin.H to ``object`` upstream; the converter has to
-    pass that through as an OpenAPI object type."""
+    pass that through as an OpenAPI object type.
+
+    Asserted unconditionally: if the converter ever stops emitting the
+    content block for free-form objects, this test needs to fail
+    loudly, not silently pass. Emitting the object schema is the
+    intentional behaviour per the module docstring."""
     result = go_usages_1.convert_usages()
     health = result["/health"]["get"]
     response = health["responses"]["200"]
-    if "content" in response:
-        schema = response["content"]["application/json"]["schema"]
-        assert schema == {"type": "object"}
+    schema = response["content"]["application/json"]["schema"]
+    assert schema == {"type": "object"}
 
 
 def test_go_gin_endpoints_to_openapi(go_usages_1):
@@ -1728,3 +1732,31 @@ def test_go_gin_endpoints_to_openapi(go_usages_1):
     paths = result["paths"]
     assert "/health" in paths
     assert "/api/v1/users/{id}" in paths
+
+
+def test_go_normalize_path_gin_catchall():
+    """Gin catch-all routes (``/static/*filepath``) must normalise to
+    OpenAPI's ``{filepath}`` form, mirroring the rust converter's
+    handling of axum/rocket's ``<id..>`` catch-all placeholder."""
+    from atom_tools.lib.go_converter import normalize_path
+
+    assert normalize_path("/static/*filepath") == "/static/{filepath}"
+    # Colon and catch-all placeholders on the same path both normalise.
+    assert (
+        normalize_path("/api/v1/users/:id/files/*path")
+        == "/api/v1/users/{id}/files/{path}"
+    )
+    # Already-OpenAPI paths pass through unchanged.
+    assert normalize_path("/api/v1/users/{id}") == "/api/v1/users/{id}"
+
+
+def test_go_type_to_schema_normalises_interface_with_space():
+    """``interface {}`` as spelled in Go source (with a space) must
+    resolve to the free-form object schema, not fall through to a
+    ``$ref`` pointing at an invalid schema name containing whitespace."""
+    from atom_tools.lib.go_converter import go_type_to_schema
+
+    assert go_type_to_schema("interface {}") == {"type": "object"}
+    assert go_type_to_schema("interface{}") == {"type": "object"}
+    # any is Go 1.18+'s alias for interface{} and must produce the same shape.
+    assert go_type_to_schema("any") == {"type": "object"}
