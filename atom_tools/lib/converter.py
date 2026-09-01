@@ -21,6 +21,7 @@ from atom_tools.lib.regex_utils import (
     OpenAPIRegexCollection,
 )
 from atom_tools.lib.slices import AtomSlice
+from atom_tools.lib.go_converter import convert as go_convert
 from atom_tools.lib.ruby_converter import convert as ruby_convert
 from atom_tools.lib.rust_converter import convert as rust_convert
 from atom_tools.lib.scala_converter import convert as scala_convert
@@ -388,6 +389,8 @@ class OpenAPI:
             return scala_convert(self.usages, self.semantics)
         if self.usages.origin_type in ("rs", "rust"):
             return rust_convert(self.usages)
+        if self.usages.origin_type in ("go", "golang"):
+            return go_convert(self.usages)
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
         self.target_line_nums = self._identify_target_line_nums(methods)

@@ -1615,3 +1615,148 @@ def test_rust_axum_endpoints_to_openapi(rust_usages_1):
     paths = result["paths"]
     assert "/health" in paths
     assert "/api/v1/users/{id}" in paths
+
+
+@pytest.fixture
+def go_usages_1():
+    # Real golem report (cdxgen-plugins-bin v3.0.5+) emitted by golem's
+    # enriched endpoint discovery against a small Gin service: 10
+    # endpoints across /health, /api/v1/users, /api/v1/orders, and
+    # /api/v1/auth/login. The fixture exercises the empty-path Group
+    # fix (POST/GET /api/v1/users have empty-string path args in the
+    # source) and the handler-signature enrichment (path params,
+    # request bodies, response types).
+    return OpenAPI("openapi3.0.1", "go", "test/data/go-gin-sample-golem.json")
+
+
+def test_go_gin_convert_emits_expected_paths(go_usages_1):
+    """The go converter should produce one OpenAPI path entry per
+    golem endpoint, with framework-native placeholders (Gin's
+    ``:id``) normalised to OpenAPI's ``{id}``."""
+    result = go_usages_1.convert_usages()
+    result = sort_openapi_result(result)
+    expected_paths = {
+        "/health",
+        "/api/v1/users",
+        "/api/v1/users/{id}",
+        "/api/v1/orders",
+        "/api/v1/orders/{id}",
+        "/api/v1/auth/login",
+    }
+    assert expected_paths.issubset(set(result.keys()))
+
+
+def test_go_gin_methods_per_path(go_usages_1):
+    """All HTTP methods registered against a path should appear in
+    the converted operation map."""
+    result = go_usages_1.convert_usages()
+    users = result["/api/v1/users"]
+    assert {"get", "post"}.issubset(set(users.keys()))
+
+
+def test_go_gin_path_param_extraction(go_usages_1):
+    """Golem lifts ``c.Param("id")`` out of getUser's body into a
+    structured parameter; the converter should emit it as an OpenAPI
+    path parameter with the correct name and location."""
+    result = go_usages_1.convert_usages()
+    op = result["/api/v1/users/{id}"]["get"]
+    params = op.get("parameters", [])
+    id_params = [p for p in params if p["name"] == "id" and p["in"] == "path"]
+    assert id_params, f"expected 'id' path parameter, got {params}"
+    assert id_params[0]["required"] is True
+    assert id_params[0]["schema"] == {"type": "string"}
+
+
+def test_go_gin_request_body_and_response_types(go_usages_1):
+    """A handler with ``c.ShouldBindJSON(&req)`` should map to a
+    ``requestBody`` referencing the body type via $ref; the return
+    type should appear as the 200 response content schema."""
+    result = go_usages_1.convert_usages()
+    create_user = result["/api/v1/users"]["post"]
+
+    body = create_user["requestBody"]
+    assert body["required"] is True
+    body_schema = body["content"]["application/json"]["schema"]
+    assert body_schema == {"$ref": "#/components/schemas/CreateUserRequest"}
+
+    response_schema = create_user["responses"]["200"]["content"]["application/json"]["schema"]
+    # POST /api/v1/users returns a User struct via c.JSON(201, User{...}).
+    assert response_schema == {"$ref": "#/components/schemas/User"}
+
+
+def test_go_gin_slice_response_preserves_multiplicity(go_usages_1):
+    """A handler returning ``[]User`` should map to an OpenAPI array
+    of Users, not a single User reference."""
+    result = go_usages_1.convert_usages()
+    list_users = result["/api/v1/users"]["get"]
+    response_schema = list_users["responses"]["200"]["content"]["application/json"]["schema"]
+    assert response_schema == {
+        "type": "array",
+        "items": {"$ref": "#/components/schemas/User"},
+    }
+
+
+def test_go_gin_framework_attribution(go_usages_1):
+    """Each operation carries the detected framework and the owning
+    Go package so downstream tooling can group endpoints by service."""
+    result = go_usages_1.convert_usages()
+    op = result["/api/v1/users/{id}"]["get"]
+    assert op.get("x-go-framework") == "gin"
+    assert op.get("x-go-package")
+
+
+def test_go_gin_gin_h_maps_to_free_form_object(go_usages_1):
+    """Handlers that return ``gin.H{...}`` (an ad-hoc map alias)
+    should surface as a free-form ``object`` schema rather than a
+    $ref to something with no declaration to point at. Golem
+    collapses gin.H to ``object`` upstream; the converter has to
+    pass that through as an OpenAPI object type.
+
+    Asserted unconditionally: if the converter ever stops emitting the
+    content block for free-form objects, this test needs to fail
+    loudly, not silently pass. Emitting the object schema is the
+    intentional behaviour per the module docstring."""
+    result = go_usages_1.convert_usages()
+    health = result["/health"]["get"]
+    response = health["responses"]["200"]
+    schema = response["content"]["application/json"]["schema"]
+    assert schema == {"type": "object"}
+
+
+def test_go_gin_endpoints_to_openapi(go_usages_1):
+    """The full OpenAPI-document export wraps the go converter's
+    paths dict in the standard envelope."""
+    result = go_usages_1.endpoints_to_openapi()
+    result = sort_openapi_result(result)
+    assert result["openapi"] == "3.0.1"
+    paths = result["paths"]
+    assert "/health" in paths
+    assert "/api/v1/users/{id}" in paths
+
+
+def test_go_normalize_path_gin_catchall():
+    """Gin catch-all routes (``/static/*filepath``) must normalise to
+    OpenAPI's ``{filepath}`` form, mirroring the rust converter's
+    handling of axum/rocket's ``<id..>`` catch-all placeholder."""
+    from atom_tools.lib.go_converter import normalize_path
+
+    assert normalize_path("/static/*filepath") == "/static/{filepath}"
+    # Colon and catch-all placeholders on the same path both normalise.
+    assert (
+        normalize_path("/api/v1/users/:id/files/*path")
+        == "/api/v1/users/{id}/files/{path}"
+    )
+    # Already-OpenAPI paths pass through unchanged.
+    assert normalize_path("/api/v1/users/{id}") == "/api/v1/users/{id}"
+
+
+def test_go_type_to_schema_normalises_interface_with_space():
+    """``interface {}`` as spelled in Go source (with a space) must
+    resolve to the free-form object schema, not fall through to a
+    ``$ref`` pointing at an invalid schema name containing whitespace."""
+    from atom_tools.lib.go_converter import go_type_to_schema
+
+    assert go_type_to_schema("interface {}") == {"type": "object"}
+    assert go_type_to_schema("interface{}") == {"type": "object"}
+    # any is Go 1.18+'s alias for interface{} and must produce the same shape.
+    assert go_type_to_schema("any") == {"type": "object"}

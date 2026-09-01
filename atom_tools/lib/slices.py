@@ -114,6 +114,12 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
             # The api_endpoints array is the structured endpoint table
             # produced by rusi's api-discovery pass.
             slice_type = "api_endpoints"
+        elif "apiEndpoints" in content:
+            # Golem (cdxgen-plugins-bin) reports — Go analyzer output.
+            # Uses camelCase apiEndpoints (rather than snake_case) so
+            # it's disambiguated from rusi reports at the slice-loading
+            # layer even though converter dispatch is by origin_type.
+            slice_type = "api_endpoints"
     except (json.decoder.JSONDecodeError, UnicodeDecodeError):
         logger.warning(
             f"Failed to load usages slice: {filename}\nPlease check that you specified a valid"

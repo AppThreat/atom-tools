@@ -1,0 +1,284 @@
+{
+  "apiEndpoints": [
+    {
+      "id": "sample-gin-api|endpoint|http-route|DELETE|/api/v1/users/:id|deleteUser|/Users/abdul/golem-trial/sample-gin-api/main.go|88|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "DELETE",
+      "path": "/api/v1/users/:id",
+      "handler": "deleteUser",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1952,
+          "line": 88,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1984,
+          "line": 88,
+          "column": 36
+        }
+      }
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|GET|/api/v1/orders/:id|getOrder|/Users/abdul/golem-trial/sample-gin-api/main.go|95|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "GET",
+      "path": "/api/v1/orders/:id",
+      "handler": "getOrder",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2092,
+          "line": 95,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2120,
+          "line": 95,
+          "column": 32
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "typeName": "string"
+        }
+      ],
+      "responseType": "object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|GET|/api/v1/orders|listOrders|/Users/abdul/golem-trial/sample-gin-api/main.go|93|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "GET",
+      "path": "/api/v1/orders",
+      "handler": "listOrders",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2030,
+          "line": 93,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2056,
+          "line": 93,
+          "column": 30
+        }
+      },
+      "responseType": "[]object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|GET|/api/v1/users/:id|getUser|/Users/abdul/golem-trial/sample-gin-api/main.go|86|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "GET",
+      "path": "/api/v1/users/:id",
+      "handler": "getUser",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1887,
+          "line": 86,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1913,
+          "line": 86,
+          "column": 30
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "typeName": "string"
+        }
+      ],
+      "responseType": "object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|GET|/api/v1/users|listUsers|/Users/abdul/golem-trial/sample-gin-api/main.go|84|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "GET",
+      "path": "/api/v1/users",
+      "handler": "listUsers",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1829,
+          "line": 84,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1853,
+          "line": 84,
+          "column": 28
+        }
+      },
+      "responseType": "[]User"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|GET|/health|health|/Users/abdul/golem-trial/sample-gin-api/main.go|78|2",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "GET",
+      "path": "/health",
+      "handler": "health",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1735,
+          "line": 78,
+          "column": 2
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1759,
+          "line": 78,
+          "column": 26
+        }
+      },
+      "responseType": "object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|PATCH|/api/v1/users/:id|updateUser|/Users/abdul/golem-trial/sample-gin-api/main.go|87|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "PATCH",
+      "path": "/api/v1/users/:id",
+      "handler": "updateUser",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1917,
+          "line": 87,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1948,
+          "line": 87,
+          "column": 35
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "location": "path",
+          "typeName": "string"
+        }
+      ],
+      "responseType": "object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|POST|/api/v1/auth/login|login|/Users/abdul/golem-trial/sample-gin-api/main.go|98|3",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "handler": "login",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2128,
+          "line": 98,
+          "column": 3
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2158,
+          "line": 98,
+          "column": 33
+        }
+      },
+      "responseType": "object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|POST|/api/v1/orders|createOrder|/Users/abdul/golem-trial/sample-gin-api/main.go|94|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "POST",
+      "path": "/api/v1/orders",
+      "handler": "createOrder",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2060,
+          "line": 94,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 2088,
+          "line": 94,
+          "column": 32
+        }
+      },
+      "responseType": "object"
+    },
+    {
+      "id": "sample-gin-api|endpoint|http-route|POST|/api/v1/users|createUser|/Users/abdul/golem-trial/sample-gin-api/main.go|85|4",
+      "kind": "http-route",
+      "framework": "gin",
+      "method": "POST",
+      "path": "/api/v1/users",
+      "handler": "createUser",
+      "packagePath": "sample-gin-api",
+      "usageScope": "runtime",
+      "range": {
+        "start": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1857,
+          "line": 85,
+          "column": 4
+        },
+        "end": {
+          "filename": "/Users/abdul/golem-trial/sample-gin-api/main.go",
+          "offset": 1883,
+          "line": 85,
+          "column": 30
+        }
+      },
+      "requestBodyType": "CreateUserRequest",
+      "responseType": "User",
+      "properties": {
+        "errorResponseType": "object"
+      }
+    }
+  ],
+  "tool": {
+    "name": "golem",
+    "version": "3.0.0",
+    "description": "Go Library Evidence Mapper: semantic Go source evidence and call graph analyzer"
+  },
+  "schemaVersion": "https://cdxgen.github.io/cdxgen-plugins-bin/golem/schema/v6"
+}
