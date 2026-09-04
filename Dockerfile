@@ -74,4 +74,40 @@ RUN npm install -g @appthreat/atom @cyclonedx/cdxgen --omit=dev \
     && microdnf clean all \
     && rm -rf /root/.npm /root/.cache /tmp/* /var/cache/dnf /var/tmp/*
 
+# Analyzer binaries that produce the reports consumed by the convert command.
+# rusi analyses Rust projects and golem analyses Go projects. They are published
+# per platform in the cdxgen-plugins-bin GitHub releases together with a .sha256
+# sidecar, which is downloaded and verified before the binary is installed.
+# Bump CDXGEN_PLUGINS_BIN_VERSION to move to a newer release.
+ARG CDXGEN_PLUGINS_BIN_VERSION=3.1.0
+ARG TARGETARCH
+RUN set -eux; \
+    arch="${TARGETARCH:-$(uname -m)}"; \
+    case "${arch}" in \
+        x86_64|amd64) arch="amd64" ;; \
+        aarch64|arm64) arch="arm64" ;; \
+        armv7l|armv6l|arm) arch="arm" ;; \
+        ppc64le) arch="ppc64le" ;; \
+        riscv64) arch="riscv64" ;; \
+        *) echo >&2 "unsupported architecture for analyzer binaries: ${arch}"; exit 1 ;; \
+    esac; \
+    workdir="$(mktemp -d)"; \
+    cd "${workdir}"; \
+    base_url="https://github.com/cdxgen/cdxgen-plugins-bin/releases/download/v${CDXGEN_PLUGINS_BIN_VERSION}"; \
+    for tool in rusi golem; do \
+        asset="${tool}-linux-${arch}"; \
+        curl -fsSL --retry 3 -o "${asset}" "${base_url}/${asset}"; \
+        curl -fsSL --retry 3 -o "${asset}.sha256" "${base_url}/${asset}.sha256"; \
+        expected="$(cut -d " " -f1 "${asset}.sha256")"; \
+        actual="$(sha256sum "${asset}" | cut -d " " -f1)"; \
+        echo "${asset}: expected ${expected} got ${actual}"; \
+        if [ "${expected}" != "${actual}" ]; then \
+            echo >&2 "sha256 mismatch for ${asset}"; exit 1; \
+        fi; \
+        install -m 0755 "${asset}" "/usr/local/bin/${tool}"; \
+        "/usr/local/bin/${tool}" --help > /dev/null; \
+    done; \
+    cd /; \
+    rm -rf "${workdir}"
+
 ENTRYPOINT [ "atom-tools" ]
