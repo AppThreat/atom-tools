@@ -1,0 +1,24 @@
+atom_tools/lib/utils.py
+  s_11b4201fc5b29d::t_c61629a65f5902 59-80,84
+test/test_supported_origin_types.py
+  s_11b4201fc5b29d::t_497e16fd18f4ee 143-153,155-166,169
+  s_11b4201fc5b29d::t_dad13c1dba2d14 8-12
+  s_11b4201fc5b29d::t_e7c904765e5650 154
+  s_11b4201fc5b29d::t_057658f469c262 167-168
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "1bfe023ee50268e7fd02ce155b7c9573b7d6d98d",
+  "prompts": {},
+  "sessions": {
+    "s_11b4201fc5b29d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c4aaa429-a47f-4d19-ac33-46415e81970c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
