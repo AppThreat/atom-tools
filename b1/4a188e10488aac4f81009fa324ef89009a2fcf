@@ -1,0 +1,26 @@
+atom_tools/lib/stats.py
+  s_11b4201fc5b29d::t_9d53b5a8caca62 100-106
+test/test_ingest.py
+  s_11b4201fc5b29d::t_7c87c9aaad9edb 290,321
+  s_11b4201fc5b29d::t_48e21a6eb32c8c 277-289,291-320,322-338
+atom_tools/lib/unified.py
+  s_11b4201fc5b29d::t_b342e43a66bf0c 175-181,184-187
+  s_11b4201fc5b29d::t_181e7a83fd2bf6 234-242
+  s_11b4201fc5b29d::t_4524600292f495 27-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "b14a188e10488aac4f81009fa324ef89009a2fcf",
+  "prompts": {},
+  "sessions": {
+    "s_11b4201fc5b29d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c4aaa429-a47f-4d19-ac33-46415e81970c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
