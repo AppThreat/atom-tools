@@ -1,0 +1,19 @@
+atom_tools/lib/converter.py
+  s_9d783fb1e8d1fd::t_293d1703cc4f1b 32-59,414,416,418,420
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "d8a8edbf023e665537010ac79caf3ead9bfecfe5",
+  "prompts": {},
+  "sessions": {
+    "s_9d783fb1e8d1fd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "70b6339c-f98b-44f9-a0af-a2adbc268048",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
