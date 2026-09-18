@@ -1,0 +1,43 @@
+test/data/ecosystem/rust-microservices-kafka-rusi-baseline.json
+  s_11b4201fc5b29d::t_99576f3f42f978 1
+test/test_commands.py
+  s_11b4201fc5b29d::t_8754b9db6687c9 29
+atom_tools/lib/drift.py
+  s_11b4201fc5b29d::t_42ee8493b8a511 49-55,109-110,113-114,116-120
+  s_11b4201fc5b29d::t_66bc6642f7c5fa 310-311,322-329,331-337
+  s_11b4201fc5b29d::t_ec5bf3f1fbcd20 252-256,266-267
+  s_11b4201fc5b29d::t_61e0dd990a0cfe 124-125,128-138
+  s_11b4201fc5b29d::t_a7164a41bfa717 400-407
+  s_11b4201fc5b29d::t_1cab516a0b5e44 56-108
+  s_11b4201fc5b29d::t_42295a0f732428 1-48,111-112,115,121-123,126-127,139-251,257-265,268-309,312,314-321,330,338-399,408-519
+  s_11b4201fc5b29d::t_0ebd84b459114b 313
+test/test_drift.py
+  s_11b4201fc5b29d::t_416c13eb0a16c7 1-26,28-32,35-146,149-365
+  s_11b4201fc5b29d::t_10714012f47d34 27,366-389
+  s_11b4201fc5b29d::t_f471dc6b3830ee 33,147-148
+  s_11b4201fc5b29d::t_dc675e363a74bd 34
+atom_tools/cli/application.py
+  s_11b4201fc5b29d::t_8754b9db6687c9 60
+test/data/ecosystem/PROVENANCE.md
+  s_11b4201fc5b29d::t_34ef01a70b391c 200-245
+atom_tools/cli/commands/drift.py
+  s_11b4201fc5b29d::t_886bb03278e6a1 1-145
+slice-stats.json
+  s_11b4201fc5b29d::t_d9ffa57f1ce2f1 1-39
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "bca6bc6335875c6ed0aeca04f44c40f710df5cfb",
+  "prompts": {},
+  "sessions": {
+    "s_11b4201fc5b29d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c4aaa429-a47f-4d19-ac33-46415e81970c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
