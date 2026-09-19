@@ -1,0 +1,13 @@
+rusi baseline 5 flow(s) / 5 file(s)  ->  current 5 flow(s) / 5 file(s)
+severity source: the shared taxonomy (the engine emitted no severity)
+
++0 added  -0 removed  ~2 moved  =0 witness-changed
+
+RiskDelta:
+  NewHighSeverityFlows: 0
+  NewMediumSeverityFlows: 0
+  NewLowSeverityFlows: 0
+  NewAnonymousEndpoints: not computed
+  NewEntryPoints: 0
+  NewlyReachablePackages: 0
+  NewSinkCategories: 0

@@ -1,9 +1,7 @@
 import pytest
 
 from atom_tools.lib.filtering import (
-    check_reachable_purl,
     Filter,
-    filter_flows,
     parse_filters,
 )
 from atom_tools.lib.slices import AtomSlice
@@ -163,3 +161,30 @@ def test_check_reachable():
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:400") == False
     assert check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:400-600") == False
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:400-600") == False
+
+
+def test_check_reachable_matches_versionless_and_verbatim_purls():
+    """golem emits Go packages with no version at all.
+
+    ``parse_purl`` yields ``package:version`` pairs and so produced nothing for
+    those, which made ``check-reachable`` answer a confident ``False`` for every
+    package in a golem report rather than saying it could not tell.
+    """
+    document = {
+        "reachables": [
+            {"purls": ["pkg:golang/github.com/blacktop/ipsw"]},
+            {"purls": ["pkg:maven/org.springframework/spring-web@7.0.8?type=jar"]},
+        ]
+    }
+    assert check_reachable(document, "pkg:golang/github.com/blacktop/ipsw", "") is True
+    assert check_reachable(document, "pkg:golang/not/here", "") is False
+    # The versioned forms keep working, both verbatim and as package:version.
+    assert check_reachable(document, "org.springframework/spring-web:7.0.8", "") is True
+
+
+def test_check_reachable_reads_a_bare_reachables_list_and_names_a_missing_option():
+    """atom writes reachables as a bare list, and both options may be absent."""
+    listed = [{"purls": ["pkg:maven/org.springframework/spring-web@7.0.8?type=jar"]}]
+    assert check_reachable(listed, "org.springframework/spring-web:7.0.8", "") is True
+    with pytest.raises(ValueError, match="--purl"):
+        check_reachable(listed, "", "")

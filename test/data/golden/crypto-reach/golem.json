@@ -1,0 +1,578 @@
+{
+    "cryptoReachVersion": 1,
+    "diagnostics": [
+        "golem: golem's crypto items carry no enclosing-function field \u2014 the join is package-level: 'the site sits in a package that carries tainted flows', never 'this call is on a tainted path'."
+    ],
+    "engine": "golem",
+    "engines": [
+        {
+            "attentionItems": 15,
+            "coverageNotes": [
+                "endpoint closures from the attack-surface join: 31 of 57 endpoint(s) anchored in this input's call graph",
+                "the call graph is a subgraph of the engine's run (3325 of 22308 edges present); closures are computed within that subgraph"
+            ],
+            "diagnostics": [
+                "golem's crypto items carry no enclosing-function field \u2014 the join is package-level: 'the site sits in a package that carries tainted flows', never 'this call is on a tainted path'."
+            ],
+            "engine": "golem",
+            "inventory": {
+                "assets": 9,
+                "findings": 146,
+                "libraries": 106,
+                "materials": 320,
+                "operations": 323,
+                "protocols": 1
+            },
+            "items": [
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/download/transport_apple.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/internal/download|GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY|/Users/prabhu/sandbox/ipsw/internal/download/transport_apple.go|31|43",
+                    "Kind": "finding",
+                    "LineNumber": 31,
+                    "Name": "GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY",
+                    "Package": "github.com/blacktop/ipsw/internal/download",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 30,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:09fdbf26ee410e1aebd02d60a92f32052c8361ea7862e0b3c01d0f4aeb111f34",
+                            "seam-slice|sha256:0bb1620528701ae6b5751ff2c3550e1b579f69ed396214d67b9f77619dcc7e66",
+                            "seam-slice|sha256:0bf85aa3567b839cc1494639e3e10485e811473878c82dc44d91da816f356bfe",
+                            "seam-slice|sha256:0db9a2a15e668ce00aa29e415b4869edeb0444497a2516c607fc860f6780742e",
+                            "seam-slice|sha256:0feecd1612bb6e2275774d410410fb13a6e1bfd79fc9a68a8ebab365da0631aa",
+                            "seam-slice|sha256:1271be19b4fa832caf33a4747909238a3253c2c8efa8027bb647cd2ee5cc9b08",
+                            "seam-slice|sha256:134634af57e560bfa951a55bbaa1781f9df8244043b7f0d8f374c986efd630ba",
+                            "seam-slice|sha256:17d0ed2d18d7b27c4b7cc5a3ee4f386515acaec7d0f07a57d4fdb07fa766c24f",
+                            "seam-slice|sha256:192e62ee4e56882c5bd2e0cee8b50c555404676de06b4712a7e7f212b4e1e7d0",
+                            "seam-slice|sha256:23bb17ee1d4f0510ca9805d123601358c89432f82b8f21e727ba21ae5c2aeae1",
+                            "seam-slice|sha256:29ff07add49ff27e1763fd41de55234d5e90a067e0c16210d61aec2dffa1cb99",
+                            "seam-slice|sha256:2ce17928a729a8023c3ae24392a1b5a2153fcaeee510e0e65725311a43dcb13f",
+                            "seam-slice|sha256:394f688f8faba04e5dadf08daac638a80e6447cd41d271d8eff9ca874a9b6751",
+                            "seam-slice|sha256:396f0465c794da1231b6046743a78b3523d6ab60648452e82237d8c29615dd6b",
+                            "seam-slice|sha256:39ef20b7c15422b4d21d3de5d3f08a30963082ceb7f395cd92323f5c40beb8d1",
+                            "seam-slice|sha256:41e31312e2f71ac3ae4a0d7e2ecdc577d8c099d19da49b51b4b28d62a450dd74",
+                            "seam-slice|sha256:446c14ab369e2b5f2a3f3b9c0a423daca25564a54287229ec0e5b6567ca6ce0e",
+                            "seam-slice|sha256:44a3d5511072c758b079f593be5bfb919b8e8c9659e41ab3ad7b147153e200d3",
+                            "seam-slice|sha256:5a87c36f3f2444dde7793826a1c9cbc1642691ec0b74ef777fcadfa2a0934c48",
+                            "seam-slice|sha256:6352586af23b5ff88fe33558eaf4a2822ef5bb2bf76a0b3f921fda029c2ddd04"
+                        ],
+                        "flowsThroughPackage": 59,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/internal/download",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY",
+                    "Severity": "critical",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/pkg/tss/tss.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/pkg/tss|GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY|/Users/prabhu/sandbox/ipsw/pkg/tss/tss.go|192|33",
+                    "Kind": "finding",
+                    "LineNumber": 192,
+                    "Name": "GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY",
+                    "Package": "github.com/blacktop/ipsw/pkg/tss",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "flowIds": [],
+                        "flowsThroughPackage": 0,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/pkg/tss",
+                        "packageOnFlow": false,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY",
+                    "Severity": "critical",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/pkg/usb/client.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/pkg/usb|GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY|/Users/prabhu/sandbox/ipsw/pkg/usb/client.go|70|3",
+                    "Kind": "finding",
+                    "LineNumber": 70,
+                    "Name": "GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY",
+                    "Package": "github.com/blacktop/ipsw/pkg/usb",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 18,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [],
+                        "flowsThroughPackage": 0,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/pkg/usb",
+                        "packageOnFlow": false,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY",
+                    "Severity": "critical",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/dyld/dyld_mg.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/cmd/ipsw/cmd/dyld|GOLEM-CRYPTO-WEAK-MD5|/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/dyld/dyld_mg.go|79|13",
+                    "Kind": "finding",
+                    "LineNumber": 79,
+                    "Name": "GOLEM-CRYPTO-WEAK-MD5",
+                    "Package": "github.com/blacktop/ipsw/cmd/ipsw/cmd/dyld",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "flowIds": [],
+                        "flowsThroughPackage": 0,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/cmd/ipsw/cmd/dyld",
+                        "packageOnFlow": false,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-MD5",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/codesign/resources/resources.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/internal/codesign/resources|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/internal/codesign/resources/resources.go|285|8",
+                    "Kind": "finding",
+                    "LineNumber": 285,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/internal/codesign/resources",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "flowIds": [],
+                        "flowsThroughPackage": 0,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/internal/codesign/resources",
+                        "packageOnFlow": false,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/download/dev_portal.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/internal/download|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/internal/download/dev_portal.go|525|11",
+                    "Kind": "finding",
+                    "LineNumber": 525,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/internal/download",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 30,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:09fdbf26ee410e1aebd02d60a92f32052c8361ea7862e0b3c01d0f4aeb111f34",
+                            "seam-slice|sha256:0bb1620528701ae6b5751ff2c3550e1b579f69ed396214d67b9f77619dcc7e66",
+                            "seam-slice|sha256:0bf85aa3567b839cc1494639e3e10485e811473878c82dc44d91da816f356bfe",
+                            "seam-slice|sha256:0db9a2a15e668ce00aa29e415b4869edeb0444497a2516c607fc860f6780742e",
+                            "seam-slice|sha256:0feecd1612bb6e2275774d410410fb13a6e1bfd79fc9a68a8ebab365da0631aa",
+                            "seam-slice|sha256:1271be19b4fa832caf33a4747909238a3253c2c8efa8027bb647cd2ee5cc9b08",
+                            "seam-slice|sha256:134634af57e560bfa951a55bbaa1781f9df8244043b7f0d8f374c986efd630ba",
+                            "seam-slice|sha256:17d0ed2d18d7b27c4b7cc5a3ee4f386515acaec7d0f07a57d4fdb07fa766c24f",
+                            "seam-slice|sha256:192e62ee4e56882c5bd2e0cee8b50c555404676de06b4712a7e7f212b4e1e7d0",
+                            "seam-slice|sha256:23bb17ee1d4f0510ca9805d123601358c89432f82b8f21e727ba21ae5c2aeae1",
+                            "seam-slice|sha256:29ff07add49ff27e1763fd41de55234d5e90a067e0c16210d61aec2dffa1cb99",
+                            "seam-slice|sha256:2ce17928a729a8023c3ae24392a1b5a2153fcaeee510e0e65725311a43dcb13f",
+                            "seam-slice|sha256:394f688f8faba04e5dadf08daac638a80e6447cd41d271d8eff9ca874a9b6751",
+                            "seam-slice|sha256:396f0465c794da1231b6046743a78b3523d6ab60648452e82237d8c29615dd6b",
+                            "seam-slice|sha256:39ef20b7c15422b4d21d3de5d3f08a30963082ceb7f395cd92323f5c40beb8d1",
+                            "seam-slice|sha256:41e31312e2f71ac3ae4a0d7e2ecdc577d8c099d19da49b51b4b28d62a450dd74",
+                            "seam-slice|sha256:446c14ab369e2b5f2a3f3b9c0a423daca25564a54287229ec0e5b6567ca6ce0e",
+                            "seam-slice|sha256:44a3d5511072c758b079f593be5bfb919b8e8c9659e41ab3ad7b147153e200d3",
+                            "seam-slice|sha256:5a87c36f3f2444dde7793826a1c9cbc1642691ec0b74ef777fcadfa2a0934c48",
+                            "seam-slice|sha256:6352586af23b5ff88fe33558eaf4a2822ef5bb2bf76a0b3f921fda029c2ddd04"
+                        ],
+                        "flowsThroughPackage": 59,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/internal/download",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/download/downloader.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/internal/download|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/internal/download/downloader.go|371|8",
+                    "Kind": "finding",
+                    "LineNumber": 371,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/internal/download",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 30,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:09fdbf26ee410e1aebd02d60a92f32052c8361ea7862e0b3c01d0f4aeb111f34",
+                            "seam-slice|sha256:0bb1620528701ae6b5751ff2c3550e1b579f69ed396214d67b9f77619dcc7e66",
+                            "seam-slice|sha256:0bf85aa3567b839cc1494639e3e10485e811473878c82dc44d91da816f356bfe",
+                            "seam-slice|sha256:0db9a2a15e668ce00aa29e415b4869edeb0444497a2516c607fc860f6780742e",
+                            "seam-slice|sha256:0feecd1612bb6e2275774d410410fb13a6e1bfd79fc9a68a8ebab365da0631aa",
+                            "seam-slice|sha256:1271be19b4fa832caf33a4747909238a3253c2c8efa8027bb647cd2ee5cc9b08",
+                            "seam-slice|sha256:134634af57e560bfa951a55bbaa1781f9df8244043b7f0d8f374c986efd630ba",
+                            "seam-slice|sha256:17d0ed2d18d7b27c4b7cc5a3ee4f386515acaec7d0f07a57d4fdb07fa766c24f",
+                            "seam-slice|sha256:192e62ee4e56882c5bd2e0cee8b50c555404676de06b4712a7e7f212b4e1e7d0",
+                            "seam-slice|sha256:23bb17ee1d4f0510ca9805d123601358c89432f82b8f21e727ba21ae5c2aeae1",
+                            "seam-slice|sha256:29ff07add49ff27e1763fd41de55234d5e90a067e0c16210d61aec2dffa1cb99",
+                            "seam-slice|sha256:2ce17928a729a8023c3ae24392a1b5a2153fcaeee510e0e65725311a43dcb13f",
+                            "seam-slice|sha256:394f688f8faba04e5dadf08daac638a80e6447cd41d271d8eff9ca874a9b6751",
+                            "seam-slice|sha256:396f0465c794da1231b6046743a78b3523d6ab60648452e82237d8c29615dd6b",
+                            "seam-slice|sha256:39ef20b7c15422b4d21d3de5d3f08a30963082ceb7f395cd92323f5c40beb8d1",
+                            "seam-slice|sha256:41e31312e2f71ac3ae4a0d7e2ecdc577d8c099d19da49b51b4b28d62a450dd74",
+                            "seam-slice|sha256:446c14ab369e2b5f2a3f3b9c0a423daca25564a54287229ec0e5b6567ca6ce0e",
+                            "seam-slice|sha256:44a3d5511072c758b079f593be5bfb919b8e8c9659e41ab3ad7b147153e200d3",
+                            "seam-slice|sha256:5a87c36f3f2444dde7793826a1c9cbc1642691ec0b74ef777fcadfa2a0934c48",
+                            "seam-slice|sha256:6352586af23b5ff88fe33558eaf4a2822ef5bb2bf76a0b3f921fda029c2ddd04"
+                        ],
+                        "flowsThroughPackage": 59,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/internal/download",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/utils/utils.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/internal/utils|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/internal/utils/utils.go|171|7",
+                    "Kind": "finding",
+                    "LineNumber": 171,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/internal/utils",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 34,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:2f8f4aae1dd35f4dc7a4cbcac3bcf2a79e061f88159f39214761df04757372c2",
+                            "seam-slice|sha256:3a003e4c2340dc2a637c42c30e1d5c7e2b96a667f427453ec88c2deff9fe552e",
+                            "seam-slice|sha256:60714f0a79163b26c87b35d150471d5c6be0cbaa3559a5fbbcdb03620b166fcd",
+                            "seam-slice|sha256:a0bdf55e456c95d20c1ddcc3ac6418431187a4e57b9d7e501a4d7b64eaba3c22",
+                            "seam-slice|sha256:ade8b822d48748629aad032571dcd31f34d18dcc0897c054696ffdde17a41475",
+                            "seam-slice|sha256:b264a3f72f178483a9e6221d8535d351b8796be1925a2bb113606c8b3a01bcd3",
+                            "seam-slice|sha256:c3a8fc23c5ef0e22d75c250b3a6ea1dfe774a6b1db3458eb9f6acd1ced47fcdc",
+                            "seam-slice|sha256:c3d7d35597a333be79efc71165de00c29674b94142bf28b9c845c37dc88a6b92",
+                            "seam-slice|sha256:d0330175bbbe1bda71cdd1eb3ef40eb9c34f2622acf78420cb578be64096948e",
+                            "seam-slice|sha256:f3794c8add329a56806036c9a4f72bad75a58a3fa774fab0b8fc7b00784e5079",
+                            "seam-slice|sha256:ffa1a5398ba32a2e342a80c44e552e0d54c1e899f90d6be318a3ba5f1b076784"
+                        ],
+                        "flowsThroughPackage": 11,
+                        "flowsThroughPackageReachEndpoints": [
+                            "GET /idev/amfi/dev"
+                        ],
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/internal/utils",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/utils/utils.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/internal/utils|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/internal/utils/utils.go|532|7",
+                    "Kind": "finding",
+                    "LineNumber": 532,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/internal/utils",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 34,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:2f8f4aae1dd35f4dc7a4cbcac3bcf2a79e061f88159f39214761df04757372c2",
+                            "seam-slice|sha256:3a003e4c2340dc2a637c42c30e1d5c7e2b96a667f427453ec88c2deff9fe552e",
+                            "seam-slice|sha256:60714f0a79163b26c87b35d150471d5c6be0cbaa3559a5fbbcdb03620b166fcd",
+                            "seam-slice|sha256:a0bdf55e456c95d20c1ddcc3ac6418431187a4e57b9d7e501a4d7b64eaba3c22",
+                            "seam-slice|sha256:ade8b822d48748629aad032571dcd31f34d18dcc0897c054696ffdde17a41475",
+                            "seam-slice|sha256:b264a3f72f178483a9e6221d8535d351b8796be1925a2bb113606c8b3a01bcd3",
+                            "seam-slice|sha256:c3a8fc23c5ef0e22d75c250b3a6ea1dfe774a6b1db3458eb9f6acd1ced47fcdc",
+                            "seam-slice|sha256:c3d7d35597a333be79efc71165de00c29674b94142bf28b9c845c37dc88a6b92",
+                            "seam-slice|sha256:d0330175bbbe1bda71cdd1eb3ef40eb9c34f2622acf78420cb578be64096948e",
+                            "seam-slice|sha256:f3794c8add329a56806036c9a4f72bad75a58a3fa774fab0b8fc7b00784e5079",
+                            "seam-slice|sha256:ffa1a5398ba32a2e342a80c44e552e0d54c1e899f90d6be318a3ba5f1b076784"
+                        ],
+                        "flowsThroughPackage": 11,
+                        "flowsThroughPackageReachEndpoints": [
+                            "GET /idev/amfi/dev"
+                        ],
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/internal/utils",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/pkg/dyld/closure.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/pkg/dyld|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/pkg/dyld/closure.go|281|7",
+                    "Kind": "finding",
+                    "LineNumber": 281,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/pkg/dyld",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 178,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:2015015d92ad0203471ff6fa8765cd1a2491323073e801860c3e5a27f9c1d4a6",
+                            "seam-slice|sha256:265ca3d09acbf24f51ac44b01859f75dc08ee424957c9cae28340d75f865f4de",
+                            "seam-slice|sha256:617987eeb99e0b088939b070c60c46b616e812dd4c7796ecb286418308b4e4f3",
+                            "seam-slice|sha256:642df22ed14f771cb3acb9d4e429b64323034547234cd075de194ab2ee1a4901",
+                            "seam-slice|sha256:662383b44c7c2439d440a48e6238c67886149f57fd9a8ecfc5f7fc9a7db171e3",
+                            "seam-slice|sha256:6d747102367d72b18be25877fe9144253c8bfc388730d0a2314d32fd64a738a5",
+                            "seam-slice|sha256:83daf5d339f750a2c447de2946ee00430114eeab48558d8832ae51aba03d560f",
+                            "seam-slice|sha256:86c6f894db71bd77f4218efb39377373ddc79fe4b528f419e98d8174cfe17af6",
+                            "seam-slice|sha256:9441cfe583c8f1e9fe284ec29299ee2f67f746189ac08fd0de380645e3bc3c1a",
+                            "seam-slice|sha256:af04ac58acfd0c6a959552119c9dbd348545f27b78467496f2261339a60ec650",
+                            "seam-slice|sha256:c42fdc9d8be7842d5f667c238c24699b377cf1bcfc2b87e7c4fb96b7d4a4a79c",
+                            "seam-slice|sha256:fec30323745bce14e1e32d3122040c476dadee7e32f6676496ea126b5a1b3925"
+                        ],
+                        "flowsThroughPackage": 12,
+                        "flowsThroughPackageReachEndpoints": [
+                            "GET /dsc/imports",
+                            "GET /dsc/info",
+                            "GET /dsc/macho",
+                            "GET /dsc/str",
+                            "GET /dsc/webkit"
+                        ],
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/pkg/dyld",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/pkg/dyld/prebuilt_types.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/pkg/dyld|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/pkg/dyld/prebuilt_types.go|620|9",
+                    "Kind": "finding",
+                    "LineNumber": 620,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/pkg/dyld",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "engineRootVerdict": {
+                            "nodesInPackage": 178,
+                            "reachableNodesInPackage": 0,
+                            "rootReasons": {
+                                "init": 184,
+                                "main": 2
+                            },
+                            "rootsTotal": 186
+                        },
+                        "flowIds": [
+                            "seam-slice|sha256:2015015d92ad0203471ff6fa8765cd1a2491323073e801860c3e5a27f9c1d4a6",
+                            "seam-slice|sha256:265ca3d09acbf24f51ac44b01859f75dc08ee424957c9cae28340d75f865f4de",
+                            "seam-slice|sha256:617987eeb99e0b088939b070c60c46b616e812dd4c7796ecb286418308b4e4f3",
+                            "seam-slice|sha256:642df22ed14f771cb3acb9d4e429b64323034547234cd075de194ab2ee1a4901",
+                            "seam-slice|sha256:662383b44c7c2439d440a48e6238c67886149f57fd9a8ecfc5f7fc9a7db171e3",
+                            "seam-slice|sha256:6d747102367d72b18be25877fe9144253c8bfc388730d0a2314d32fd64a738a5",
+                            "seam-slice|sha256:83daf5d339f750a2c447de2946ee00430114eeab48558d8832ae51aba03d560f",
+                            "seam-slice|sha256:86c6f894db71bd77f4218efb39377373ddc79fe4b528f419e98d8174cfe17af6",
+                            "seam-slice|sha256:9441cfe583c8f1e9fe284ec29299ee2f67f746189ac08fd0de380645e3bc3c1a",
+                            "seam-slice|sha256:af04ac58acfd0c6a959552119c9dbd348545f27b78467496f2261339a60ec650",
+                            "seam-slice|sha256:c42fdc9d8be7842d5f667c238c24699b377cf1bcfc2b87e7c4fb96b7d4a4a79c",
+                            "seam-slice|sha256:fec30323745bce14e1e32d3122040c476dadee7e32f6676496ea126b5a1b3925"
+                        ],
+                        "flowsThroughPackage": 12,
+                        "flowsThroughPackageReachEndpoints": [
+                            "GET /dsc/imports",
+                            "GET /dsc/info",
+                            "GET /dsc/macho",
+                            "GET /dsc/str",
+                            "GET /dsc/webkit"
+                        ],
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/pkg/dyld",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "type-resolved",
+                    "Cwe": null,
+                    "Engine": "golem",
+                    "File": "/Users/prabhu/sandbox/ipsw/pkg/ota/bxdiff50/bxdiff50.go",
+                    "Function": null,
+                    "Id": "github.com/blacktop/ipsw/pkg/ota/bxdiff50|GOLEM-CRYPTO-WEAK-SHA1|/Users/prabhu/sandbox/ipsw/pkg/ota/bxdiff50/bxdiff50.go|112|14",
+                    "Kind": "finding",
+                    "LineNumber": 112,
+                    "Name": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Package": "github.com/blacktop/ipsw/pkg/ota/bxdiff50",
+                    "Reach": {
+                        "claim": "the crypto site sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "flowIds": [],
+                        "flowsThroughPackage": 0,
+                        "granularity": "package",
+                        "package": "github.com/blacktop/ipsw/pkg/ota/bxdiff50",
+                        "packageOnFlow": false,
+                        "source": "derived"
+                    },
+                    "RuleId": "GOLEM-CRYPTO-WEAK-SHA1",
+                    "Severity": "high",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                "... 787 more not pinned ..."
+            ],
+            "itemsTotal": 799,
+            "joinGranularity": "package",
+            "joinSource": "derived"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/go-ipsw-golem.json"
+    ],
+    "summary": {
+        "outOfScope": null,
+        "perEngine": {
+            "golem": {
+                "attentionItems": 15,
+                "itemsTotal": 799,
+                "joinGranularity": "package",
+                "joinSource": "derived"
+            }
+        }
+    },
+    "weakOnly": null
+}

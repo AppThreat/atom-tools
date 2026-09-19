@@ -1,0 +1,231 @@
+{
+    "attackSurfaceVersion": 1,
+    "coverage": {
+        "rusi": {
+            "callGraphs": [
+                {
+                    "edges": 2156,
+                    "engine": "rusi",
+                    "file": "test/data/ecosystem/rust-microservices-kafka-rusi.json",
+                    "nodes": 712,
+                    "present": true
+                }
+            ],
+            "endpoints": 14,
+            "endpointsAnchored": 14,
+            "engine": "rusi",
+            "flows": 5,
+            "flowsAttached": 2
+        }
+    },
+    "diagnostics": [],
+    "engine": "rusi",
+    "sources": [
+        "test/data/ecosystem/rust-microservices-kafka-rusi.json"
+    ],
+    "summary": {
+        "anonymousReach": {
+            "anonymousEntryPoints": 0,
+            "computed": false,
+            "reachingHighSeveritySink": 0
+        },
+        "byEngine": {
+            "rusi": 14
+        },
+        "byTier": {
+            "unknown-auth": 14
+        },
+        "entryPoints": 14,
+        "entryPointsWithReach": 2,
+        "reachComputed": true
+    },
+    "tierOrder": [
+        "anonymous-http",
+        "anonymous-rpc",
+        "anonymous",
+        "mcp",
+        "queue",
+        "cli",
+        "authenticated-http",
+        "authenticated-rpc",
+        "internal",
+        "unknown-auth"
+    ],
+    "tiers": [
+        {
+            "Engine": [
+                "rusi"
+            ],
+            "EntryPointCount": 14,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "rusi",
+                    "EntryPointId": "rusi-13",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "app-accommodation-service/src/graphql/mod.rs",
+                    "FileName": "mod.rs",
+                    "Framework": "axum",
+                    "Handler": "app_accommodation_service::graphql::graphql_sdl",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 44,
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "decl-13d493503be11841"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/graphql",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "rusi",
+                    "EntryPointId": "rusi-7",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "app-user-service/src/graphql/mod.rs",
+                    "FileName": "mod.rs",
+                    "Framework": "axum",
+                    "Handler": "app_user_service::graphql::graphql_sdl",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 44,
+                    "Package": "app_user_service",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "decl-f54f3f7619eba472"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/graphql",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "rusi",
+                    "EntryPointId": "rusi-10",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "app-accommodation-service/src/main.rs",
+                    "FileName": "main.rs",
+                    "Framework": "axum",
+                    "Handler": "app_accommodation_service::common::api::health",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 128,
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "decl-4369c58dea659b6e"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/health",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "rusi",
+                    "EntryPointId": "rusi-5",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "app-kafka-connector-mongodb/src/main.rs",
+                    "FileName": "main.rs",
+                    "Framework": "axum",
+                    "Handler": "app_accommodation_service::common::api::health",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 74,
+                    "Package": "app_kafka_connector_mongodb",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "note": "anchored by handler name alone: the endpoint's package did not match the call graph node's package, so this reach may belong to a same-named function in another package",
+                        "purls": [],
+                        "seeds": [
+                            "decl-4369c58dea659b6e"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/health",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "rusi",
+                    "EntryPointId": "rusi-2",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "app-kafka-connector-relationaldb/src/main.rs",
+                    "FileName": "main.rs",
+                    "Framework": "axum",
+                    "Handler": "app_accommodation_service::common::api::health",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 72,
+                    "Package": "app_kafka_connector_relationaldb",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "note": "anchored by handler name alone: the endpoint's package did not match the call graph node's package, so this reach may belong to a same-named function in another package",
+                        "purls": [],
+                        "seeds": [
+                            "decl-4369c58dea659b6e"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/health",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                "... 9 more entry point(s) not pinned ..."
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 2,
+            "ExploitChainCount": 0,
+            "Exposure": "unknown-auth",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "kind"
+            ],
+            "WeaknessCount": 0
+        }
+    ]
+}

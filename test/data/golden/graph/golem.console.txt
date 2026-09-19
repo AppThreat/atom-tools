@@ -1,0 +1,26 @@
+Call graph metric: chokepoints — nodes on the most source→sink paths (golem, 1 input(s))
+golem: 986 nodes (833 internal, 153 external), 3325 edges
+  call types: static 3325
+  engine roots: 0 of 186 in this graph
+
+-- golem (test/data/ecosystem/go-ipsw-golem.json) --
+seeds: 13 source(s) → 27 sink(s) via flow-sources→flow-sinks (engine); 48 source→sink pair(s) connected
+153 external node(s) excluded from the ranking (--include-external to rank them).
+  1. (*github.com/blacktop/ipsw/pkg/img4.Payload).Decompress  /Users/prabhu/sandbox/ipsw/pkg/img4/payload.go:329  [github.com/blacktop/ipsw/pkg/img4]  betweenness 2.0  (4% of pairs)
+  2. (*github.com/blacktop/ipsw/pkg/img4.Payload).GetData  /Users/prabhu/sandbox/ipsw/pkg/img4/payload.go:446  [github.com/blacktop/ipsw/pkg/img4]  betweenness 2.0  (4% of pairs)
+  3. (*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).batchStaticCallContexts  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go:1833  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 2.0  (4% of pairs)
+  4. github.com/blacktop/ipsw/pkg/devicetree.ParseImg4Data  /Users/prabhu/sandbox/ipsw/pkg/devicetree/image.go:44  [github.com/blacktop/ipsw/pkg/devicetree]  betweenness 2.0  (4% of pairs)
+  5. github.com/blacktop/ipsw/pkg/info.ParseZipFiles  /Users/prabhu/sandbox/ipsw/pkg/info/info.go:844  [github.com/blacktop/ipsw/pkg/info]  betweenness 2.0  (4% of pairs)
+  6. (*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).functionReferencesAddressNoResolve  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/discover.go:451  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 1.0  (2% of pairs)
+  7. (*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).inferMetaPtrFromDirectCallers  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go:1473  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 1.0  (2% of pairs)
+  8. (*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).inferMetaPtrFromDirectCallersDepth  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go:1477  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 1.0  (2% of pairs)
+  9. (*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).recoverStaticAnchorClasses  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/emulate.go:416  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 1.0  (2% of pairs)
+ 10. github.com/blacktop/ipsw/internal/commands/dsc.LookupSymbol  /Users/prabhu/sandbox/ipsw/internal/commands/dsc/dsc.go:278  [github.com/blacktop/ipsw/internal/commands/dsc]  betweenness 1.0  (2% of pairs)
+ 11. github.com/blacktop/ipsw/pkg/devicetree.Parse  /Users/prabhu/sandbox/ipsw/pkg/devicetree/devicetree.go:708  [github.com/blacktop/ipsw/pkg/devicetree]  betweenness 1.0  (2% of pairs)
+ 12. github.com/blacktop/ipsw/pkg/devicetree.ParseZipFiles  /Users/prabhu/sandbox/ipsw/pkg/devicetree/devicetree.go:779  [github.com/blacktop/ipsw/pkg/devicetree]  betweenness 1.0  (2% of pairs)
+ 13. github.com/blacktop/ipsw/pkg/info.Parse  /Users/prabhu/sandbox/ipsw/pkg/info/info.go:822  [github.com/blacktop/ipsw/pkg/info]  betweenness 1.0  (2% of pairs)
+ 14. github.com/blacktop/ipsw/pkg/kernelcache/cpp.trackRegisterRawWithReason  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go:1608  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 1.0  (2% of pairs)
+ 15. (*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).functionForAddr  /Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go:549  [github.com/blacktop/ipsw/pkg/kernelcache/cpp]  betweenness 0.667  (1% of pairs)
+… 1 more ranked node(s) in the json output.
+note: golem: 13 of 58 flow source function(s) and 27 of 77 sink function(s) anchored in the call graph; the rest are not nodes of it.
+note: golem call graph in test/data/ecosystem/go-ipsw-golem.json is a subgraph of the engine's run (3325 of 22308 edges, 986 of 7848 nodes, per its own stats block); every metric is computed within that subgraph.

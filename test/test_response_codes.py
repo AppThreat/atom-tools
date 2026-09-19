@@ -23,7 +23,6 @@ from atom_tools.lib.converter import (
     HTTP_METHOD_DEFAULT_STATUS,
     STATUS_DESCRIPTIONS,
 )
-from atom_tools.lib.slices import AtomSlice
 
 JAVA_SLICE_FILE = "test/data/java-response-codes-usages.json"
 

@@ -1,0 +1,647 @@
+{
+  "entryPoints": [],
+  "explainVersion": 1,
+  "highRiskFlows": [
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs1",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "ApiTokenHelper.cs",
+        "line": 46,
+        "name": "CreateToken"
+      },
+      "sinkCategory": "auth",
+      "source": {
+        "file": "ApiTokenHelper.cs",
+        "line": 38,
+        "name": "JWT_SECRET_KEY",
+        "tags": [
+          "secret"
+        ]
+      },
+      "sourceCategory": "secret",
+      "steps": 4
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs100",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 319,
+        "name": "GetCertificateChain"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 10
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs101",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 330,
+        "name": "EnsureCertificatesInCertificatesCollection"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 14
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs102",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 330,
+        "name": "EnsureCertificatesInCertificatesCollection"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 14
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs103",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 408,
+        "name": "SetResult"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 15
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs104",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 36,
+        "name": "GetTimestampAsync"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 2
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs105",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 41,
+        "name": "GetAwaiter"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 2
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs106",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 50,
+        "name": "get_IsCompleted"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 4
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs107",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 124,
+        "name": "GetResult"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 4
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs108",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 83,
+        "name": "AwaitUnsafeOnCompleted<System.Runtime.CompilerServices.TaskAwaiter`1<System.Security.Cryptography.Pkcs.SignedCms>,<TimestampSignatureAsync>d__3>"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 4
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs109",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 175,
+        "name": "AddTimestamp"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 6
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs110",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 165,
+        "name": "AddTimestampToRepositoryCountersignature"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 6
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs114",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Protocol@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Protocol.dll",
+        "line": 89,
+        "name": "SendAsync"
+      },
+      "sinkCategory": "network",
+      "source": {
+        "file": "NuGet.Protocol.dll",
+        "line": 1,
+        "name": "request",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 3
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs119",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/Microsoft.AspNetCore.Components.Web@8.0.2"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "HomePageHealthCheck.cs",
+        "line": 26,
+        "name": "GetAsync"
+      },
+      "sinkCategory": "network",
+      "source": {
+        "file": "HomePageHealthCheck.cs",
+        "line": 23,
+        "name": "get_Scheme",
+        "tags": [
+          "http"
+        ]
+      },
+      "sourceCategory": "http",
+      "steps": 3
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs120",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/Microsoft.AspNetCore.Components.Web@8.0.2"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "HomePageHealthCheck.cs",
+        "line": 26,
+        "name": "GetAsync"
+      },
+      "sinkCategory": "network",
+      "source": {
+        "file": "HomePageHealthCheck.cs",
+        "line": 23,
+        "name": "get_Host",
+        "tags": [
+          "http"
+        ]
+      },
+      "sourceCategory": "http",
+      "steps": 5
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs124",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Common@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Common.dll",
+        "line": 1,
+        "name": ".ctor"
+      },
+      "sinkCategory": "command",
+      "source": {
+        "file": "NuGet.Common.dll",
+        "line": 1,
+        "name": "command",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 2
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs125",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Common@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Common.dll",
+        "line": 8,
+        "name": "set_Arguments"
+      },
+      "sinkCategory": "command",
+      "source": {
+        "file": "NuGet.Common.dll",
+        "line": 1,
+        "name": "command",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 3
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs126",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Common@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Common.dll",
+        "line": 15,
+        "name": "set_RedirectStandardError"
+      },
+      "sinkCategory": "command",
+      "source": {
+        "file": "NuGet.Common.dll",
+        "line": 1,
+        "name": "command",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 3
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs127",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Common@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Common.dll",
+        "line": 22,
+        "name": "set_RedirectStandardOutput"
+      },
+      "sinkCategory": "command",
+      "source": {
+        "file": "NuGet.Common.dll",
+        "line": 1,
+        "name": "command",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 3
+    },
+    {
+      "confidence": "medium",
+      "entryPoints": [],
+      "id": "dfs128",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Common@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Common.dll",
+        "line": 29,
+        "name": "set_UseShellExecute"
+      },
+      "sinkCategory": "command",
+      "source": {
+        "file": "NuGet.Common.dll",
+        "line": 1,
+        "name": "command",
+        "tags": [
+          "message"
+        ]
+      },
+      "sourceCategory": "message",
+      "steps": 3
+    },
+    {
+      "confidence": "low",
+      "entryPoints": [],
+      "id": "dfs10",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:nuget/NuGet.Packaging@6.3.1"
+      ],
+      "sanitizerReported": false,
+      "severity": "warning",
+      "severitySource": "engine",
+      "sink": {
+        "file": "NuGet.Packaging.dll",
+        "line": 2,
+        "name": "Load"
+      },
+      "sinkCategory": "xxe",
+      "source": {
+        "file": "NuGet.Packaging.dll",
+        "line": 1,
+        "name": "input",
+        "tags": [
+          "input"
+        ]
+      },
+      "sourceCategory": "input",
+      "steps": 2
+    }
+  ],
+  "reachablePackages": [],
+  "relevantFiles": [],
+  "schema": "atom-tools/explain-agent-context@1",
+  "suggestedNextCommands": [
+    "atom-tools explain -i dotnet-eshoponweb-dosai-dataflows.json --flow dfs1",
+    "atom-tools explain -i dotnet-eshoponweb-dosai-dataflows.json --flow dfs100",
+    "atom-tools explain -i dotnet-eshoponweb-dosai-dataflows.json --flow dfs101",
+    "atom-tools explain -i dotnet-eshoponweb-dosai-dataflows.json --query 'flows[severity=error] count'",
+    "atom-tools attack-surface -i dotnet-eshoponweb-dosai-dataflows.json -f json -o attack-surface.json"
+  ],
+  "summary": {
+    "endpoints": 60,
+    "engineVersions": {
+      "dosai": [
+        "5.0.0.0"
+      ]
+    },
+    "engines": [
+      "dosai"
+    ],
+    "flows": 60,
+    "flowsBehindAnEntryPoint": 0,
+    "flowsWithSourceTags": 60,
+    "packageRecords": 45,
+    "severity": {
+      "error": 20,
+      "note": 12,
+      "warning": 28
+    },
+    "severitySource": {
+      "derived": 0,
+      "engine": 60
+    },
+    "sources": [
+      "dotnet-eshoponweb-dosai-dataflows.json"
+    ]
+  },
+  "tokenBudget": {
+    "countingMethod": "characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser",
+    "estimatedTokens": 3882,
+    "maxTokens": 4000,
+    "respected": true
+  },
+  "truncation": {
+    "marker": "truncated: 127 more item(s) not shown (13 relevantFiles, 15 reachablePackages, 60 entryPoints, 39 highRiskFlows)",
+    "omitted": {
+      "entryPoints": 60,
+      "highRiskFlows": 39,
+      "reachablePackages": 15,
+      "relevantFiles": 13
+    },
+    "reason": "the token budget (--max-tokens, counting characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser) was reached; what is listed is ranked, not exhaustive"
+  }
+}

@@ -1,4 +1,3 @@
-import pytest
 from atom_tools.lib import HttpRoute
 from atom_tools.lib.ruby_semantics import (
     code_to_routes,

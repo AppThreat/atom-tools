@@ -1,0 +1,546 @@
+{
+  "entryPoints": [],
+  "explainVersion": 1,
+  "highRiskFlows": [
+    {
+      "confidence": null,
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "showOwner",
+          "location": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java:None"
+        }
+      ],
+      "id": "atom-flow-160",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-web@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 176,
+        "name": "return mav;"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 170,
+        "name": "ownerId",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 12
+    },
+    {
+      "confidence": null,
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "showOwner",
+          "location": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java:None"
+        }
+      ],
+      "id": "atom-flow-74",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-web@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 175,
+        "name": "addObject"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 170,
+        "name": "ownerId",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 12
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-101",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar",
+        "pkg:maven/org.springframework/spring-context-support@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 55,
+        "name": "addAttribute"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 45,
+        "name": "page",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 14
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-104",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 61,
+        "name": "<operator>.assignment"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 45,
+        "name": "page",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 6
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-107",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 62,
+        "name": "findAll"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 45,
+        "name": "page",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 7
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-108",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-core@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+        "line": 180,
+        "name": "Assert"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+        "line": 98,
+        "name": "petId",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 6
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-109",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-core@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+        "line": 180,
+        "name": "Assert"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+        "line": 98,
+        "name": "visit",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 10
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-112",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-context@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 79,
+        "name": "result"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 78,
+        "name": "result",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 2
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-113",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-context@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 110,
+        "name": "result"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 95,
+        "name": "result",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 2
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-114",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 128,
+        "name": "paginated"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 95,
+        "name": "page",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 13
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-117",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 128,
+        "name": "paginated"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 95,
+        "name": "owner",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 18
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-120",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-context@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 153,
+        "name": "result"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 145,
+        "name": "result",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 3
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-124",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-context@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+        "line": 132,
+        "name": "result"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+        "line": 108,
+        "name": "result",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 5
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-126",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-context@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+        "line": 174,
+        "name": "result"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+        "line": 145,
+        "name": "result",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 5
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-133",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework/spring-context@7.0.8?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+        "line": 104,
+        "name": "result"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/VisitController.java",
+        "line": 99,
+        "name": "result",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 3
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-140",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 54,
+        "name": "paginated"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/vet/VetController.java",
+        "line": 45,
+        "name": "page",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 11
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "atom-flow-143",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:maven/org.springframework.data/spring-data-commons@4.1.0?type=jar"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerRepository.java",
+        "line": 45,
+        "name": "pageable"
+      },
+      "sinkCategory": null,
+      "source": {
+        "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+        "line": 95,
+        "name": "page",
+        "tags": [
+          "framework-input"
+        ]
+      },
+      "sourceCategory": "framework-input",
+      "steps": 9
+    }
+  ],
+  "reachablePackages": [],
+  "relevantFiles": [],
+  "schema": "atom-tools/explain-agent-context@1",
+  "suggestedNextCommands": [
+    "atom-tools explain -i java-petclinic-reachables.json --flow atom-flow-160",
+    "atom-tools explain -i java-petclinic-reachables.json --flow atom-flow-74",
+    "atom-tools explain -i java-petclinic-reachables.json --flow atom-flow-101",
+    "atom-tools explain -i java-petclinic-reachables.json --query 'flows[severity=error] count'",
+    "atom-tools attack-surface -i java-petclinic-reachables.json -f json -o attack-surface.json"
+  ],
+  "summary": {
+    "endpoints": 0,
+    "engineVersions": {
+      "atom": null
+    },
+    "engines": [
+      "atom"
+    ],
+    "flows": 163,
+    "flowsBehindAnEntryPoint": 2,
+    "flowsWithSourceTags": 78,
+    "packageRecords": 0,
+    "severity": {
+      "error": 0,
+      "note": 109,
+      "warning": 54
+    },
+    "severitySource": {
+      "derived": 163,
+      "engine": 0
+    },
+    "sources": [
+      "java-petclinic-reachables.json"
+    ]
+  },
+  "tokenBudget": {
+    "countingMethod": "characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser",
+    "estimatedTokens": 3966,
+    "maxTokens": 4000,
+    "respected": true
+  },
+  "truncation": {
+    "marker": "truncated: 169 more item(s) not shown (14 relevantFiles, 8 reachablePackages, 1 entryPoints, 146 highRiskFlows)",
+    "omitted": {
+      "entryPoints": 1,
+      "highRiskFlows": 146,
+      "reachablePackages": 8,
+      "relevantFiles": 14
+    },
+    "reason": "the token budget (--max-tokens, counting characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser) was reached; what is listed is ranked, not exhaustive"
+  }
+}

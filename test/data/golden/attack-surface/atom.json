@@ -1,0 +1,99 @@
+{
+    "attackSurfaceVersion": 1,
+    "coverage": {
+        "atom": {
+            "endpoints": 1,
+            "engine": "atom",
+            "note": "atom emits no call graph; reach is joined by flow source location for reachables inputs and is not computed for usages-only inputs.",
+            "usagesFiles": 0
+        }
+    },
+    "diagnostics": [],
+    "engine": "atom",
+    "sources": [
+        "test/data/java-petclinic-reachables.json"
+    ],
+    "summary": {
+        "anonymousReach": {
+            "anonymousEntryPoints": 0,
+            "computed": false,
+            "reachingHighSeveritySink": 0
+        },
+        "byEngine": {
+            "atom": 1
+        },
+        "byTier": {
+            "unknown-auth": 1
+        },
+        "entryPoints": 1,
+        "entryPointsWithReach": 1,
+        "reachComputed": true
+    },
+    "tierOrder": [
+        "anonymous-http",
+        "anonymous-rpc",
+        "anonymous",
+        "mcp",
+        "queue",
+        "cli",
+        "authenticated-http",
+        "authenticated-rpc",
+        "internal",
+        "unknown-auth"
+    ],
+    "tiers": [
+        {
+            "Engine": [
+                "atom"
+            ],
+            "EntryPointCount": 1,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "atom",
+                    "EntryPointId": "atom:src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java#showOwner",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+                    "FileName": "OwnerController.java",
+                    "Framework": null,
+                    "Handler": "showOwner",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "http-route",
+                    "LineNumber": null,
+                    "Package": null,
+                    "Reach": {
+                        "flowIds": [
+                            "atom-flow-160",
+                            "atom-flow-74"
+                        ],
+                        "flows": 2,
+                        "functions": [],
+                        "note": "atom emits no call graph; reach is the count of flows in this document whose source sits in the route's (file, method).",
+                        "purls": [
+                            "pkg:maven/org.springframework/spring-web@7.0.8?type=jar"
+                        ],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": null,
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                }
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 1,
+            "ExploitChainCount": 0,
+            "Exposure": "unknown-auth",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "kind"
+            ],
+            "WeaknessCount": 0
+        }
+    ]
+}

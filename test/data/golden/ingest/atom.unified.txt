@@ -1,0 +1,95 @@
+unified document md5: ee50cdbdd3ec545118d84297c9f343b3
+engine: atom (no version recorded), mode reachables
+counts: 163 flow(s), 0 endpoint(s), 0 package(s), 0 diagnostic(s)
+flow[0]: {
+  "analysis_mode": "reachables",
+  "confidence": null,
+  "engine": "atom",
+  "engine_version": "",
+  "extra": {},
+  "id": "atom-flow-0",
+  "nodes": [
+    {
+      "code": "SpringApplication.run(PetClinicApplication.class, args)",
+      "column": 3,
+      "file": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+      "function": "main",
+      "line": 33,
+      "name": "SpringApplication",
+      "package": "org.springframework.samples.petclinic",
+      "purl": "pkg:maven/org.springframework.boot/spring-boot-micrometer-metrics@4.1.0?type=jar",
+      "role": "source",
+      "symbol": "IDENTIFIER",
+      "tags": []
+    },
+    {
+      "code": "SpringApplication.run(PetClinicApplication.class, args)",
+      "column": 3,
+      "file": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+      "function": "main",
+      "line": 33,
+      "name": "run",
+      "package": "org.springframework.samples.petclinic",
+      "purl": "pkg:maven/org.springframework/spring-aspects@7.0.8?type=jar",
+      "role": "sink",
+      "symbol": "org.springframework.boot.SpringApplication.run:org.springframework.context.ConfigurableApplicationContext(java.lang.Class,java.lang.String[])",
+      "tags": []
+    }
+  ],
+  "path_truncated": false,
+  "purls": [
+    "pkg:maven/org.springframework.boot/spring-boot-micrometer-metrics@4.1.0?type=jar",
+    "pkg:maven/org.springframework/spring-aspects@7.0.8?type=jar"
+  ],
+  "raw": {
+    "flows": [
+      {
+        "code": "SpringApplication.run(PetClinicApplication.class, args)",
+        "columnNumber": 3,
+        "fullName": "",
+        "id": 22,
+        "isExternal": false,
+        "label": "IDENTIFIER",
+        "lineNumber": 33,
+        "name": "SpringApplication",
+        "parentClassName": "org.springframework.samples.petclinic.PetClinicApplication",
+        "parentFileName": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+        "parentMethodName": "main",
+        "parentMethodSignature": "void(java.lang.String[])",
+        "parentPackageName": "org.springframework.samples.petclinic",
+        "signature": "",
+        "tags": "pkg:maven/org.springframework.boot/spring-boot-micrometer-metrics@4.1.0?type=jar, framework",
+        "typeFullName": ""
+      },
+      {
+        "code": "SpringApplication.run(PetClinicApplication.class, args)",
+        "columnNumber": 3,
+        "fullName": "org.springframework.boot.SpringApplication.run:org.springframework.context.ConfigurableApplicationContext(java.lang.Class,java.lang.String[])",
+        "id": 21,
+        "isExternal": true,
+        "label": "CALL",
+        "lineNumber": 33,
+        "name": "run",
+        "parentClassName": "org.springframework.samples.petclinic.PetClinicApplication",
+        "parentFileName": "src/main/java/org/springframework/samples/petclinic/PetClinicApplication.java",
+        "parentMethodName": "main",
+        "parentMethodSignature": "void(java.lang.String[])",
+        "parentPackageName": "org.springframework.samples.petclinic",
+        "signature": "",
+        "tags": "pkg:maven/org.springframework/spring-aspects@7.0.8?type=jar, framework",
+        "typeFullName": ""
+      }
+    ],
+    "purls": [
+      "pkg:maven/org.springframework.boot/spring-boot-micrometer-metrics@4.1.0?type=jar",
+      "pkg:maven/org.springframework/spring-aspects@7.0.8?type=jar"
+    ]
+  },
+  "sanitized": false,
+  "severity": "note",
+  "severity_source": "derived",
+  "sink_category": "",
+  "source_category": "",
+  "taint_kinds": []
+}
+endpoints: (none) — atom reachables carry no endpoint table

@@ -1,0 +1,37 @@
+Attack surface: 14 entry point(s) from 1 report(s) (rusi)
+tiers run most-exposed first; only dosai classifies authentication — every other engine's entries sit in unknown-auth, which is a gap, not a finding.
+
+  ? unknown-auth [auth unknown — not an exposure verdict]: 14 entry point(s), 0 weakness(es) (0 high severity)
+   ├── GET /graphql  app-accommodation-service/src/graphql/mod.rs:44  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /graphql  app-user-service/src/graphql/mod.rs:44  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /health  app-accommodation-service/src/main.rs:128  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /health  app-kafka-connector-mongodb/src/main.rs:74  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /health  app-kafka-connector-relationaldb/src/main.rs:72  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /health  app-user-service/src/main.rs:92  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /ui  app-accommodation-service/src/graphql/mod.rs:44  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /ui  app-user-service/src/graphql/mod.rs:44  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /users  app-user-service/src/user/api/rest/routing.rs:11  [auth unknown]
+       reach: 1 flow(s) · sinks: network-request
+       packages: pkg:cargo/app-user-service@0.1.0
+   ├── GET /users/:identifier  app-user-service/src/user/api/rest/routing.rs:11  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /graphql  app-accommodation-service/src/graphql/mod.rs:44  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /graphql  app-user-service/src/graphql/mod.rs:44  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /users  app-user-service/src/user/api/rest/routing.rs:11  [auth unknown]
+       reach: computed — reaches no analysed flow
+   └── POST /users/search  app-user-service/src/user/api/rest/routing.rs:11  [auth unknown]
+       reach: 1 flow(s) · sinks: network-request
+       packages: pkg:cargo/app-user-service@0.1.0
+
+tiers with no entry points here: anonymous-http, anonymous-rpc, anonymous, mcp, queue, cli, authenticated-http, authenticated-rpc, internal
+headline suppressed: no input classifies authentication, so no entry point is known to be anonymous — a percentage here would invent a denominator.

@@ -1,0 +1,65 @@
+golem baseline 343 flow(s) / 54 file(s)  ->  current 397 flow(s) / 66 file(s)
+severity source: engine
+
++159 added  -105 removed  ~91 moved  =21 witness-changed
+  + error    configuration -> crypto  crypto/x509.ParsePKCS8PrivateKey  (pkg/aea/aea.go:82)  x17
+  + error    configuration -> filesystem  os.Open  (internal/diff/ota_inputs.go:126)  x17
+  + error    configuration -> native-interop  github.com/blacktop/ipsw/pkg/comp._Cfunc_compression_decode_buffer  (pkg/comp/comp_darwin.go:51)  x3
+  + error    configuration -> filesystem  os.ReadFile  (pkg/aea/aea.go:129)  x15
+  + error    configuration -> native-interop  github.com/blacktop/ipsw/pkg/comp._Cfunc_compression_encode_buffer  (pkg/comp/comp_darwin.go:23)
+  + error    configuration -> filesystem  os.RemoveAll  (internal/diff/diff.go:390)  x3
+  + error    http-input -> filesystem  os.Open  (pkg/dyld/mmap_unix.go:31)  x5
+  + error    configuration -> filesystem  os.WriteFile  (cmd/ipsw/cmd/comp.go:90)
+  + error    parameter -> native-interop  github.com/blacktop/arm64-cgo/disassemble._Cfunc_aarch64_decompose_zeroed  (/Users/prabhu/go/pkg/mod/github.com/blacktop/arm64-cgo@v1.0.71/disassemble/disassemble.go:800)  x3
+  + error    parameter -> filesystem  os.Open  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-macho@v1.1.281/fat.go:146)
+  + error    configuration -> filesystem  os.WriteFile  (cmd/ipsw/cmd/decomp.go:90)
+  + warning  configuration -> external-service  (*net/http.Client).Do  (pkg/aea/aea.go:159)  x17
+  + warning  configuration -> data  encoding/json.Unmarshal  (pkg/aea/aea.go:185)  x17
+  + warning  configuration -> external-service  net/http.NewRequest  (pkg/aea/aea.go:155)  x17
+  + warning  parameter -> logging  log.Printf  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-macho@v1.1.281/file.go:253)  x20
+  + warning  http-input -> external-service  net/http.NewRequest  (pkg/appstore/bundle.go:133)
+  + warning  http-input -> logging  log.Printf  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-macho@v1.1.281/file.go:253)  x6
+  + warning  configuration -> logging  fmt.Println  (cmd/ipsw/cmd/device_tree.go:214)  x2
+  + warning  configuration -> logging  fmt.Println  (cmd/ipsw/cmd/device_tree.go:197)  x2
+  + warning  parameter -> panic  github.com/sergi/go-diff/diffmatchpatch.runeToInt  (/Users/prabhu/go/pkg/mod/github.com/sergi/go-diff@v1.4.0/diffmatchpatch/stringutil.go:189)
+  + warning  configuration -> panic  (reflect.Value).assignTo  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/reflect/value.go:3256)  x2
+  + warning  configuration -> panic  reflect.typesMustMatch  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/reflect/value.go:2723)  x2
+  + warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.27.0/registry.go:156)
+  + warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.27.0/registry.go:136)
+  + warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.27.0/registry.go:129)
+  + warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.27.0/registry.go:163)
+  + warning  http-input -> external-service  (*net/http.Client).Do  (pkg/appstore/bundle.go:146)
+  - warning  http-input -> panic  (*github.com/blacktop/go-plist.textPlistParser).parseDocument  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/text_parser.go:83)
+  - warning  http-input -> panic  github.com/blacktop/go-plist.mustParseUint  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:31)
+  - warning  http-input -> http-response  (*github.com/gin-gonic/gin.Context).JSON  (/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go:232)  x5
+  - warning  configuration -> panic  github.com/blacktop/go-plist.mustParseUint  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:31)  x14
+  - warning  http-input -> logging  log.Printf  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-macho@v1.1.263/file.go:244)  x11
+  - warning  http-input -> panic  reflect.typesMustMatch  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/reflect/value.go:2723)
+  - warning  http-input -> panic  github.com/blacktop/go-plist.mustParseInt  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:23)
+  - warning  configuration -> panic  github.com/blacktop/go-plist.mustParseFloat  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:39)  x14
+  - warning  http-input -> panic  github.com/blacktop/go-plist.mustParseBool  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:47)
+  - warning  configuration -> panic  (*github.com/blacktop/go-plist.textPlistParser).error  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/text_parser.go:116)  x14
+  - warning  configuration -> panic  github.com/blacktop/go-plist.mustParseInt  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:23)  x9
+  - error    http-input -> filesystem  os.Open  (pkg/dyld/file.go:143)  x5
+  - warning  http-input -> panic  (*github.com/blacktop/go-plist.textPlistParser).error  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/text_parser.go:116)
+  - warning  http-input -> panic  github.com/blacktop/go-plist.mustParseFloat  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go:39)
+  - warning  http-input -> panic  (reflect.Value).assignTo  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/reflect/value.go:3256)
+  - warning  http-input -> panic  (reflect.Value).Convert  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/reflect/value.go:3269)
+  - error    configuration -> filesystem  os.Open  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/archive/zip/reader.go:78)  x14
+  - warning  http-input -> http-response  (*github.com/gin-gonic/gin.Context).JSON  (api/server/routes/kernel/kernel.go:34)
+  - warning  http-input -> http-response  (*github.com/gin-gonic/gin.Context).JSON  (api/server/routes/kernel/kernel.go:59)
+  - error    http-input -> filesystem  os.Open  (/Users/prabhu/go/pkg/mod/github.com/blacktop/go-macho@v1.1.263/file.go:119)  x3
+  - warning  http-input -> formatted-output  fmt.Fprintf  (/opt/homebrew/Cellar/go/1.27.1/libexec/src/net/http/response.go:263)
+  - warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.23.1/registry.go:136)
+  - warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.23.1/registry.go:163)
+  - warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.23.1/registry.go:156)
+  - warning  parameter -> panic  panic  (/Users/prabhu/go/pkg/mod/github.com/alecthomas/chroma/v2@v2.23.1/registry.go:129)
+
+RiskDelta:
+  NewHighSeverityFlows: 67
+  NewMediumSeverityFlows: 92
+  NewLowSeverityFlows: 0
+  NewAnonymousEndpoints: not computed
+  NewEntryPoints: 3
+  NewlyReachablePackages: 0
+  NewSinkCategories: 0

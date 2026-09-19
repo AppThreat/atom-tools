@@ -1,0 +1,25 @@
+Call graph metric: chokepoints — nodes on the most source→sink paths (dosai, 1 input(s))
+dosai: 315 nodes (291 internal, 24 external), 300 edges
+  call types: ConstructorCall 16, DelegateInvoke 71, MethodCall 77, PropertyGet 80, PropertySet 56
+  engine roots: 0 of 34 in this graph
+
+-- dosai (test/data/ecosystem/dotnet-eshoponweb-dosai-methods.json) --
+seeds: 106 source(s) → 315 sink(s) via zero-indegree (derived); 204 source→sink pair(s) connected
+PATH ENUMERATION CAPPED at 64 of 106 source nodes — betweenness scores are a lower bound.
+24 external node(s) excluded from the ranking (--include-external to rank them).
+  1. List  CatalogItemService.cs:78  [BlazorAdmin.Services]  betweenness 17.0  (8% of pairs)  engine fan-in/out 4/3
+  2. RefreshLocalStorageList  CachedCatalogItemServiceDecorator.cs:104  [BlazorAdmin.Services]  betweenness 12.0  (6% of pairs)  engine fan-in/out 3/1
+  3. CreateToken  ApiTokenHelper.cs:29  [Microsoft.eShopWeb.FunctionalTests.Web.Api]  betweenness 8.0  (4% of pairs)  engine fan-in/out 2/4
+  4. GetUser  CustomAuthStateProvider.cs:36  [BlazorAdmin]  betweenness 6.0  (3% of pairs)  engine fan-in/out 1/1
+  5. Create  CatalogItemService.cs:29  [BlazorAdmin.Services]  betweenness 6.0  (3% of pairs)  engine fan-in/out 1/1
+  6. .ctor  BasketWithItemsSpecification.cs:15  [Microsoft.eShopWeb.ApplicationCore.Specifications]  betweenness 6.0  (3% of pairs)  engine fan-in/out 5/3
+  7. FetchUser  CustomAuthStateProvider.cs:50  [BlazorAdmin]  betweenness 5.0  (2% of pairs)  engine fan-in/out 1/5
+  8. Edit  CatalogItemService.cs:35  [BlazorAdmin.Services]  betweenness 5.0  (2% of pairs)  engine fan-in/out 1/1
+  9. HttpPost  HttpService.cs:49  [BlazorAdmin.Services]  betweenness 5.0  (2% of pairs)  engine fan-in/out 1/3
+ 10. .ctor  BasketItem.cs:13  [Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate]  betweenness 5.0  (2% of pairs)  engine fan-in/out 1/3
+ 11. BuildToastSettings  ToastComponent.cs:56  [BlazorAdmin.Helpers]  betweenness 4.0  (2% of pairs)  engine fan-in/out 1/4
+ 12. List  CachedCatalogItemServiceDecorator.cs:51  [BlazorAdmin.Services]  betweenness 4.0  (2% of pairs)  engine fan-in/out 3/1
+ 13. HttpPut  HttpService.cs:69  [BlazorAdmin.Services]  betweenness 4.0  (2% of pairs)  engine fan-in/out 1/2
+ 14. ShowToast  ToastService.cs:19  [BlazorAdmin.Services]  betweenness 4.0  (2% of pairs)  engine fan-in/out 2/1
+ 15. ListPaged  CatalogItemService.cs:59  [BlazorAdmin.Services]  betweenness 3.0  (2% of pairs)  engine fan-in/out 1/3
+… 9 more ranked node(s) in the json output.

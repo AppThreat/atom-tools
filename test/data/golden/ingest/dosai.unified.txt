@@ -1,0 +1,164 @@
+unified document md5: 98b0b279a7e151e1bf37dd7625633023
+engine: dosai 5.0.0.0, mode dataflows
+counts: 60 flow(s), 60 endpoint(s), 45 package(s), 151 diagnostic(s)
+flow[0]: {
+  "analysis_mode": "dataflows",
+  "confidence": "medium",
+  "engine": "dosai",
+  "engine_version": "5.0.0.0",
+  "extra": {
+    "EdgeIds": [
+      "dfe10",
+      "dfe11",
+      "dfe22",
+      "dfe12",
+      "dfe23",
+      "dfe24"
+    ],
+    "SinkArgument": "tokenDescriptor",
+    "SinkPurl": "pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1",
+    "Summary": "Data flows from dfn10 to CreateToken argument 0.",
+    "derived_tag": "sensitive-data",
+    "weakness_ids": [
+      "wc1"
+    ]
+  },
+  "id": "dfs1",
+  "nodes": [
+    {
+      "code": "AuthorizationConstants.JWT_SECRET_KEY",
+      "column": 43,
+      "file": "ApiTokenHelper.cs",
+      "function": "CreateToken",
+      "line": 38,
+      "name": "JWT_SECRET_KEY",
+      "package": "Microsoft.eShopWeb.FunctionalTests.Web.Api",
+      "purl": null,
+      "role": "source",
+      "symbol": "JWT_SECRET_KEY",
+      "tags": [
+        "secret"
+      ]
+    },
+    {
+      "code": "key = Encoding.ASCII.GetBytes(AuthorizationConstants.JWT_SECRET_KEY)",
+      "column": 13,
+      "file": "ApiTokenHelper.cs",
+      "function": "CreateToken",
+      "line": 38,
+      "name": "key",
+      "package": "Microsoft.eShopWeb.FunctionalTests.Web.Api",
+      "purl": null,
+      "role": "step",
+      "symbol": "key",
+      "tags": []
+    },
+    {
+      "code": "tokenDescriptor = new SecurityTokenDescriptor         {             Subject = new ClaimsIdentity(claims.ToArray()),             Expires = DateTime.UtcNow.AddHours(1),             SigningCredentials = new SigningCredentials(new SymmetricSecu\u2026",
+      "column": 13,
+      "file": "ApiTokenHelper.cs",
+      "function": "CreateToken",
+      "line": 39,
+      "name": "tokenDescriptor",
+      "package": "Microsoft.eShopWeb.FunctionalTests.Web.Api",
+      "purl": null,
+      "role": "step",
+      "symbol": "tokenDescriptor",
+      "tags": []
+    },
+    {
+      "code": "tokenHandler.CreateToken(tokenDescriptor)",
+      "column": 21,
+      "file": "ApiTokenHelper.cs",
+      "function": "CreateToken",
+      "line": 46,
+      "name": "CreateToken",
+      "package": "Microsoft.eShopWeb.FunctionalTests.Web.Api",
+      "purl": "pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1",
+      "role": "sink",
+      "symbol": "System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.CreateToken(Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor)",
+      "tags": [
+        "auth"
+      ]
+    }
+  ],
+  "path_truncated": false,
+  "purls": [
+    "pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1"
+  ],
+  "raw": {
+    "Confidence": "Medium",
+    "EdgeIds": [
+      "dfe10",
+      "dfe11",
+      "dfe22",
+      "dfe12",
+      "dfe23",
+      "dfe24"
+    ],
+    "FieldPaths": [],
+    "Id": "dfs1",
+    "NodeIds": [
+      "dfn10",
+      "dfn11",
+      "dfn12",
+      "dfn16"
+    ],
+    "Purls": [
+      "pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1"
+    ],
+    "Severity": "high",
+    "SinkArgument": "tokenDescriptor",
+    "SinkArgumentIndex": 0,
+    "SinkCategory": "auth",
+    "SinkId": "dfn16",
+    "SinkPurl": "pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1",
+    "SourceCategory": "secret",
+    "SourceId": "dfn10",
+    "Summary": "Data flows from dfn10 to CreateToken argument 0.",
+    "TaintKinds": [
+      "secret"
+    ]
+  },
+  "sanitized": false,
+  "severity": "error",
+  "severity_source": "engine",
+  "sink_category": "auth",
+  "source_category": "secret",
+  "taint_kinds": [
+    "secret"
+  ]
+}
+endpoint[0]: {
+  "file": "OrderController.cs",
+  "handler": "Microsoft.eShopWeb.Web.Controllers.OrderController.MyOrders",
+  "id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Order#GET:/Order/MyOrders",
+  "kind": "HttpController",
+  "line": null,
+  "method": null,
+  "path": null,
+  "raw": {
+    "AllowAnonymous": false,
+    "AuthenticationSchemes": [],
+    "AuthorizationPolicies": [],
+    "AuthorizationRequired": true,
+    "ClassName": "OrderController",
+    "ColumnNumber": 5,
+    "CorsPolicies": [],
+    "FileName": "OrderController.cs",
+    "HttpMethod": "GET",
+    "Id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Order#GET:/Order/MyOrders",
+    "InputNames": [],
+    "Kind": "HttpController",
+    "LineNumber": 22,
+    "MethodId": "Microsoft.eShopWeb.Web.Controllers.OrderController.MyOrders():Task<Microsoft.AspNetCore.Mvc.IActionResult>",
+    "MethodName": "MyOrders",
+    "Namespace": "Microsoft.eShopWeb.Web.Controllers",
+    "Path": "src/Web/Controllers/OrderController.cs",
+    "RawUrls": [],
+    "RequiredClaims": [],
+    "RequiredScopes": [],
+    "Roles": [],
+    "Route": "/Order/MyOrders"
+  }
+}

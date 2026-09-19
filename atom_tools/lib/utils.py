@@ -34,8 +34,19 @@ def add_params_to_cmd(cmd: str, outfile: str, origin_type: str = "") -> Tuple[st
 
 def check_reachable(data: Dict, pkg: str, loc: str) -> bool:
     """Checks if package is reachable"""
+    # atom writes a reachables slice as a bare list; everything downstream reads
+    # the {"reachables": [...]} envelope, so a list used to produce an empty
+    # purl enumeration (a silent False) rather than an answer.
+    if isinstance(data, list):
+        data = {"reachables": data}
     if pkg:
         return check_reachable_purl(data, pkg)
+    if not loc:
+        # Neither was given. This used to reach re.search(pattern, None) and
+        # surface as "expected string or bytes-like object, got 'NoneType'",
+        # which reads like a problem with the input document rather than a
+        # missing option.
+        raise ValueError("Specify the package to check with --purl, or a location with --location.")
     if match := re.search(r"(?P<file>[^/]+(?<!/)):(?P<line>[\d-]+)", loc):
         return filter_flows(data.get("reachables", []), match["file"], get_ln_range(match["line"]))
     raise ValueError(f"Invalid location: {loc}")
@@ -56,10 +67,32 @@ def output_endpoints(data: Dict, sparse: bool, line_range: Tuple[int, int] | Tup
     return to_print
 
 
+def collect_call_usages(values: Dict) -> Dict:
+    """
+    Collect ``x-atom-usages.call`` for one path item, from either nesting.
+
+    The JVM-style converter attaches ``x-atom-usages`` to the path item; the
+    go, rust and ruby converters attach it to each operation instead. Reading
+    only the path item made those three languages print an empty endpoint
+    listing even though the conversion itself was complete.
+    """
+    calls: Dict = {}
+    sources = [values]
+    sources.extend(op for op in values.values() if isinstance(op, dict))
+    for source in sources:
+        usages = source.get("x-atom-usages")
+        if not isinstance(usages, dict):
+            continue
+        for fname, lines in (usages.get("call") or {}).items():
+            merged = calls.setdefault(fname, [])
+            merged.extend(ln for ln in lines if ln not in merged)
+    return calls
+
+
 def filter_endpoint_ln(ep: str, values: Dict, sparse: bool, ln_range: Tuple[int, int]) -> str:
     """Filters endpoint line numbers"""
     to_print = ""
-    usages = values.get("x-atom-usages", {}).get("call", {})
+    usages = collect_call_usages(values)
     for k, v in usages.items():
         for i in v:
             if not ln_range or ln_range[0] <= i <= ln_range[1]:

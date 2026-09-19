@@ -1,0 +1,141 @@
+{
+    "AddedEntryPoints": [],
+    "AddedFlows": [],
+    "AddedPackages": [],
+    "MovedFlows": [
+        {
+            "engine": "rusi",
+            "flowId": "df-slice-b8f1bc4456f16a37",
+            "pathLength": 2,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:cargo/app-user-service@0.1.0"
+            ],
+            "severity": "warning",
+            "severitySource": "derived",
+            "sink": {
+                "file": "app-user-service/src/common/security.rs",
+                "line": 39,
+                "name": "common_security::load_jwk_decoders"
+            },
+            "sinkCategory": "network-request",
+            "source": {
+                "file": "app-user-service/src/common/security.rs",
+                "line": 35,
+                "name": "security_configuration"
+            },
+            "sourceCategory": "param-1"
+        },
+        {
+            "engine": "rusi",
+            "flowId": "df-slice-b9a6867c65b226a9",
+            "pathLength": 2,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:cargo/app-accommodation-service@0.1.0"
+            ],
+            "severity": "warning",
+            "severitySource": "derived",
+            "sink": {
+                "file": "app-accommodation-service/src/common/security.rs",
+                "line": 39,
+                "name": "common_security::load_jwk_decoders"
+            },
+            "sinkCategory": "network-request",
+            "source": {
+                "file": "app-accommodation-service/src/common/security.rs",
+                "line": 35,
+                "name": "security_configuration"
+            },
+            "sourceCategory": "param-1"
+        }
+    ],
+    "NewSinkCategories": [],
+    "RemovedEntryPoints": [],
+    "RemovedFlows": [],
+    "RemovedPackages": [],
+    "RiskDelta": {
+        "NewAnonymousEndpoints": null,
+        "NewEntryPoints": 0,
+        "NewHighSeverityFlows": 0,
+        "NewLowSeverityFlows": 0,
+        "NewMediumSeverityFlows": 0,
+        "NewSinkCategories": 0,
+        "NewlyReachablePackages": 0
+    },
+    "WitnessChangedFlows": [],
+    "baseline": {
+        "engine": "rusi",
+        "file": "test/data/ecosystem/rust-microservices-kafka-rusi-baseline.json"
+    },
+    "coverage": {
+        "new": {
+            "analysisMode": "security",
+            "diagnostics": 7,
+            "endpoints": 14,
+            "engine": "rusi",
+            "engineVersion": "3.2.0",
+            "files": 5,
+            "flows": 5,
+            "packages": 3,
+            "severitySources": [
+                "derived"
+            ],
+            "truncated": false,
+            "truncatedPaths": 0,
+            "truncationReasons": []
+        },
+        "old": {
+            "analysisMode": "security",
+            "diagnostics": 7,
+            "endpoints": 14,
+            "engine": "rusi",
+            "engineVersion": "3.2.0",
+            "files": 5,
+            "flows": 5,
+            "packages": 3,
+            "severitySources": [
+                "derived"
+            ],
+            "truncated": false,
+            "truncatedPaths": 0,
+            "truncationReasons": []
+        },
+        "regressed": false,
+        "regressions": []
+    },
+    "current": {
+        "engine": "rusi",
+        "file": "test/data/ecosystem/rust-microservices-kafka-rusi.json"
+    },
+    "diagnostics": [],
+    "driftVersion": 1,
+    "engineDiagnostics": {
+        "baseline": [
+            "doc! bodies were not analyzed in 5 file(s) (for example app-accommodation-service/src/accommodation/service/accommodation_service.rs, app-accommodation-service/src/accommodation/service/room_type_service.rs, app-accommodation-service/src/common/db.rs); calls inside them are not in the call graph",
+            "glob import `async_graphql::dataloader::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "glob import `sea_orm::entity::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "glob import `sea_orm::entity::prelude::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "glob import `sea_orm_migration::prelude::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "json! bodies were not analyzed in 5 file(s) (for example app-accommodation-service/src/common/api.rs, app-kafka-connector-mongodb/src/common/api.rs, app-kafka-connector-relationaldb/src/common/api.rs); calls inside them are not in the call graph",
+            "tokio::select! bodies were not analyzed in 4 file(s) (for example app-accommodation-service/src/common/server.rs, app-kafka-connector-mongodb/src/common/server.rs, app-kafka-connector-relationaldb/src/common/server.rs); calls inside them are not in the call graph"
+        ],
+        "current": [
+            "doc! bodies were not analyzed in 5 file(s) (for example app-accommodation-service/src/accommodation/service/accommodation_service.rs, app-accommodation-service/src/accommodation/service/room_type_service.rs, app-accommodation-service/src/common/db.rs); calls inside them are not in the call graph",
+            "glob import `async_graphql::dataloader::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "glob import `sea_orm::entity::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "glob import `sea_orm::entity::prelude::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "glob import `sea_orm_migration::prelude::*` targets a module outside this workspace; names imported through it stay unresolved",
+            "json! bodies were not analyzed in 5 file(s) (for example app-accommodation-service/src/common/api.rs, app-kafka-connector-mongodb/src/common/api.rs, app-kafka-connector-relationaldb/src/common/api.rs); calls inside them are not in the call graph",
+            "tokio::select! bodies were not analyzed in 4 file(s) (for example app-accommodation-service/src/common/server.rs, app-kafka-connector-mongodb/src/common/server.rs, app-kafka-connector-relationaldb/src/common/server.rs); calls inside them are not in the call graph"
+        ]
+    },
+    "severitySources": {
+        "baseline": [
+            "derived"
+        ],
+        "current": [
+            "derived"
+        ]
+    }
+}

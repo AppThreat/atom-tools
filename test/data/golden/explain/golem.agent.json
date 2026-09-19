@@ -1,0 +1,522 @@
+{
+  "entryPoints": [],
+  "explainVersion": 1,
+  "highRiskFlows": [
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /dsc/str",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:193"
+        }
+      ],
+      "id": "seam-slice|sha256:2015015d92ad0203471ff6fa8765cd1a2491323073e801860c3e5a27f9c1d4a6",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/dyld/mmap_unix.go",
+        "line": 31,
+        "name": "Open"
+      },
+      "sinkCategory": "filesystem",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/dsc.go",
+        "line": 422,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 4
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /idev/amfi/dev",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21"
+        }
+      ],
+      "id": "seam-slice|sha256:2b44daa4369a7ef8c90a99496472d16881c3f53b36b7652ad454b477c75e10ac",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go",
+        "line": 365,
+        "name": "ParsePKCS1PrivateKey"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go",
+        "line": 67,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 6
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /idev/amfi/dev",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21"
+        }
+      ],
+      "id": "seam-slice|sha256:2f8f4aae1dd35f4dc7a4cbcac3bcf2a79e061f88159f39214761df04757372c2",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go",
+        "line": 362,
+        "name": "ParsePKCS8PrivateKey"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go",
+        "line": 67,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 6
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /info/ipsw",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:29"
+        },
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /info/ota",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:49"
+        }
+      ],
+      "id": "seam-slice|sha256:4e8cced6970dd82355403bd0a57a3500c9c3ae43829fa7ca68d4aff13d7aba03",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/comp/comp_darwin.go",
+        "line": 51,
+        "name": "_Cfunc_compression_decode_buffer"
+      },
+      "sinkCategory": "native-interop",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/info/info.go",
+        "line": 53,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 4
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /idev/amfi/dev",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21"
+        }
+      ],
+      "id": "seam-slice|sha256:53fcaf7a382abcf1fe4517597b56fdd9e6f56c5857b4284bec6cef94b873e332",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go",
+        "line": 365,
+        "name": "ParsePKCS1PrivateKey"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go",
+        "line": 67,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 6
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /dsc/macho",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:121"
+        }
+      ],
+      "id": "seam-slice|sha256:642df22ed14f771cb3acb9d4e429b64323034547234cd075de194ab2ee1a4901",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/dyld/mmap_unix.go",
+        "line": 31,
+        "name": "Open"
+      },
+      "sinkCategory": "filesystem",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/dsc.go",
+        "line": 193,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 4
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /dsc/imports",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:78"
+        }
+      ],
+      "id": "seam-slice|sha256:6d747102367d72b18be25877fe9144253c8bfc388730d0a2314d32fd64a738a5",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/dyld/mmap_unix.go",
+        "line": 31,
+        "name": "Open"
+      },
+      "sinkCategory": "filesystem",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/dsc.go",
+        "line": 137,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 4
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /idev/amfi/dev",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21"
+        }
+      ],
+      "id": "seam-slice|sha256:7ad00420f2177e36f1af51b0f82c409c6633f1c0a59ff452f0c370e524019bf2",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go",
+        "line": 365,
+        "name": "ParsePKCS1PrivateKey"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go",
+        "line": 67,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 5
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /idev/amfi/dev",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21"
+        }
+      ],
+      "id": "seam-slice|sha256:8180eec24fa6e2b2fd1a4f94a041eb6738037c1d77ec937d6500fd4445a93165",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go",
+        "line": 362,
+        "name": "ParsePKCS8PrivateKey"
+      },
+      "sinkCategory": "crypto",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go",
+        "line": 67,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 6
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /info/ipsw",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:29"
+        },
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /info/ota",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:49"
+        }
+      ],
+      "id": "seam-slice|sha256:81929f68b4ac3a37184ce8eb422ee3a480cb16a8fafc720ab44cf751c6523eb5",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/archive/zip/reader.go",
+        "line": 78,
+        "name": "Open"
+      },
+      "sinkCategory": "filesystem",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/info/info.go",
+        "line": 53,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 4
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /kernel/cpp",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:76"
+        },
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /kernel/symbolicate",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:147"
+        }
+      ],
+      "id": "seam-slice|sha256:8fc7a5797fe6d2d4fc6a213eaf499e000607c944fe1023ed25a80e929dbde8ba",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/go/pkg/mod/github.com/blacktop/arm64-cgo@v1.0.71/disassemble/disassemble.go",
+        "line": 800,
+        "name": "_Cfunc_aarch64_decompose_zeroed"
+      },
+      "sinkCategory": "native-interop",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/emulate.go",
+        "line": 159,
+        "name": "path",
+        "tags": [
+          "parameter"
+        ]
+      },
+      "sourceCategory": "parameter",
+      "steps": 7
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /dsc/info",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:97"
+        }
+      ],
+      "id": "seam-slice|sha256:9441cfe583c8f1e9fe284ec29299ee2f67f746189ac08fd0de380645e3bc3c1a",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/dyld/mmap_unix.go",
+        "line": 31,
+        "name": "Open"
+      },
+      "sinkCategory": "filesystem",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/dsc.go",
+        "line": 165,
+        "name": "Query",
+        "tags": [
+          "http-input"
+        ]
+      },
+      "sourceCategory": "http-input",
+      "steps": 4
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /kernel/cpp",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:76"
+        },
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /kernel/symbolicate",
+          "location": "/Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:147"
+        }
+      ],
+      "id": "seam-slice|sha256:9e399f1615e0cf853f0b5c92111a5103ec6b989394c79eaab2de96719a3eab89",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:golang/github.com/blacktop/ipsw"
+      ],
+      "sanitizerReported": false,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "/Users/prabhu/go/pkg/mod/github.com/blacktop/arm64-cgo@v1.0.71/disassemble/disassemble.go",
+        "line": 800,
+        "name": "_Cfunc_aarch64_decompose_zeroed"
+      },
+      "sinkCategory": "native-interop",
+      "source": {
+        "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/emulate.go",
+        "line": 159,
+        "name": "path",
+        "tags": [
+          "parameter"
+        ]
+      },
+      "sourceCategory": "parameter",
+      "steps": 5
+    }
+  ],
+  "reachablePackages": [],
+  "relevantFiles": [],
+  "schema": "atom-tools/explain-agent-context@1",
+  "suggestedNextCommands": [
+    "atom-tools explain -i go-ipsw-golem.json --flow seam-slice|sha256:2015015d92ad0203471ff6fa8765cd1a2491323073e801860c3e5a27f9c1d4a6",
+    "atom-tools explain -i go-ipsw-golem.json --flow seam-slice|sha256:2b44daa4369a7ef8c90a99496472d16881c3f53b36b7652ad454b477c75e10ac",
+    "atom-tools explain -i go-ipsw-golem.json --flow seam-slice|sha256:2f8f4aae1dd35f4dc7a4cbcac3bcf2a79e061f88159f39214761df04757372c2",
+    "atom-tools explain -i go-ipsw-golem.json --query 'flows[severity=error] count'",
+    "atom-tools attack-surface -i go-ipsw-golem.json -f json -o attack-surface.json",
+    "atom-tools graph -i go-ipsw-golem.json --metric chokepoints"
+  ],
+  "summary": {
+    "endpoints": 57,
+    "engineVersions": {
+      "golem": [
+        "3.2.0"
+      ]
+    },
+    "engines": [
+      "golem"
+    ],
+    "flows": 397,
+    "flowsBehindAnEntryPoint": 136,
+    "flowsWithSourceTags": 397,
+    "packageRecords": 21,
+    "severity": {
+      "error": 109,
+      "note": 0,
+      "warning": 288
+    },
+    "severitySource": {
+      "derived": 0,
+      "engine": 397
+    },
+    "sources": [
+      "go-ipsw-golem.json"
+    ]
+  },
+  "tokenBudget": {
+    "countingMethod": "characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser",
+    "estimatedTokens": 3944,
+    "maxTokens": 4000,
+    "respected": true
+  },
+  "truncation": {
+    "marker": "truncated: 528 more item(s) not shown (66 relevantFiles, 21 reachablePackages, 57 entryPoints, 384 highRiskFlows)",
+    "omitted": {
+      "entryPoints": 57,
+      "highRiskFlows": 384,
+      "reachablePackages": 21,
+      "relevantFiles": 66
+    },
+    "reason": "the token budget (--max-tokens, counting characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser) was reached; what is listed is ranked, not exhaustive"
+  }
+}

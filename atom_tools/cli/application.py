@@ -53,12 +53,22 @@ def load_command(name: str) -> Callable[[], Command]:
 
 
 COMMANDS = [
+    "analyze",
     "apk-analysis",
-    "convert",
-    "filter",
-    "query-endpoints",
+    "attack-surface",
     "check-reachable",
+    "convert",
+    "crypto-reach",
+    "drift",
+    "explain",
+    "filter",
+    "graph",
+    "ingest",
+    "merge-slices",
+    "query-endpoints",
+    "stats",
     "validate-lines",
+    "visualize",
 ]
 
 

@@ -29,6 +29,34 @@ from atom_tools.lib.scala_converter import convert as scala_convert
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
 
+# Aliases each dedicated converter in convert_usages dispatches on.
+_RUBY_ORIGIN_TYPES = ("rb", "ruby")
+_SCALA_ORIGIN_TYPES = ("scala", "sbt")
+_RUST_ORIGIN_TYPES = ("rs", "rust")
+_GO_ORIGIN_TYPES = ("go", "golang")
+# Aliases handled by the JVM-style path that follows the dedicated converters
+# in convert_usages (Java, JavaScript/TypeScript and Python).
+_JVM_STYLE_ORIGIN_TYPES = (
+    "java",
+    "jar",
+    "python",
+    "py",
+    "javascript",
+    "js",
+    "typescript",
+    "ts",
+)
+# Every origin type convert_usages handles. Single source of truth for the
+# --type validation shared by the convert and query-endpoints commands, so
+# the two cannot drift apart.
+SUPPORTED_ORIGIN_TYPES = frozenset(
+    _RUBY_ORIGIN_TYPES
+    + _SCALA_ORIGIN_TYPES
+    + _RUST_ORIGIN_TYPES
+    + _GO_ORIGIN_TYPES
+    + _JVM_STYLE_ORIGIN_TYPES
+)
+
 # Maps fully-qualified Java types to OpenAPI schema dicts.
 _JAVA_TYPE_SCHEMA: Dict[str, Dict] = {
     "java.lang.String": {"type": "string"},
@@ -383,13 +411,13 @@ class OpenAPI:
         """
         Converts usages to OpenAPI.
         """
-        if self.usages.origin_type in ("rb", "ruby"):
+        if self.usages.origin_type in _RUBY_ORIGIN_TYPES:
             return ruby_convert(self.usages)
-        if self.usages.origin_type in ("scala", "sbt"):
+        if self.usages.origin_type in _SCALA_ORIGIN_TYPES:
             return scala_convert(self.usages, self.semantics)
-        if self.usages.origin_type in ("rs", "rust"):
+        if self.usages.origin_type in _RUST_ORIGIN_TYPES:
             return rust_convert(self.usages)
-        if self.usages.origin_type in ("go", "golang"):
+        if self.usages.origin_type in _GO_ORIGIN_TYPES:
             return go_convert(self.usages)
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
@@ -436,7 +464,7 @@ class OpenAPI:
                     self.file_endpoint_map[i].add(k)
                 else:
                     self.file_endpoint_map[i] = {k}
-        return {k: list(v) for k, v in self.file_endpoint_map.items()}
+        return {k: sorted(v) for k, v in self.file_endpoint_map.items()}
 
     def create_paths_item(self, filename: str, paths_dict: Dict) -> Dict:
         """
@@ -457,7 +485,7 @@ class OpenAPI:
 
         paths_object: Dict = {}
 
-        for ep in set(endpoints):
+        for ep in sorted(set(endpoints)):
             ep, paths_item_object = self._paths_object_helper(
                 calls, ep, filename, call_line_numbers, target_line_number
             )
@@ -621,7 +649,10 @@ class OpenAPI:
         """
         params = self._generic_params_helper(ep, orig_ep) if "{" in ep else []
         if not params and call:
-            ptypes = set(call.get("paramTypes", []))
+            # Sorted: a set of parameter-type strings iterates in an order
+            # that depends on Python's per-process string hash seed, and it
+            # lands directly in the emitted parameter list.
+            ptypes = sorted(set(call.get("paramTypes", [])))
             if len(ptypes) > 1:
                 params = [
                     {"name": param, "in": "header"}
@@ -797,7 +828,7 @@ class OpenAPI:
                     self._calls_to_params(ep, orig_ep, call, filename),
                 )
         if (call_line_numbers or line_number) and (
-            line_nos := create_ln_entries(filename, list(set(call_line_numbers)), line_number)
+            line_nos := create_ln_entries(filename, sorted(set(call_line_numbers)), line_number)
         ):
             if "x-atom-usages" in paths_item_object:
                 paths_item_object["x-atom-usages"] = merge_x_atom(
@@ -1559,7 +1590,7 @@ class OpenAPI:
                 method_map[key] = {"resolved_methods": value.get("resolved_methods")}
 
         for k, v in method_map.items():
-            method_map[k] = list(set(v.get("resolved_methods")))
+            method_map[k] = sorted(set(v.get("resolved_methods")))
 
         return method_map
 
@@ -1865,6 +1896,11 @@ def merge_x_atom(x1: Dict, x2: Dict) -> Dict:
         x1 (dict): The first dictionary of x atoms.
         x2 (dict): The second dictionary of x atoms.
 
+    Line-number lists are de-duplicated and sorted as they merge. They are
+    gathered from several usages of the same endpoint, so their arrival order
+    is an artefact of traversal rather than information, and letting it through
+    made the same slice convert to a different document on different runs.
+
     Returns:
         dict: The merged dictionary of x atoms.
     """
@@ -1885,6 +1921,9 @@ def merge_x_atom(x1: Dict, x2: Dict) -> Dict:
                     x1[key][k] = v
             else:
                 x1[key][k] = v
+            merged = x1[key].get(k)
+            if isinstance(merged, list) and all(isinstance(n, int) for n in merged):
+                x1[key][k] = sorted(set(merged))
     return x1
 
 

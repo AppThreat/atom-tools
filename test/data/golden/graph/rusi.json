@@ -1,0 +1,75 @@
+{
+    "diagnostics": [
+        "rusi: 5 of 5 flow source function(s) and 5 of 5 sink function(s) anchored in the call graph; the rest are not nodes of it."
+    ],
+    "engines": [
+        "rusi"
+    ],
+    "graphVersion": 1,
+    "graphs": [
+        {
+            "callTypeMix": {
+                "external": 1570,
+                "higher-order": 71,
+                "receiver-typed": 30,
+                "static": 306,
+                "static-overapprox": 168,
+                "trait-impl": 2,
+                "trait-overapprox": 9
+            },
+            "confidenceMix": {
+                "candidate": 278,
+                "exact": 308,
+                "external": 1570
+            },
+            "edges": 2156,
+            "engine": "rusi",
+            "engineDiagnostics": [
+                "1 ambiguous call sites were truncated to at most 8 candidate edges each, dropping 29 over-approximated edges; affected edges carry candidateCount and candidatesTruncated. Raise --max-call-candidates (0 disables the cap) to emit the full candidate set",
+                "unresolved or external call target Args::parse",
+                "unresolved or external call target Args::parse",
+                "unresolved or external call target Box::new",
+                "unresolved or external call target Box::new",
+                "unresolved or external call target Box::new",
+                "unresolved or external call target Box::new",
+                "unresolved or external call target Box::new",
+                "unresolved or external call target Box::new",
+                "unresolved or external call target Box::new",
+                "... 1561 more not pinned ..."
+            ],
+            "engineRootReasons": {},
+            "engineRoots": 0,
+            "engineRootsInGraph": 0,
+            "externalNodes": 341,
+            "internalNodes": 371,
+            "nodes": 712,
+            "sourceFile": "test/data/ecosystem/rust-microservices-kafka-rusi.json",
+            "trimmed": false
+        }
+    ],
+    "metric": "chokepoints",
+    "options": {
+        "includeExternal": false,
+        "maxChokepointSources": 64,
+        "minConfidence": null
+    },
+    "results": [
+        {
+            "computed": true,
+            "engine": "rusi",
+            "externalNodesExcludedFromRanking": 341,
+            "ranked": [],
+            "seeds": {
+                "pairs": 2,
+                "policy": "flow-sources\u2192flow-sinks",
+                "sinks": 5,
+                "source": "engine",
+                "sources": 5
+            },
+            "sourceFile": "test/data/ecosystem/rust-microservices-kafka-rusi.json"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/rust-microservices-kafka-rusi.json"
+    ]
+}

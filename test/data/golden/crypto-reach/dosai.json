@@ -1,0 +1,401 @@
+{
+    "cryptoReachVersion": 1,
+    "diagnostics": [],
+    "engine": "dosai",
+    "engines": [
+        {
+            "attentionItems": 8,
+            "coverageNotes": [],
+            "diagnostics": [],
+            "engine": "dosai",
+            "inventory": {
+                "Assets": 3,
+                "Findings": 5,
+                "Materials": 2,
+                "Operations": 3,
+                "Protocols": 0
+            },
+            "items": [
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "High",
+                    "Cwe": "CWE-327",
+                    "Engine": "dosai",
+                    "File": "tests/FunctionalTests/PublicApi/ApiTokenHelper.cs",
+                    "Function": null,
+                    "Id": "cf1",
+                    "Kind": "finding",
+                    "LineNumber": 46,
+                    "Name": "Weak or legacy symmetric cipher was detected.",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [
+                            "dfs1"
+                        ],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": "Microsoft.eShopWeb.FunctionalTests.Web.Api.ApiTokenHelper.CreateToken(string,string[]):string",
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": "DOSAI-CRYPTO-WEAK-CIPHER",
+                    "Severity": "High",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "High",
+                    "Cwe": "CWE-327",
+                    "Engine": "dosai",
+                    "File": "tests/PublicApiIntegrationTests/ApiTokenHelper.cs",
+                    "Function": null,
+                    "Id": "cf2",
+                    "Kind": "finding",
+                    "LineNumber": 46,
+                    "Name": "Weak or legacy symmetric cipher was detected.",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [
+                            "dfs2"
+                        ],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": "PublicApiIntegrationTests.ApiTokenHelper.CreateToken(string,string[]):string",
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": "DOSAI-CRYPTO-WEAK-CIPHER",
+                    "Severity": "High",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "Medium",
+                    "Cwe": "CWE-321",
+                    "Engine": "dosai",
+                    "File": "src/ApplicationCore/Constants/AuthorizationConstants.cs",
+                    "Function": null,
+                    "Id": "cf3",
+                    "Kind": "finding",
+                    "LineNumber": 5,
+                    "Name": "Hardcoded cryptographic key, token, or certificate-like material was detected.",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": "DOSAI-CRYPTO-HARDCODED-MATERIAL",
+                    "Severity": "High",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "Medium",
+                    "Cwe": "CWE-321",
+                    "Engine": "dosai",
+                    "File": "src/ApplicationCore/Constants/AuthorizationConstants.cs",
+                    "Function": null,
+                    "Id": "cf4",
+                    "Kind": "finding",
+                    "LineNumber": 11,
+                    "Name": "Hardcoded cryptographic key, token, or certificate-like material was detected.",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": "DOSAI-CRYPTO-HARDCODED-MATERIAL",
+                    "Severity": "High",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": "High",
+                    "Cwe": "CWE-327",
+                    "Engine": "dosai",
+                    "File": "src/Infrastructure/Identity/IdentityTokenClaimService.cs",
+                    "Function": null,
+                    "Id": "cf5",
+                    "Kind": "finding",
+                    "LineNumber": 43,
+                    "Name": "Weak or legacy symmetric cipher was detected.",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [
+                            "dfs3"
+                        ],
+                        "entryPoints": [
+                            {
+                                "authorizationRequired": null,
+                                "file": "src/PublicApi/AuthEndpoints/AuthenticateEndpoint.cs",
+                                "id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.PublicApi.AuthEndpoints/AuthenticateEndpoint#POST:/api/authenticate",
+                                "kind": "HttpController",
+                                "label": "POST /api/authenticate",
+                                "line": 29,
+                                "resolved": true
+                            },
+                            {
+                                "authorizationRequired": null,
+                                "file": "src/PublicApi/AuthEndpoints/AuthenticateEndpoint.cs",
+                                "id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.PublicApi.AuthEndpoints/AuthenticateEndpoint#Handle",
+                                "kind": "HttpController",
+                                "label": "ANY /AuthenticateEndpoint/Handle",
+                                "line": 29,
+                                "resolved": true
+                            }
+                        ],
+                        "granularity": "record",
+                        "methodId": "Microsoft.eShopWeb.Infrastructure.Identity.IdentityTokenClaimService.GetTokenAsync(string):System.Threading.Tasks.Task<string>",
+                        "reachableFromEntryPoint": true,
+                        "source": "engine"
+                    },
+                    "RuleId": "DOSAI-CRYPTO-WEAK-CIPHER",
+                    "Severity": "High",
+                    "SeverityLevel": "error",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "tests/FunctionalTests/PublicApi/ApiTokenHelper.cs",
+                    "Function": null,
+                    "Id": "cas1",
+                    "Kind": "asset",
+                    "LineNumber": 46,
+                    "Name": "DES/RC2/RC4",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": "weak"
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "tests/PublicApiIntegrationTests/ApiTokenHelper.cs",
+                    "Function": null,
+                    "Id": "cas2",
+                    "Kind": "asset",
+                    "LineNumber": 46,
+                    "Name": "DES/RC2/RC4",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": "weak"
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": true,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "src/Infrastructure/Identity/IdentityTokenClaimService.cs",
+                    "Function": null,
+                    "Id": "cas3",
+                    "Kind": "asset",
+                    "LineNumber": 43,
+                    "Name": "DES/RC2/RC4",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [
+                            {
+                                "authorizationRequired": null,
+                                "file": "src/PublicApi/AuthEndpoints/AuthenticateEndpoint.cs",
+                                "id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.PublicApi.AuthEndpoints/AuthenticateEndpoint#POST:/api/authenticate",
+                                "kind": "HttpController",
+                                "label": "POST /api/authenticate",
+                                "line": 29,
+                                "resolved": true
+                            },
+                            {
+                                "authorizationRequired": null,
+                                "file": "src/PublicApi/AuthEndpoints/AuthenticateEndpoint.cs",
+                                "id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.PublicApi.AuthEndpoints/AuthenticateEndpoint#Handle",
+                                "kind": "HttpController",
+                                "label": "ANY /AuthenticateEndpoint/Handle",
+                                "line": 29,
+                                "resolved": true
+                            }
+                        ],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": true,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": "weak"
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": null,
+                    "Confidence": "Medium",
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "src/ApplicationCore/Constants/AuthorizationConstants.cs",
+                    "Function": null,
+                    "Id": "cma1",
+                    "Kind": "material",
+                    "LineNumber": 5,
+                    "Name": "AUTH_KEY",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": null,
+                    "Attention": null,
+                    "Confidence": "Medium",
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "src/ApplicationCore/Constants/AuthorizationConstants.cs",
+                    "Function": null,
+                    "Id": "cma2",
+                    "Kind": "material",
+                    "LineNumber": 11,
+                    "Name": "JWT_SECRET_KEY",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": null,
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "DES/RC2/RC4",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "tests/FunctionalTests/PublicApi/ApiTokenHelper.cs",
+                    "Function": null,
+                    "Id": "cop1",
+                    "Kind": "operation",
+                    "LineNumber": 46,
+                    "Name": "use DES/RC2/RC4",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [
+                            "dfs1"
+                        ],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": "Microsoft.eShopWeb.FunctionalTests.Web.Api.ApiTokenHelper.CreateToken(string,string[]):string",
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "DES/RC2/RC4",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "dosai",
+                    "File": "tests/PublicApiIntegrationTests/ApiTokenHelper.cs",
+                    "Function": null,
+                    "Id": "cop2",
+                    "Kind": "operation",
+                    "LineNumber": 46,
+                    "Name": "use DES/RC2/RC4",
+                    "Package": null,
+                    "Reach": {
+                        "dataFlowSliceIds": [
+                            "dfs2"
+                        ],
+                        "entryPoints": [],
+                        "granularity": "record",
+                        "methodId": "PublicApiIntegrationTests.ApiTokenHelper.CreateToken(string,string[]):string",
+                        "reachableFromEntryPoint": false,
+                        "source": "engine"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                "... 1 more not pinned ..."
+            ],
+            "itemsTotal": 13,
+            "joinGranularity": "record",
+            "joinSource": "engine"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/dotnet-eshoponweb-dosai-crypto.json"
+    ],
+    "summary": {
+        "outOfScope": null,
+        "perEngine": {
+            "dosai": {
+                "attentionItems": 8,
+                "itemsTotal": 13,
+                "joinGranularity": "record",
+                "joinSource": "engine"
+            }
+        }
+    },
+    "weakOnly": null
+}

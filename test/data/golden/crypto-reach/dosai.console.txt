@@ -1,0 +1,44 @@
+Crypto reach: dosai — join granularity per engine: dosai record-level (engine)
+reachability means a different thing at each granularity; counts are per engine and are never summed across them.
+
+* dosai: 13 item(s) (3 assets, 5 findings, 2 materials, 3 operations, 0 protocols)
+  triage population (weak/legacy strength or a weak-crypto rule): 8 item(s)
+  1. finding Weak or legacy symmetric cipher was detected. (DOSAI-CRYPTO-WEAK-CIPHER), severity High, CWE-327  tests/FunctionalTests/PublicApi/ApiTokenHelper.cs:46
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+     witness slices: dfs1
+  2. finding Weak or legacy symmetric cipher was detected. (DOSAI-CRYPTO-WEAK-CIPHER), severity High, CWE-327  tests/PublicApiIntegrationTests/ApiTokenHelper.cs:46
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+     witness slices: dfs2
+  3. finding Hardcoded cryptographic key, token, or certificate-like material was detected. (DOSAI-CRYPTO-HARDCODED-MATERIAL), severity High, CWE-321  src/ApplicationCore/Constants/AuthorizationConstants.cs:5
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+  4. finding Hardcoded cryptographic key, token, or certificate-like material was detected. (DOSAI-CRYPTO-HARDCODED-MATERIAL), severity High, CWE-321  src/ApplicationCore/Constants/AuthorizationConstants.cs:11
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+  5. finding Weak or legacy symmetric cipher was detected. (DOSAI-CRYPTO-WEAK-CIPHER), severity High, CWE-327  src/Infrastructure/Identity/IdentityTokenClaimService.cs:43
+     reach: engine-reported · reachable from an entry point (engine verdict)
+     entry point: POST /api/authenticate
+     entry point: ANY /AuthenticateEndpoint/Handle
+     witness slices: dfs3
+  6. asset DES/RC2/RC4, strength weak  tests/FunctionalTests/PublicApi/ApiTokenHelper.cs:46
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+  7. asset DES/RC2/RC4, strength weak  tests/PublicApiIntegrationTests/ApiTokenHelper.cs:46
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+  8. asset DES/RC2/RC4, strength weak  src/Infrastructure/Identity/IdentityTokenClaimService.cs:43
+     reach: engine-reported · reachable from an entry point (engine verdict)
+     entry point: POST /api/authenticate
+     entry point: ANY /AuthenticateEndpoint/Handle
+  9. material AUTH_KEY  src/ApplicationCore/Constants/AuthorizationConstants.cs:5
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+  10. material JWT_SECRET_KEY  src/ApplicationCore/Constants/AuthorizationConstants.cs:11
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+  11. operation use DES/RC2/RC4  tests/FunctionalTests/PublicApi/ApiTokenHelper.cs:46
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+     witness slices: dfs1
+  12. operation use DES/RC2/RC4  tests/PublicApiIntegrationTests/ApiTokenHelper.cs:46
+     reach: engine-reported · not reachable from any entry point (engine verdict)
+     witness slices: dfs2
+  13. operation use DES/RC2/RC4  src/Infrastructure/Identity/IdentityTokenClaimService.cs:43
+     reach: engine-reported · reachable from an entry point (engine verdict)
+     entry point: POST /api/authenticate
+     entry point: ANY /AuthenticateEndpoint/Handle
+     witness slices: dfs3
+

@@ -1,0 +1,107 @@
+Crypto reach: golem — join granularity per engine: golem package-level (derived)
+reachability means a different thing at each granularity; counts are per engine and are never summed across them.
+
+* golem: 799 item(s) (9 assets, 146 findings, 106 libraries, 320 materials, 323 operations, 1 protocols)
+  triage population (weak/legacy strength or a weak-crypto rule): 15 item(s)
+  1. finding GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY, severity critical  /Users/prabhu/sandbox/ipsw/internal/download/transport_apple.go:31
+     reach: package-level · 59 tainted flow(s) through package
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 30 call-graph node(s) in this package are reachable from the engine's root set
+  2. finding GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY, severity critical  /Users/prabhu/sandbox/ipsw/pkg/tss/tss.go:192
+     reach: package-level · no analysed flow runs through this item's package
+  3. finding GOLEM-CRYPTO-TLS-INSECURE-SKIP-VERIFY, severity critical  /Users/prabhu/sandbox/ipsw/pkg/usb/client.go:70
+     reach: package-level · no analysed flow runs through this item's package
+  4. finding GOLEM-CRYPTO-WEAK-MD5, severity high  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/dyld/dyld_mg.go:79
+     reach: package-level · no analysed flow runs through this item's package
+  5. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/internal/codesign/resources/resources.go:285
+     reach: package-level · no analysed flow runs through this item's package
+  6. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/internal/download/dev_portal.go:525
+     reach: package-level · 59 tainted flow(s) through package
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 30 call-graph node(s) in this package are reachable from the engine's root set
+  7. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/internal/download/downloader.go:371
+     reach: package-level · 59 tainted flow(s) through package
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 30 call-graph node(s) in this package are reachable from the engine's root set
+  8. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/internal/utils/utils.go:171
+     reach: package-level · 11 tainted flow(s) through package, of which some hang off: GET /idev/amfi/dev
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 34 call-graph node(s) in this package are reachable from the engine's root set
+  9. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/internal/utils/utils.go:532
+     reach: package-level · 11 tainted flow(s) through package, of which some hang off: GET /idev/amfi/dev
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 34 call-graph node(s) in this package are reachable from the engine's root set
+  10. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/pkg/dyld/closure.go:281
+     reach: package-level · 12 tainted flow(s) through package, of which some hang off: GET /dsc/imports, GET /dsc/info, GET /dsc/macho (+2 more)
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 178 call-graph node(s) in this package are reachable from the engine's root set
+  11. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/pkg/dyld/prebuilt_types.go:620
+     reach: package-level · 12 tainted flow(s) through package, of which some hang off: GET /dsc/imports, GET /dsc/info, GET /dsc/macho (+2 more)
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 178 call-graph node(s) in this package are reachable from the engine's root set
+  12. finding GOLEM-CRYPTO-WEAK-SHA1, severity high  /Users/prabhu/sandbox/ipsw/pkg/ota/bxdiff50/bxdiff50.go:112
+     reach: package-level · no analysed flow runs through this item's package
+  13. finding GOLEM-CRYPTO-WEAK-MD5, severity high  /Users/prabhu/sandbox/ipsw/pkg/usb/diagnostics/diagnostics.go:104
+     reach: package-level · no analysed flow runs through this item's package
+  14. asset crypto/md5.Sum, strength weak  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/dyld/dyld_mg.go:79
+     reach: package-level · no analysed flow runs through this item's package
+  15. asset crypto/sha1.New, strength weak  /Users/prabhu/sandbox/ipsw/internal/utils/utils.go:171
+     reach: package-level · 11 tainted flow(s) through package, of which some hang off: GET /idev/amfi/dev
+     claim: the crypto site sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+     engine roots: 0 of 34 call-graph node(s) in this package are reachable from the engine's root set
+  16. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go:37
+     reach: package-level · no analysed flow runs through this item's package
+  17. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/appstore/appstore_token.go:34
+     reach: package-level · no analysed flow runs through this item's package
+  18. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_appledb.go:182
+     reach: package-level · no analysed flow runs through this item's package
+  19. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_git.go:93
+     reach: package-level · no analysed flow runs through this item's package
+  20. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_keys.go:64
+     reach: package-level · no analysed flow runs through this item's package
+  21. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_ota.go:357
+     reach: package-level · no analysed flow runs through this item's package
+  22. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_appledb.go:173
+     reach: package-level · no analysed flow runs through this item's package
+  23. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_ipsw.go:246
+     reach: package-level · no analysed flow runs through this item's package
+  24. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_appledb.go:172
+     reach: package-level · no analysed flow runs through this item's package
+  25. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_ipsw.go:245
+     reach: package-level · no analysed flow runs through this item's package
+  26. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_ota.go:196
+     reach: package-level · no analysed flow runs through this item's package
+  27. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_dev.go:143
+     reach: package-level · no analysed flow runs through this item's package
+  28. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/download/download_ipa.go:101
+     reach: package-level · no analysed flow runs through this item's package
+  29. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/dyld/dyld_webkit.go:76
+     reach: package-level · no analysed flow runs through this item's package
+  30. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/fw/aea.go:82
+     reach: package-level · no analysed flow runs through this item's package
+  31. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/fw/aea.go:101
+     reach: package-level · no analysed flow runs through this item's package
+  32. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/fw/aea.go:83
+     reach: package-level · no analysed flow runs through this item's package
+  33. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/fw/aea.go:81
+     reach: package-level · no analysed flow runs through this item's package
+  34. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/idev/idev_diag_mg.go:49
+     reach: package-level · no analysed flow runs through this item's package
+  35. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/idev/idev_img_nonce.go:70
+     reach: package-level · no analysed flow runs through this item's package
+  36. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/idev/idev_img_mount.go:158
+     reach: package-level · no analysed flow runs through this item's package
+  37. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/idev/idev_img_nonce.go:107
+     reach: package-level · no analysed flow runs through this item's package
+  38. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/idev/idev_img_sign.go:90
+     reach: package-level · no analysed flow runs through this item's package
+  39. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/img3/img3_extract.go:198
+     reach: package-level · no analysed flow runs through this item's package
+  40. finding GOLEM-CRYPTO-LITERAL-MATERIAL, severity medium  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/img3/img3_extract.go:199
+     reach: package-level · no analysed flow runs through this item's package
+  coverage: endpoint closures from the attack-surface join: 31 of 57 endpoint(s) anchored in this input's call graph
+  coverage: the call graph is a subgraph of the engine's run (3325 of 22308 edges present); closures are computed within that subgraph
+
+listing truncated at --max-entries 40; the json output carries every item.
+
+note: golem: golem's crypto items carry no enclosing-function field — the join is package-level: 'the site sits in a package that carries tainted flows', never 'this call is on a tainted path'.

@@ -1,0 +1,26 @@
+Flow report: golem 3.2.0 (all mode) — 397 flow(s), 21 package record(s) from 1 input file(s) (go-ipsw-golem.json).
+severity: 109 error / 288 warning / 0 note; 397 engine-reported, 0 derived
+source tags: 397 of 397 flow(s) carry tags on the source node
+entry-point join: 136 of 397 flow(s) sit behind an anchored entry point; golem: 31 of 57 endpoint(s) anchored in the call graph, 179 flow attachment(s).
+note: golem call graph in go-ipsw-golem.json is a subgraph of the engine's run (3325 of 22308 edges present); reach is computed within that subgraph only.
+note: 26 golem endpoint(s) could not be anchored in the call graph (closure handler, name and file range all missed); their reach is reported as seed-not-found, not as empty.
+
+1. Flow seam-slice|sha256:2015015d92ad0203471ff6fa8765cd1a2491323073e801860c3e5a27f9c1d4a6 — http-input → filesystem
+  Reachability: `pkg:golang/github.com/blacktop/ipsw` is reached from `GET /dsc/str` (/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:193); golem does not classify authentication, so the route's exposure is unknown.
+  Path: source `Query` (/Users/prabhu/sandbox/ipsw/api/server/routes/dsc/dsc.go:422) tagged `http-input` which reaches `Open` (/Users/prabhu/sandbox/ipsw/pkg/dyld/mmap_unix.go:31) in 4 step(s), classified `filesystem`.
+  Evidence: golem 3.2.0, all mode. Severity `error` (engine-reported). Confidence `high`.
+  Sanitizer: No sanitizer reported on this path by golem's sanitizer analysis; this run found none to report.
+
+2. Flow seam-slice|sha256:2b44daa4369a7ef8c90a99496472d16881c3f53b36b7652ad454b477c75e10ac — http-input → crypto
+  Reachability: `pkg:golang/github.com/blacktop/ipsw` is reached from `GET /idev/amfi/dev` (/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21); golem does not classify authentication, so the route's exposure is unknown.
+  Path: source `Query` (/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go:67) tagged `http-input` which reaches `ParsePKCS1PrivateKey` (/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go:365) in 6 step(s), classified `crypto`.
+  Evidence: golem 3.2.0, all mode. Severity `error` (engine-reported). Confidence `high`.
+  Sanitizer: No sanitizer reported on this path by golem's sanitizer analysis; this run found none to report.
+
+3. Flow seam-slice|sha256:2f8f4aae1dd35f4dc7a4cbcac3bcf2a79e061f88159f39214761df04757372c2 — http-input → crypto
+  Reachability: `pkg:golang/github.com/blacktop/ipsw` is reached from `GET /idev/amfi/dev` (/Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21); golem does not classify authentication, so the route's exposure is unknown.
+  Path: source `Query` (/Users/prabhu/sandbox/ipsw/api/server/routes/idev/idev.go:67) tagged `http-input` which reaches `ParsePKCS8PrivateKey` (/opt/homebrew/Cellar/go/1.27.1/libexec/src/crypto/tls/tls.go:362) in 6 step(s), classified `crypto`.
+  Evidence: golem 3.2.0, all mode. Severity `error` (engine-reported). Confidence `high`.
+  Sanitizer: No sanitizer reported on this path by golem's sanitizer analysis; this run found none to report.
+
+truncated: 394 more flow(s) not shown — the listing is ranked by severity then entry-point tier; select with --flow/--package/--file/--query or raise --max-flows.

@@ -1,0 +1,139 @@
+Attack surface: 57 entry point(s) from 1 report(s) (golem)
+tiers run most-exposed first; only dosai classifies authentication — every other engine's entries sit in unknown-auth, which is a gap, not a finding.
+
+  ? unknown-auth [auth unknown — not an exposure verdict]: 57 entry point(s), 0 weakness(es) (0 high severity)
+   ├── /GET /  /Users/prabhu/sandbox/ipsw/internal/commands/ent/ui.go:35  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── /GET /static/  /Users/prabhu/sandbox/ipsw/internal/commands/ent/ui.go:58  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /_ping  /Users/prabhu/sandbox/ipsw/api/server/routes/daemon/routes.go:40  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /aea/fcs-keys/:key  /Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go:36  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /device_list  /Users/prabhu/sandbox/ipsw/api/server/routes/devicelist/routes.go:32  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /download/ipsw/ios/latest/build  /Users/prabhu/sandbox/ipsw/api/server/routes/download/routes.go:37  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /download/ipsw/ios/latest/version  /Users/prabhu/sandbox/ipsw/api/server/routes/download/routes.go:27  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /dsc/imports  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:78  [auth unknown]
+       reach: 6 flow(s) · sinks: filesystem, http-response, logging
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /dsc/info  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:97  [auth unknown]
+       reach: 5 flow(s) · sinks: filesystem, http-response, logging
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /dsc/macho  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:121  [auth unknown]
+       reach: 9 flow(s) · sinks: filesystem, http-response, logging
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /dsc/str  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:193  [auth unknown]
+       reach: 5 flow(s) · sinks: filesystem, http-response, logging
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /dsc/webkit  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:230  [auth unknown]
+       reach: 5 flow(s) · sinks: filesystem, http-response, logging
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /idev/amfi/dev  /Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:21  [auth unknown]
+       reach: 68 flow(s) · sinks: crypto, http-response, panic
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /idev/info  /Users/prabhu/sandbox/ipsw/api/server/routes/idev/routes.go:61  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /info/ipsw  /Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:29  [auth unknown]
+       reach: 12 flow(s) · sinks: filesystem, http-response, native-interop, panic
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /info/ipsw/remote  /Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:70  [auth unknown]
+       reach: 1 flow(s) · sinks: http-response
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /info/ota  /Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:49  [auth unknown]
+       reach: 12 flow(s) · sinks: filesystem, http-response, native-interop, panic
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /info/ota/remote  /Users/prabhu/sandbox/ipsw/api/server/routes/info/routes.go:91  [auth unknown]
+       reach: 1 flow(s) · sinks: http-response
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── GET /ipsw/fs/ents  /Users/prabhu/sandbox/ipsw/api/server/routes/ipsw/routes.go:59  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /ipsw/fs/files  /Users/prabhu/sandbox/ipsw/api/server/routes/ipsw/routes.go:34  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /ipsw/fs/launchd  /Users/prabhu/sandbox/ipsw/api/server/routes/ipsw/routes.go:84  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /kernel/cpp  /Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:76  [auth unknown]
+       reach: 24 flow(s) · sinks: filesystem, logging, native-interop
+       packages: pkg:golang/github.com/blacktop/ipsw
+   ├── GET /kernel/kexts  /Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:34  [auth unknown]
+       reach: 2 flow(s) · sinks: filesystem, logging
+       packages: pkg:golang/github.com/blacktop/ipsw
+   ├── GET /kernel/symbolicate  /Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:147  [auth unknown]
+       reach: 24 flow(s) · sinks: filesystem, logging, native-interop
+       packages: pkg:golang/github.com/blacktop/ipsw
+   ├── GET /kernel/syscall  /Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:98  [auth unknown]
+       reach: 2 flow(s) · sinks: filesystem, logging
+       packages: pkg:golang/github.com/blacktop/ipsw
+   ├── GET /kernel/version  /Users/prabhu/sandbox/ipsw/api/server/routes/kernel/routes.go:117  [auth unknown]
+       reach: 2 flow(s) · sinks: filesystem, logging
+       packages: pkg:golang/github.com/blacktop/ipsw
+   ├── GET /macho/info  /Users/prabhu/sandbox/ipsw/api/server/routes/macho/routes.go:40  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /macho/info/strings  /Users/prabhu/sandbox/ipsw/api/server/routes/macho/routes.go:65  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /syms/:uuid  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:377  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /syms/:uuid/:addr  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:344  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /syms/dsc/:uuid  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:269  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /syms/dsc/:uuid/:addr  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:306  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /syms/ipsw  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:201  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /syms/macho/:uuid  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:237  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /version  /Users/prabhu/sandbox/ipsw/api/server/routes/daemon/routes.go:49  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── GET /version  /Users/prabhu/sandbox/ipsw/api/server/server.go:88  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── HEAD /_ping  /Users/prabhu/sandbox/ipsw/api/server/routes/daemon/routes.go:27  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /diff/blobs  /Users/prabhu/sandbox/ipsw/api/server/routes/diff/routes.go:40  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── POST /dsc/a2o  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:27  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /dsc/a2s  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:47  [auth unknown]
+       reach: 1 flow(s) · sinks: http-response
+       packages: pkg:golang/github.com/blacktop/ipsw, pkg:golang/github.com/gin-gonic/gin
+   ├── POST /dsc/o2a  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:135  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /dsc/slide  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:153  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /dsc/split  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:168  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /dsc/symaddr  /Users/prabhu/sandbox/ipsw/api/server/routes/dsc/routes.go:209  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /extract/dmg  /Users/prabhu/sandbox/ipsw/api/server/routes/extract/routes.go:94  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /extract/dsc  /Users/prabhu/sandbox/ipsw/api/server/routes/extract/routes.go:53  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── POST /extract/kbag  /Users/prabhu/sandbox/ipsw/api/server/routes/extract/routes.go:134  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── POST /extract/kernel  /Users/prabhu/sandbox/ipsw/api/server/routes/extract/routes.go:172  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /extract/pattern  /Users/prabhu/sandbox/ipsw/api/server/routes/extract/routes.go:214  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── POST /extract/sptm  /Users/prabhu/sandbox/ipsw/api/server/routes/extract/routes.go:256  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── POST /mount/:type  /Users/prabhu/sandbox/ipsw/api/server/routes/mount/mount.go:68  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── POST /syms/scan  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:80  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── POST /unmount  /Users/prabhu/sandbox/ipsw/api/server/routes/mount/mount.go:145  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── PUT /syms/rescan  /Users/prabhu/sandbox/ipsw/api/server/routes/syms/syms.go:142  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── http-listener  /Users/prabhu/sandbox/ipsw/api/server/server.go:123  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   ├── http-listener  /Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/kernel/kernel_cpp.go:149  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+   └── http-listener  /Users/prabhu/sandbox/ipsw/internal/commands/ent/ui.go:75  [auth unknown]
+       reach: seed-not-found (handler not locatable in the call graph)
+
+tiers with no entry points here: anonymous-http, anonymous-rpc, anonymous, mcp, queue, cli, authenticated-http, authenticated-rpc, internal
+headline suppressed: no input classifies authentication, so no entry point is known to be anonymous — a percentage here would invent a denominator.
+note: golem call graph in go-ipsw-golem.json is a subgraph of the engine's run (3325 of 22308 edges present); reach is computed within that subgraph only.
+note: 26 golem endpoint(s) could not be anchored in the call graph (closure handler, name and file range all missed); their reach is reported as seed-not-found, not as empty.

@@ -1,0 +1,385 @@
+{
+    "cryptoReachVersion": 1,
+    "diagnostics": [
+        "rusi: rusi's crypto components match a fixed symbol catalog (SHA-256/512/1, MD5, BLAKE3, ring digest/aead, AES-GCM, ChaCha20-Poly1305, PBKDF2, JWT (jsonwebtoken), TLS (rustls), RSA, Ed25519, Argon2); zero components means zero catalog matches, not an absence of crypto \u2014 crypto not spelled as one of those symbols is invisible to rusi.",
+        "rusi: rusi emits crypto findings only from catalog components, and its only weak-crypto rules are SHA-1 and MD5 (category 'weak-crypto'); DES, RC4 and ECB are not modeled. 'rusi does not look for this' is the honest sentence, not 'rusi found nothing'.",
+        "rusi: rusi has no strength field at all: materials are triaged by kind and construction site, not by algorithm strength."
+    ],
+    "engine": "rusi",
+    "engines": [
+        {
+            "attentionItems": 0,
+            "coverageNotes": [
+                "endpoint closures from the attack-surface join: 14 of 14 endpoint(s) anchored in this input's call graph"
+            ],
+            "diagnostics": [
+                "rusi's crypto components match a fixed symbol catalog (SHA-256/512/1, MD5, BLAKE3, ring digest/aead, AES-GCM, ChaCha20-Poly1305, PBKDF2, JWT (jsonwebtoken), TLS (rustls), RSA, Ed25519, Argon2); zero components means zero catalog matches, not an absence of crypto \u2014 crypto not spelled as one of those symbols is invisible to rusi.",
+                "rusi emits crypto findings only from catalog components, and its only weak-crypto rules are SHA-1 and MD5 (category 'weak-crypto'); DES, RC4 and ECB are not modeled. 'rusi does not look for this' is the honest sentence, not 'rusi found nothing'.",
+                "rusi has no strength field at all: materials are triaged by kind and construction site, not by algorithm strength."
+            ],
+            "engine": "rusi",
+            "inventory": {
+                "components": 0,
+                "findings": 0,
+                "libraries": 2,
+                "materials": 17
+            },
+            "items": [
+                {
+                    "Algorithm": "token",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "common-security/src/jwt/rsa.rs",
+                    "Function": null,
+                    "Id": "crypto-library-91ad555beb501d09",
+                    "Kind": "library",
+                    "LineNumber": 1,
+                    "Name": "jsonwebtoken",
+                    "Package": "common_security",
+                    "Reach": {
+                        "claim": "the item sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "flowsThroughPackage": 2,
+                        "granularity": "package",
+                        "package": "common_security",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "token",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "common-security/src/lib.rs",
+                    "Function": null,
+                    "Id": "crypto-library-b2f84c1a2b0aaac4",
+                    "Kind": "library",
+                    "LineNumber": 3,
+                    "Name": "jsonwebtoken",
+                    "Package": "common_security",
+                    "Reach": {
+                        "claim": "the item sits in a package that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "flowsThroughPackage": 2,
+                        "granularity": "package",
+                        "package": "common_security",
+                        "packageOnFlow": true,
+                        "source": "derived"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-user-service/src/user/event/user_converter.rs",
+                    "Function": "app_user_service::user::event::user_converter::UserEventEncoder<'a>::handle",
+                    "Id": "crypto-material-03fd26f6f66d27a8",
+                    "Kind": "material",
+                    "LineNumber": 75,
+                    "Name": "key_avro",
+                    "Package": "app_user_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch",
+                            "app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch"
+                        ],
+                        "function": "app_user_service::user::event::user_converter::UserEventEncoder<'a>::handle",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-accommodation-service/src/accommodation/event/room_type_converter.rs",
+                    "Function": "app_accommodation_service::accommodation::event::room_type_converter::RoomTypeEventEncoder<'a>::handle",
+                    "Id": "crypto-material-216451cc80644de4",
+                    "Kind": "material",
+                    "LineNumber": 93,
+                    "Name": "key_avro",
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch",
+                            "app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch"
+                        ],
+                        "function": "app_accommodation_service::accommodation::event::room_type_converter::RoomTypeEventEncoder<'a>::handle",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-user-service/src/common/security.rs",
+                    "Function": "app_user_service::common::security::OAuthConfiguration::new",
+                    "Id": "crypto-material-2d897c601cd0904d",
+                    "Kind": "material",
+                    "LineNumber": 39,
+                    "Name": "token_decoders",
+                    "Package": "app_user_service",
+                    "Reach": {
+                        "callers": [
+                            "app_user_service::main"
+                        ],
+                        "function": "app_user_service::common::security::OAuthConfiguration::new",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-accommodation-service/src/user/listener.rs",
+                    "Function": "app_accommodation_service::user::listener::do_listen",
+                    "Id": "crypto-material-35962010aeaa7baf",
+                    "Kind": "material",
+                    "LineNumber": 72,
+                    "Name": "key_result",
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::user::listener::listen"
+                        ],
+                        "function": "app_accommodation_service::user::listener::do_listen",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-accommodation-service/src/user/listener.rs",
+                    "Function": "app_accommodation_service::user::listener::do_listen",
+                    "Id": "crypto-material-3a3ac9850f1e38f3",
+                    "Kind": "material",
+                    "LineNumber": 77,
+                    "Name": "key",
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::user::listener::listen"
+                        ],
+                        "function": "app_accommodation_service::user::listener::do_listen",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-accommodation-service/src/accommodation/event/room_type_converter.rs",
+                    "Function": "app_accommodation_service::accommodation::event::room_type_converter::RoomTypeEventEncoder<'a>::handle",
+                    "Id": "crypto-material-3f89b4e7bde27f04",
+                    "Kind": "material",
+                    "LineNumber": 104,
+                    "Name": "serialized_key",
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch",
+                            "app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch"
+                        ],
+                        "function": "app_accommodation_service::accommodation::event::room_type_converter::RoomTypeEventEncoder<'a>::handle",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-accommodation-service/src/accommodation/event/accommodation_converter.rs",
+                    "Function": "app_accommodation_service::accommodation::event::accommodation_converter::AccommodationEventEncoder<'a>::handle",
+                    "Id": "crypto-material-43b5852b7dd2c870",
+                    "Kind": "material",
+                    "LineNumber": 95,
+                    "Name": "serialized_key",
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch",
+                            "app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch"
+                        ],
+                        "function": "app_accommodation_service::accommodation::event::accommodation_converter::AccommodationEventEncoder<'a>::handle",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-accommodation-service/src/accommodation/event/room_type_converter.rs",
+                    "Function": "app_accommodation_service::accommodation::event::room_type_converter::RoomTypeEventEncoder<'a>::handle",
+                    "Id": "crypto-material-47a0f3dd96ca865c",
+                    "Kind": "material",
+                    "LineNumber": 102,
+                    "Name": "key_sns",
+                    "Package": "app_accommodation_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch",
+                            "app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch"
+                        ],
+                        "function": "app_accommodation_service::accommodation::event::room_type_converter::RoomTypeEventEncoder<'a>::handle",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "common-security/src/authentication.rs",
+                    "Function": "common_security::authentication::auth",
+                    "Id": "crypto-material-48b846daf1c33209",
+                    "Kind": "material",
+                    "LineNumber": 111,
+                    "Name": "token_validator",
+                    "Package": "common_security",
+                    "Reach": {
+                        "function": "common_security::authentication::auth",
+                        "granularity": "function",
+                        "note": "anchors in the call graph with no static caller \u2014 either dead, or reached through dynamic dispatch the static graph does not model",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": "medium",
+                    "Cwe": null,
+                    "Engine": "rusi",
+                    "File": "app-user-service/src/user/event/user_converter.rs",
+                    "Function": "app_user_service::user::event::user_converter::UserEventEncoder<'a>::handle",
+                    "Id": "crypto-material-59cbb6d5c2ab5a29",
+                    "Kind": "material",
+                    "LineNumber": 85,
+                    "Name": "serialized_key",
+                    "Package": "app_user_service",
+                    "Reach": {
+                        "callers": [
+                            "app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch",
+                            "app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch"
+                        ],
+                        "function": "app_user_service::user::event::user_converter::UserEventEncoder<'a>::handle",
+                        "granularity": "function",
+                        "note": "inside the call graph but in no anchored endpoint's closure; static callers listed \u2014 event handlers, main and background listeners land here, as do functions reached only through dynamic dispatch",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                "... 7 more not pinned ..."
+            ],
+            "itemsTotal": 19,
+            "joinGranularity": "function/package",
+            "joinSource": "derived"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/rust-microservices-kafka-rusi.json"
+    ],
+    "summary": {
+        "outOfScope": null,
+        "perEngine": {
+            "rusi": {
+                "attentionItems": 0,
+                "itemsTotal": 19,
+                "joinGranularity": "function/package",
+                "joinSource": "derived"
+            }
+        }
+    },
+    "weakOnly": null
+}

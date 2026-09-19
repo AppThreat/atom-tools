@@ -1,0 +1,1099 @@
+{
+  "ranking" : [
+    {
+      "method" : "<operator>.fieldAccess",
+      "pageRank" : 0.09741849396420309,
+      "inDegree" : 83
+    },
+    {
+      "method" : "<operator>.assignment",
+      "pageRank" : 0.06003558791050108,
+      "inDegree" : 91
+    },
+    {
+      "method" : "<operator>.alloc",
+      "pageRank" : 0.01421992191798194,
+      "inDegree" : 23
+    },
+    {
+      "method" : "org.springframework.aot.hint.TypeHint$Builder.withJavaSerialization:org.springframework.aot.hint.TypeHint$Builder(boolean)",
+      "pageRank" : 0.011474397360900288,
+      "inDegree" : 3
+    },
+    {
+      "method" : "<operator>.addition",
+      "pageRank" : 0.010729965585351608,
+      "inDegree" : 19
+    },
+    {
+      "method" : "<operator>.arrayInitializer",
+      "pageRank" : 0.008727007024299386,
+      "inDegree" : 5
+    },
+    {
+      "method" : "org.springframework.web.bind.WebDataBinder.setDisallowedFields:void(java.lang.String[])",
+      "pageRank" : 0.007811210245432418,
+      "inDegree" : 4
+    },
+    {
+      "method" : "<operator>.equals",
+      "pageRank" : 0.007705110927953228,
+      "inDegree" : 11
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vet.getSpecialtiesInternal:java.util.Set()",
+      "pageRank" : 0.006437515077131967,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.ui.Model.addAttribute:org.springframework.ui.Model(java.lang.String,java.lang.Object)",
+      "pageRank" : 0.006433700419587027,
+      "inDegree" : 8
+    },
+    {
+      "method" : "<operator>.notEquals",
+      "pageRank" : 0.006391460286906502,
+      "inDegree" : 11
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.String,boolean)",
+      "pageRank" : 0.00617247536896234,
+      "inDegree" : 3
+    },
+    {
+      "method" : "java.lang.IllegalArgumentException.<init>:void(java.lang.String)",
+      "pageRank" : 0.006012918388748191,
+      "inDegree" : 6
+    },
+    {
+      "method" : "java.time.LocalDate.now:java.time.LocalDate()",
+      "pageRank" : 0.005723502863966709,
+      "inDegree" : 5
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.NamedEntity.getName:java.lang.String()",
+      "pageRank" : 0.005716474990441042,
+      "inDegree" : 9
+    },
+    {
+      "method" : "<operator>.logicalNot",
+      "pageRank" : 0.005446358214877219,
+      "inDegree" : 11
+    },
+    {
+      "method" : "java.time.LocalDate.plusDays:java.time.LocalDate(long)",
+      "pageRank" : 0.005319306464502783,
+      "inDegree" : 2
+    },
+    {
+      "method" : "<operator>.logicalAnd",
+      "pageRank" : 0.005217100575643351,
+      "inDegree" : 11
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.BaseEntity.getId:java.lang.Integer()",
+      "pageRank" : 0.00515289024202485,
+      "inDegree" : 10
+    },
+    {
+      "method" : "org.springframework.web.servlet.mvc.support.RedirectAttributes.addFlashAttribute:org.springframework.web.servlet.mvc.support.RedirectAttributes(java.lang.String,java.lang.Object)",
+      "pageRank" : 0.0050101179188619584,
+      "inDegree" : 8
+    },
+    {
+      "method" : "<operator>.conditional",
+      "pageRank" : 0.004949345311473145,
+      "inDegree" : 3
+    },
+    {
+      "method" : "java.util.Collection.add:boolean(java.lang.Object)",
+      "pageRank" : 0.004866327768227817,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.getVisits:java.util.Collection()",
+      "pageRank" : 0.004866327768227817,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerRepository.findById:java.util.Optional(java.lang.Integer)",
+      "pageRank" : 0.0048300142160450235,
+      "inDegree" : 5
+    },
+    {
+      "method" : "java.util.Optional.orElseThrow:java.lang.Object(java.util.function.Supplier)",
+      "pageRank" : 0.0048300142160450235,
+      "inDegree" : 5
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetTypeRepository.findPetTypes:java.util.List()",
+      "pageRank" : 0.004789080875171426,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.util.Assert.notNull:void(java.lang.Object,java.lang.String)",
+      "pageRank" : 0.004695740279551811,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.BaseEntity.isNew:boolean()",
+      "pageRank" : 0.00461945500952369,
+      "inDegree" : 7
+    },
+    {
+      "method" : "java.util.Set.size:int()",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.CacheConfiguration.cacheConfiguration:javax.cache.configuration.Configuration()",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.WebConfiguration.localeChangeInterceptor:org.springframework.web.servlet.i18n.LocaleChangeInterceptor()",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.Set.add:boolean(java.lang.Object)",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.Class.isAssignableFrom:boolean(java.lang.Class)",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "javax.cache.CacheManager.createCache:javax.cache.Cache(java.lang.String,javax.cache.configuration.Configuration)",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.servlet.config.annotation.InterceptorRegistry.addInterceptor:org.springframework.web.servlet.config.annotation.InterceptorRegistration(org.springframework.web.servlet.HandlerInterceptor)",
+      "pageRank" : 0.004605921519398032,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getPets:java.util.List()",
+      "pageRank" : 0.0044312097399982035,
+      "inDegree" : 5
+    },
+    {
+      "method" : "java.util.Iterator.next:java.lang.Object()",
+      "pageRank" : 0.0044221934445166046,
+      "inDegree" : 5
+    },
+    {
+      "method" : "<operator>.subtraction",
+      "pageRank" : 0.004299384373927397,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.data.domain.PageRequest.of:<unresolvedSignature>(2)",
+      "pageRank" : 0.004299384373927397,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.Integer)",
+      "pageRank" : 0.004296429583650278,
+      "inDegree" : 4
+    },
+    {
+      "method" : "<operator>.throw",
+      "pageRank" : 0.004282603834391416,
+      "inDegree" : 5
+    },
+    {
+      "method" : "java.util.Iterator.hasNext:boolean()",
+      "pageRank" : 0.004269560648038777,
+      "inDegree" : 4
+    },
+    {
+      "method" : "java.util.Objects.equals:boolean(java.lang.Object,java.lang.Object)",
+      "pageRank" : 0.004243473547282447,
+      "inDegree" : 5
+    },
+    {
+      "method" : "java.util.ArrayList.<init>:void()",
+      "pageRank" : 0.004225211971807084,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.web.servlet.i18n.LocaleChangeInterceptor.setParamName:void(java.lang.String)",
+      "pageRank" : 0.004210984905747586,
+      "inDegree" : 1
+    },
+    {
+      "method" : "javax.cache.configuration.MutableConfiguration.setStatisticsEnabled:javax.cache.configuration.MutableConfiguration(boolean)",
+      "pageRank" : 0.004210984905747586,
+      "inDegree" : 1
+    },
+    {
+      "method" : "javax.cache.configuration.MutableConfiguration.<init>:void()",
+      "pageRank" : 0.004210984905747586,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.servlet.i18n.LocaleChangeInterceptor.<init>:void()",
+      "pageRank" : 0.004210984905747586,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.validation.BindingResult.hasErrors:boolean()",
+      "pageRank" : 0.004208795737353361,
+      "inDegree" : 5
+    },
+    {
+      "method" : "org.springframework.data.domain.Page.getTotalElements:long()",
+      "pageRank" : 0.0041852276646977705,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetController.findPaginated:org.springframework.data.domain.Page(int)",
+      "pageRank" : 0.0041480231299645485,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetController.addPaginationModel:java.lang.String(int,org.springframework.data.domain.Page,org.springframework.ui.Model)",
+      "pageRank" : 0.0041480231299645485,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.core.style.ToStringCreator.append:org.springframework.core.style.ToStringCreator(java.lang.String,java.lang.Object)",
+      "pageRank" : 0.0041480231299645485,
+      "inDegree" : 6
+    },
+    {
+      "method" : "org.springframework.boot.SpringApplication.run:org.springframework.context.ConfigurableApplicationContext(java.lang.Class,java.lang.String[])",
+      "pageRank" : 0.0041480231299645485,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.List.iterator:java.util.Iterator()",
+      "pageRank" : 0.004086401292265383,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.addPet:void(org.springframework.samples.petclinic.owner.Pet)",
+      "pageRank" : 0.004056570345672588,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.<init>:void()",
+      "pageRank" : 0.004056443452077852,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.data.domain.Page.getTotalPages:int()",
+      "pageRank" : 0.004032594868219943,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.data.domain.Page.getContent:java.util.List()",
+      "pageRank" : 0.004032594868219943,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerRepository.save:java.lang.Object(java.lang.Object)",
+      "pageRank" : 0.004015937056089504,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.validation.BindingResult.rejectValue:void(java.lang.String,java.lang.String,java.lang.String)",
+      "pageRank" : 0.003999525704819863,
+      "inDegree" : 6
+    },
+    {
+      "method" : "java.util.LinkedHashSet.<init>:void()",
+      "pageRank" : 0.0039218216842576556,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.HashSet.<init>:void()",
+      "pageRank" : 0.003916212942089103,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.getBirthDate:java.time.LocalDate()",
+      "pageRank" : 0.0039045841708941235,
+      "inDegree" : 6
+    },
+    {
+      "method" : "org.springframework.aot.hint.ResourceHints.registerPattern:org.springframework.aot.hint.ResourceHints(java.lang.String)",
+      "pageRank" : 0.0038786711361801455,
+      "inDegree" : 4
+    },
+    {
+      "method" : "org.springframework.aot.hint.RuntimeHints.resources:org.springframework.aot.hint.ResourceHints()",
+      "pageRank" : 0.0038786711361801455,
+      "inDegree" : 4
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.addVisit:void(org.springframework.samples.petclinic.owner.Visit)",
+      "pageRank" : 0.003844945706185395,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetRepository.findAll:org.springframework.data.domain.Page(org.springframework.data.domain.Pageable)",
+      "pageRank" : 0.003819862949642078,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.servlet.i18n.SessionLocaleResolver.<init>:void()",
+      "pageRank" : 0.0037817044184177613,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.servlet.i18n.SessionLocaleResolver.setDefaultLocale:void(java.util.Locale)",
+      "pageRank" : 0.0037817044184177613,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.RuntimeException.<init>:void(java.lang.String)",
+      "pageRank" : 0.0037817044184177613,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.String.toLowerCase:java.lang.String()",
+      "pageRank" : 0.003717446456981783,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.String.contains:boolean(java.lang.CharSequence)",
+      "pageRank" : 0.003717446456981783,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.dao.DataIntegrityViolationException.getMessage:java.lang.String()",
+      "pageRank" : 0.003717446456981783,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.aot.hint.RuntimeHints.reflection:org.springframework.aot.hint.ReflectionHints()",
+      "pageRank" : 0.0037170599399095044,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.aot.hint.ReflectionHints.registerType:org.springframework.aot.hint.ReflectionHints(java.lang.Class,java.util.function.Consumer)",
+      "pageRank" : 0.0037170599399095044,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerRepository.findByLastNameStartingWith:org.springframework.data.domain.Page(java.lang.String,org.springframework.data.domain.Pageable)",
+      "pageRank" : 0.0037117477753829,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.bind.WebDataBinder.setValidator:void(org.springframework.validation.Validator)",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.stream.Stream.sorted:java.util.stream.Stream(java.util.Comparator)",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetValidator.<init>:void()",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.stream.Stream.collect:java.lang.Object(java.util.stream.Collector)",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.Set.stream:java.util.stream.Stream()",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.Comparator.comparing:java.util.Comparator(java.util.function.Function)",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.stream.Collectors.toList:java.util.stream.Collector()",
+      "pageRank" : 0.0036901247405310643,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.validation.Errors.rejectValue:void(java.lang.String,java.lang.String,java.lang.String)",
+      "pageRank" : 0.003671808804953725,
+      "inDegree" : 4
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Visit.getDate:java.time.LocalDate()",
+      "pageRank" : 0.0036549017874977197,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.validation.BindingResult.rejectValue:void(java.lang.String,java.lang.String)",
+      "pageRank" : 0.0036364227505615064,
+      "inDegree" : 3
+    },
+    {
+      "method" : "java.time.LocalDate.isAfter:boolean(java.time.chrono.ChronoLocalDate)",
+      "pageRank" : 0.0036364227505615064,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetRepository.findAll:java.util.Collection()",
+      "pageRank" : 0.0036247106848977095,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vets.<init>:void()",
+      "pageRank" : 0.0036247106848977095,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.List.addAll:boolean(java.util.Collection)",
+      "pageRank" : 0.0036247106848977095,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vets.getVetList:java.util.List()",
+      "pageRank" : 0.0036247106848977095,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.String.equalsIgnoreCase:boolean(java.lang.String)",
+      "pageRank" : 0.003582000244384477,
+      "inDegree" : 1
+    },
+    {
+      "method" : "<operator>.logicalOr",
+      "pageRank" : 0.003582000244384477,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.<init>:void()",
+      "pageRank" : 0.0035756501431726934,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.servlet.ModelAndView.addObject:org.springframework.web.servlet.ModelAndView(java.lang.Object)",
+      "pageRank" : 0.0035374919440532364,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.web.servlet.ModelAndView.<init>:void(java.lang.String)",
+      "pageRank" : 0.0035374919440532364,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.Person.getLastName:java.lang.String()",
+      "pageRank" : 0.0035374919440532364,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.util.StringUtils.hasText:boolean(java.lang.String)",
+      "pageRank" : 0.003534980645825473,
+      "inDegree" : 3
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.getType:org.springframework.samples.petclinic.owner.PetType()",
+      "pageRank" : 0.003518866808366411,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerRepository.saveAndFlush:java.lang.Object(java.lang.Object)",
+      "pageRank" : 0.003507092278352407,
+      "inDegree" : 2
+    },
+    {
+      "method" : "java.util.Map.put:java.lang.Object(java.lang.Object,java.lang.Object)",
+      "pageRank" : 0.00348198910897039,
+      "inDegree" : 2
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.BaseEntity.setId:void(java.lang.Integer)",
+      "pageRank" : 0.0034611755458143225,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.addVisit:void(java.lang.Integer,org.springframework.samples.petclinic.owner.Visit)",
+      "pageRank" : 0.00344356406929765,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.isDuplicatePetNameViolation:boolean(org.springframework.dao.DataIntegrityViolationException)",
+      "pageRank" : 0.003425085032361437,
+      "inDegree" : 2
+    },
+    {
+      "method" : "java.util.Collection.iterator:java.util.Iterator()",
+      "pageRank" : 0.003415385706870974,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.text.ParseException.<init>:void(java.lang.String,int)",
+      "pageRank" : 0.003415385706870974,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.NamedEntity.setName:void(java.lang.String)",
+      "pageRank" : 0.003408971194902375,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.setType:void(org.springframework.samples.petclinic.owner.PetType)",
+      "pageRank" : 0.003408971194902375,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.util.Assert.state:void(boolean,java.lang.String)",
+      "pageRank" : 0.003408971194902375,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.setBirthDate:void(java.time.LocalDate)",
+      "pageRank" : 0.003408971194902375,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.List.add:boolean(java.lang.Object)",
+      "pageRank" : 0.003404630574963991,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.util.List.contains:boolean(java.lang.Object)",
+      "pageRank" : 0.003404630574963991,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.Person.getFirstName:java.lang.String()",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.data.domain.Page.isEmpty:<unresolvedSignature>(0)",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.core.style.ToStringCreator.toString:java.lang.String()",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel:java.lang.String(int,org.springframework.ui.Model,org.springframework.data.domain.Page)",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.String.strip:java.lang.String()",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.findPaginatedForOwnersLastName:org.springframework.data.domain.Page(int,java.lang.String)",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.core.style.ToStringCreator.<init>:void(java.lang.Object)",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.data.domain.Page.iterator:java.util.Iterator()",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.core.style.ToStringCreator.append:org.springframework.core.style.ToStringCreator(java.lang.String,boolean)",
+      "pageRank" : 0.0033848591475754085,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Visit.<init>:void()",
+      "pageRank" : 0.0033571077300339853,
+      "inDegree" : 1
+    },
+    {
+      "method" : "java.lang.String.length:int()",
+      "pageRank" : 0.0033421219645616168,
+      "inDegree" : 1
+    },
+    {
+      "method" : "<operator>.greaterThan",
+      "pageRank" : 0.0033421219645616168,
+      "inDegree" : 1
+    },
+    {
+      "method" : "<operator>.cast",
+      "pageRank" : 0.0033421219645616168,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.updatePetDetails:void(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Pet)",
+      "pageRank" : 0.003326963948911405,
+      "inDegree" : 1
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.loadPetWithVisit:org.springframework.samples.petclinic.owner.Visit(int,int,java.util.Map)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetController.<init>:void(org.springframework.samples.petclinic.vet.VetRepository)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.lambda$1:java.lang.Throwable()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.setCity:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.populatePetTypes:java.util.Collection()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.Person.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vet.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.initNewVisitForm:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.<init>:void(org.springframework.samples.petclinic.owner.OwnerRepository,org.springframework.samples.petclinic.owner.PetTypeRepository)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.WebConfiguration.localeResolver:org.springframework.web.servlet.LocaleResolver()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.<clinit>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getFirstName:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getTelephone:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicRuntimeHints.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.initFindForm:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.initCreationForm:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicRuntimeHints.registerHints:void(org.springframework.aot.hint.RuntimeHints,java.lang.ClassLoader)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.processCreationForm:java.lang.String(org.springframework.samples.petclinic.owner.Owner,org.springframework.validation.BindingResult,org.springframework.web.servlet.mvc.support.RedirectAttributes)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.NamedEntity.toString:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.Person.setFirstName:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getAddress:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetController.showResourcesVetList:org.springframework.samples.petclinic.vet.Vets()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetType.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.WebConfiguration.addInterceptors:void(org.springframework.web.servlet.config.annotation.InterceptorRegistry)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.initPetBinder:void(org.springframework.web.bind.WebDataBinder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetValidator.supports:boolean(java.lang.Class)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.initUpdateForm:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.findOwner:org.springframework.samples.petclinic.owner.Owner(int)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.CacheConfiguration.petclinicCacheConfigurationCustomizer:org.springframework.boot.cache.autoconfigure.JCacheManagerCustomizer()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getCity:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.isNew:boolean()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.setAddress:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetValidator.validate:void(java.lang.Object,org.springframework.validation.Errors)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetTypeFormatter.parse:org.springframework.samples.petclinic.owner.PetType(java.lang.String,java.util.Locale)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.isNew:boolean()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.WelcomeController.welcome:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.<clinit>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.Person.setLastName:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.findPet:org.springframework.samples.petclinic.owner.Pet(int,java.lang.Integer)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.setId:void(java.lang.Integer)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.setTelephone:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.CacheConfiguration.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.lambda$0:java.lang.Throwable()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetValidator.<clinit>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.<init>:void(org.springframework.samples.petclinic.owner.OwnerRepository)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Visit.setDate:void(java.time.LocalDate)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.lambda$0:java.lang.Throwable()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetType.getName:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Visit.getDescription:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.initCreationForm:java.lang.String(org.springframework.samples.petclinic.owner.Owner,org.springframework.ui.ModelMap)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.setName:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.lambda$0:java.lang.Throwable()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicRuntimeHints.lambda$2:void(org.springframework.aot.hint.TypeHint$Builder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.initUpdateOwnerForm:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getId:java.lang.Integer()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.showOwner:org.springframework.web.servlet.ModelAndView(int)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.VetController.showVetList:java.lang.String(int,org.springframework.ui.Model)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicApplication.main:void(java.lang.String[])",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.WelcomeController.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.minVisitDate:java.time.LocalDate()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.processNewVisitForm:java.lang.String(org.springframework.samples.petclinic.owner.Owner,int,org.springframework.samples.petclinic.owner.Visit,org.springframework.validation.BindingResult,org.springframework.web.servlet.mvc.support.RedirectAttributes)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.processUpdateOwnerForm:java.lang.String(org.springframework.samples.petclinic.owner.Owner,org.springframework.validation.BindingResult,int,org.springframework.web.servlet.mvc.support.RedirectAttributes)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vet.getSpecialties:java.util.List()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicApplication.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicRuntimeHints.lambda$1:void(org.springframework.aot.hint.TypeHint$Builder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.BaseEntity.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.CrashController.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.findOwner:org.springframework.samples.petclinic.owner.Owner(java.lang.Integer)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.processCreationForm:java.lang.String(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Pet,org.springframework.validation.BindingResult,org.springframework.web.servlet.mvc.support.RedirectAttributes)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetTypeFormatter.<init>:void(org.springframework.samples.petclinic.owner.PetTypeRepository)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetTypeFormatter.print:java.lang.String(org.springframework.samples.petclinic.owner.PetType,java.util.Locale)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vet.addSpecialty:void(org.springframework.samples.petclinic.vet.Specialty)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.initOwnerBinder:void(org.springframework.web.bind.WebDataBinder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.processUpdateForm:java.lang.String(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Pet,org.springframework.validation.BindingResult,org.springframework.web.servlet.mvc.support.RedirectAttributes)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.WebConfiguration.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.getId:java.lang.Integer()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.setAllowedFields:void(org.springframework.web.bind.WebDataBinder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.processFindForm:java.lang.String(int,org.springframework.samples.petclinic.owner.Owner,org.springframework.validation.BindingResult,org.springframework.ui.Model)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.CrashController.triggerException:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.VisitController.setAllowedFields:void(org.springframework.web.bind.WebDataBinder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.getLastName:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Vet.getNrOfSpecialties:int()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.OwnerController.<init>:void(org.springframework.samples.petclinic.owner.OwnerRepository)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.PetClinicRuntimeHints.lambda$0:void(org.springframework.aot.hint.TypeHint$Builder)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.vet.Specialty.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Owner.toString:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.system.CacheConfiguration.lambda$0:void(javax.cache.CacheManager)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.model.NamedEntity.<init>:void()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.PetController.lambda$1:java.lang.Throwable()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Pet.getName:java.lang.String()",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    },
+    {
+      "method" : "org.springframework.samples.petclinic.owner.Visit.setDescription:void(java.lang.String)",
+      "pageRank" : 0.0032322263510975806,
+      "inDegree" : 0
+    }
+  ]
+}

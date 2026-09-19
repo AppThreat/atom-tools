@@ -11,6 +11,8 @@ from typing import Tuple, Dict
 
 import json_flatten  # type: ignore
 
+from atom_tools.lib.adapters import normalize_engine_report
+from atom_tools.lib.reachables import load_reachables
 from atom_tools.lib.regex_utils import FilteringPatternCollection
 
 logger = logging.getLogger(__name__)
@@ -88,8 +90,9 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
     content: Dict = {}
     slice_type = ""
     custom_attr = ""
+    filename = str(filename) if filename is not None else filename
     if not filename or not Path(filename).exists():
-        logger.warning("No filename specified.", filename)
+        logger.warning("No filename specified: %s", filename)
         return content, slice_type, custom_attr
     try:
         with open(filename, "r", encoding="utf-8") as f:
@@ -103,7 +106,19 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
             elif "akka" in raw_content:
                 custom_attr = "akka"
             content = json.loads(raw_content)
-        if content.get("config") or "semantics.slices" in filename:
+        if isinstance(content, list):
+            # atom writes chunked reachable slices as bare JSON arrays.
+            content = {"reachables": content}
+        engine_doc = normalize_engine_report(content, str(filename))
+        if engine_doc is not None:
+            # dosai/golem/rusi reports: normalise into the atom reachables
+            # shape (keeping the engine's endpoint arrays) so every command
+            # works on them unchanged. Engine detection happens before the
+            # atom checks because e.g. rusi reports also carry a "modules"
+            # key that would otherwise read as a parsedeps slice.
+            content = engine_doc
+            slice_type = "reachables"
+        elif content.get("config") or "semantics.slices" in filename:
             slice_type = "semantics"
         elif "objectSlices" in content:
             slice_type = "usages"
@@ -120,10 +135,19 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
             # it's disambiguated from rusi reports at the slice-loading
             # layer even though converter dispatch is by origin_type.
             slice_type = "api_endpoints"
-    except (json.decoder.JSONDecodeError, UnicodeDecodeError):
+        elif "graph" in content and "paths" in content:
+            # Data-flow slice produced by `atom data-flow`:
+            # {"graph": {"nodes": [...], "edges": [...]}, "paths": [...]}
+            slice_type = "data-flow"
+        elif "modules" in content:
+            # Dependency slice produced by `atom parsedeps` (python only):
+            # {"modules": [{"name", "version", "versionSpecifiers",
+            #               "importedSymbols"}]}
+            slice_type = "parsedeps"
+    except (json.decoder.JSONDecodeError, UnicodeDecodeError) as e:
         logger.warning(
-            f"Failed to load usages slice: {filename}\nPlease check that you specified a valid"
-            f" json file."
+            f"Failed to load usages slice: {filename}: {e}\nPlease check that you specified a"
+            f" valid json file."
         )
     except FileNotFoundError:
         logger.exception(f"Failed to locate the following slice file: {filename}")
@@ -162,6 +186,17 @@ class AtomSlice:
     def __init__(self, filename: str | Path, origin_type: str | None = None) -> None:
         self.content, self.slice_type, self.custom_attr = import_slice(filename)
         self.origin_type = origin_type
+        if self.slice_type == "reachables":
+            # atom chunks large reachable slices into <base>_1.json and so on.
+            # Fold the sibling chunks in so every command sees the full set.
+            merged = load_reachables(filename)
+            if len(merged["reachables"]) > len(self.content.get("reachables", [])):
+                logger.debug(
+                    "Merged sibling chunks into %s: %d total reachable entries.",
+                    filename,
+                    len(merged["reachables"]),
+                )
+                self.content = merged
 
 
 @dataclass

@@ -1,0 +1,72 @@
+{
+    "diagnostics": [
+        "golem: golem's reachability measures reachability from its own roots (3459 root(s), reasons: exported 3457, main 2); unreachable-from-roots is the engine's liveness verdict over its full run, not a deletability claim.",
+        "golem call graph in test/data/ecosystem/go-ipsw-golem-roots.json is a subgraph of the engine's run (3325 of 22308 edges, 986 of 7848 nodes, per its own stats block); every metric is computed within that subgraph."
+    ],
+    "engines": [
+        "golem"
+    ],
+    "graphVersion": 1,
+    "graphs": [
+        {
+            "callTypeMix": {
+                "static": 3325
+            },
+            "confidenceMix": {
+                "exact": 3325
+            },
+            "edges": 3325,
+            "engine": "golem",
+            "engineDiagnostics": [
+                "callgraph: //go:linkname _Cgo_always_false runtime.cgoAlwaysFalse is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_e2624339ec71_Cfunc_state _cgo_e2624339ec71_Cfunc_state is unresolved in the loaded program",
+                "callgraph: //go:linkname _Cgo_always_false runtime.cgoAlwaysFalse is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_19d706f38116_Cfunc_compression_decode_buffer _cgo_19d706f38116_Cfunc_compression_decode_buffer is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_19d706f38116_Cfunc_compression_encode_buffer _cgo_19d706f38116_Cfunc_compression_encode_buffer is unresolved in the loaded program",
+                "callgraph: //go:linkname _Cgo_always_false runtime.cgoAlwaysFalse is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc__Cmalloc _cgo_8279e5c5a74f_Cfunc__Cmalloc is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc_dlclose _cgo_8279e5c5a74f_Cfunc_dlclose is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc_dlerror _cgo_8279e5c5a74f_Cfunc_dlerror is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc_dlopen _cgo_8279e5c5a74f_Cfunc_dlopen is unresolved in the loaded program",
+                "... 10 more not pinned ..."
+            ],
+            "engineRootReasons": {
+                "exported": 3457,
+                "main": 2
+            },
+            "engineRoots": 3459,
+            "engineRootsInGraph": 294,
+            "externalNodes": 153,
+            "fullEdges": 22308,
+            "fullNodes": 7848,
+            "internalNodes": 833,
+            "nodes": 986,
+            "sourceFile": "test/data/ecosystem/go-ipsw-golem-roots.json",
+            "trimmed": true
+        }
+    ],
+    "metric": "dead-code",
+    "options": {
+        "includeExternal": false,
+        "minConfidence": null
+    },
+    "results": [
+        {
+            "computed": true,
+            "engine": "golem",
+            "nodesWithVerdict": 986,
+            "rootReasons": {
+                "exported": 3457,
+                "main": 2
+            },
+            "rootsInGraph": 294,
+            "rootsTotal": 3459,
+            "source": "engine",
+            "sourceFile": "test/data/ecosystem/go-ipsw-golem-roots.json",
+            "unreachableFromRootsPerEngine": 39
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/go-ipsw-golem-roots.json"
+    ]
+}
