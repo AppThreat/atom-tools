@@ -55,6 +55,39 @@ def _node(raw: Dict, role: str) -> UnifiedNode:
     )
 
 
+# dosai's declared-requirement vocabulary, read off the EntryPoints records
+# in the eShopOnWeb fixture and confirmed against every one of them:
+#   AuthorizationRequired  bool   an [Authorize] attribute applies
+#   Roles                  [str]  the roles it names
+#   AuthorizationPolicies  [str]  the named policies it requires
+#   AuthenticationSchemes  [str]  the schemes it names
+#   RequiredClaims/Scopes  [str]  finer-grained requirements
+#   AllowAnonymous         bool   an explicit [AllowAnonymous] marker
+#
+# Rendered into the SAME vocabulary the kosi adapter consumes, so
+# ``_exposure`` stays one code path rather than three (§7 of the findings
+# report). An absent or empty list means "nothing declared" — never
+# "anonymous" (§6 rule 1).
+def _authentication(ep: Dict) -> List[str]:
+    """dosai's authorization declarations, in kosi's vocabulary."""
+    out: List[str] = []
+    for role in ep.get("Roles") or []:
+        out.append(f"role({role})")
+    for policy in ep.get("AuthorizationPolicies") or []:
+        out.append(f"policy({policy})")
+    for scheme in ep.get("AuthenticationSchemes") or []:
+        out.append(f"auth-handler({scheme})")
+    for claim in ep.get("RequiredClaims") or []:
+        out.append(f"claim({claim})")
+    for scope in ep.get("RequiredScopes") or []:
+        out.append(f"scope({scope})")
+    # An [Authorize] with no arguments names no role, policy or scheme and
+    # would otherwise vanish: it is still a positive requirement.
+    if not out and ep.get("AuthorizationRequired") is True:
+        out.append("authorize")
+    return out
+
+
 def _endpoints(content: Dict) -> List[Dict]:
     endpoints: List[Dict] = []
     for ep in content.get("ApiEndpoints") or []:
@@ -62,8 +95,10 @@ def _endpoints(content: Dict) -> List[Dict]:
             {
                 "method": ep.get("HttpMethod"),
                 "path": ep.get("Route") or ep.get("Path"),
-                "file": ep.get("FilePath") or ep.get("FileName"),
-                "line": ep.get("Line"),
+                "file": ep.get("FilePath") or ep.get("Path") or ep.get("FileName"),
+                # dosai's field is LineNumber; `Line` has never existed on
+                # any record, so this read was `None` for every endpoint.
+                "line": ep.get("LineNumber") or ep.get("Line"),
                 "framework": ep.get("Framework"),
                 "handler": ".".join(
                     p
@@ -75,13 +110,36 @@ def _endpoints(content: Dict) -> List[Dict]:
             }
         )
     for ep in content.get("EntryPoints") or []:
+        auth = _authentication(ep)
         endpoints.append(
             {
-                "method": None,
-                "path": None,
-                "file": ep.get("FileName") or ep.get("Path"),
-                "line": ep.get("Line"),
+                # These three were hardcoded `None` / read from a field that
+                # does not exist, so every .NET endpoint reached the unified
+                # document without its route, its verb or its line —
+                # `attack-surface` reads the same records correctly, but
+                # `ingest` and `explain` did not.
+                "method": ep.get("HttpMethod"),
+                # `Route` only. `Path` is the FILE path on these records
+                # (`src/Web/Program.cs`), so a `Route or Path` fallback
+                # renders a .cs or .dll file as the route of every CLI and
+                # queue entry point.
+                "path": ep.get("Route"),
+                # The full path, matching what attack-surface reports;
+                # `FileName` is only the basename.
+                "file": ep.get("Path") or ep.get("FileName"),
+                "line": ep.get("LineNumber") or ep.get("Line"),
                 "kind": ep.get("Kind"),
+                **({"authentication": auth} if auth else {}),
+                **(
+                    {"authenticationSource": "dosai-authorize-attributes"}
+                    if auth
+                    else {}
+                ),
+                **(
+                    {"allowAnonymous": True}
+                    if ep.get("AllowAnonymous") is True
+                    else {}
+                ),
                 "handler": ".".join(
                     p
                     for p in (ep.get("Namespace"), ep.get("ClassName"), ep.get("MethodName"))

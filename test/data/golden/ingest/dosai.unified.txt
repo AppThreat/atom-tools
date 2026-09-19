@@ -1,4 +1,4 @@
-unified document md5: 98b0b279a7e151e1bf37dd7625633023
+unified document md5: 9617754965fabc4e143a58f5458d9b01
 engine: dosai 5.0.0.0, mode dataflows
 counts: 60 flow(s), 60 endpoint(s), 45 package(s), 151 diagnostic(s)
 flow[0]: {
@@ -130,13 +130,17 @@ flow[0]: {
   ]
 }
 endpoint[0]: {
-  "file": "OrderController.cs",
+  "authentication": [
+    "authorize"
+  ],
+  "authenticationSource": "dosai-authorize-attributes",
+  "file": "src/Web/Controllers/OrderController.cs",
   "handler": "Microsoft.eShopWeb.Web.Controllers.OrderController.MyOrders",
   "id": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Order#GET:/Order/MyOrders",
   "kind": "HttpController",
-  "line": null,
-  "method": null,
-  "path": null,
+  "line": 22,
+  "method": "GET",
+  "path": "/Order/MyOrders",
   "raw": {
     "AllowAnonymous": false,
     "AuthenticationSchemes": [],
