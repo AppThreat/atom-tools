@@ -4,6 +4,54 @@ All notable changes to atom-tools are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **kosi (Kotlin/JVM) is the fifth engine** atom-tools reads, alongside atom,
+  dosai, golem and rusi. kosi emits one camelCase envelope
+  (`schemaVersion: "kosi/1"`); its `dataFlow.slices[]` carry the engine's own
+  severity (critical/high/medium/low, so `severity_source` is "engine"), its
+  `apiEndpoints[]` carry the requirements declared at the sites kosi models
+  (`authentication`), the Android/servlet `exported` verdict, and — where
+  `--endpoint-sources` seeded the handler parameters — the engine's own
+  endpoint→slice links (`sliceIds`), the one direct flow link in the
+  ecosystem besides dosai's per-entry-point verdicts. Six of kosi's
+  security-pack sink categories map onto the shared tag vocabulary
+  (`process-exec`→`shell-exec`, `crypto-asset`→`crypto`,
+  `hardcoded-secret`→`sensitive-data`, `js-injection`→`code-execution`,
+  `log-injection`→`log`, `prompt-injection`→`ai-prompt`); `xss` joins the
+  extended tag set as a genuinely new tag; the propagation-mechanics
+  categories and those with no honest target stay deliberately unmapped.
+- **attack-surface reads kosi's declared authentication** — the second
+  engine after dosai whose endpoints can leave `unknown-auth`. A non-empty
+  `authentication` list lifts the endpoint to `authenticated-http` (evidence
+  carried as `ExposureEvidence` and printed beside the entry point);
+  `security-constraint(denied)` is a **deny rule**, not a login, and maps to
+  `internal`; `exported: false` maps to `internal`. An **empty declaration
+  is not a denial**: kosi endpoints with no declared requirement stay in
+  `unknown-auth`, and no `anonymous` tier is ever derived from kosi data.
+  kosi endpoints with an empty `httpMethod` list print the path alone
+  rather than asserting "ANY".
+- **crypto-reach reads kosi's crypto block** at the grain each record kind
+  supports: operations carry an enclosing function and join at function
+  grain; materials and findings carry a file position and join at file
+  grain; assets, protocols and libraries carry no location at all and are
+  rendered as inventory only.
+- **graph reads kosi's call graph**, including its per-node
+  reachability-from-root-scopes verdicts, which the dead-code metric reports
+  as the engine's own liveness verdict.
+- kosi fixtures under `test/data/ecosystem/` (whole, untrimmed reports from
+  the 0.2.0 darwin-arm64 binary, command lines and caveats in
+  `test/data/ecosystem/PROVENANCE.md`) with goldens for ingest, attack
+  surface, drift, graph, explain and crypto-reach.
+
+### Changed
+
+- The `attack-surface` console header now says "dosai and kosi classify
+  authentication" on reports that involve kosi; other reports keep the
+  previous wording, so no existing rendering changes.
+
 ## [1.0.0] - 2026-09-19
 
 atom-tools now reads the reports of the whole AppThreat analysis ecosystem —

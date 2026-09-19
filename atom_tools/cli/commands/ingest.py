@@ -108,7 +108,7 @@ work on dosai, golem, rusi and kosi reports unchanged."""
             if detected is None:
                 raise ValueError(
                     f"Could not detect the producing engine for {path};"
-                    " re-run with --engine atom|dosai|golem|rusi."
+                    " re-run with --engine atom|dosai|golem|rusi|kosi."
                 )
             report = parse_report(content, source_file=path, engine=detected)
             reports.append(report)

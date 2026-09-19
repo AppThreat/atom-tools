@@ -2,9 +2,9 @@
 
 Collection of tools for post-processing the reports of the AppThreat analysis
 ecosystem: [atom](https://github.com/appthreat/atom) slices (Java, JavaScript,
-Python, Ruby, ...), dosai (.NET), golem (Go) and rusi (Rust) flow reports. The
-six analysis commands — `ingest`, `attack-surface`, `drift`, `graph`, `explain`
-and `crypto-reach` — accept any of the four, mixed freely.
+Python, Ruby, ...), dosai (.NET), golem (Go), rusi (Rust) and kosi (Kotlin/JVM)
+flow reports. The six analysis commands — `ingest`, `attack-surface`, `drift`,
+`graph`, `explain` and `crypto-reach` — accept any of the five, mixed freely.
 
 ## Install the engines
 
@@ -19,7 +19,9 @@ Atom installs from a
 npm `npm install -g @appthreat/atom`. The golem and rusi binaries are published in the
 [cdxgen-plugins-bin](https://github.com/cdxgen/cdxgen-plugins-bin/releases) releases (and bundled
 in the atom-tools Docker image); dosai builds from [OWASP/dosai](https://github.com/OWASP/dosai)
-with `dotnet`.
+with `dotnet`. kosi ships from the `thirdparty/kosi` directory of cdxgen-plugins-bin — it is
+pre-1.0 and currently built for darwin-arm64 only, so CI environments cannot run it; generate
+kosi reports on a Mac and commit or pass the JSON along like any other report.
 
 ## Install atom-tools
 
@@ -102,7 +104,7 @@ Available commands:
   filter           Filter an atom slice based on specified criteria.
   graph            Compute a call-graph metric — chokepoints, centrality, blast radius, entry depth, dead-code or cycles — over engine call graphs.
   help             Displays help for a command.
-  ingest           Normalise dosai, golem, rusi or atom flow reports into the unified flow model (or an atom-compatible reachables document).
+  ingest           Normalise dosai, golem, rusi, kosi or atom flow reports into the unified flow model (or an atom-compatible reachables document).
   list             Lists commands.
   merge-slices     Merge reachable slice files (including atom's chunked output) into a single de-duplicated slice.
   query-endpoints  List elements to display in the console.
@@ -155,11 +157,11 @@ For the custom properties that the analysis reads from and writes to the BOM, se
 
 ### Ingest
 
-The ingest command normalises flow reports from the four ecosystem engines — atom reachables, dosai
-dataflows/methods, golem analyze, rusi analyze — into one unified flow model. Engines are detected
-from the report envelope and can be mixed freely in one invocation; every flow carries the engine's
-own severity where it emits one (taxonomy-derived otherwise), a truncated-witness flag, and its raw
-engine record as an escape hatch.
+The ingest command normalises flow reports from the five ecosystem engines — atom reachables, dosai
+dataflows/methods, golem analyze, rusi analyze, kosi analyze — into one unified flow model. Engines
+are detected from the report envelope and can be mixed freely in one invocation; every flow carries
+the engine's own severity where it emits one (taxonomy-derived otherwise), a truncated-witness
+flag, and its raw engine record as an escape hatch.
 
 **Example** (the committed golem fixture, from a clone of this repository):
 
@@ -167,7 +169,7 @@ engine record as an escape hatch.
 
 - `--emit unified` (the default) writes the model document; `--emit reachables` writes an
   atom-compatible document that `stats`, `visualize`, `convert -f sarif`, `check-reachable` and
-  `filter` already consume — so the existing commands work on dosai, golem and rusi reports
+  `filter` already consume — so the existing commands work on dosai, golem, rusi and kosi reports
   unchanged.
 - A unified document can be read back in: every report-taking command (`stats`, `explain`,
   `attack-surface`, `drift`, ...) accepts it, so a polyglot repository can be ingested once and
@@ -183,11 +185,16 @@ reports what each one reaches, in the shape of dosai's own `AttackSurface[]` vie
 
 > `atom-tools attack-surface -i test/data/ecosystem/dotnet-eshoponweb-dosai-dataflows.json`
 
-- **Only dosai classifies authentication**; its verdict is used verbatim, never re-derived. Every
-  other engine's entry points land in `unknown-auth` by design, rendered as a gap ("auth unknown —
-  not an exposure verdict"), and "anonymous" is never asserted for them.
-- For golem and rusi, reach is computed by anchoring each endpoint's handler in the engine's call
-  graph and attaching the flows whose source function falls inside its transitive closure.
+- **dosai classifies authentication and kosi carries declared requirements.** dosai's verdict is
+  used verbatim, never re-derived. kosi maps `apiEndpoints[].authentication` — a non-empty list
+  lifts the endpoint to `authenticated-http`, a `security-constraint(denied)` deny rule and an
+  `exported: false` manifest map to `internal` — and stops there: an **empty declaration is not a
+  denial**, so kosi endpoints without a declared requirement stay in `unknown-auth`, exactly like
+  every other non-dosai engine, and "anonymous" is never asserted for anything that did not say so.
+- For golem, rusi and kosi, reach is computed by anchoring each endpoint's handler in the engine's
+  call graph and attaching the flows whose source function falls inside its transitive closure.
+  kosi endpoints that name their own slices (`apiEndpoints[].sliceIds`) carry the engine's verdict
+  directly instead — the one flow link in the ecosystem besides dosai's.
   Endpoints that cannot be anchored report `seed-not-found`; endpoints with no call graph report
   reach as `not computed` — "reaches nothing" and "not computed" are opposite findings and always
   render differently.
@@ -217,10 +224,11 @@ function over two reports — it never invokes an engine, so it runs in seconds 
 
 ### Graph
 
-The graph command reads the call graph four engines emit — golem `callGraph`, rusi `call_graph`,
-dosai `CallGraph`+`Reachability` (methods report), atom `export --format graphml` — and computes one
-metric over it: chokepoints (nodes on the most source→sink paths, the default), centrality, blast
-radius, entry depth, dead-code or recursion clusters.
+The graph command reads the call graph five engines emit — golem `callGraph`, rusi `call_graph`,
+kosi `callGraph` (with its reachability-from-root-scopes verdicts), dosai `CallGraph`+`Reachability`
+(methods report), atom `export --format graphml` — and computes one metric over it: chokepoints
+(nodes on the most source→sink paths, the default), centrality, blast radius, entry depth, dead-code
+or recursion clusters.
 
 **Example**
 
@@ -256,10 +264,11 @@ where a field is empty the clause is omitted or hedged, never filled with a plau
 
 > `atom-tools explain -i test/data/ecosystem/rust-microservices-kafka-rusi.json`
 
-- The honesty clauses are part of the output: only dosai classifies authentication (every other
-  engine's routes say the exposure is unknown); the endpoint→flow join is partial and an unjoined
-  flow says so; atom slices record no version, so none is printed; the sanitizer sentence appears
-  only for engines whose schema carries a sanitizer field.
+- The honesty clauses are part of the output: dosai classifies authentication outright and kosi
+  carries declared requirements (every other engine's routes — and kosi's undeclared ones — say the
+  exposure is unknown); the endpoint→flow join is partial and an unjoined flow says so; atom slices
+  record no version, so none is printed; the sanitizer sentence appears only for engines whose
+  schema carries a sanitizer field.
 - `--flow`, `--package`, `--file` and `--query` (dosai's compact grammar, e.g.
   `flows[sink_category=sql && severity=error]`) select flows for the text and markdown formats.
 - `-f agent` emits a compact, token-budgeted JSON context for a consuming agent, trimmed with an
@@ -283,8 +292,11 @@ question a CBOM cannot answer: is this weak algorithm on a path an entry point r
   `ReachableFromEntryPoint` verdicts, rendered verbatim); rusi is function-level for materials
   (anchored in the call graph) and package-level for libraries; golem is package-level at best —
   its crypto items carry no enclosing-function field, so the claim printed is "this site sits in a
-  package that carries tainted flows", never "this call is on a tainted path".
-- There is **deliberately no cross-engine total**: three granularities do not sum, and counts are
+  package that carries tainted flows", never "this call is on a tainted path"; kosi splits by
+  record kind — operations carry an enclosing function and join at function grain, materials and
+  findings carry only a file position and join at file grain, and assets, protocols and libraries
+  carry no location at all and are rendered as inventory only.
+- There is **deliberately no cross-engine total**: four granularities do not sum, and counts are
   per engine.
 - atom slices and unified documents carry no crypto section; both are reported as out of scope
   rather than producing an empty report.
