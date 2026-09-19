@@ -1,0 +1,248 @@
+unified document md5: e272113b2f01760f355f050876a94ca4
+engine: kosi 0.2.0, mode all
+counts: 2 flow(s), 1 endpoint(s), 1 package(s), 2 diagnostic(s)
+flow[0]: {
+  "analysis_mode": "all",
+  "confidence": "high",
+  "engine": "kosi",
+  "engine_version": "0.2.0",
+  "extra": {
+    "accessPath": "t4",
+    "edgeIds": [
+      "dfe-000001",
+      "dfe-000002",
+      "dfe-000003",
+      "dfe-000004",
+      "dfe-000005",
+      "dfe-000006"
+    ],
+    "flowKey": "5481f29ab0578441e7c1fcbbec83ad839dcd4a0cb8b042bee43e0e1d625873a4",
+    "origins": [
+      "pack"
+    ],
+    "pathLength": 6,
+    "riskScore": "9.0",
+    "ruleId": "taint/untrusted-input-to-process-exec",
+    "ruleName": "untrusted-input to process-exec",
+    "sinkArgumentIndex": 0,
+    "sinkModulePath": ".",
+    "sinkName": "java.lang.ProcessBuilder",
+    "sourceModulePath": ".",
+    "sourceName": "endpoint-params fixtures.exec.CmdRunner.runCommand",
+    "sourcePurl": "pkg:generic/command-exec@unspecified",
+    "targetPurl": "pkg:generic/command-exec@unspecified"
+  },
+  "id": "slice-000001",
+  "nodes": [
+    {
+      "code": "store vthis",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 36,
+      "name": "store vthis",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "source",
+      "symbol": null,
+      "tags": [
+        "untrusted-input"
+      ]
+    },
+    {
+      "code": "store vcommand",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 36,
+      "name": "store vcommand",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "step",
+      "symbol": null,
+      "tags": []
+    },
+    {
+      "code": "kotlin.text.trim",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 37,
+      "name": "kotlin.text.trim",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "step",
+      "symbol": null,
+      "tags": []
+    },
+    {
+      "code": "kotlin.text.split",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 37,
+      "name": "kotlin.text.split",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "step",
+      "symbol": null,
+      "tags": []
+    },
+    {
+      "code": "store vparts",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 36,
+      "name": "store vparts",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "step",
+      "symbol": null,
+      "tags": []
+    },
+    {
+      "code": "kotlin.collections.toTypedArray",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 38,
+      "name": "kotlin.collections.toTypedArray",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "step",
+      "symbol": null,
+      "tags": []
+    },
+    {
+      "code": "java.lang.ProcessBuilder",
+      "column": 36,
+      "file": "src/main/kotlin/Cmd.kt",
+      "function": null,
+      "line": 38,
+      "name": "java.lang.ProcessBuilder",
+      "package": ".",
+      "purl": "pkg:generic/command-exec@unspecified",
+      "role": "sink",
+      "symbol": null,
+      "tags": [
+        "process-exec"
+      ]
+    }
+  ],
+  "path_truncated": false,
+  "purls": [
+    "pkg:generic/command-exec@unspecified"
+  ],
+  "raw": {
+    "accessPath": "t4",
+    "confidence": "high",
+    "crossesDependency": false,
+    "crossesModule": false,
+    "description": "Value from untrusted-input (endpoint-params fixtures.exec.CmdRunner.runCommand) reaches process-exec sink java.lang.ProcessBuilder (argument 0) in fixtures.exec.CmdRunner.runCommand",
+    "edgeIds": [
+      "dfe-000001",
+      "dfe-000002",
+      "dfe-000003",
+      "dfe-000004",
+      "dfe-000005",
+      "dfe-000006"
+    ],
+    "elided": null,
+    "flowKey": "5481f29ab0578441e7c1fcbbec83ad839dcd4a0cb8b042bee43e0e1d625873a4",
+    "id": "slice-000001",
+    "nodeIds": [
+      "dfn-000003",
+      "dfn-000001",
+      "dfn-000005",
+      "dfn-000004",
+      "dfn-000002",
+      "dfn-000006",
+      "dfn-000007"
+    ],
+    "origins": [
+      "pack"
+    ],
+    "pathLength": 6,
+    "purls": [
+      "pkg:generic/command-exec@unspecified"
+    ],
+    "reachableFromRoots": false,
+    "riskScore": "9.0",
+    "rootWitness": [],
+    "ruleId": "taint/untrusted-input-to-process-exec",
+    "ruleName": "untrusted-input to process-exec",
+    "sanitizerNodeIds": [],
+    "severity": "critical",
+    "sinkArgumentIndex": 0,
+    "sinkCategory": "process-exec",
+    "sinkFunction": "fixtures.exec.CmdRunner.runCommand",
+    "sinkId": "dfn-000007",
+    "sinkModulePath": ".",
+    "sinkName": "java.lang.ProcessBuilder",
+    "sourceCategory": "untrusted-input",
+    "sourceFunction": "fixtures.exec.CmdRunner.runCommand",
+    "sourceId": "dfn-000003",
+    "sourceModulePath": ".",
+    "sourceName": "endpoint-params fixtures.exec.CmdRunner.runCommand",
+    "sourcePurl": "pkg:generic/command-exec@unspecified",
+    "taintKinds": [
+      "untrusted-input"
+    ],
+    "targetPurl": "pkg:generic/command-exec@unspecified"
+  },
+  "sanitized": false,
+  "severity": "error",
+  "severity_source": "engine",
+  "sink_category": "process-exec",
+  "source_category": "untrusted-input",
+  "taint_kinds": [
+    "untrusted-input"
+  ]
+}
+endpoint[0]: {
+  "file": "src/main/kotlin/Cmd.kt",
+  "framework": "spring-mvc",
+  "handler": "fixtures.exec.CmdRunner.runCommand",
+  "id": "ep-000001",
+  "kind": "http-route",
+  "line": 36,
+  "method": "GET",
+  "package": ".",
+  "path": "/run",
+  "purl": "pkg:generic/command-exec@unspecified",
+  "raw": {
+    "authentication": [],
+    "consumes": [],
+    "deepLinkHosts": [],
+    "exported": null,
+    "foundBy": "annotation",
+    "framework": "spring-mvc",
+    "handlerCanonicalName": "fixtures.exec.CmdRunner.runCommand",
+    "handlerSymbol": "fixtures.exec.CmdRunner.runCommand",
+    "httpMethod": [
+      "GET"
+    ],
+    "id": "ep-000001",
+    "modulePath": ".",
+    "pathParameters": [],
+    "pathTemplate": "/run",
+    "permissions": [],
+    "position": {
+      "column": 36,
+      "filename": "src/main/kotlin/Cmd.kt",
+      "line": 36
+    },
+    "produces": [],
+    "purl": "pkg:generic/command-exec@unspecified",
+    "queryParameters": [
+      "command"
+    ],
+    "reachableSources": [
+      "untrusted-input"
+    ],
+    "sliceIds": [
+      "slice-000001"
+    ]
+  }
+}

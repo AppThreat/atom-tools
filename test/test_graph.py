@@ -125,6 +125,40 @@ def test_golem_reports_itself_as_trimmed(golem_graph):
     assert sum(1 for r in golem_graph.engine_roots if r in golem_graph.by_id) == 0
 
 
+# --- kosi: one whole graph, verdicts carried ---------------------------------
+
+
+@pytest.fixture(scope="module")
+def kosi_graph():
+    return cg.load_kosi(load_json(ECOSYSTEM / "kotlin-dsl-media-auth-kosi.json"), str(ECOSYSTEM / "kotlin-dsl-media-auth-kosi.json"))
+
+
+def test_kosi_graph_is_whole_and_its_verdicts_are_verbatim(kosi_graph):
+    """The fixture commits kosi's whole callGraph section, so counts are the
+    engine's own; the reachability entries carry the run's
+    reach-from-root-scopes verdict per node (40 of 64 reachable), exactly as
+    emitted."""
+    assert kosi_graph.engine == "kosi"
+    assert len(kosi_graph.nodes) == 64
+    assert len(kosi_graph.edges) == 13
+    assert kosi_graph.call_type_mix() == {"static": 13}
+    verdicts = [n.reachable_from_roots for n in kosi_graph.nodes if n.reachable_from_roots is not None]
+    assert len(verdicts) == 64
+    assert sum(1 for v in verdicts if v) == 40
+    # kosi nodes name their functions (canonicalName) — anchoring goes
+    # through the same name index rusi's opaque ids need.
+    assert any(n.name == "fixtures.dslmedia.DeniedServlet.doGet" for n in kosi_graph.nodes)
+
+
+def test_kosi_dead_code_is_the_engine_verdict(kosi_graph):
+    result = cg.compute_dead_code(kosi_graph)
+    assert result["computed"] is True
+    assert result["source"] == "engine"
+    assert result["unreachableFromRootsPerEngine"] == 24
+    assert result["nodesWithVerdict"] == 64
+    assert any("not a deletability" in d for d in result["diagnostics"])
+
+
 # --- dispatch confidence ------------------------------------------------------
 
 
@@ -648,6 +682,7 @@ GOLDEN_INPUTS = {
     "golem": (GOLEM.as_posix(), ""),
     "dosai": (DOSAI_METHODS.as_posix(), ""),
     "rusi": (RUSI.as_posix(), ""),
+    "kosi": ((ECOSYSTEM / "kotlin-dsl-media-auth-kosi.json").as_posix(), ""),
     "atom": (ATOM_CPG.as_posix(), ""),
     "golem-dead-code": (GOLEM.as_posix(), "dead-code"),
     "golem-roots-dead-code": ((ECOSYSTEM / "go-ipsw-golem-roots.json").as_posix(), "dead-code"),

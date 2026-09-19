@@ -1,0 +1,15 @@
+kosi baseline 0 flow(s) / 0 file(s)  ->  current 2 flow(s) / 2 file(s)
+severity source: engine
+
++2 added  -0 removed  ~0 moved  =0 witness-changed
+  + error    untrusted-input -> process-exec  java.lang.ProcessBuilder  (src/main/kotlin/Cmd.kt:38)
+  + error    untrusted-input -> process-exec  java.lang.ProcessBuilder  (src/main/kotlin/CommandExec.kt:32)
+
+RiskDelta:
+  NewHighSeverityFlows: 2
+  NewMediumSeverityFlows: 0
+  NewLowSeverityFlows: 0
+  NewAnonymousEndpoints: not computed
+  NewEntryPoints: 1
+  NewlyReachablePackages: 1
+  NewSinkCategories: 1

@@ -1,0 +1,137 @@
+{
+    "AddedEntryPoints": [
+        {
+            "file": "src/main/kotlin/Cmd.kt",
+            "kind": "http-route",
+            "method": "GET",
+            "path": "/run"
+        }
+    ],
+    "AddedFlows": [
+        {
+            "engine": "kosi",
+            "flowId": "slice-000001",
+            "pathLength": 7,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:generic/command-exec@unspecified"
+            ],
+            "severity": "error",
+            "severitySource": "engine",
+            "sink": {
+                "file": "src/main/kotlin/Cmd.kt",
+                "line": 38,
+                "name": "java.lang.ProcessBuilder"
+            },
+            "sinkCategory": "process-exec",
+            "source": {
+                "file": "src/main/kotlin/Cmd.kt",
+                "line": 36,
+                "name": "store vthis"
+            },
+            "sourceCategory": "untrusted-input"
+        },
+        {
+            "engine": "kosi",
+            "flowId": "slice-000002",
+            "pathLength": 8,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:generic/command-exec@unspecified"
+            ],
+            "severity": "error",
+            "severitySource": "engine",
+            "sink": {
+                "file": "src/main/kotlin/CommandExec.kt",
+                "line": 32,
+                "name": "java.lang.ProcessBuilder"
+            },
+            "sinkCategory": "process-exec",
+            "source": {
+                "file": "src/main/kotlin/CommandExec.kt",
+                "line": 30,
+                "name": "kotlin.io.readLine"
+            },
+            "sourceCategory": "untrusted-input"
+        }
+    ],
+    "AddedPackages": [
+        "pkg:generic/command-exec@unspecified"
+    ],
+    "MovedFlows": [],
+    "NewSinkCategories": [
+        "process-exec"
+    ],
+    "RemovedEntryPoints": [],
+    "RemovedFlows": [],
+    "RemovedPackages": [],
+    "RiskDelta": {
+        "NewAnonymousEndpoints": null,
+        "NewEntryPoints": 1,
+        "NewHighSeverityFlows": 2,
+        "NewLowSeverityFlows": 0,
+        "NewMediumSeverityFlows": 0,
+        "NewSinkCategories": 1,
+        "NewlyReachablePackages": 1
+    },
+    "WitnessChangedFlows": [],
+    "baseline": {
+        "engine": "kosi",
+        "file": "test/data/ecosystem/kotlin-command-exec-kosi-baseline.json"
+    },
+    "coverage": {
+        "new": {
+            "analysisMode": "all",
+            "diagnostics": 2,
+            "endpoints": 1,
+            "engine": "kosi",
+            "engineVersion": "0.2.0",
+            "files": 2,
+            "flows": 2,
+            "packages": 1,
+            "severitySources": [
+                "engine"
+            ],
+            "truncated": false,
+            "truncatedPaths": 0,
+            "truncationReasons": []
+        },
+        "old": {
+            "analysisMode": "none",
+            "diagnostics": 1,
+            "endpoints": 0,
+            "engine": "kosi",
+            "engineVersion": "0.2.0",
+            "files": 0,
+            "flows": 0,
+            "packages": 0,
+            "severitySources": [],
+            "truncated": false,
+            "truncatedPaths": 0,
+            "truncationReasons": []
+        },
+        "regressed": false,
+        "regressions": []
+    },
+    "current": {
+        "engine": "kosi",
+        "file": "test/data/ecosystem/kotlin-command-exec-kosi.json"
+    },
+    "diagnostics": [],
+    "driftVersion": 1,
+    "engineDiagnostics": {
+        "baseline": [
+            "syntax-backend-no-resolution: syntax backend parses without a classpath; no symbol resolution is performed and resolvedCallRatio is 0.0 by construction"
+        ],
+        "current": [
+            "resolution-errors: frontend resolution reported 1 diagnostic(s) in src/main/kotlin/Cmd.kt: CONFLICTING_OVERLOADS=1",
+            "resolution-errors: frontend resolution reported 2 diagnostic(s) in src/main/kotlin/CommandExec.kt: CONFLICTING_OVERLOADS=1, DEPRECATION=1"
+        ]
+    },
+    "severitySources": {
+        "baseline": [],
+        "current": [
+            "engine"
+        ]
+    }
+}

@@ -1,0 +1,27 @@
+Crypto reach: kosi — join granularity per engine: kosi file/function-level (derived)
+reachability means a different thing at each granularity; counts are per engine and are never summed across them.
+
+* kosi: 8 item(s) (3 assets, 1 findings, 0 libraries, 2 materials, 2 operations, 0 protocols)
+  triage population (weak/legacy strength or a weak-crypto rule): 1 item(s)
+  1. finding low-iteration-pbkdf2, severity medium  src/main/kotlin/fixtures/cryptoflow/TokenService.kt:30
+     reach: file-level · 2 tainted flow(s) through this file
+     claim: the crypto site sits in a file that carries tainted flows — not that the crypto call itself is on a tainted path
+  2. asset EC
+     reach: none · kosi's crypto assets carry no file, function or package field — there is nothing to join on; this is inventory only
+  3. asset HmacSHA256
+     reach: none · kosi's crypto assets carry no file, function or package field — there is nothing to join on; this is inventory only
+  4. asset PBKDF2WithHmacSHA256
+     reach: none · kosi's crypto assets carry no file, function or package field — there is nothing to join on; this is inventory only
+  5. material signingKey  src/main/kotlin/fixtures/cryptoflow/TokenService.kt:23
+     reach: file-level · 2 tainted flow(s) through this file
+     claim: the crypto site sits in a file that carries tainted flows — not that the crypto call itself is on a tainted path
+  6. material apiToken  src/main/kotlin/fixtures/cryptoflow/TokenService.kt:36
+     reach: file-level · 2 tainted flow(s) through this file
+     claim: the crypto site sits in a file that carries tainted flows — not that the crypto call itself is on a tainted path
+  7. operation Mac HmacSHA256  src/main/kotlin/fixtures/cryptoflow/TokenService.kt:25
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: none
+  8. operation SecretKeyFactory PBKDF2WithHmacSHA256  src/main/kotlin/fixtures/cryptoflow/TokenService.kt:31
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: none
+  coverage: endpoint closures from the attack-surface join: 0 of 0 endpoint(s) anchored in this input's call graph
+
+note: kosi: crypto assets, protocols and libraries carry no location and no strength field: they are inventory only, and weakness claims come from kosi's own findings.

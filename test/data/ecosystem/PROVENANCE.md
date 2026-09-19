@@ -2,13 +2,14 @@
 
 Every file in this directory was produced by running the real engine against the
 real target repository, on this machine, on **2026-09-18** (the atom graph
-fixtures and the crypto-reach additions on **2026-09-19**). Nothing here is
-hand-written, hand-edited or duplicated. Where a full report was too large to
-commit, the fixture is a **contiguous slice of real records** with the sibling
-tables filtered to the ids those records reference (so id joins stay resolvable);
-exactly what was trimmed is recorded per fixture below, and the md5/size of the
-original untrimmed report is kept for comparison. The trimming scripts preserved
-emitted record order and never touched field values.
+fixtures and the crypto-reach additions on **2026-09-19**; the kosi fixtures on
+**2026-09-19**). Nothing here is hand-written, hand-edited or duplicated. Where
+a full report was too large to commit, the fixture is a **contiguous slice of
+real records** with the sibling tables filtered to the ids those records
+reference (so id joins stay resolvable); exactly what was trimmed is recorded
+per fixture below, and the md5/size of the original untrimmed report is kept
+for comparison. The trimming scripts preserved emitted record order and never
+touched field values.
 
 If a value in these files looks wrong, it is a finding about the engine — do not
 "fix" the JSON.
@@ -21,8 +22,10 @@ If a value in these files looks wrong, it is a finding about the engine — do n
 | cargo / rustc | cargo 1.98.0 (797e8a9bc 2026-08-05) / rustc 1.98.0 (88d9e12ae 2026-08-18) |
 | dotnet | 11.0.100-rc.1.26425.128 |
 | node | v26.8.2 |
+| jdk (kosi resolved backend) | 21.0.7-tem (`~/.sdkman/candidates/java/21.0.7-tem`) |
 | golem + rusi source | https://github.com/CycloneDX/cdxgen-plugins-bin @ `f0eb7677419445e88103c89805589d3318a64278`, built from `thirdparty/golem` / `thirdparty/rusi` |
 | dosai source | https://github.com/OWASP/dosai (local clone `~/work/owasp/dosai`) @ `4d5df2619cd6c26323d1e06ec9a32a12e166167f` |
+| kosi source | https://github.com/CycloneDX/cdxgen-plugins-bin `thirdparty/kosi` — **pre-1.0, under active development** (repo at P26 on 2026-09-19); the fixtures were produced by the committed binary below, not by a fresh build |
 
 ## dotnet-eshoponweb-dosai-dataflows.json
 
@@ -361,6 +364,125 @@ and real `atom algorithms` outputs (centrality and scc). Added 2026-09-19.
   `recursiveComponents` list is empty because the target genuinely has no
   recursive method.
 
+## kotlin-*-kosi.json — the kosi fixtures
+
+Added 2026-09-19 for the kosi (Kotlin/JVM) phase. **Read this section before
+regenerating any of these files.** kosi is pre-1.0 and under heavy active
+development; `schemaVersion` is pinned at `kosi/1`, but the field-level shape
+has already changed under the binary that produced these fixtures (see
+"Binary predates the schema sources" below). A report regenerated from a newer
+kosi may not match these files, and that is the point of recording the binary
+here.
+
+- **Engine**: kosi **0.2.0**, commit
+  `2e1f7b53357b003679914fadf95918f02864c9e1` (from the report's own `tool`
+  object and `kosi version`), schema `kosi/1`. Native image, host
+  `darwin-aarch64` — the shipped binary is
+  `build/kosi-darwin-arm64` (99,381,728 bytes, built 2026-09-16). **CI cannot
+  run kosi**: darwin-arm64 only and ~99 MB. Fixtures are generated once, by
+  hand, on this machine.
+- **Binary predates the schema sources**: the `FlowSlice` data class in the
+  repo (P22+) declares `pathKind`/`frames`/`framesCutBy` and *replaces*
+  `reachableFromRoots`/`rootWitness`; the 0.2.0 binary still emits the old
+  fields and none of the new ones. The fixtures therefore carry
+  `reachableFromRoots`/`rootWitness`/`elided` and no `pathKind`. Both
+  spellings are read when present.
+- **`runtime` is never written**: `KosiReport` declares 19 fields but the
+  JSON writer emits 18 keys — `runtime` is constructed and silently dropped.
+  These fixtures accordingly have no `runtime` key.
+- **Determinism**: two runs of the same command produced byte-identical
+  reports (verified for `dsl-media-auth`), including the sha256 `flowKey`
+  values. `options.jdkHome` embeds the absolute SDKMAN path.
+- **Command** (one line per fixture; run from
+  `~/work/cdxgen/cdxgen-plugins-bin/thirdparty/kosi`; every fixture is the
+  **whole untrimmed report** — no trimming, no edits):
+
+  ```
+  ./build/kosi-darwin-arm64 analyze --dir fixtures/<name> --backend resolved \
+    --jdk-home ~/.sdkman/candidates/java/21.0.7-tem \
+    --dataflow all --callgraph auto --roots all --endpoint-sources \
+    --out <tmp>/<name>.json
+  ```
+
+  The baseline additionally uses `--backend syntax` (see its section).
+
+### kotlin-dsl-media-auth-kosi.json
+
+- 178,029 bytes, md5 `26feeeec231ceedb6495b401a06289aa`. Committed verbatim,
+  untrimmed.
+- **What it exists for**: the authentication fixture. 11 `apiEndpoints` — 1
+  with `role(ADMIN)`, 1 with `security-constraint(denied)` (a deny rule, not
+  an auth requirement), 1 with `security-constraint(admin,auditor)`, 8 with
+  `authentication: []` (no declaration — which is not anonymity). `foundBy`
+  in two spellings here (`dsl` 8, `descriptor` 3; the third spelling,
+  `annotation`, is on the command-exec fixture's endpoint). `exported` is
+  `true` on the 3 descriptor endpoints and `null` on the 8 dsl ones. Also
+  the `graph` fixture: callGraph 64 nodes / 13 edges, `algorithmUsed: vta`.
+- **dataFlow is empty on purpose**: 0 slices despite `--dataflow all` — the
+  fixture's routes reach no modelled taint sink. Its claim is endpoints and
+  auth, not flows.
+- **Wire quirks visible here**: two vertx endpoints (`/secure`, `/token`)
+  publish an empty `handlerCanonicalName` and an empty `httpMethod` list —
+  the route shape matched but the method/handler registers did not fold.
+  `position.filename` is **relative** on all source-derived endpoints.
+
+### kotlin-command-exec-kosi.json
+
+- 32,017 bytes, md5 `90bae035ea7e2f2072187644ce8ecc94`. Committed verbatim,
+  untrimmed.
+- **What it exists for**: the flow fixture. 2 `dataFlow.slices`
+  (`taint/untrusted-input-to-process-exec`), severity `critical`,
+  confidence `high`, sink `java.lang.ProcessBuilder` at argument 0, with
+  `nodeIds`/`edgeIds` witnesses (15 nodes / 13 edges). 1 endpoint
+  (`GET /run`, spring-mvc, `foundBy: annotation` — the third spelling) that
+  carries the engine's own flow link: `sliceIds: ["slice-000001"]`.
+- callGraph present but degenerate (3 nodes, 0 edges) — the endpoint's reach
+  comes from the engine's slice link, not a traversal.
+
+### kotlin-command-exec-kosi-baseline.json
+
+- 19,123 bytes, md5 `20249de5dfcf4570e932416dbf50ca30`. Committed verbatim,
+  untrimmed. Same fixture and same command line as the current-side fixture
+  **except `--backend syntax`** (no `--jdk-home`, which the syntax backend
+  does not use).
+- **What it exists for**: the `drift` pair, and the degradation contract.
+  The syntax run reports **0 slices, 0 endpoints and no callGraph key** —
+  the only trace of why is one `diagnostics` entry
+  (`syntax-backend-no-resolution`). Diffed against the current side: +2
+  added flows, +1 entry point. This is also the trap the phase brief
+  described ("a run without --jdk-home silently degrades"): with this
+  binary, `--backend resolved` *without* `--jdk-home` does **not** degrade
+  (the native image bundles a JVM and resolves normally); what degrades to
+  near-empty output is the syntax backend. Check `diagnostics` before
+  concluding kosi found nothing.
+
+### kotlin-android-manifest-app-kosi.json
+
+- 33,785 bytes, md5 `1a4b82878b6672d54c23c19774bb44b1`. Committed verbatim,
+  untrimmed.
+- **What it exists for**: the `exported` fixture. 5 `apiEndpoints` found by
+  `manifest` with `exported` `true` (3) *and* `false` (2) — a positive
+  engine statement in both directions. `httpMethod` is empty on all 5 (they
+  are android components, not HTTP routes); `pathTemplate` is the intent
+  action or the component short name, not a URL path; `purl` is empty on
+  all 5.
+- **`position.filename` is ABSOLUTE on every manifest endpoint**
+  (`/Users/prabhu/work/cdxgen/.../AndroidManifest.xml`), where the
+  source-derived endpoints in the other fixtures are relative. Do not
+  assume either; the engine emits both.
+
+### kotlin-crypto-material-flow-kosi.json
+
+- 29,005 bytes, md5 `f08049b0d31e34832790e6cf3a05c710`. Committed verbatim,
+  untrimmed.
+- **What it exists for**: the crypto fixture. `crypto` carries 3 assets, 2
+  materials, 2 operations, 1 finding (`low-iteration-pbkdf2`, severity
+  `medium`) and 0 libraries/protocols; `dataFlow` carries 2
+  `taint/hardcoded-secret-to-crypto-asset` slices (severity `medium`).
+  Assets have no location field at all; materials/findings have a file
+  position but no enclosing function; operations carry `function` — the
+  three join grains crypto-reach distinguishes, one per record kind.
+
 ## Digest summary (all distinct)
 
 | file | bytes | md5 |
@@ -371,6 +493,11 @@ and real `atom algorithms` outputs (centrality and scc). Added 2026-09-19.
 | go-ipsw-golem.json | 11,246,966 | `bc36dce6d4a2ebfa42686f263dae8186` |
 | go-ipsw-golem-roots.json | 12,193,102 | `7da0dc57c85dba082a6a3fbb24ccdfde` |
 | rust-microservices-kafka-rusi.json | 3,219,424 | `71a4a2d21b10cfb2429e748e469ed257` |
+| kotlin-android-manifest-app-kosi.json | 33,785 | `1a4b82878b6672d54c23c19774bb44b1` |
+| kotlin-command-exec-kosi.json | 32,017 | `90bae035ea7e2f2072187644ce8ecc94` |
+| kotlin-command-exec-kosi-baseline.json | 19,123 | `20249de5dfcf4570e932416dbf50ca30` |
+| kotlin-crypto-material-flow-kosi.json | 29,005 | `f08049b0d31e34832790e6cf3a05c710` |
+| kotlin-dsl-media-auth-kosi.json | 178,029 | `26feeeec231ceedb6495b401a06289aa` |
 | java-petclinic-atom-cpg.graphml | 991,979 | `f606555f0357ab3c3c317e094a4b7e78` |
 | java-petclinic-atom-centrality.json | 41,342 | `7a70ac9b1da87bf4951e5fe9ff16e1d6` |
 | java-petclinic-atom-scc.json | 94 | `9c57889d088e16e65340a8d4eb823f98` |

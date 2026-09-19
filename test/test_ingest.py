@@ -348,6 +348,85 @@ def test_kosi_stats_degradation_is_diagnosed():
     assert report.provenance["truncations"] == {"analysis-seconds": 1}
 
 
+# ------------------------------------------- kosi (committed fixture counts)
+
+KOSI = ECOSYSTEM / "kotlin-command-exec-kosi.json"
+KOSI_BASELINE = ECOSYSTEM / "kotlin-command-exec-kosi-baseline.json"
+KOSI_DSL = ECOSYSTEM / "kotlin-dsl-media-auth-kosi.json"
+KOSI_ANDROID = ECOSYSTEM / "kotlin-android-manifest-app-kosi.json"
+KOSI_CRYPTO = ECOSYSTEM / "kotlin-crypto-material-flow-kosi.json"
+
+
+def test_kosi_flows_match_own_stats_block():
+    content = load(KOSI)
+    report = parse(KOSI)
+    assert len(report.flows) == content["stats"]["sliceCount"] == 2
+    assert len(report.flows) == len(content["dataFlow"]["slices"])
+    # kosi emits its own severity; nothing here is taxonomy-derived.
+    assert all(f.severity_source == "engine" for f in report.flows)
+    assert {f.severity for f in report.flows} == {"error"}  # critical folded
+    assert all(f.confidence == "high" for f in report.flows)
+    # The whole report is committed, so its tables are the oracle.
+    assert not [d for d in report.diagnostics if d.startswith("Dropped")]
+    expected_nodes = sum(len(s["nodeIds"]) for s in content["dataFlow"]["slices"])
+    assert sum(len(f.nodes) for f in report.flows) == expected_nodes
+
+
+def test_kosi_endpoint_carries_the_engine_slice_link():
+    content = load(KOSI)
+    report = parse(KOSI)
+    assert len(report.endpoints) == len(content["apiEndpoints"]) == 1
+    # --endpoint-sources made the endpoint-rooted slice name its endpoint:
+    # the one direct flow link the ecosystem emits besides dosai's verdicts.
+    assert content["apiEndpoints"][0]["sliceIds"] == ["slice-000001"]
+    endpoint = report.endpoints[0]
+    assert endpoint["method"] == "GET"
+    assert endpoint["handler"] == "fixtures.exec.CmdRunner.runCommand"
+    assert endpoint["raw"]["reachableSources"] == ["untrusted-input"]
+
+
+def test_kosi_endpoint_wire_names_are_read_not_assumed():
+    report = parse(KOSI_DSL)
+    d = load(KOSI_DSL)
+    # 11 apiEndpoints in, 11 out: each declares a single method or none.
+    assert len(report.endpoints) == len(d["apiEndpoints"]) == 11
+    declared = sum(1 for e in d["apiEndpoints"] if e.get("httpMethod"))
+    assert sum(1 for e in report.endpoints if e["method"]) == declared == 10
+    # The writer emits httpMethod (singular) where the data class declares
+    # httpMethods; parsing the data class's spelling would find nothing.
+    assert all("httpMethod" in e for e in d["apiEndpoints"])
+    assert not any("httpMethods" in e for e in d["apiEndpoints"])
+
+
+def test_kosi_android_endpoints_exported_both_ways():
+    d = load(KOSI_ANDROID)
+    report = parse(KOSI_ANDROID)
+    exported = [e["raw"]["exported"] for e in report.endpoints]
+    assert exported.count(True) == 3
+    assert exported.count(False) == 2
+    assert len(report.endpoints) == len(d["apiEndpoints"]) == 5
+    # Manifest endpoints are components, not HTTP routes: no method was
+    # resolved and none may be invented.
+    assert all(e["method"] is None and e.get("methodUnresolved") for e in report.endpoints)
+    # And the manifest records absolute paths where source endpoints are
+    # relative — the fixture keeps both spellings verbatim.
+    manifest_file = d["apiEndpoints"][0]["position"]["filename"]
+    assert manifest_file.startswith("/")
+
+
+def test_kosi_syntax_backend_degrades_to_near_empty_with_a_named_reason():
+    content = load(KOSI_BASELINE)
+    report = parse(KOSI_BASELINE)
+    assert content["dataFlow"] is not None or report.flows == []
+    assert len(report.flows) == 0
+    assert len(report.endpoints) == 0
+    assert report.provenance["backend"] == "syntax"
+    # The one honest trace of why is the diagnostics entry; it must survive.
+    assert any("syntax-backend-no-resolution" in d for d in content["diagnostics"]) or any(
+        "syntax-backend" in d for d in report.diagnostics
+    )
+
+
 # --------------------------------------------------------------------- atom
 
 
@@ -586,6 +665,7 @@ GOLDEN_FIXTURES = {
     "dosai": _golden_input(DOSAI_DATAFLOWS),
     "golem": _golden_input(GOLEM),
     "rusi": _golden_input(RUSI),
+    "kosi": _golden_input(KOSI),
     "atom": _golden_input(ATOM),
 }
 
