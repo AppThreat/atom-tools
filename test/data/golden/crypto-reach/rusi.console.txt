@@ -1,0 +1,50 @@
+Crypto reach: rusi — join granularity per engine: rusi function/package-level (derived)
+reachability means a different thing at each granularity; counts are per engine and are never summed across them.
+
+* rusi: 19 item(s) (0 components, 0 findings, 2 libraries, 17 materials)
+  triage population (weak/legacy strength or a weak-crypto rule): 0 item(s)
+  1. library jsonwebtoken  common-security/src/jwt/rsa.rs:1
+     reach: package-level · 2 tainted flow(s) through package
+     claim: the item sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+  2. library jsonwebtoken  common-security/src/lib.rs:3
+     reach: package-level · 2 tainted flow(s) through package
+     claim: the item sits in a package that carries tainted flows — not that the crypto call itself is on a tainted path
+  3. material key_avro  app-user-service/src/user/event/user_converter.rs:75
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  4. material key_avro  app-accommodation-service/src/accommodation/event/room_type_converter.rs:93
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  5. material token_decoders  app-user-service/src/common/security.rs:39
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_user_service::main
+  6. material key_result  app-accommodation-service/src/user/listener.rs:72
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::user::listener::listen
+  7. material key  app-accommodation-service/src/user/listener.rs:77
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::user::listener::listen
+  8. material serialized_key  app-accommodation-service/src/accommodation/event/room_type_converter.rs:104
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  9. material serialized_key  app-accommodation-service/src/accommodation/event/accommodation_converter.rs:95
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  10. material key_sns  app-accommodation-service/src/accommodation/event/room_type_converter.rs:102
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  11. material token_validator  common-security/src/authentication.rs:111
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: none
+  12. material serialized_key  app-user-service/src/user/event/user_converter.rs:85
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  13. material key_sns  app-user-service/src/user/event/user_converter.rs:83
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  14. material token_decoders  common-security/src/authentication.rs:106
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: none
+  15. material decoding_key  common-security/src/jwt/rsa.rs:29
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: common_security::load_jwk_decoders
+  16. material key_avro  app-accommodation-service/src/accommodation/event/accommodation_converter.rs:85
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  17. material key_sns  app-accommodation-service/src/accommodation/event/accommodation_converter.rs:93
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::event::service::event_dispatcher::EventDispatcher::dispatch, app_user_service::event::service::event_dispatcher::EventDispatcher::dispatch
+  18. material decoded_token  common-security/src/authentication.rs:117
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: none
+  19. material token_decoders  app-accommodation-service/src/common/security.rs:39
+     reach: function-level · in the call graph, in no anchored endpoint's closure · static callers: app_accommodation_service::main
+  coverage: endpoint closures from the attack-surface join: 14 of 14 endpoint(s) anchored in this input's call graph
+
+note: rusi: rusi's crypto components match a fixed symbol catalog (SHA-256/512/1, MD5, BLAKE3, ring digest/aead, AES-GCM, ChaCha20-Poly1305, PBKDF2, JWT (jsonwebtoken), TLS (rustls), RSA, Ed25519, Argon2); zero components means zero catalog matches, not an absence of crypto — crypto not spelled as one of those symbols is invisible to rusi.
+note: rusi: rusi emits crypto findings only from catalog components, and its only weak-crypto rules are SHA-1 and MD5 (category 'weak-crypto'); DES, RC4 and ECB are not modeled. 'rusi does not look for this' is the honest sentence, not 'rusi found nothing'.
+note: rusi: rusi has no strength field at all: materials are triaged by kind and construction site, not by algorithm strength.

@@ -1,0 +1,24 @@
+Call graph metric: chokepoints — nodes on the most source→sink paths (atom, 1 input(s))
+atom: 219 nodes (121 internal, 98 external), 417 edges
+  call types: DYNAMIC_DISPATCH 173, STATIC_DISPATCH 244
+
+-- atom (test/data/ecosystem/java-petclinic-atom-cpg.graphml) --
+seeds: 82 source(s) → 219 sink(s) via zero-indegree (derived); 361 source→sink pair(s) connected
+PATH ENUMERATION CAPPED at 64 of 82 source nodes — betweenness scores are a lower bound.
+98 external node(s) excluded from the ranking (--include-external to rank them).
+  1. org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.String,boolean)  src/main/java/org/springframework/samples/petclinic/owner/Owner.java:144  betweenness 25.5  (7% of pairs)
+  2. org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.Integer)  src/main/java/org/springframework/samples/petclinic/owner/Owner.java:126  betweenness 24.0  (7% of pairs)
+  3. org.springframework.samples.petclinic.owner.Owner.addPet:void(org.springframework.samples.petclinic.owner.Pet)  src/main/java/org/springframework/samples/petclinic/owner/Owner.java:97  betweenness 21.0  (6% of pairs)
+  4. org.springframework.samples.petclinic.owner.Owner.addVisit:void(java.lang.Integer,org.springframework.samples.petclinic.owner.Visit)  src/main/java/org/springframework/samples/petclinic/owner/Owner.java:173  betweenness 14.0  (4% of pairs)
+  5. org.springframework.samples.petclinic.owner.PetController.updatePetDetails:void(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Pet)  src/main/java/org/springframework/samples/petclinic/owner/PetController.java:186  betweenness 10.5  (3% of pairs)
+  6. org.springframework.samples.petclinic.owner.PetController.isDuplicatePetNameViolation:boolean(org.springframework.dao.DataIntegrityViolationException)  src/main/java/org/springframework/samples/petclinic/owner/PetController.java:202  betweenness 6.0  (2% of pairs)
+  7. org.springframework.samples.petclinic.model.BaseEntity.isNew:boolean()  src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java:47  betweenness 4.333  (1% of pairs)
+  8. org.springframework.samples.petclinic.owner.Pet.addVisit:void(org.springframework.samples.petclinic.owner.Visit)  src/main/java/org/springframework/samples/petclinic/owner/Pet.java:81  betweenness 4.0  (1% of pairs)
+  9. org.springframework.samples.petclinic.owner.OwnerController.findPaginatedForOwnersLastName:org.springframework.data.domain.Page(int,java.lang.String)  src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java:133  betweenness 3.333  (1% of pairs)
+ 10. org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel:java.lang.String(int,org.springframework.ui.Model,org.springframework.data.domain.Page)  src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java:124  betweenness 3.0  (1% of pairs)
+ 11. org.springframework.samples.petclinic.model.NamedEntity.getName:java.lang.String()  src/main/java/org/springframework/samples/petclinic/model/NamedEntity.java:37  betweenness 2.333  (1% of pairs)
+ 12. org.springframework.samples.petclinic.owner.Pet.<init>:void()  src/main/java/org/springframework/samples/petclinic/owner/Pet.java  betweenness 2.0  (1% of pairs)
+ 13. org.springframework.samples.petclinic.owner.Visit.<init>:void()  src/main/java/org/springframework/samples/petclinic/owner/Visit.java:48  betweenness 2.0  (1% of pairs)
+ 14. org.springframework.samples.petclinic.model.BaseEntity.setId:void(java.lang.Integer)  src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java:43  betweenness 1.0  (0% of pairs)
+ 15. org.springframework.samples.petclinic.owner.Owner.<init>:void()  src/main/java/org/springframework/samples/petclinic/owner/Owner.java  betweenness 1.0  (0% of pairs)
+… 3 more ranked node(s) in the json output.

@@ -1,0 +1,129 @@
+unified document md5: fad20f9d003c885078abcb02e0718dab
+engine: rusi 3.2.0, mode security
+counts: 5 flow(s), 14 endpoint(s), 3 package(s), 7 diagnostic(s)
+flow[0]: {
+  "analysis_mode": "security",
+  "confidence": null,
+  "engine": "rusi",
+  "engine_version": "3.2.0",
+  "extra": {
+    "derived_tag": "http",
+    "description": "param-0 data can flow from security_configuration to common_security::jwk::JwkLoader::from_url",
+    "edge_ids": [
+      "df-edge-f3522fcae0693b88"
+    ],
+    "path_length": 1,
+    "rule_name": "param-0-to-network-request",
+    "sourcePurl": "pkg:cargo/common-security@0.1.0",
+    "source_parameter_index": 0,
+    "targetPurl": "pkg:cargo/common-security@0.1.0"
+  },
+  "id": "df-slice-03a64c7753789d6d",
+  "nodes": [
+    {
+      "code": "security_configuration",
+      "column": 14,
+      "file": "common-security/src/lib.rs",
+      "function": "common_security::load_jwk_decoders",
+      "line": 22,
+      "name": "security_configuration",
+      "package": "common_security",
+      "purl": "pkg:cargo/common-security@0.1.0",
+      "role": "source",
+      "symbol": null,
+      "tags": [
+        "param-0"
+      ]
+    },
+    {
+      "code": "common_security::jwk::JwkLoader::from_url",
+      "column": 9,
+      "file": "common-security/src/lib.rs",
+      "function": "common_security::load_jwk_decoders",
+      "line": 27,
+      "name": "common_security::jwk::JwkLoader::from_url",
+      "package": "common_security",
+      "purl": "pkg:cargo/common-security@0.1.0",
+      "role": "sink",
+      "symbol": null,
+      "tags": [
+        "network-request"
+      ]
+    }
+  ],
+  "path_truncated": false,
+  "purls": [
+    "pkg:cargo/common-security@0.1.0"
+  ],
+  "raw": {
+    "description": "param-0 data can flow from security_configuration to common_security::jwk::JwkLoader::from_url",
+    "edge_ids": [
+      "df-edge-f3522fcae0693b88"
+    ],
+    "id": "df-slice-03a64c7753789d6d",
+    "node_ids": [
+      "df-node-e980da101c0f6df0",
+      "df-node-cc39f93683b7b9ad"
+    ],
+    "path_length": 1,
+    "properties": {},
+    "purls": [
+      "pkg:cargo/common-security@0.1.0"
+    ],
+    "rule_name": "param-0-to-network-request",
+    "sink_category": "network-request",
+    "sink_function": "common_security::load_jwk_decoders",
+    "sink_id": "df-node-cc39f93683b7b9ad",
+    "sink_name": "common_security::jwk::JwkLoader::from_url",
+    "sink_package_path": "common_security",
+    "sink_parameter_index": null,
+    "sink_type_name": null,
+    "sourcePurl": "pkg:cargo/common-security@0.1.0",
+    "source_category": "param-0",
+    "source_function": "common_security::load_jwk_decoders",
+    "source_id": "df-node-e980da101c0f6df0",
+    "source_name": "security_configuration",
+    "source_package_path": "common_security",
+    "source_parameter_index": 0,
+    "source_type_name": null,
+    "targetPurl": "pkg:cargo/common-security@0.1.0"
+  },
+  "sanitized": false,
+  "severity": "warning",
+  "severity_source": "derived",
+  "sink_category": "network-request",
+  "source_category": "param-0",
+  "taint_kinds": [
+    "param-0-to-network-request"
+  ]
+}
+endpoint[0]: {
+  "file": "app-accommodation-service/src/graphql/mod.rs",
+  "framework": "axum",
+  "handler": "app_accommodation_service::graphql::graphql_handler",
+  "kind": "http-route",
+  "line": 44,
+  "method": "POST",
+  "package": "app_accommodation_service",
+  "path": "/graphql",
+  "purl": "pkg:cargo/axum@0.5.17",
+  "raw": {
+    "file_path": "app-accommodation-service/src/graphql/mod.rs",
+    "framework": "axum",
+    "handler": "app_accommodation_service::graphql::graphql_handler",
+    "id": "api-endpoint-035b3b6f01c540f1",
+    "method": "POST",
+    "package_path": "app_accommodation_service",
+    "parameters": [],
+    "path": "/graphql",
+    "position": {
+      "column": 5,
+      "filename": "app-accommodation-service/src/graphql/mod.rs",
+      "line": 44
+    },
+    "properties": {},
+    "purl": "pkg:cargo/axum@0.5.17",
+    "request_body_type": null,
+    "response_type": "GraphQLResponse"
+  }
+}

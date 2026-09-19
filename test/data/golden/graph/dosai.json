@@ -1,0 +1,187 @@
+{
+    "diagnostics": [],
+    "engines": [
+        "dosai"
+    ],
+    "graphVersion": 1,
+    "graphs": [
+        {
+            "callTypeMix": {
+                "ConstructorCall": 16,
+                "DelegateInvoke": 71,
+                "MethodCall": 77,
+                "PropertyGet": 80,
+                "PropertySet": 56
+            },
+            "confidenceMix": {
+                "candidate": 4,
+                "exact": 296
+            },
+            "edges": 300,
+            "engine": "dosai",
+            "engineDiagnostics": [
+                "Dead-code report truncated at 500 entries; query reachability[reachable=false] for the full set."
+            ],
+            "engineRootReasons": {},
+            "engineRoots": 34,
+            "engineRootsInGraph": 0,
+            "externalNodes": 24,
+            "internalNodes": 291,
+            "nodes": 315,
+            "sourceFile": "test/data/ecosystem/dotnet-eshoponweb-dosai-methods.json",
+            "trimmed": false
+        }
+    ],
+    "metric": "chokepoints",
+    "options": {
+        "includeExternal": false,
+        "maxChokepointSources": 64,
+        "minConfidence": null
+    },
+    "results": [
+        {
+            "capped": {
+                "effect": "betweenness scores are a lower bound",
+                "sourcesAvailable": 106,
+                "sourcesEnumerated": 64
+            },
+            "computed": true,
+            "engine": "dosai",
+            "externalNodesExcludedFromRanking": 24,
+            "ranked": [
+                {
+                    "betweenness": 17.0,
+                    "engineFanIn": 4,
+                    "engineFanOut": 3,
+                    "external": false,
+                    "file": "CatalogItemService.cs",
+                    "id": "BlazorAdmin.Services.CatalogItemService.List():System.Threading.Tasks.Task<System.Collections.Generic.List<BlazorShared.Models.CatalogItem>>",
+                    "line": 78,
+                    "name": "List",
+                    "package": "BlazorAdmin.Services",
+                    "pairShare": 0.083
+                },
+                {
+                    "betweenness": 12.0,
+                    "engineFanIn": 3,
+                    "engineFanOut": 1,
+                    "external": false,
+                    "file": "CachedCatalogItemServiceDecorator.cs",
+                    "id": "BlazorAdmin.Services.CachedCatalogItemServiceDecorator.RefreshLocalStorageList():System.Threading.Tasks.Task",
+                    "line": 104,
+                    "name": "RefreshLocalStorageList",
+                    "package": "BlazorAdmin.Services",
+                    "pairShare": 0.059
+                },
+                {
+                    "betweenness": 8.0,
+                    "engineFanIn": 2,
+                    "engineFanOut": 4,
+                    "external": false,
+                    "file": "ApiTokenHelper.cs",
+                    "id": "Microsoft.eShopWeb.FunctionalTests.Web.Api.ApiTokenHelper.CreateToken(string,string[]):string",
+                    "line": 29,
+                    "name": "CreateToken",
+                    "package": "Microsoft.eShopWeb.FunctionalTests.Web.Api",
+                    "pairShare": 0.039
+                },
+                {
+                    "betweenness": 6.0,
+                    "engineFanIn": 1,
+                    "engineFanOut": 1,
+                    "external": false,
+                    "file": "CustomAuthStateProvider.cs",
+                    "id": "BlazorAdmin.CustomAuthStateProvider.GetUser(bool):System.Threading.Tasks.ValueTask<System.Security.Claims.ClaimsPrincipal>",
+                    "line": 36,
+                    "name": "GetUser",
+                    "package": "BlazorAdmin",
+                    "pairShare": 0.029
+                },
+                {
+                    "betweenness": 6.0,
+                    "engineFanIn": 1,
+                    "engineFanOut": 1,
+                    "external": false,
+                    "file": "CatalogItemService.cs",
+                    "id": "BlazorAdmin.Services.CatalogItemService.Create(BlazorShared.Models.CreateCatalogItemRequest):System.Threading.Tasks.Task<BlazorShared.Models.CatalogItem>",
+                    "line": 29,
+                    "name": "Create",
+                    "package": "BlazorAdmin.Services",
+                    "pairShare": 0.029
+                },
+                {
+                    "betweenness": 6.0,
+                    "engineFanIn": 5,
+                    "engineFanOut": 3,
+                    "external": false,
+                    "file": "BasketWithItemsSpecification.cs",
+                    "id": "Microsoft.eShopWeb.ApplicationCore.Specifications.BasketWithItemsSpecification..ctor(string)",
+                    "line": 15,
+                    "name": ".ctor",
+                    "package": "Microsoft.eShopWeb.ApplicationCore.Specifications",
+                    "pairShare": 0.029
+                },
+                {
+                    "betweenness": 5.0,
+                    "engineFanIn": 1,
+                    "engineFanOut": 5,
+                    "external": false,
+                    "file": "CustomAuthStateProvider.cs",
+                    "id": "BlazorAdmin.CustomAuthStateProvider.FetchUser():System.Threading.Tasks.Task<System.Security.Claims.ClaimsPrincipal>",
+                    "line": 50,
+                    "name": "FetchUser",
+                    "package": "BlazorAdmin",
+                    "pairShare": 0.025
+                },
+                {
+                    "betweenness": 5.0,
+                    "engineFanIn": 1,
+                    "engineFanOut": 1,
+                    "external": false,
+                    "file": "CatalogItemService.cs",
+                    "id": "BlazorAdmin.Services.CatalogItemService.Edit(BlazorShared.Models.CatalogItem):System.Threading.Tasks.Task<BlazorShared.Models.CatalogItem>",
+                    "line": 35,
+                    "name": "Edit",
+                    "package": "BlazorAdmin.Services",
+                    "pairShare": 0.025
+                },
+                {
+                    "betweenness": 5.0,
+                    "engineFanIn": 1,
+                    "engineFanOut": 3,
+                    "external": false,
+                    "file": "HttpService.cs",
+                    "id": "BlazorAdmin.Services.HttpService.HttpPost(string,object):System.Threading.Tasks.Task<T>",
+                    "line": 49,
+                    "name": "HttpPost",
+                    "package": "BlazorAdmin.Services",
+                    "pairShare": 0.025
+                },
+                {
+                    "betweenness": 5.0,
+                    "engineFanIn": 1,
+                    "engineFanOut": 3,
+                    "external": false,
+                    "file": "BasketItem.cs",
+                    "id": "Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate.BasketItem..ctor(int,int,decimal)",
+                    "line": 13,
+                    "name": ".ctor",
+                    "package": "Microsoft.eShopWeb.ApplicationCore.Entities.BasketAggregate",
+                    "pairShare": 0.025
+                },
+                "... 14 more not pinned ..."
+            ],
+            "seeds": {
+                "pairs": 204,
+                "policy": "zero-indegree",
+                "sinks": 315,
+                "source": "derived",
+                "sources": 106
+            },
+            "sourceFile": "test/data/ecosystem/dotnet-eshoponweb-dosai-methods.json"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/dotnet-eshoponweb-dosai-methods.json"
+    ]
+}

@@ -1,6 +1,9 @@
 """Tests for the apk analysis pipeline helpers."""
 
 import os
+import subprocess
+
+from atom_tools.lib import apk_pipeline
 
 from atom_tools.lib.apk_pipeline import (
     build_cyclonedx_services,
@@ -327,3 +330,27 @@ def test_resolve_blint_missing_venv_falls_back(tmp_path, monkeypatch):
     monkeypatch.setattr(apk_pipeline, "resolve_tool", lambda names: "/usr/bin/blint")
     # A venv with no blint falls back to PATH resolution.
     assert apk_pipeline.resolve_blint(str(tmp_path)) == "/usr/bin/blint"
+
+
+def test_run_command_timeout(monkeypatch):
+    import subprocess
+
+    def fake_run(*args, **kwargs):
+        raise subprocess.TimeoutExpired(cmd=args[0], timeout=kwargs.get("timeout"))
+
+    monkeypatch.setattr(apk_pipeline.subprocess, "run", fake_run)
+    cp = apk_pipeline.run_command(["atom", "reachables"], timeout=5)
+    assert cp.returncode == 124
+    assert "timed out" in cp.stdout
+
+
+def test_run_command_timeout_disabled(monkeypatch):
+    calls = {}
+
+    def fake_run(*args, **kwargs):
+        calls["timeout"] = kwargs.get("timeout")
+        return subprocess.CompletedProcess(args[0], 0, stdout="")
+
+    monkeypatch.setattr(apk_pipeline.subprocess, "run", fake_run)
+    apk_pipeline.run_command(["blint"], timeout=0)
+    assert calls["timeout"] is None

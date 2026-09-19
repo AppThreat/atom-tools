@@ -1,0 +1,9 @@
+Call graph metric: chokepoints — nodes on the most source→sink paths (rusi, 1 input(s))
+rusi: 712 nodes (371 internal, 341 external), 2156 edges
+  call types: external 1570, higher-order 71, receiver-typed 30, static 306, static-overapprox 168, trait-impl 2, trait-overapprox 9
+
+-- rusi (test/data/ecosystem/rust-microservices-kafka-rusi.json) --
+seeds: 5 source(s) → 5 sink(s) via flow-sources→flow-sinks (engine); 2 source→sink pair(s) connected
+341 external node(s) excluded from the ranking (--include-external to rank them).
+no node lies on any source→sink path.
+note: rusi: 5 of 5 flow source function(s) and 5 of 5 sink function(s) anchored in the call graph; the rest are not nodes of it.

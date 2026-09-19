@@ -9,7 +9,7 @@ import sys
 from cleo.helpers import option
 
 from atom_tools.cli.commands.command import Command
-from atom_tools.lib.converter import OpenAPI
+from atom_tools.lib.converter import SUPPORTED_ORIGIN_TYPES, OpenAPI
 from atom_tools.lib.utils import export_json
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,8 @@ class ConvertCommand(Command):
         option(
             "type",
             "t",
-            "Origin type of source on which the atom slice was generated.",
+            "Origin type of source on which the atom slice was generated. Supported: "
+            + ", ".join(sorted(SUPPORTED_ORIGIN_TYPES)),
             flag=False,
             default="java",
         ),
@@ -78,10 +79,13 @@ class ConvertCommand(Command):
         ),
     ]
     help = """The convert command converts an atom slice to a different format.
-Currently supports creating an OpenAPI 3.x document based on a usages slice."""
+Currently supports creating an OpenAPI 3.x document based on a usages slice,
+and a SARIF 2.1.0 document based on a reachable slice."""
     loggers = [
         "atom_tools.lib.converter",
         "atom_tools.lib.regex_utils",
+        "atom_tools.lib.reachables",
+        "atom_tools.lib.sarif",
         "atom_tools.lib.slices",
         "atom_tools.lib.utils",
     ]
@@ -90,26 +94,11 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
         """
         Executes the convert command and performs the conversion.
         """
-        supported_types = {
-            "java",
-            "jar",
-            "python",
-            "py",
-            "javascript",
-            "js",
-            "typescript",
-            "ts",
-            "ruby",
-            "rb",
-            "scala",
-            "sbt",
-            "rs",
-            "rust",
-            "go",
-            "golang",
-        }
-        if self.option("type") not in supported_types:
-            raise ValueError(f"Unknown origin type: {self.option('type')}")
+        if self.option("type") not in SUPPORTED_ORIGIN_TYPES:
+            raise ValueError(
+                f"Unknown origin type: {self.option('type')}. "
+                f"Supported: {', '.join(sorted(SUPPORTED_ORIGIN_TYPES))}"
+            )
         match self.option("format"):
             case "openapi3.1.0" | "openapi3.0.1":
                 converter = OpenAPI(
@@ -124,5 +113,14 @@ Currently supports creating an OpenAPI 3.x document based on a usages slice."""
                     sys.exit(1)
                 export_json(result, self.option("output-file"), 4)
                 logger.info(f"OpenAPI document written to {self.option('output-file')}.")
+            case "sarif" | "sarif2.1.0":
+                from atom_tools.lib.sarif import Sarif
+
+                converter = Sarif(self.option("input-slice"), self.option("type"))
+                result = converter.convert()
+                if not result["runs"][0]["results"]:
+                    logging.warning("No results produced!")
+                export_json(result, self.option("output-file"), 4)
+                logger.info(f"SARIF document written to {self.option('output-file')}.")
             case _:
                 raise ValueError(f"Unknown destination format: {self.option('format')}")

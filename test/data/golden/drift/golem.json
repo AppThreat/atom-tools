@@ -1,0 +1,589 @@
+{
+    "AddedEntryPoints": [
+        {
+            "file": "cmd/ipsw/cmd/kernel/kernel_cpp.go",
+            "kind": "http-listener",
+            "method": "",
+            "path": ""
+        },
+        {
+            "file": "api/server/routes/kernel/routes.go",
+            "kind": "http-route",
+            "method": "GET",
+            "path": "/kernel/cpp"
+        },
+        {
+            "file": "api/server/routes/kernel/routes.go",
+            "kind": "http-route",
+            "method": "GET",
+            "path": "/kernel/symbolicate"
+        }
+    ],
+    "AddedFlows": [
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:0038e689258c614bfb273a3e881edba2ace02e42d87c642262d7b4d492d83876",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "pkg/aea/aea.go",
+                "line": 159,
+                "name": "(*net/http.Client).Do"
+            },
+            "sinkCategory": "external-service",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 212,
+                "name": "github.com/spf13/viper.GetBool"
+            },
+            "sourceCategory": "configuration"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:0a09c2074862d5676745d5a9c39529094cb3117bf76991325ede650f8a0da8a1",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "pkg/aea/aea.go",
+                "line": 159,
+                "name": "(*net/http.Client).Do"
+            },
+            "sinkCategory": "external-service",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 215,
+                "name": "github.com/spf13/viper.GetStringSlice"
+            },
+            "sourceCategory": "configuration"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:0fdba784d545974a3ea8598150aba8d65ebaa117a30df26ddc918ac2963c50ad",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "pkg/aea/aea.go",
+                "line": 159,
+                "name": "(*net/http.Client).Do"
+            },
+            "sinkCategory": "external-service",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 205,
+                "name": "github.com/spf13/viper.GetBool"
+            },
+            "sourceCategory": "configuration"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:13a632be16c91688a6923d739ccd9214cf9ca6022f130ff0cca08e8a2f33eafc",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "pkg/aea/aea.go",
+                "line": 159,
+                "name": "(*net/http.Client).Do"
+            },
+            "sinkCategory": "external-service",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 219,
+                "name": "github.com/spf13/viper.GetString"
+            },
+            "sourceCategory": "configuration"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:18858ddb9bb52760fa1138e1d08c1ae13efb636da39780bfcd3be531e6a34da4",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "pkg/aea/aea.go",
+                "line": 159,
+                "name": "(*net/http.Client).Do"
+            },
+            "sinkCategory": "external-service",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 206,
+                "name": "github.com/spf13/viper.GetBool"
+            },
+            "sourceCategory": "configuration"
+        },
+        "... 154 more not pinned ..."
+    ],
+    "AddedPackages": [],
+    "MovedFlows": [
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:3698008c04c34d746ab1aa717807a76e89d06490f49784c560762af089fd81d9",
+            "pathLength": 8,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw",
+                "pkg:golang/github.com/gin-gonic/gin"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go",
+                "line": 232,
+                "name": "(*github.com/gin-gonic/gin.Context).JSON"
+            },
+            "sinkCategory": "http-response",
+            "source": {
+                "file": "api/server/routes/info/info.go",
+                "line": 71,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:5b02fbca0c2897fd6a1f629f7791ff52a327336926c669ee6074b1c384c5f84e",
+            "pathLength": 8,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw",
+                "pkg:golang/github.com/gin-gonic/gin"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go",
+                "line": 232,
+                "name": "(*github.com/gin-gonic/gin.Context).JSON"
+            },
+            "sinkCategory": "http-response",
+            "source": {
+                "file": "api/server/routes/info/info.go",
+                "line": 53,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:08c9daf39ad8bbd31d270d3fdd8d166b694f6afd255a6692eae67214eeacc5a9",
+            "pathLength": 4,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go",
+                "line": 39,
+                "name": "github.com/blacktop/go-plist.mustParseFloat"
+            },
+            "sinkCategory": "panic",
+            "source": {
+                "file": "api/server/routes/info/info.go",
+                "line": 53,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:7fd77cb0bbca704c1e187fba95d65f8d69e46956cabf173752e528ae88e4ed35",
+            "pathLength": 4,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/text_parser.go",
+                "line": 83,
+                "name": "(*github.com/blacktop/go-plist.textPlistParser).parseDocument"
+            },
+            "sinkCategory": "panic",
+            "source": {
+                "file": "api/server/routes/info/info.go",
+                "line": 53,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:09fdbf26ee410e1aebd02d60a92f32052c8361ea7862e0b3c01d0f4aeb111f34",
+            "pathLength": 4,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "error",
+            "severitySource": "engine",
+            "sink": {
+                "file": "internal/utils/utils.go",
+                "line": 165,
+                "name": "os.Open"
+            },
+            "sinkCategory": "filesystem",
+            "source": {
+                "file": "internal/download/appstore.go",
+                "line": 1255,
+                "name": "url"
+            },
+            "sourceCategory": "parameter"
+        },
+        "... 86 more not pinned ..."
+    ],
+    "NewSinkCategories": [],
+    "RemovedEntryPoints": [
+        {
+            "file": "api/server/routes/diff/routes.go",
+            "kind": "http-route",
+            "method": "POST",
+            "path": "/diff/files"
+        }
+    ],
+    "RemovedFlows": [
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:e24c7bd7a900c7236ae0e789b2f0dc0189483d23c61ec034d4363aee3dc0c5f5",
+            "pathLength": 5,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/text_parser.go",
+                "line": 83,
+                "name": "(*github.com/blacktop/go-plist.textPlistParser).parseDocument"
+            },
+            "sinkCategory": "panic",
+            "source": {
+                "file": "api/server/routes/kernel/kernel.go",
+                "line": 19,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:cc1c23891254d41c38a96dd63ef81fdab7b99630661132964ea849bf71081085",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/blacktop/go-plist@v1.0.2/must.go",
+                "line": 31,
+                "name": "github.com/blacktop/go-plist.mustParseUint"
+            },
+            "sinkCategory": "panic",
+            "source": {
+                "file": "api/server/routes/idev/idev.go",
+                "line": 67,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:e7c3584f99e30aa9a33cc4fc7d4ba2760d92942ff16bf3dd4cceeea861735014",
+            "pathLength": 9,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw",
+                "pkg:golang/github.com/gin-gonic/gin"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go",
+                "line": 232,
+                "name": "(*github.com/gin-gonic/gin.Context).JSON"
+            },
+            "sinkCategory": "http-response",
+            "source": {
+                "file": "api/server/routes/kernel/kernel.go",
+                "line": 44,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:f4562ce1ad624f095b87affaec40b1f18fd8e4b969832b92ed10128a5e2bc108",
+            "pathLength": 10,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw",
+                "pkg:golang/github.com/gin-gonic/gin"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go",
+                "line": 232,
+                "name": "(*github.com/gin-gonic/gin.Context).JSON"
+            },
+            "sinkCategory": "http-response",
+            "source": {
+                "file": "api/server/routes/idev/idev.go",
+                "line": 67,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:f8594d9a0c4dc002c5c01735a06e31c49491a92750d4ce1d3cbb565c9017959d",
+            "pathLength": 8,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw",
+                "pkg:golang/github.com/gin-gonic/gin"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go",
+                "line": 232,
+                "name": "(*github.com/gin-gonic/gin.Context).JSON"
+            },
+            "sinkCategory": "http-response",
+            "source": {
+                "file": "api/server/routes/kernel/kernel.go",
+                "line": 19,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        "... 100 more not pinned ..."
+    ],
+    "RemovedPackages": [
+        "pkg:golang/github.com/blacktop/go-macho"
+    ],
+    "RiskDelta": {
+        "NewAnonymousEndpoints": null,
+        "NewEntryPoints": 3,
+        "NewHighSeverityFlows": 67,
+        "NewLowSeverityFlows": 0,
+        "NewMediumSeverityFlows": 92,
+        "NewSinkCategories": 0,
+        "NewlyReachablePackages": 0
+    },
+    "WitnessChangedFlows": [
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:3698008c04c34d746ab1aa717807a76e89d06490f49784c560762af089fd81d9",
+            "pathLength": 8,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw",
+                "pkg:golang/github.com/gin-gonic/gin"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/gin-gonic/gin@v1.12.0/context.go",
+                "line": 232,
+                "name": "(*github.com/gin-gonic/gin.Context).JSON"
+            },
+            "sinkCategory": "http-response",
+            "source": {
+                "file": "api/server/routes/info/info.go",
+                "line": 71,
+                "name": "github.com/gin-gonic/gin.(*Context).Query"
+            },
+            "sourceCategory": "http-input"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:173927c29169c4842add601ba42c6123d10ff42bce06ff62f1866e1fcfd41dbb",
+            "pathLength": 5,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/anthropics/anthropic-sdk-go",
+                "pkg:golang/reflect"
+            ],
+            "severity": "warning",
+            "severitySource": "engine",
+            "sink": {
+                "file": "/opt/homebrew/Cellar/go/1.27.1/libexec/src/reflect/value.go",
+                "line": 3256,
+                "name": "(reflect.Value).assignTo"
+            },
+            "sinkCategory": "panic",
+            "source": {
+                "file": "/Users/prabhu/go/pkg/mod/github.com/anthropics/anthropic-sdk-go@v1.51.0/internal/apijson/decoder.go",
+                "line": 269,
+                "name": "key"
+            },
+            "sourceCategory": "parameter"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:195729e12ee9fe879101e8a9df0343fe163a42a5aa50a3d505ab0aaa8dd1f17f",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "error",
+            "severitySource": "engine",
+            "sink": {
+                "file": "internal/diff/diff.go",
+                "line": 390,
+                "name": "os.RemoveAll"
+            },
+            "sinkCategory": "filesystem",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 204,
+                "name": "github.com/spf13/viper.GetStringSlice"
+            },
+            "sourceCategory": "configuration"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:19b056e94c8c18b38a89d0f38a5d82e4dd47e1314b184de481362cda45e5f608",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "error",
+            "severitySource": "engine",
+            "sink": {
+                "file": "internal/diff/diff.go",
+                "line": 390,
+                "name": "os.RemoveAll"
+            },
+            "sinkCategory": "filesystem",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 212,
+                "name": "github.com/spf13/viper.GetBool"
+            },
+            "sourceCategory": "configuration"
+        },
+        {
+            "engine": "golem",
+            "flowId": "seam-slice|sha256:1a3c76129b81db43c4c9d119a0c47d9cc558802a778fe0b118ade8dc3caf75bb",
+            "pathLength": 6,
+            "pathTruncated": false,
+            "purls": [
+                "pkg:golang/github.com/blacktop/ipsw"
+            ],
+            "severity": "error",
+            "severitySource": "engine",
+            "sink": {
+                "file": "internal/diff/diff.go",
+                "line": 390,
+                "name": "os.RemoveAll"
+            },
+            "sinkCategory": "filesystem",
+            "source": {
+                "file": "cmd/ipsw/cmd/diff.go",
+                "line": 215,
+                "name": "github.com/spf13/viper.GetStringSlice"
+            },
+            "sourceCategory": "configuration"
+        },
+        "... 16 more not pinned ..."
+    ],
+    "baseline": {
+        "engine": "golem",
+        "file": "test/data/ecosystem/go-ipsw-golem-baseline.json"
+    },
+    "coverage": {
+        "new": {
+            "analysisMode": "all",
+            "diagnostics": 1,
+            "endpoints": 57,
+            "engine": "golem",
+            "engineVersion": "3.2.0",
+            "files": 66,
+            "flows": 397,
+            "packages": 21,
+            "severitySources": [
+                "engine"
+            ],
+            "truncated": true,
+            "truncatedPaths": 0,
+            "truncationReasons": [
+                "golem data-flow truncated: slice limit reached at 1000; further findings were not materialised"
+            ]
+        },
+        "old": {
+            "analysisMode": "all",
+            "diagnostics": 1,
+            "endpoints": 55,
+            "engine": "golem",
+            "engineVersion": "3.2.0",
+            "files": 54,
+            "flows": 343,
+            "packages": 22,
+            "severitySources": [
+                "engine"
+            ],
+            "truncated": true,
+            "truncatedPaths": 0,
+            "truncationReasons": [
+                "golem data-flow truncated: slice limit reached at 1000; further findings were not materialised"
+            ]
+        },
+        "regressed": false,
+        "regressions": []
+    },
+    "current": {
+        "engine": "golem",
+        "file": "test/data/ecosystem/go-ipsw-golem.json"
+    },
+    "diagnostics": [],
+    "driftVersion": 1,
+    "engineDiagnostics": {
+        "baseline": [
+            "golem data-flow truncated: slice limit reached at 1000; further findings were not materialised"
+        ],
+        "current": [
+            "golem data-flow truncated: slice limit reached at 1000; further findings were not materialised"
+        ]
+    },
+    "severitySources": {
+        "baseline": [
+            "engine"
+        ],
+        "current": [
+            "engine"
+        ]
+    }
+}

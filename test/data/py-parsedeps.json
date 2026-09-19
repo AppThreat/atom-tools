@@ -1,0 +1,31 @@
+{
+  "modules": [
+    {
+      "name": "flask",
+      "version": "3.0.0",
+      "versionSpecifiers": "==3.0.0",
+      "importedSymbols": [
+        "flask.Flask",
+        "flask.request",
+        "flask.jsonify"
+      ]
+    },
+    {
+      "name": "requests",
+      "version": "2.31.0",
+      "versionSpecifiers": ">=2.28",
+      "importedSymbols": [
+        "requests.get",
+        "requests.Session"
+      ]
+    },
+    {
+      "name": "sqlite3",
+      "version": "",
+      "versionSpecifiers": "",
+      "importedSymbols": [
+        "sqlite3.connect"
+      ]
+    }
+  ]
+}

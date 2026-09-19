@@ -2,7 +2,6 @@
 Scala converter helper
 """
 
-import re
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.utils import extract_params
 

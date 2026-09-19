@@ -1,0 +1,227 @@
+{
+    "attackSurfaceVersion": 1,
+    "coverage": {
+        "golem": {
+            "callGraphs": [
+                {
+                    "edges": 3325,
+                    "engine": "golem",
+                    "file": "test/data/ecosystem/go-ipsw-golem.json",
+                    "fullEdges": 22308,
+                    "fullNodes": 7848,
+                    "nodes": 986,
+                    "present": true,
+                    "trimmed": true
+                }
+            ],
+            "endpoints": 57,
+            "endpointsAnchored": 31,
+            "engine": "golem",
+            "flows": 397,
+            "flowsAttached": 179
+        }
+    },
+    "diagnostics": [
+        "golem call graph in go-ipsw-golem.json is a subgraph of the engine's run (3325 of 22308 edges present); reach is computed within that subgraph only.",
+        "26 golem endpoint(s) could not be anchored in the call graph (closure handler, name and file range all missed); their reach is reported as seed-not-found, not as empty."
+    ],
+    "engine": "golem",
+    "sources": [
+        "test/data/ecosystem/go-ipsw-golem.json"
+    ],
+    "summary": {
+        "anonymousReach": {
+            "anonymousEntryPoints": 0,
+            "computed": false,
+            "reachingHighSeveritySink": 0
+        },
+        "byEngine": {
+            "golem": 57
+        },
+        "byTier": {
+            "unknown-auth": 57
+        },
+        "entryPoints": 57,
+        "entryPointsWithReach": 16,
+        "reachComputed": true
+    },
+    "tierOrder": [
+        "anonymous-http",
+        "anonymous-rpc",
+        "anonymous",
+        "mcp",
+        "queue",
+        "cli",
+        "authenticated-http",
+        "authenticated-rpc",
+        "internal",
+        "unknown-auth"
+    ],
+    "tiers": [
+        {
+            "Engine": [
+                "golem"
+            ],
+            "EntryPointCount": 57,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "golem",
+                    "EntryPointId": "golem-57",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/commands/ent/ui.go",
+                    "FileName": "ui.go",
+                    "Framework": "net/http",
+                    "Handler": "func literal",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "http-route",
+                    "LineNumber": 35,
+                    "Package": "github.com/blacktop/ipsw/internal/commands/ent",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "seed-not-found"
+                    },
+                    "Route": "/GET /",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "golem",
+                    "EntryPointId": "golem-56",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "/Users/prabhu/sandbox/ipsw/internal/commands/ent/ui.go",
+                    "FileName": "ui.go",
+                    "Framework": "net/http",
+                    "Handler": "staticFs",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "http-route",
+                    "LineNumber": 58,
+                    "Package": "github.com/blacktop/ipsw/internal/commands/ent",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "seed-not-found"
+                    },
+                    "Route": "/GET /static/",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "golem",
+                    "EntryPointId": "golem-2",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "/Users/prabhu/sandbox/ipsw/api/server/routes/daemon/routes.go",
+                    "FileName": "routes.go",
+                    "Framework": "gin",
+                    "Handler": "pingHandler",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 40,
+                    "Package": "github.com/blacktop/ipsw/api/server/routes/daemon",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "github.com/blacktop/ipsw/api/server/routes/daemon.pingHandler"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/_ping",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "golem",
+                    "EntryPointId": "golem-1",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "/Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go",
+                    "FileName": "aea.go",
+                    "Framework": "gin",
+                    "Handler": "func literal",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 36,
+                    "Package": "github.com/blacktop/ipsw/api/server/routes/aea",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "seed-not-found"
+                    },
+                    "Route": "/aea/fcs-keys/:key",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "golem",
+                    "EntryPointId": "golem-5",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "/Users/prabhu/sandbox/ipsw/api/server/routes/devicelist/routes.go",
+                    "FileName": "routes.go",
+                    "Framework": "gin",
+                    "Handler": "func literal",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 32,
+                    "Package": "github.com/blacktop/ipsw/api/server/routes/devicelist",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "seed-not-found"
+                    },
+                    "Route": "/device_list",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                "... 52 more entry point(s) not pinned ..."
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 16,
+            "ExploitChainCount": 0,
+            "Exposure": "unknown-auth",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "kind"
+            ],
+            "WeaknessCount": 0
+        }
+    ]
+}

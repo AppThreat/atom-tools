@@ -1,0 +1,110 @@
+{
+  "graph": {
+    "nodes": [
+      {
+        "id": 1001,
+        "label": "CALL",
+        "name": "request",
+        "fullName": "__ec_request",
+        "signature": "",
+        "isExternal": true,
+        "code": "request.args.get('url')",
+        "typeFullName": "ANY",
+        "parentMethodName": "run",
+        "parentMethodSignature": "run()",
+        "parentFileName": "app\\views.py",
+        "parentPackageName": "<global>",
+        "parentClassName": "app\\views.py::program",
+        "lineNumber": 10,
+        "columnNumber": 1,
+        "tags": "framework-input"
+      },
+      {
+        "id": 1002,
+        "label": "CALL",
+        "name": "requests.get",
+        "fullName": "__ec_requests.get",
+        "signature": "",
+        "isExternal": true,
+        "code": "requests.get(url, timeout=5)",
+        "typeFullName": "ANY",
+        "parentMethodName": "run",
+        "parentMethodSignature": "run()",
+        "parentFileName": "app\\views.py",
+        "parentPackageName": "<global>",
+        "parentClassName": "app\\views.py::program",
+        "lineNumber": 12,
+        "columnNumber": 1,
+        "tags": "ssrf"
+      },
+      {
+        "id": 1003,
+        "label": "CALL",
+        "name": "open",
+        "fullName": "__ec_open",
+        "signature": "",
+        "isExternal": true,
+        "code": "open('/tmp/cache', 'w')",
+        "typeFullName": "ANY",
+        "parentMethodName": "run",
+        "parentMethodSignature": "run()",
+        "parentFileName": "app\\views.py",
+        "parentPackageName": "<global>",
+        "parentClassName": "app\\views.py::program",
+        "lineNumber": 15,
+        "columnNumber": 1,
+        "tags": "file-io"
+      },
+      {
+        "id": 1004,
+        "label": "CALL",
+        "name": "execute",
+        "fullName": "__ec_execute",
+        "signature": "",
+        "isExternal": true,
+        "code": "cursor.execute(query)",
+        "typeFullName": "ANY",
+        "parentMethodName": "run",
+        "parentMethodSignature": "run()",
+        "parentFileName": "app\\db.py",
+        "parentPackageName": "<global>",
+        "parentClassName": "app\\db.py::program",
+        "lineNumber": 42,
+        "columnNumber": 1,
+        "tags": "sql"
+      }
+    ],
+    "edges": [
+      {
+        "src": 1001,
+        "dst": 1002,
+        "label": "REACHING_DEF"
+      },
+      {
+        "src": 1001,
+        "dst": 1003,
+        "label": "REACHING_DEF"
+      },
+      {
+        "src": 1001,
+        "dst": 1004,
+        "label": "ARGUMENT"
+      },
+      {
+        "src": 1002,
+        "dst": 1003,
+        "label": "CFG"
+      }
+    ]
+  },
+  "paths": [
+    [
+      1001,
+      1002
+    ],
+    [
+      1001,
+      1004
+    ]
+  ]
+}

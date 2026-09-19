@@ -6,7 +6,7 @@ import logging
 from cleo.helpers import option
 
 from atom_tools.cli.commands.command import Command
-from atom_tools.lib.converter import OpenAPI
+from atom_tools.lib.converter import SUPPORTED_ORIGIN_TYPES, OpenAPI
 from atom_tools.lib.filtering import get_ln_range
 from atom_tools.lib.utils import output_endpoints
 
@@ -42,7 +42,8 @@ class QueryEndpointsCommand(Command):
         option(
             "type",
             "t",
-            "Origin type of source on which the atom slice was generated.",
+            "Origin type of source on which the atom slice was generated. Supported: "
+            + ", ".join(sorted(SUPPORTED_ORIGIN_TYPES)),
             flag=False,
             default="java",
         ),
@@ -70,18 +71,11 @@ class QueryEndpointsCommand(Command):
         """
         Executes the query command and performs the conversion.
         """
-        supported_types = {
-            "java",
-            "jar",
-            "python",
-            "py",
-            "javascript",
-            "js",
-            "typescript",
-            "ts",
-        }
-        if self.option("type") not in supported_types:
-            raise ValueError(f"Unknown origin type: {self.option('type')}")
+        if self.option("type") not in SUPPORTED_ORIGIN_TYPES:
+            raise ValueError(
+                f"Unknown origin type: {self.option('type')}. "
+                f"Supported: {', '.join(sorted(SUPPORTED_ORIGIN_TYPES))}"
+            )
         converter = OpenAPI(
             "openapi3.1.0",
             self.option("type"),

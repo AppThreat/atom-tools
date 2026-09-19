@@ -1,7 +1,7 @@
 [project]
 name = "atom-tools"
-version = "0.9.1"
-description = "Collection of tools for use with AppThreat/atom."
+version = "1.0.0"
+description = "Collection of tools for post-processing the reports of the AppThreat analysis ecosystem: atom slices, dosai (.NET), golem (Go) and rusi (Rust) flow reports."
 authors = [
   { name = "Team AppThreat", email = "cloud@appthreat.com" },
 ]
@@ -9,12 +9,27 @@ dependencies = ["cleo>=1.0.0", "jmespath>=1.0.0", "thefuzz>=0.22.1", "json-flatt
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.10"
+keywords = [
+  "appthreat",
+  "atom",
+  "dosai",
+  "golem",
+  "rusi",
+  "reachability",
+  "attack-surface",
+  "crypto-reach",
+  "openapi",
+  "sarif",
+  "static-analysis",
+  "cbom",
+]
 classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Environment :: Console",
   "Intended Audience :: Developers",
   "Operating System :: OS Independent",
   "Topic :: Security",
@@ -40,6 +55,9 @@ dev = [
 "pre-commit",
 "pytest",
 ]
+# The stdio MCP server behind `atom-tools explain --mcp`. Pinned below 2.0:
+# the 2.x SDK renamed FastMCP to MCPServer and changed the registration API.
+mcp = ["mcp>=1.0.0,<2"]
 
 [build-system]
 requires = ["setuptools>=65", "wheel"]
@@ -56,6 +74,18 @@ include-package-data = true
 
 [tool.ruff]
 line-length = 99
+
+[tool.ruff.lint]
+# Explicit rule selection so lint results stay stable across ruff releases
+# instead of tracking whatever the default set becomes (ruff 0.16 widened its
+# defaults, which broke the previously clean tree with hundreds of UP hits).
+# This is ruff's long-standing default set, pinned on purpose.
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# Legacy assertion style in the filtering tests; == True/False comparisons
+# are deliberate there and changing them would alter test semantics.
+"test/test_filtering.py" = ["E712"]
 
 [tool.ruff.format]
 # Match the previous formatter defaults so existing files are not churned.

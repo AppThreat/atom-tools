@@ -9,6 +9,31 @@ from atom_tools.lib.ruby_semantics import code_to_routes, endpoints_to_routes
 from atom_tools.lib.utils import extract_params
 
 
+def _dedupe(items: list) -> list:
+    """
+    Drop duplicate and empty dicts, keeping the order they were produced in.
+
+    This used to round-trip through a ``set`` of JSON strings. Python hashes
+    strings with a per-process random seed, so the resulting order changed on
+    every run and the same slice converted to a different document each time --
+    four distinct digests in five runs, which makes the output impossible to
+    diff in CI. Order here is the order atom emitted the usages in, which is
+    both stable and meaningful.
+
+    Empty dicts are dropped rather than deduplicated: they came from wrapping a
+    missing ``existing_method`` and are a placeholder, not a usage.
+    """
+    seen, unique = set(), []
+    for item in items:
+        if not item:
+            continue
+        key = json.dumps(item, sort_keys=True)
+        if key not in seen:
+            seen.add(key)
+            unique.append(item)
+    return unique
+
+
 def convert(usages: AtomSlice):
     result = {}
     object_slices = usages.content.get("objectSlices", {})
@@ -45,7 +70,7 @@ def convert(usages: AtomSlice):
                             else oslice.get("fileName")
                         )
                         + f"-{route.method}-{str(i)}",
-                        "x-atom-usages": {"call": {file_name: list(line_nums)}},
+                        "x-atom-usages": {"call": {file_name: sorted(line_nums)}},
                         "responses": {"200": {"description": ""}},
                     }
                     # Support for servers per method
@@ -63,20 +88,13 @@ def convert(usages: AtomSlice):
                             existing_usages = [existing_usages]
                         new_servers: list[dict[str, str]] = amethod.get("servers", [])
                         new_usages = amethod.get("x-atom-usages", {})
-                        combined_servers = [
-                            dict(t)
-                            for t in {tuple(d.items()) for d in existing_servers + new_servers}
-                        ]
+                        combined_servers = _dedupe(existing_servers + new_servers)
                         if new_usages:
                             existing_usages.append(new_usages)
                         if combined_servers:
                             amethod["servers"] = combined_servers
-                        if existing_usages:
-                            amethod["x-atom-usages"] = [
-                                json.loads(item)
-                                for item in set(
-                                    json.dumps(d, sort_keys=True) for d in existing_usages
-                                )
-                            ]
+                        usages = _dedupe(existing_usages)
+                        if usages:
+                            amethod["x-atom-usages"] = usages
                         result[route.url_pattern].update({route.method.lower(): amethod})
     return result

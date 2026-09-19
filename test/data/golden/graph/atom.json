@@ -1,0 +1,162 @@
+{
+    "diagnostics": [],
+    "engines": [
+        "atom"
+    ],
+    "graphVersion": 1,
+    "graphs": [
+        {
+            "callTypeMix": {
+                "DYNAMIC_DISPATCH": 173,
+                "STATIC_DISPATCH": 244
+            },
+            "confidenceMix": {
+                "candidate": 173,
+                "exact": 244
+            },
+            "edges": 417,
+            "engine": "atom",
+            "engineDiagnostics": [],
+            "engineRootReasons": {},
+            "engineRoots": 0,
+            "engineRootsInGraph": 0,
+            "externalNodes": 98,
+            "internalNodes": 121,
+            "nodes": 219,
+            "sourceFile": "test/data/ecosystem/java-petclinic-atom-cpg.graphml",
+            "trimmed": false
+        }
+    ],
+    "metric": "chokepoints",
+    "options": {
+        "includeExternal": false,
+        "maxChokepointSources": 64,
+        "minConfidence": null
+    },
+    "results": [
+        {
+            "capped": {
+                "effect": "betweenness scores are a lower bound",
+                "sourcesAvailable": 82,
+                "sourcesEnumerated": 64
+            },
+            "computed": true,
+            "engine": "atom",
+            "externalNodesExcludedFromRanking": 98,
+            "ranked": [
+                {
+                    "betweenness": 25.5,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+                    "id": "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.String,boolean)",
+                    "line": 144,
+                    "name": "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.String,boolean)",
+                    "package": "",
+                    "pairShare": 0.071
+                },
+                {
+                    "betweenness": 24.0,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+                    "id": "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.Integer)",
+                    "line": 126,
+                    "name": "org.springframework.samples.petclinic.owner.Owner.getPet:org.springframework.samples.petclinic.owner.Pet(java.lang.Integer)",
+                    "package": "",
+                    "pairShare": 0.066
+                },
+                {
+                    "betweenness": 21.0,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+                    "id": "org.springframework.samples.petclinic.owner.Owner.addPet:void(org.springframework.samples.petclinic.owner.Pet)",
+                    "line": 97,
+                    "name": "org.springframework.samples.petclinic.owner.Owner.addPet:void(org.springframework.samples.petclinic.owner.Pet)",
+                    "package": "",
+                    "pairShare": 0.058
+                },
+                {
+                    "betweenness": 14.0,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/Owner.java",
+                    "id": "org.springframework.samples.petclinic.owner.Owner.addVisit:void(java.lang.Integer,org.springframework.samples.petclinic.owner.Visit)",
+                    "line": 173,
+                    "name": "org.springframework.samples.petclinic.owner.Owner.addVisit:void(java.lang.Integer,org.springframework.samples.petclinic.owner.Visit)",
+                    "package": "",
+                    "pairShare": 0.039
+                },
+                {
+                    "betweenness": 10.5,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+                    "id": "org.springframework.samples.petclinic.owner.PetController.updatePetDetails:void(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Pet)",
+                    "line": 186,
+                    "name": "org.springframework.samples.petclinic.owner.PetController.updatePetDetails:void(org.springframework.samples.petclinic.owner.Owner,org.springframework.samples.petclinic.owner.Pet)",
+                    "package": "",
+                    "pairShare": 0.029
+                },
+                {
+                    "betweenness": 6.0,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/PetController.java",
+                    "id": "org.springframework.samples.petclinic.owner.PetController.isDuplicatePetNameViolation:boolean(org.springframework.dao.DataIntegrityViolationException)",
+                    "line": 202,
+                    "name": "org.springframework.samples.petclinic.owner.PetController.isDuplicatePetNameViolation:boolean(org.springframework.dao.DataIntegrityViolationException)",
+                    "package": "",
+                    "pairShare": 0.017
+                },
+                {
+                    "betweenness": 4.333,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/model/BaseEntity.java",
+                    "id": "org.springframework.samples.petclinic.model.BaseEntity.isNew:boolean()",
+                    "line": 47,
+                    "name": "org.springframework.samples.petclinic.model.BaseEntity.isNew:boolean()",
+                    "package": "",
+                    "pairShare": 0.012
+                },
+                {
+                    "betweenness": 4.0,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/Pet.java",
+                    "id": "org.springframework.samples.petclinic.owner.Pet.addVisit:void(org.springframework.samples.petclinic.owner.Visit)",
+                    "line": 81,
+                    "name": "org.springframework.samples.petclinic.owner.Pet.addVisit:void(org.springframework.samples.petclinic.owner.Visit)",
+                    "package": "",
+                    "pairShare": 0.011
+                },
+                {
+                    "betweenness": 3.333,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+                    "id": "org.springframework.samples.petclinic.owner.OwnerController.findPaginatedForOwnersLastName:org.springframework.data.domain.Page(int,java.lang.String)",
+                    "line": 133,
+                    "name": "org.springframework.samples.petclinic.owner.OwnerController.findPaginatedForOwnersLastName:org.springframework.data.domain.Page(int,java.lang.String)",
+                    "package": "",
+                    "pairShare": 0.009
+                },
+                {
+                    "betweenness": 3.0,
+                    "external": false,
+                    "file": "src/main/java/org/springframework/samples/petclinic/owner/OwnerController.java",
+                    "id": "org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel:java.lang.String(int,org.springframework.ui.Model,org.springframework.data.domain.Page)",
+                    "line": 124,
+                    "name": "org.springframework.samples.petclinic.owner.OwnerController.addPaginationModel:java.lang.String(int,org.springframework.ui.Model,org.springframework.data.domain.Page)",
+                    "package": "",
+                    "pairShare": 0.008
+                },
+                "... 8 more not pinned ..."
+            ],
+            "seeds": {
+                "pairs": 361,
+                "policy": "zero-indegree",
+                "sinks": 219,
+                "source": "derived",
+                "sources": 82
+            },
+            "sourceFile": "test/data/ecosystem/java-petclinic-atom-cpg.graphml"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/java-petclinic-atom-cpg.graphml"
+    ]
+}

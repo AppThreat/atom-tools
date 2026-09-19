@@ -163,7 +163,10 @@ class Filter:
 def check_reachable_purl(data: Dict, purl: str) -> bool:
     """Checks if purl is reachable"""
     purls = enumerate_reachable_purls(data)
-    return purl.lower() in purls
+    # Compare case-insensitively on both sides: package names keep their
+    # native case (NuGet's PascalCase, Cargo's kebab-case, ...), so lowering
+    # only the query would never match a mixed-case package.
+    return purl.lower() in {p.lower() for p in purls}
 
 
 def create_attribute_filter(key: str, value: str, fuzz_pct: int | None) -> Tuple:
@@ -196,12 +199,20 @@ def create_purl_map(data: Dict) -> Dict:
 
 
 def enumerate_reachable_purls(data: Dict) -> Set[str]:
-    """Enumerate reachable purls"""
-    all_purls = set(patterns.jmespath_purls.search(data))
-    purls = []
+    """Enumerate reachable purls, as ``package:version`` pairs and verbatim.
+
+    ``parse_purl`` only yields anything when the purl carries a version, so a
+    versionless purl used to contribute nothing at all -- and golem emits every
+    Go package that way (``pkg:golang/github.com/blacktop/ipsw``). The effect
+    was that ``check-reachable`` answered a confident ``False`` for all 21 of a
+    golem report's packages, which is worse than an error. The purls are kept
+    verbatim as well so an exact purl still matches itself.
+    """
+    all_purls = set(patterns.jmespath_purls.search(data) or [])
+    purls = set(all_purls)
     for purl in all_purls:
-        purls.extend(parse_purl(purl))
-    return set(purls)
+        purls.update(parse_purl(purl))
+    return purls
 
 
 def filter_flows(reachables: List[Dict], filename: str, ln: Tuple[int, int]) -> bool:

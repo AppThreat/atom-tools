@@ -1,0 +1,21 @@
+Flow report: rusi 3.2.0 (security mode) — 5 flow(s), 3 package record(s) from 1 input file(s) (rust-microservices-kafka-rusi.json).
+severity: 0 error / 5 warning / 0 note; 0 engine-reported, 5 derived
+source tags: 5 of 5 flow(s) carry tags on the source node
+entry-point join: 1 of 5 flow(s) sit behind an anchored entry point; rusi: 14 of 14 endpoint(s) anchored in the call graph, 2 flow attachment(s).
+
+1. Flow df-slice-a8522d1a3ab83d87 — param-0 → network-request
+  Reachability: `pkg:cargo/app-user-service@0.1.0` is reached from `GET /users` (app-user-service/src/user/api/rest/routing.rs:11), and 1 more entry point(s); rusi does not classify authentication, so the route's exposure is unknown.
+  Path: source `u` (app-user-service/src/user/api/rest/resources/response/mod.rs:72) tagged `param-0` which reaches `get` (app-user-service/src/user/api/rest/resources/response/mod.rs:75) in 2 step(s), classified `network-request`.
+  Evidence: rusi 3.2.0, security mode. Severity `warning` (derived from the shared taxonomy, not engine-reported).
+
+2. Flow df-slice-03a64c7753789d6d — param-0 → network-request
+  Reachability: `pkg:cargo/common-security@0.1.0` is reached by this flow; its source function sits inside no anchored handler's closure (14 of 14 endpoints anchored in this report's call graph).
+  Path: source `security_configuration` (common-security/src/lib.rs:22) tagged `param-0` which reaches `common_security::jwk::JwkLoader::from_url` (common-security/src/lib.rs:27) in 2 step(s), classified `network-request`.
+  Evidence: rusi 3.2.0, security mode. Severity `warning` (derived from the shared taxonomy, not engine-reported).
+
+3. Flow df-slice-b8f1bc4456f16a37 — param-1 → network-request
+  Reachability: `pkg:cargo/app-user-service@0.1.0` is reached by this flow; its source function sits inside no anchored handler's closure (14 of 14 endpoints anchored in this report's call graph).
+  Path: source `security_configuration` (app-user-service/src/common/security.rs:35) tagged `param-1` which reaches `common_security::load_jwk_decoders` (app-user-service/src/common/security.rs:39) in 2 step(s), classified `network-request`.
+  Evidence: rusi 3.2.0, security mode. Severity `warning` (derived from the shared taxonomy, not engine-reported).
+
+truncated: 2 more flow(s) not shown — the listing is ranked by severity then entry-point tier; select with --flow/--package/--file/--query or raise --max-flows.

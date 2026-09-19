@@ -1,0 +1,133 @@
+Attack surface: 60 entry point(s) from 1 report(s) (dosai)
+tiers run most-exposed first; only dosai classifies authentication — every other engine's entries sit in unknown-auth, which is a gap, not a finding.
+
+  * anonymous-http: 27 entry point(s), 0 weakness(es) (0 high severity)
+   ├── ANY /  src/Web/Pages/Index.cshtml:8
+       reach: engine · sinks: none reported
+   ├── ANY /Account/ConfirmEmail  src/Web/Areas/Identity/Pages/Account/ConfirmEmail.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Account/Login  src/Web/Areas/Identity/Pages/Account/Login.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Account/Logout  src/Web/Areas/Identity/Pages/Account/Logout.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Account/Register  src/Web/Areas/Identity/Pages/Account/Register.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Admin  src/Web/Pages/Admin/Index.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Admin/EditCatalogItem  src/Web/Pages/Admin/EditCatalogItem.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /AuthenticateEndpoint/Handle  src/PublicApi/AuthEndpoints/AuthenticateEndpoint.cs:29
+       reach: engine · sinks: none reported
+   ├── ANY /Basket/Checkout  src/Web/Pages/Basket/Checkout.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Basket/Success  src/Web/Pages/Basket/Success.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Error  src/Web/Pages/Error.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /Privacy  src/Web/Pages/Privacy.cshtml:1
+       reach: engine · sinks: none reported
+   ├── ANY /User/Logout  src/Web/Controllers/UserController.cs:41
+       reach: engine · sinks: none reported
+   ├── ANY /logout  src/BlazorAdmin/Pages/Logout.razor:1
+       reach: engine · sinks: none reported
+   ├── ANY /{handler}  src/Web/Pages/Basket/Index.cshtml:1
+       reach: engine · sinks: none reported
+   ├── DELETE /api/catalog-items/{catalogItemId}  src/PublicApi/CatalogItemEndpoints/DeleteCatalogItemEndpoint.cs:20
+       reach: engine · sinks: none reported
+   ├── GET /User  src/Web/Controllers/UserController.cs:35
+       reach: engine · sinks: none reported
+   ├── GET /api/catalog-brands  src/PublicApi/CatalogBrandEndpoints/CatalogBrandListEndpoint.cs:27
+       reach: engine · sinks: none reported
+   ├── GET /api/catalog-items  src/PublicApi/CatalogItemEndpoints/CatalogItemListPagedEndpoint.cs:31
+       reach: engine · sinks: none reported
+   ├── GET /api/catalog-items/{catalogItemId}  src/PublicApi/CatalogItemEndpoints/CatalogItemGetByIdEndpoint.cs:25
+       reach: engine · sinks: none reported
+   ├── GET /api/catalog-types  src/PublicApi/CatalogTypeEndpoints/CatalogTypeListEndpoint.cs:27
+       reach: engine · sinks: none reported
+   ├── GET /api_health_check  src/Web/Program.cs:197
+       reach: engine · sinks: none reported
+   ├── GET /home_page_health_check  src/Web/Program.cs:196
+       reach: engine · sinks: none reported
+   ├── POST /User  src/Web/Controllers/UserController.cs:41
+       reach: engine · sinks: none reported
+   ├── POST /api/authenticate  src/PublicApi/AuthEndpoints/AuthenticateEndpoint.cs:29
+       reach: engine · sinks: none reported
+   ├── POST /api/catalog-items  src/PublicApi/CatalogItemEndpoints/CreateCatalogItemEndpoint.cs:29
+       reach: engine · sinks: none reported
+   └── PUT /api/catalog-items  src/PublicApi/CatalogItemEndpoints/UpdateCatalogItemEndpoint.cs:27
+       reach: engine · sinks: none reported
+
+  * queue: 2 entry point(s), 0 weakness(es) (0 high severity)
+   ├── ANY src/Web/Features/MyOrders/GetMyOrdersHandler.cs  src/Web/Features/MyOrders/GetMyOrdersHandler.cs:18
+       reach: engine · sinks: none reported
+   └── ANY src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs  src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs:18
+       reach: engine · sinks: none reported
+
+  * cli: 7 entry point(s), 81 weakness(es) (0 high severity)
+   ├── ANY src/Web/bin/Debug/net8.0/BlazorDebugProxy/BrowserDebugHost.dll  src/Web/bin/Debug/net8.0/BlazorDebugProxy/BrowserDebugHost.dll:1
+       reach: engine · sinks: log
+   ├── ANY ../../../.nuget/packages/microsoft.net.test.sdk/17.9.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs  ../../../.nuget/packages/microsoft.net.test.sdk/17.9.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs:4
+       reach: engine · sinks: none reported
+   ├── ANY src/BlazorAdmin/Program.cs  src/BlazorAdmin/Program.cs:16
+       reach: engine · sinks: none reported
+   ├── ANY src/PublicApi/Program.cs  src/PublicApi/Program.cs:26
+       reach: engine · sinks: none reported
+   ├── ANY src/Web/Program.cs  src/Web/Program.cs:22
+       reach: engine · sinks: none reported
+   ├── ANY src/Web/bin/Debug/net8.0/dotnet-aspnet-codegenerator-design.dll  src/Web/bin/Debug/net8.0/dotnet-aspnet-codegenerator-design.dll:1
+       reach: engine · sinks: none reported
+   └── ANY tests/UnitTests/bin/Debug/net8.0/testhost.dll  tests/UnitTests/bin/Debug/net8.0/testhost.dll:1
+       reach: engine · sinks: none reported
+
+  * authenticated-http: 24 entry point(s), 0 weakness(es) (0 high severity)
+   ├── ANY /admin  src/BlazorAdmin/Pages/CatalogItemPage/List.razor:1
+       reach: engine · sinks: none reported
+   ├── GET /Manage/ChangePassword  src/Web/Controllers/ManageController.cs:136
+       reach: engine · sinks: none reported
+   ├── GET /Manage/Disable2faWarning  src/Web/Controllers/ManageController.cs:337
+       reach: engine · sinks: none reported
+   ├── GET /Manage/EnableAuthenticator  src/Web/Controllers/ManageController.cs:374
+       reach: engine · sinks: none reported
+   ├── GET /Manage/ExternalLogins  src/Web/Controllers/ManageController.cs:233
+       reach: engine · sinks: none reported
+   ├── GET /Manage/GenerateRecoveryCodesWarning  src/Web/Controllers/ManageController.cs:486
+       reach: engine · sinks: none reported
+   ├── GET /Manage/LinkLoginCallback  src/Web/Controllers/ManageController.cs:265
+       reach: engine · sinks: none reported
+   ├── GET /Manage/MyAccount  src/Web/Controllers/ManageController.cs:46
+       reach: engine · sinks: none reported
+   ├── GET /Manage/ResetAuthenticatorWarning  src/Web/Controllers/ManageController.cs:440
+       reach: engine · sinks: none reported
+   ├── GET /Manage/SetPassword  src/Web/Controllers/ManageController.cs:185
+       reach: engine · sinks: none reported
+   ├── GET /Manage/ShowRecoveryCodes  src/Web/Controllers/ManageController.cs:389
+       reach: engine · sinks: none reported
+   ├── GET /Manage/TwoFactorAuthentication  src/Web/Controllers/ManageController.cs:318
+       reach: engine · sinks: none reported
+   ├── GET /Order/Detail/{orderId}  src/Web/Controllers/OrderController.cs:31
+       reach: engine · sinks: none reported
+   ├── GET /Order/MyOrders  src/Web/Controllers/OrderController.cs:22
+       reach: engine · sinks: none reported
+   ├── POST /Manage/ChangePassword  src/Web/Controllers/ManageController.cs:155
+       reach: engine · sinks: none reported
+   ├── POST /Manage/Disable2fa  src/Web/Controllers/ManageController.cs:354
+       reach: engine · sinks: none reported
+   ├── POST /Manage/EnableAuthenticator  src/Web/Controllers/ManageController.cs:403
+       reach: engine · sinks: none reported
+   ├── POST /Manage/GenerateRecoveryCodes  src/Web/Controllers/ManageController.cs:463
+       reach: engine · sinks: none reported
+   ├── POST /Manage/LinkLogin  src/Web/Controllers/ManageController.cs:252
+       reach: engine · sinks: none reported
+   ├── POST /Manage/MyAccount  src/Web/Controllers/ManageController.cs:67
+       reach: engine · sinks: none reported
+   ├── POST /Manage/RemoveLogin  src/Web/Controllers/ManageController.cs:293
+       reach: engine · sinks: none reported
+   ├── POST /Manage/ResetAuthenticator  src/Web/Controllers/ManageController.cs:446
+       reach: engine · sinks: none reported
+   ├── POST /Manage/SendVerificationEmail  src/Web/Controllers/ManageController.cs:106
+       reach: engine · sinks: none reported
+   └── POST /Manage/SetPassword  src/Web/Controllers/ManageController.cs:205
+       reach: engine · sinks: none reported
+
+tiers with no entry points here: anonymous-rpc, anonymous, mcp, authenticated-rpc, internal, unknown-auth
+headline: 0 of 27 anonymous entry points (0%) reach at least one high-risk sink (27 of 60 entry points are anonymous).

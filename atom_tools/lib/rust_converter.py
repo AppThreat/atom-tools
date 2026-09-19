@@ -28,7 +28,7 @@ is not (yet) available.
 """
 
 import re
-from typing import Dict, Optional
+from typing import Dict
 
 from atom_tools.lib.slices import AtomSlice
 

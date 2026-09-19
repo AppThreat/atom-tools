@@ -1,0 +1,24 @@
+Flow report: dosai 5.0.0.0 (dataflows mode) — 60 flow(s), 45 package record(s) from 1 input file(s) (dotnet-eshoponweb-dosai-dataflows.json).
+severity: 20 error / 28 warning / 12 note; 60 engine-reported, 0 derived
+source tags: 60 of 60 flow(s) carry tags on the source node
+entry-point join: 0 of 60 flow(s) sit behind an anchored entry point; dosai: engine-tiered entry points taken verbatim from the report's own AttackSurface array; dosai links weaknesses — not flows — to entry points.
+
+1. Flow dfs1 — secret → auth
+  Reachability: `pkg:nuget/System.IdentityModel.Tokens.Jwt@7.3.1` is reached by this flow; dosai links weaknesses — not flows — to entry points, so no route is named here.
+  Path: source `JWT_SECRET_KEY` (ApiTokenHelper.cs:38) tagged `secret` which reaches `CreateToken` (ApiTokenHelper.cs:46) in 4 step(s), classified `auth`.
+  Evidence: dosai 5.0.0.0, dataflows mode. Severity `error` (engine-reported). Confidence `medium`.
+  Sanitizer: No sanitizer reported on this path by dosai's sanitizer analysis; this run found none to report.
+
+2. Flow dfs100 — message → crypto
+  Reachability: `pkg:nuget/NuGet.Packaging@6.3.1` is reached by this flow; dosai links weaknesses — not flows — to entry points, so no route is named here.
+  Path: source `request` (NuGet.Packaging.dll:1) tagged `message` which reaches `GetCertificateChain` (NuGet.Packaging.dll:319) in 10 step(s), classified `crypto`.
+  Evidence: dosai 5.0.0.0, dataflows mode. Severity `error` (engine-reported). Confidence `medium`.
+  Sanitizer: No sanitizer reported on this path by dosai's sanitizer analysis; this run found none to report.
+
+3. Flow dfs101 — message → crypto
+  Reachability: `pkg:nuget/NuGet.Packaging@6.3.1` is reached by this flow; dosai links weaknesses — not flows — to entry points, so no route is named here.
+  Path: source `request` (NuGet.Packaging.dll:1) tagged `message` which reaches `EnsureCertificatesInCertificatesCollection` (NuGet.Packaging.dll:330) in 14 step(s), classified `crypto`.
+  Evidence: dosai 5.0.0.0, dataflows mode. Severity `error` (engine-reported). Confidence `medium`.
+  Sanitizer: No sanitizer reported on this path by dosai's sanitizer analysis; this run found none to report.
+
+truncated: 57 more flow(s) not shown — the listing is ranked by severity then entry-point tier; select with --flow/--package/--file/--query or raise --max-flows.

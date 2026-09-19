@@ -1,0 +1,380 @@
+{
+  "entryPoints": [
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /graphql",
+      "location": "app-accommodation-service/src/graphql/mod.rs:44",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/graphql"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /graphql",
+      "location": "app-user-service/src/graphql/mod.rs:44",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/graphql"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /health",
+      "location": "app-accommodation-service/src/main.rs:128",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/health"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /health",
+      "location": "app-kafka-connector-mongodb/src/main.rs:74",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/health"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /health",
+      "location": "app-kafka-connector-relationaldb/src/main.rs:72",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/health"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /health",
+      "location": "app-user-service/src/main.rs:92",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/health"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /ui",
+      "location": "app-accommodation-service/src/graphql/mod.rs:44",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/ui"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /ui",
+      "location": "app-user-service/src/graphql/mod.rs:44",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/ui"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /users",
+      "location": "app-user-service/src/user/api/rest/routing.rs:11",
+      "method": "GET",
+      "reachFlows": 1,
+      "reachSinkCategories": [
+        "network-request"
+      ],
+      "route": "/users"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /users/:identifier",
+      "location": "app-user-service/src/user/api/rest/routing.rs:11",
+      "method": "GET",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/users/:identifier"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "POST /graphql",
+      "location": "app-accommodation-service/src/graphql/mod.rs:44",
+      "method": "POST",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/graphql"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "POST /graphql",
+      "location": "app-user-service/src/graphql/mod.rs:44",
+      "method": "POST",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/graphql"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "POST /users",
+      "location": "app-user-service/src/user/api/rest/routing.rs:11",
+      "method": "POST",
+      "reachFlows": 0,
+      "reachSinkCategories": [],
+      "route": "/users"
+    },
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "POST /users/search",
+      "location": "app-user-service/src/user/api/rest/routing.rs:11",
+      "method": "POST",
+      "reachFlows": 1,
+      "reachSinkCategories": [
+        "network-request"
+      ],
+      "route": "/users/search"
+    }
+  ],
+  "explainVersion": 1,
+  "highRiskFlows": [
+    {
+      "confidence": null,
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /users",
+          "location": "app-user-service/src/user/api/rest/routing.rs:11"
+        },
+        {
+          "exposure": "unknown-auth",
+          "label": "POST /users/search",
+          "location": "app-user-service/src/user/api/rest/routing.rs:11"
+        }
+      ],
+      "id": "df-slice-a8522d1a3ab83d87",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:cargo/app-user-service@0.1.0"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "app-user-service/src/user/api/rest/resources/response/mod.rs",
+        "line": 75,
+        "name": "get"
+      },
+      "sinkCategory": "network-request",
+      "source": {
+        "file": "app-user-service/src/user/api/rest/resources/response/mod.rs",
+        "line": 72,
+        "name": "u",
+        "tags": [
+          "param-0"
+        ]
+      },
+      "sourceCategory": "param-0",
+      "steps": 2
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "df-slice-03a64c7753789d6d",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:cargo/common-security@0.1.0"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "common-security/src/lib.rs",
+        "line": 27,
+        "name": "common_security::jwk::JwkLoader::from_url"
+      },
+      "sinkCategory": "network-request",
+      "source": {
+        "file": "common-security/src/lib.rs",
+        "line": 22,
+        "name": "security_configuration",
+        "tags": [
+          "param-0"
+        ]
+      },
+      "sourceCategory": "param-0",
+      "steps": 2
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "df-slice-b8f1bc4456f16a37",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:cargo/app-user-service@0.1.0"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "app-user-service/src/common/security.rs",
+        "line": 39,
+        "name": "common_security::load_jwk_decoders"
+      },
+      "sinkCategory": "network-request",
+      "source": {
+        "file": "app-user-service/src/common/security.rs",
+        "line": 35,
+        "name": "security_configuration",
+        "tags": [
+          "param-1"
+        ]
+      },
+      "sourceCategory": "param-1",
+      "steps": 2
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "df-slice-b9a6867c65b226a9",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:cargo/app-accommodation-service@0.1.0"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "app-accommodation-service/src/common/security.rs",
+        "line": 39,
+        "name": "common_security::load_jwk_decoders"
+      },
+      "sinkCategory": "network-request",
+      "source": {
+        "file": "app-accommodation-service/src/common/security.rs",
+        "line": 35,
+        "name": "security_configuration",
+        "tags": [
+          "param-1"
+        ]
+      },
+      "sourceCategory": "param-1",
+      "steps": 2
+    },
+    {
+      "confidence": null,
+      "entryPoints": [],
+      "id": "df-slice-eb640de22002702d",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:cargo/common-security@0.1.0"
+      ],
+      "sanitizerReported": null,
+      "severity": "warning",
+      "severitySource": "derived",
+      "sink": {
+        "file": "common-security/src/jwk/mod.rs",
+        "line": 33,
+        "name": "reqwest::get"
+      },
+      "sinkCategory": "network-request",
+      "source": {
+        "file": "common-security/src/jwk/mod.rs",
+        "line": 32,
+        "name": "url",
+        "tags": [
+          "param-0"
+        ]
+      },
+      "sourceCategory": "param-0",
+      "steps": 2
+    }
+  ],
+  "reachablePackages": [
+    {
+      "flows": 2,
+      "purl": "pkg:cargo/app-user-service@0.1.0"
+    },
+    {
+      "flows": 2,
+      "purl": "pkg:cargo/common-security@0.1.0"
+    },
+    {
+      "flows": 1,
+      "purl": "pkg:cargo/app-accommodation-service@0.1.0"
+    }
+  ],
+  "relevantFiles": [
+    {
+      "file": "app-accommodation-service/src/common/security.rs",
+      "flows": 2
+    },
+    {
+      "file": "app-user-service/src/common/security.rs",
+      "flows": 2
+    },
+    {
+      "file": "app-user-service/src/user/api/rest/resources/response/mod.rs",
+      "flows": 2
+    },
+    {
+      "file": "common-security/src/jwk/mod.rs",
+      "flows": 2
+    },
+    {
+      "file": "common-security/src/lib.rs",
+      "flows": 2
+    }
+  ],
+  "schema": "atom-tools/explain-agent-context@1",
+  "suggestedNextCommands": [
+    "atom-tools explain -i rust-microservices-kafka-rusi.json --flow df-slice-a8522d1a3ab83d87",
+    "atom-tools explain -i rust-microservices-kafka-rusi.json --flow df-slice-03a64c7753789d6d",
+    "atom-tools explain -i rust-microservices-kafka-rusi.json --flow df-slice-b8f1bc4456f16a37",
+    "atom-tools explain -i rust-microservices-kafka-rusi.json --query 'flows[severity=error] count'",
+    "atom-tools attack-surface -i rust-microservices-kafka-rusi.json -f json -o attack-surface.json",
+    "atom-tools graph -i rust-microservices-kafka-rusi.json --metric chokepoints"
+  ],
+  "summary": {
+    "endpoints": 14,
+    "engineVersions": {
+      "rusi": [
+        "3.2.0"
+      ]
+    },
+    "engines": [
+      "rusi"
+    ],
+    "flows": 5,
+    "flowsBehindAnEntryPoint": 1,
+    "flowsWithSourceTags": 5,
+    "packageRecords": 3,
+    "severity": {
+      "error": 0,
+      "note": 0,
+      "warning": 5
+    },
+    "severitySource": {
+      "derived": 5,
+      "engine": 0
+    },
+    "sources": [
+      "rust-microservices-kafka-rusi.json"
+    ]
+  },
+  "tokenBudget": {
+    "countingMethod": "characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser",
+    "estimatedTokens": 2562,
+    "maxTokens": 4000,
+    "respected": true
+  }
+}

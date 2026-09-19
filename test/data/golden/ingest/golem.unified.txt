@@ -1,0 +1,232 @@
+unified document md5: 889f5fc25d63837050ae1cb127664218
+engine: golem 3.2.0, mode all
+counts: 397 flow(s), 57 endpoint(s), 21 package(s), 1 diagnostic(s)
+flow[0]: {
+  "analysis_mode": "all",
+  "confidence": "high",
+  "engine": "golem",
+  "engine_version": "3.2.0",
+  "extra": {
+    "crossesDependency": true,
+    "dependencyHops": 1,
+    "edgeKinds": [
+      "call",
+      "call-return",
+      "sink",
+      "store"
+    ],
+    "fieldPaths": [
+      "FuncStarts"
+    ],
+    "flowKey": "df-flow|sha256:6024039ae21265a8527067db48c373e17c45c9db542c9495af15e685247d1b45",
+    "riskScore": 55,
+    "ruleId": "GOLEM-DATAFLOW-EXTERNAL-SERVICE",
+    "ruleName": "User input or secret reaches external service SDK",
+    "sinkPurl": "pkg:golang/github.com/blacktop/ipsw",
+    "sourcePurl": "pkg:golang/github.com/blacktop/ipsw"
+  },
+  "id": "seam-slice|sha256:0038e689258c614bfb273a3e881edba2ace02e42d87c642262d7b4d492d83876",
+  "nodes": [
+    {
+      "code": "",
+      "column": 32,
+      "file": "/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go",
+      "function": "github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14",
+      "line": 212,
+      "name": "GetBool",
+      "package": "github.com/blacktop/ipsw/cmd/ipsw/cmd",
+      "purl": "pkg:golang/github.com/blacktop/ipsw",
+      "role": "source",
+      "symbol": "github.com/spf13/viper.GetBool",
+      "tags": [
+        "configuration"
+      ]
+    },
+    {
+      "code": "",
+      "column": 32,
+      "file": "/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go",
+      "function": "github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14",
+      "line": 212,
+      "name": "GetBool",
+      "package": "github.com/blacktop/ipsw/cmd/ipsw/cmd",
+      "purl": "pkg:golang/github.com/blacktop/ipsw",
+      "role": "step",
+      "symbol": "github.com/spf13/viper.GetBool",
+      "tags": []
+    },
+    {
+      "code": "",
+      "column": 14,
+      "file": "/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go",
+      "function": "github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14",
+      "line": 212,
+      "name": "t42",
+      "package": "github.com/blacktop/ipsw/cmd/ipsw/cmd",
+      "purl": "pkg:golang/github.com/blacktop/ipsw",
+      "role": "step",
+      "symbol": "&t15.FuncStarts [#11]",
+      "tags": []
+    },
+    {
+      "code": "",
+      "column": 16,
+      "file": "/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go",
+      "function": "github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14",
+      "line": 200,
+      "name": "New",
+      "package": "github.com/blacktop/ipsw/cmd/ipsw/cmd",
+      "purl": "pkg:golang/github.com/blacktop/ipsw",
+      "role": "step",
+      "symbol": "github.com/blacktop/ipsw/internal/diff.New",
+      "tags": []
+    },
+    {
+      "code": "",
+      "column": 19,
+      "file": "/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go",
+      "function": "github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14",
+      "line": 224,
+      "name": "Diff",
+      "package": "github.com/blacktop/ipsw/cmd/ipsw/cmd",
+      "purl": "pkg:golang/github.com/blacktop/ipsw",
+      "role": "step",
+      "symbol": "(*github.com/blacktop/ipsw/internal/diff.Diff).Diff",
+      "tags": []
+    },
+    {
+      "code": "",
+      "column": 21,
+      "file": "/Users/prabhu/sandbox/ipsw/pkg/aea/aea.go",
+      "function": "(*github.com/blacktop/ipsw/internal/diff.Diff).Diff",
+      "line": 159,
+      "name": "Do",
+      "package": "github.com/blacktop/ipsw/internal/diff",
+      "purl": "pkg:golang/github.com/blacktop/ipsw",
+      "role": "sink",
+      "symbol": "(*net/http.Client).Do",
+      "tags": [
+        "external-service"
+      ]
+    }
+  ],
+  "path_truncated": false,
+  "purls": [
+    "pkg:golang/github.com/blacktop/ipsw"
+  ],
+  "raw": {
+    "confidence": "high",
+    "crossesDependency": true,
+    "dependencyHops": 1,
+    "description": "configuration reaches (*net/http.Client).Do",
+    "edgeIds": [
+      "seam-edge|sha256:8418e37f0fbd4c9ff5254a2d68d7045db1fa8ef436f7510e469619bfdf63257e",
+      "seam-edge|sha256:adea9657ac6bfd95185aedc6ea0db50c7a259bc50767d5d16bfebf843e5f752e",
+      "seam-edge|sha256:648cc4ee235d304692d79eff1aa2613dca889edce4a339599868b9f073a77bde",
+      "seam-edge|sha256:781ba8c13622553bb893acfbb4770819bf1eabd15783f9df26a23e83dfdf0219",
+      "seam-edge|sha256:4cb9445ad8754da400c4e7fdce6dcf73f8b2380c58e4b708bd63645a90ee95d4"
+    ],
+    "edgeKinds": [
+      "call",
+      "call-return",
+      "sink",
+      "store"
+    ],
+    "fieldPaths": [
+      "FuncStarts"
+    ],
+    "flowKey": "df-flow|sha256:6024039ae21265a8527067db48c373e17c45c9db542c9495af15e685247d1b45",
+    "id": "seam-slice|sha256:0038e689258c614bfb273a3e881edba2ace02e42d87c642262d7b4d492d83876",
+    "nodeIds": [
+      "seam-source|github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14|viper-getbool.source|/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go:212:32",
+      "seam-node|call|github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14|github.com/spf13/viper.GetBool|GetBool||/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go:212:32",
+      "seam-node|store|github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14|&t15.FuncStarts [#11]|t42|FuncStarts|/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go:212:14",
+      "seam-node|call|github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14|github.com/blacktop/ipsw/internal/diff.New|New||/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go:200:16",
+      "seam-node|call|github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14|(*github.com/blacktop/ipsw/internal/diff.Diff).Diff|Diff||/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go:224:19",
+      "seam-node|sink|(*github.com/blacktop/ipsw/internal/diff.Diff).Diff|(*net/http.Client).Do|Do||/Users/prabhu/sandbox/ipsw/pkg/aea/aea.go:159:21|external-service"
+    ],
+    "pathLength": 5,
+    "purls": [
+      "pkg:golang/github.com/blacktop/ipsw"
+    ],
+    "riskScore": 55,
+    "ruleId": "GOLEM-DATAFLOW-EXTERNAL-SERVICE",
+    "ruleName": "User input or secret reaches external service SDK",
+    "severity": "medium",
+    "sinkArgumentIndex": 0,
+    "sinkCategory": "external-service",
+    "sinkCriticality": "medium",
+    "sinkFunction": "(*github.com/blacktop/ipsw/internal/diff.Diff).Diff",
+    "sinkId": "seam-node|sink|(*github.com/blacktop/ipsw/internal/diff.Diff).Diff|(*net/http.Client).Do|Do||/Users/prabhu/sandbox/ipsw/pkg/aea/aea.go:159:21|external-service",
+    "sinkName": "Do",
+    "sinkPackagePath": "github.com/blacktop/ipsw/internal/diff",
+    "sinkPurl": "pkg:golang/github.com/blacktop/ipsw",
+    "sinkScope": "runtime",
+    "sinkSymbol": "(*net/http.Client).Do",
+    "sourceCategory": "configuration",
+    "sourceCriticality": "medium",
+    "sourceFunction": "github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14",
+    "sourceId": "seam-source|github.com/blacktop/ipsw/cmd/ipsw/cmd.init$14|viper-getbool.source|/Users/prabhu/sandbox/ipsw/cmd/ipsw/cmd/diff.go:212:32",
+    "sourceName": "GetBool",
+    "sourcePackagePath": "github.com/blacktop/ipsw/cmd/ipsw/cmd",
+    "sourcePurl": "pkg:golang/github.com/blacktop/ipsw",
+    "sourceScope": "runtime",
+    "sourceSymbol": "github.com/spf13/viper.GetBool",
+    "taintKinds": [
+      "url",
+      "user-input"
+    ]
+  },
+  "sanitized": false,
+  "severity": "warning",
+  "severity_source": "engine",
+  "sink_category": "external-service",
+  "source_category": "configuration",
+  "taint_kinds": [
+    "url",
+    "user-input"
+  ]
+}
+endpoint[0]: {
+  "file": "/Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go",
+  "framework": "gin",
+  "handler": "func literal",
+  "kind": "http-route",
+  "line": 36,
+  "method": "GET",
+  "package": "github.com/blacktop/ipsw/api/server/routes/aea",
+  "path": "/aea/fcs-keys/:key",
+  "purl": null,
+  "raw": {
+    "framework": "gin",
+    "handler": "func literal",
+    "id": "github.com/blacktop/ipsw/api/server/routes/aea|endpoint|http-route|GET|/aea/fcs-keys/:key|func literal|/Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go|36|2",
+    "kind": "http-route",
+    "method": "GET",
+    "packagePath": "github.com/blacktop/ipsw/api/server/routes/aea",
+    "parameters": [
+      {
+        "location": "path",
+        "name": "key",
+        "typeName": "string"
+      }
+    ],
+    "path": "/aea/fcs-keys/:key",
+    "range": {
+      "end": {
+        "column": 4,
+        "filename": "/Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go",
+        "line": 69,
+        "offset": 1896
+      },
+      "start": {
+        "column": 2,
+        "filename": "/Users/prabhu/sandbox/ipsw/api/server/routes/aea/aea.go",
+        "line": 36,
+        "offset": 739
+      }
+    },
+    "responseType": "object",
+    "usageScope": "runtime"
+  }
+}

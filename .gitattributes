@@ -1,0 +1,6 @@
+# Goldens are compared byte-for-byte and regenerated in place. Python's
+# text-mode round trip is separator-tolerant (universal newlines on read),
+# but a Windows clone with core.autocrlf=false would see every golden as
+# fully modified after a regen writes CRLF. Pin LF on both checkout and
+# checkin so the tree stays byte-identical on every OS and git config.
+test/data/golden/** text eol=lf

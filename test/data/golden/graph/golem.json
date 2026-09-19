@@ -1,0 +1,175 @@
+{
+    "diagnostics": [
+        "golem: 13 of 58 flow source function(s) and 27 of 77 sink function(s) anchored in the call graph; the rest are not nodes of it.",
+        "golem call graph in test/data/ecosystem/go-ipsw-golem.json is a subgraph of the engine's run (3325 of 22308 edges, 986 of 7848 nodes, per its own stats block); every metric is computed within that subgraph."
+    ],
+    "engines": [
+        "golem"
+    ],
+    "graphVersion": 1,
+    "graphs": [
+        {
+            "callTypeMix": {
+                "static": 3325
+            },
+            "confidenceMix": {
+                "exact": 3325
+            },
+            "edges": 3325,
+            "engine": "golem",
+            "engineDiagnostics": [
+                "callgraph: //go:linkname _Cgo_always_false runtime.cgoAlwaysFalse is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_e2624339ec71_Cfunc_state _cgo_e2624339ec71_Cfunc_state is unresolved in the loaded program",
+                "callgraph: //go:linkname _Cgo_always_false runtime.cgoAlwaysFalse is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_19d706f38116_Cfunc_compression_decode_buffer _cgo_19d706f38116_Cfunc_compression_decode_buffer is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_19d706f38116_Cfunc_compression_encode_buffer _cgo_19d706f38116_Cfunc_compression_encode_buffer is unresolved in the loaded program",
+                "callgraph: //go:linkname _Cgo_always_false runtime.cgoAlwaysFalse is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc__Cmalloc _cgo_8279e5c5a74f_Cfunc__Cmalloc is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc_dlclose _cgo_8279e5c5a74f_Cfunc_dlclose is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc_dlerror _cgo_8279e5c5a74f_Cfunc_dlerror is unresolved in the loaded program",
+                "callgraph: //go:linkname __cgofn__cgo_8279e5c5a74f_Cfunc_dlopen _cgo_8279e5c5a74f_Cfunc_dlopen is unresolved in the loaded program",
+                "... 10 more not pinned ..."
+            ],
+            "engineRootReasons": {
+                "init": 184,
+                "main": 2
+            },
+            "engineRoots": 186,
+            "engineRootsInGraph": 0,
+            "externalNodes": 153,
+            "fullEdges": 22308,
+            "fullNodes": 7848,
+            "internalNodes": 833,
+            "nodes": 986,
+            "sourceFile": "test/data/ecosystem/go-ipsw-golem.json",
+            "trimmed": true
+        }
+    ],
+    "metric": "chokepoints",
+    "options": {
+        "includeExternal": false,
+        "maxChokepointSources": 64,
+        "minConfidence": null
+    },
+    "results": [
+        {
+            "computed": true,
+            "engine": "golem",
+            "externalNodesExcludedFromRanking": 153,
+            "ranked": [
+                {
+                    "betweenness": 2.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/img4/payload.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/img4.Payload).Decompress",
+                    "line": 329,
+                    "name": "(*github.com/blacktop/ipsw/pkg/img4.Payload).Decompress",
+                    "package": "github.com/blacktop/ipsw/pkg/img4",
+                    "pairShare": 0.042
+                },
+                {
+                    "betweenness": 2.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/img4/payload.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/img4.Payload).GetData",
+                    "line": 446,
+                    "name": "(*github.com/blacktop/ipsw/pkg/img4.Payload).GetData",
+                    "package": "github.com/blacktop/ipsw/pkg/img4",
+                    "pairShare": 0.042
+                },
+                {
+                    "betweenness": 2.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).batchStaticCallContexts",
+                    "line": 1833,
+                    "name": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).batchStaticCallContexts",
+                    "package": "github.com/blacktop/ipsw/pkg/kernelcache/cpp",
+                    "pairShare": 0.042
+                },
+                {
+                    "betweenness": 2.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/devicetree/image.go",
+                    "id": "github.com/blacktop/ipsw/pkg/devicetree.ParseImg4Data",
+                    "line": 44,
+                    "name": "github.com/blacktop/ipsw/pkg/devicetree.ParseImg4Data",
+                    "package": "github.com/blacktop/ipsw/pkg/devicetree",
+                    "pairShare": 0.042
+                },
+                {
+                    "betweenness": 2.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/info/info.go",
+                    "id": "github.com/blacktop/ipsw/pkg/info.ParseZipFiles",
+                    "line": 844,
+                    "name": "github.com/blacktop/ipsw/pkg/info.ParseZipFiles",
+                    "package": "github.com/blacktop/ipsw/pkg/info",
+                    "pairShare": 0.042
+                },
+                {
+                    "betweenness": 1.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/discover.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).functionReferencesAddressNoResolve",
+                    "line": 451,
+                    "name": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).functionReferencesAddressNoResolve",
+                    "package": "github.com/blacktop/ipsw/pkg/kernelcache/cpp",
+                    "pairShare": 0.021
+                },
+                {
+                    "betweenness": 1.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).inferMetaPtrFromDirectCallers",
+                    "line": 1473,
+                    "name": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).inferMetaPtrFromDirectCallers",
+                    "package": "github.com/blacktop/ipsw/pkg/kernelcache/cpp",
+                    "pairShare": 0.021
+                },
+                {
+                    "betweenness": 1.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/helpers.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).inferMetaPtrFromDirectCallersDepth",
+                    "line": 1477,
+                    "name": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).inferMetaPtrFromDirectCallersDepth",
+                    "package": "github.com/blacktop/ipsw/pkg/kernelcache/cpp",
+                    "pairShare": 0.021
+                },
+                {
+                    "betweenness": 1.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/pkg/kernelcache/cpp/emulate.go",
+                    "id": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).recoverStaticAnchorClasses",
+                    "line": 416,
+                    "name": "(*github.com/blacktop/ipsw/pkg/kernelcache/cpp.Scanner).recoverStaticAnchorClasses",
+                    "package": "github.com/blacktop/ipsw/pkg/kernelcache/cpp",
+                    "pairShare": 0.021
+                },
+                {
+                    "betweenness": 1.0,
+                    "external": false,
+                    "file": "/Users/prabhu/sandbox/ipsw/internal/commands/dsc/dsc.go",
+                    "id": "github.com/blacktop/ipsw/internal/commands/dsc.LookupSymbol",
+                    "line": 278,
+                    "name": "github.com/blacktop/ipsw/internal/commands/dsc.LookupSymbol",
+                    "package": "github.com/blacktop/ipsw/internal/commands/dsc",
+                    "pairShare": 0.021
+                },
+                "... 6 more not pinned ..."
+            ],
+            "seeds": {
+                "pairs": 48,
+                "policy": "flow-sources\u2192flow-sinks",
+                "sinks": 27,
+                "source": "engine",
+                "sources": 13
+            },
+            "sourceFile": "test/data/ecosystem/go-ipsw-golem.json"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/go-ipsw-golem.json"
+    ]
+}

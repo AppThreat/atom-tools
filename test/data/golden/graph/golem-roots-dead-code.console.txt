@@ -1,0 +1,10 @@
+Call graph metric: dead-code — the engine's own verdict (golem, 1 input(s))
+golem: 986 nodes (833 internal, 153 external), 3325 edges
+  call types: static 3325
+  engine roots: 294 of 3459 in this graph
+
+-- golem (test/data/ecosystem/go-ipsw-golem-roots.json) --
+source: engine
+nodes unreachable from the engine's roots: 39 of 986 with a verdict
+note: golem: golem's reachability measures reachability from its own roots (3459 root(s), reasons: exported 3457, main 2); unreachable-from-roots is the engine's liveness verdict over its full run, not a deletability claim.
+note: golem call graph in test/data/ecosystem/go-ipsw-golem-roots.json is a subgraph of the engine's run (3325 of 22308 edges, 986 of 7848 nodes, per its own stats block); every metric is computed within that subgraph.

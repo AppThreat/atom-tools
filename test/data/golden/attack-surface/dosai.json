@@ -1,0 +1,621 @@
+{
+    "attackSurfaceVersion": 1,
+    "coverage": {
+        "dosai": {
+            "endpoints": 60,
+            "engine": "dosai",
+            "reachSource": "the engine's own AttackSurface array"
+        }
+    },
+    "diagnostics": [],
+    "engine": "dosai",
+    "sources": [
+        "test/data/ecosystem/dotnet-eshoponweb-dosai-dataflows.json"
+    ],
+    "summary": {
+        "anonymousReach": {
+            "anonymousEntryPoints": 27,
+            "computed": true,
+            "reachingHighSeveritySink": 0
+        },
+        "byEngine": {
+            "dosai": 60
+        },
+        "byTier": {
+            "anonymous-http": 27,
+            "authenticated-http": 24,
+            "cli": 7,
+            "queue": 2
+        },
+        "entryPoints": 60,
+        "entryPointsWithReach": 1,
+        "headline": "0 of 27 anonymous entry points (0%) reach at least one high-risk sink (27 of 60 entry points are anonymous).",
+        "reachComputed": true
+    },
+    "tierOrder": [
+        "anonymous-http",
+        "anonymous-rpc",
+        "anonymous",
+        "mcp",
+        "queue",
+        "cli",
+        "authenticated-http",
+        "authenticated-rpc",
+        "internal",
+        "unknown-auth"
+    ],
+    "tiers": [
+        {
+            "Engine": [
+                "dosai"
+            ],
+            "EntryPointCount": 27,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:razor-blazor:src.Web.Pages/Index#page",
+                    "ExploitChainCount": 0,
+                    "Exposure": "anonymous-http",
+                    "File": "src/Web/Pages/Index.cshtml",
+                    "FileName": "Index.cshtml",
+                    "Framework": null,
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "ANY",
+                    "Kind": "HttpRazorPage",
+                    "LineNumber": 8,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:razor-blazor:src.Web.Areas.Identity.Pages.Account/ConfirmEmail#page",
+                    "ExploitChainCount": 0,
+                    "Exposure": "anonymous-http",
+                    "File": "src/Web/Areas/Identity/Pages/Account/ConfirmEmail.cshtml",
+                    "FileName": "ConfirmEmail.cshtml",
+                    "Framework": null,
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "ANY",
+                    "Kind": "HttpRazorPage",
+                    "LineNumber": 1,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Account/ConfirmEmail",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:razor-blazor:src.Web.Areas.Identity.Pages.Account/Login#page",
+                    "ExploitChainCount": 0,
+                    "Exposure": "anonymous-http",
+                    "File": "src/Web/Areas/Identity/Pages/Account/Login.cshtml",
+                    "FileName": "Login.cshtml",
+                    "Framework": null,
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "ANY",
+                    "Kind": "HttpRazorPage",
+                    "LineNumber": 1,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Account/Login",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:razor-blazor:src.Web.Areas.Identity.Pages.Account/Logout#page",
+                    "ExploitChainCount": 0,
+                    "Exposure": "anonymous-http",
+                    "File": "src/Web/Areas/Identity/Pages/Account/Logout.cshtml",
+                    "FileName": "Logout.cshtml",
+                    "Framework": null,
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "ANY",
+                    "Kind": "HttpRazorPage",
+                    "LineNumber": 1,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Account/Logout",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:razor-blazor:src.Web.Areas.Identity.Pages.Account/Register#page",
+                    "ExploitChainCount": 0,
+                    "Exposure": "anonymous-http",
+                    "File": "src/Web/Areas/Identity/Pages/Account/Register.cshtml",
+                    "FileName": "Register.cshtml",
+                    "Framework": null,
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "ANY",
+                    "Kind": "HttpRazorPage",
+                    "LineNumber": 1,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Account/Register",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                "... 22 more entry point(s) not pinned ..."
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 0,
+            "ExploitChainCount": 0,
+            "Exposure": "anonymous-http",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "engine"
+            ],
+            "WeaknessCount": 0
+        },
+        {
+            "Engine": [
+                "dosai"
+            ],
+            "EntryPointCount": 2,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:messaging:Microsoft.eShopWeb.Web.Features.MyOrders/GetMyOrdersHandler#Handle",
+                    "ExploitChainCount": 0,
+                    "Exposure": "queue",
+                    "File": "src/Web/Features/MyOrders/GetMyOrdersHandler.cs",
+                    "FileName": "GetMyOrdersHandler.cs",
+                    "Framework": null,
+                    "Handler": "Microsoft.eShopWeb.Web.Features.MyOrders.GetMyOrdersHandler.Handle",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "MessageConsumer",
+                    "LineNumber": 18,
+                    "Package": "Microsoft.eShopWeb.Web.Features.MyOrders",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "src/Web/Features/MyOrders/GetMyOrdersHandler.cs",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:messaging:Microsoft.eShopWeb.Web.Features.OrderDetails/GetOrderDetailsHandler#Handle",
+                    "ExploitChainCount": 0,
+                    "Exposure": "queue",
+                    "File": "src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs",
+                    "FileName": "GetOrderDetailsHandler.cs",
+                    "Framework": null,
+                    "Handler": "Microsoft.eShopWeb.Web.Features.OrderDetails.GetOrderDetailsHandler.Handle",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "MessageConsumer",
+                    "LineNumber": 18,
+                    "Package": "Microsoft.eShopWeb.Web.Features.OrderDetails",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "src/Web/Features/OrderDetails/GetOrderDetailsHandler.cs",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                }
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 0,
+            "ExploitChainCount": 0,
+            "Exposure": "queue",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "engine"
+            ],
+            "WeaknessCount": 0
+        },
+        {
+            "Engine": [
+                "dosai"
+            ],
+            "EntryPointCount": 7,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [
+                        "CWE-117"
+                    ],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep54",
+                    "ExploitChainCount": 0,
+                    "Exposure": "cli",
+                    "File": "src/Web/bin/Debug/net8.0/BlazorDebugProxy/BrowserDebugHost.dll",
+                    "FileName": "BrowserDebugHost.dll",
+                    "Framework": null,
+                    "Handler": "Microsoft.WebAssembly.Diagnostics.Program.Main",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "Cli",
+                    "LineNumber": 1,
+                    "Package": "Microsoft.WebAssembly.Diagnostics",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [
+                            "log"
+                        ],
+                        "state": "engine"
+                    },
+                    "Route": "src/Web/bin/Debug/net8.0/BlazorDebugProxy/BrowserDebugHost.dll",
+                    "SinkCategories": [
+                        "log"
+                    ],
+                    "WeaknessCount": 81,
+                    "WeaknessKinds": [
+                        "LogInjectionCandidate"
+                    ]
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep55",
+                    "ExploitChainCount": 0,
+                    "Exposure": "cli",
+                    "File": "../../../.nuget/packages/microsoft.net.test.sdk/17.9.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs",
+                    "FileName": "Microsoft.NET.Test.Sdk.Program.cs",
+                    "Framework": null,
+                    "Handler": "AutoGeneratedProgram.Main",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "Cli",
+                    "LineNumber": 4,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "../../../.nuget/packages/microsoft.net.test.sdk/17.9.0/build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep56",
+                    "ExploitChainCount": 0,
+                    "Exposure": "cli",
+                    "File": "src/BlazorAdmin/Program.cs",
+                    "FileName": "Program.cs",
+                    "Framework": null,
+                    "Handler": "<global namespace>.Program.<Main>$",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "Cli",
+                    "LineNumber": 16,
+                    "Package": "<global namespace>",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "src/BlazorAdmin/Program.cs",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep58",
+                    "ExploitChainCount": 0,
+                    "Exposure": "cli",
+                    "File": "src/PublicApi/Program.cs",
+                    "FileName": "Program.cs",
+                    "Framework": null,
+                    "Handler": "<global namespace>.Program.<Main>$",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "Cli",
+                    "LineNumber": 26,
+                    "Package": "<global namespace>",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "src/PublicApi/Program.cs",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep57",
+                    "ExploitChainCount": 0,
+                    "Exposure": "cli",
+                    "File": "src/Web/Program.cs",
+                    "FileName": "Program.cs",
+                    "Framework": null,
+                    "Handler": "<global namespace>.Program.<Main>$",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "Cli",
+                    "LineNumber": 22,
+                    "Package": "<global namespace>",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "src/Web/Program.cs",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                "... 2 more entry point(s) not pinned ..."
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 1,
+            "ExploitChainCount": 0,
+            "Exposure": "cli",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "engine"
+            ],
+            "WeaknessCount": 81
+        },
+        {
+            "Engine": [
+                "dosai"
+            ],
+            "EntryPointCount": 24,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:razor-blazor:src.BlazorAdmin.Pages.CatalogItemPage/List#page",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "File": "src/BlazorAdmin/Pages/CatalogItemPage/List.razor",
+                    "FileName": "List.razor",
+                    "Framework": null,
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "ANY",
+                    "Kind": "HttpRazorPage",
+                    "LineNumber": 1,
+                    "Package": null,
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/admin",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Manage#GET:/Manage/ChangePassword",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "File": "src/Web/Controllers/ManageController.cs",
+                    "FileName": "ManageController.cs",
+                    "Framework": null,
+                    "Handler": "Microsoft.eShopWeb.Web.Controllers.ManageController.ChangePassword",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "HttpController",
+                    "LineNumber": 136,
+                    "Package": "Microsoft.eShopWeb.Web.Controllers",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Manage/ChangePassword",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Manage#GET:/Manage/Disable2faWarning",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "File": "src/Web/Controllers/ManageController.cs",
+                    "FileName": "ManageController.cs",
+                    "Framework": null,
+                    "Handler": "Microsoft.eShopWeb.Web.Controllers.ManageController.Disable2faWarning",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "HttpController",
+                    "LineNumber": 337,
+                    "Package": "Microsoft.eShopWeb.Web.Controllers",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Manage/Disable2faWarning",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Manage#GET:/Manage/EnableAuthenticator",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "File": "src/Web/Controllers/ManageController.cs",
+                    "FileName": "ManageController.cs",
+                    "Framework": null,
+                    "Handler": "Microsoft.eShopWeb.Web.Controllers.ManageController.EnableAuthenticator",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "HttpController",
+                    "LineNumber": 374,
+                    "Package": "Microsoft.eShopWeb.Web.Controllers",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Manage/EnableAuthenticator",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "dosai",
+                    "EntryPointId": "ep:op:svc:aspnetcore-mvc:Microsoft.eShopWeb.Web.Controllers/Manage#GET:/Manage/ExternalLogins",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "File": "src/Web/Controllers/ManageController.cs",
+                    "FileName": "ManageController.cs",
+                    "Framework": null,
+                    "Handler": "Microsoft.eShopWeb.Web.Controllers.ManageController.ExternalLogins",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "HttpController",
+                    "LineNumber": 233,
+                    "Package": "Microsoft.eShopWeb.Web.Controllers",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [],
+                        "sinkCategories": [],
+                        "state": "engine"
+                    },
+                    "Route": "/Manage/ExternalLogins",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                "... 19 more entry point(s) not pinned ..."
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 0,
+            "ExploitChainCount": 0,
+            "Exposure": "authenticated-http",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "engine"
+            ],
+            "WeaknessCount": 0
+        }
+    ]
+}

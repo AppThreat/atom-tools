@@ -16,6 +16,11 @@ from typing import Dict, List, Optional
 
 logger = logging.getLogger(__name__)
 
+# Wall clock budget for external tools (blint, atom) in seconds. Override with
+# the ATOM_TOOLS_SUBPROCESS_TIMEOUT environment variable; 0 disables the
+# timeout. Large atom runs can take a while, hence the generous default.
+DEFAULT_SUBPROCESS_TIMEOUT = int(os.environ.get("ATOM_TOOLS_SUBPROCESS_TIMEOUT", 3600))
+
 # Recognized Android application files.
 APP_EXTENSIONS = (".apk", ".apkm", ".apks", ".xapk", ".aab")
 
@@ -183,25 +188,40 @@ def _report_path(reports_dir: str, app_file: str, suffix: str) -> str:
     return os.path.join(reports_dir, f"{base}.{suffix}")
 
 
-def run_command(args: List[str]) -> subprocess.CompletedProcess:
+def run_command(
+    args: List[str], timeout: Optional[int] = None
+) -> subprocess.CompletedProcess:
     """
     Run an external command, capturing its output.
 
     Args:
         args: The command line arguments.
+        timeout: Seconds to wait before killing the command. None falls back
+            to ATOM_TOOLS_SUBPROCESS_TIMEOUT (default 3600); 0 disables the
+            timeout entirely.
 
     Returns:
-        The completed process.
+        The completed process. On timeout a synthetic process with return
+        code 124 is returned so callers treat it as a normal failure.
     """
+    if timeout is None:
+        timeout = DEFAULT_SUBPROCESS_TIMEOUT
     logger.info("Executing: %s", " ".join(args))
-    return subprocess.run(
-        args,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        env=os.environ.copy(),
-        encoding="utf-8",
-        check=False,
-    )
+    try:
+        return subprocess.run(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            env=os.environ.copy(),
+            encoding="utf-8",
+            check=False,
+            timeout=timeout or None,
+        )
+    except subprocess.TimeoutExpired:
+        logger.warning("Command timed out after %ss: %s", timeout, " ".join(args))
+        return subprocess.CompletedProcess(
+            args, 124, stdout=f"Command timed out after {timeout}s."
+        )
 
 
 def run_blint_sbom(blint_cmd: str, app_file: str, reports_dir: str, deep: bool) -> Optional[str]:
@@ -253,6 +273,9 @@ def run_atom_slices(atom_cmd: str, app_file: str, reports_dir: str) -> Dict[str,
     """
     Generate usage and reachable slices for an application using atom.
 
+    Thin wrapper over the shared ``analysis_pipeline.run_atom_slices`` with the
+    apk language and the report naming used by this pipeline.
+
     Args:
         atom_cmd: The resolved atom command.
         app_file: The application file to analyse.
@@ -261,54 +284,15 @@ def run_atom_slices(atom_cmd: str, app_file: str, reports_dir: str) -> Dict[str,
     Returns:
         A mapping with the ``usages`` and ``reachables`` slice paths.
     """
-    atom_file = _report_path(reports_dir, app_file, "atom")
-    usages_file = _report_path(reports_dir, app_file, "usages.json")
-    reachables_file = _report_path(reports_dir, app_file, "reachables.json")
-    result: Dict[str, Optional[str]] = {"usages": None, "reachables": None}
-    # Build reachables first: it produces an atom that carries data dependencies
-    # in addition to the AST. The usages slice only needs the AST, so it can then
-    # reuse that richer atom rather than rebuilding the CPG from scratch.
-    reachables_cp = run_command(
-        [
-            atom_cmd,
-            "reachables",
-            "-l",
-            "apk",
-            "-o",
-            atom_file,
-            "-s",
-            reachables_file,
-            app_file,
-        ]
-    )
-    if reachables_cp.returncode == 0 and os.path.exists(reachables_file):
-        result["reachables"] = reachables_file
-    else:
-        logger.warning(
-            "atom reachables failed for %s: %s",
-            app_file,
-            (reachables_cp.stdout or "").strip(),
-        )
-    usages_cmd = [
+    from atom_tools.lib.analysis_pipeline import run_atom_slices as run_generic
+
+    return run_generic(
         atom_cmd,
-        "usages",
-        "-l",
-        "apk",
-        "-o",
-        atom_file,
-        "-s",
-        usages_file,
         app_file,
-    ]
-    # Only reuse the atom when reachables actually produced one.
-    if result["reachables"] is not None and os.path.exists(atom_file):
-        usages_cmd.append("--reuse-atom")
-    usages_cp = run_command(usages_cmd)
-    if usages_cp.returncode == 0 and os.path.exists(usages_file):
-        result["usages"] = usages_file
-    else:
-        logger.warning("atom usages failed for %s: %s", app_file, (usages_cp.stdout or "").strip())
-    return result
+        "apk",
+        reports_dir,
+        name=os.path.basename(app_file),
+    )
 
 
 def analyze_app(
