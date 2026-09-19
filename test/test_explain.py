@@ -40,10 +40,11 @@ DOSAI = ECOSYSTEM / "dotnet-eshoponweb-dosai-dataflows.json"
 GOLEM = ECOSYSTEM / "go-ipsw-golem.json"
 RUSI = ECOSYSTEM / "rust-microservices-kafka-rusi.json"
 RUSI_BASELINE = ECOSYSTEM / "rust-microservices-kafka-rusi-baseline.json"
+KOSI = ECOSYSTEM / "kotlin-command-exec-kosi.json"
 ATOM = Path("test/data/java-petclinic-reachables.json")
 GOLDEN = Path("test/data/golden/explain")
 
-FIXTURES = {"dosai": DOSAI, "golem": GOLEM, "rusi": RUSI, "atom": ATOM}
+FIXTURES = {"dosai": DOSAI, "golem": GOLEM, "rusi": RUSI, "kosi": KOSI, "atom": ATOM}
 
 
 def load(path):
@@ -140,6 +141,24 @@ def test_joined_flow_says_exposure_unknown_for_non_dosai_engines():
     block = "\n".join(explain_flow_lines(joined[0], ctx))
     assert "does not classify authentication, so the route's exposure is unknown" in block
     assert "anonymous" not in block.replace("unknown-auth", "")
+
+
+def test_kosi_undeclared_route_says_the_engine_recorded_no_requirement():
+    """kosi classifies its endpoints, so the generic "does not classify"
+    sentence would be false about it. The unknown-auth wording is per-route:
+    no requirement was declared at a site kosi models — never "open", never
+    "anonymous"."""
+    ctx = context_for(KOSI)
+    joined = [f for f in ctx.report.flows if f.id in ctx.flow_entry_points]
+    assert [f.id for f in joined] == ["slice-000001"]
+    block = "\n".join(explain_flow_lines(joined[0], ctx))
+    assert "kosi records no authentication requirement for this route" in block
+    assert "anonymous" not in block.replace("unknown-auth", "")
+    # The second slice is not endpoint-rooted: the unjoined flow says so
+    # instead of dropping the clause.
+    unjoined = "\n".join(explain_flow_lines(ctx.report.flows[1], ctx))
+    assert "no entry-point link" in unjoined
+    assert "anonymous" not in unjoined.replace("unknown-auth", "")
 
 
 def test_dosai_flow_names_no_route_and_never_claims_anonymity():
@@ -517,10 +536,12 @@ def _golden(name, format_name, extension):
         ("dosai", ".text", ".txt", lambda ctx: render_text(ctx, max_flows=3)),
         ("golem", ".text", ".txt", lambda ctx: render_text(ctx, max_flows=3)),
         ("rusi", ".text", ".txt", lambda ctx: render_text(ctx, max_flows=3)),
+        ("kosi", ".text", ".txt", lambda ctx: render_text(ctx, max_flows=3)),
         ("atom", ".text", ".txt", lambda ctx: render_text(ctx, max_flows=3)),
         ("dosai", ".markdown", ".md", lambda ctx: render_markdown(ctx, max_flows=3)),
         ("golem", ".markdown", ".md", lambda ctx: render_markdown(ctx, max_flows=3)),
         ("rusi", ".markdown", ".md", lambda ctx: render_markdown(ctx, max_flows=3)),
+        ("kosi", ".markdown", ".md", lambda ctx: render_markdown(ctx, max_flows=3)),
         ("atom", ".markdown", ".md", lambda ctx: render_markdown(ctx, max_flows=3)),
         (
             "dosai",
@@ -536,6 +557,12 @@ def _golden(name, format_name, extension):
         ),
         (
             "rusi",
+            ".agent",
+            ".json",
+            lambda ctx: json.dumps(build_agent_document(ctx), indent=2, sort_keys=True) + "\n",
+        ),
+        (
+            "kosi",
             ".agent",
             ".json",
             lambda ctx: json.dumps(build_agent_document(ctx), indent=2, sort_keys=True) + "\n",

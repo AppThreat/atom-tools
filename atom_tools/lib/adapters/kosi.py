@@ -29,7 +29,7 @@ kosi is pre-1.0 and moving; ``schemaVersion`` is the pin, not the shape.
 """
 
 import logging
-from typing import Dict, List
+from typing import Dict, List, Optional, Tuple
 
 from atom_tools.lib import taxonomy
 from atom_tools.lib.unified import (
@@ -70,6 +70,70 @@ def _node(raw: Dict, role: str) -> UnifiedNode:
     )
 
 
+# kosi's declared-requirement vocabulary, read off EndpointDetector.kt /
+# WebXmlParser.kt / Endpoints.kt and confirmed against real reports:
+#   role(<r>)                          a route-level role requirement
+#   security-constraint(<roles>)       web.xml constraint naming roles
+#   security-constraint(authenticated) web.xml roles "*" — any authenticated principal
+#   security-constraint(denied)        web.xml deny-all — a refusal, not a login
+#   auth-handler(<scheme>)             an authentication handler chained onto the route
+#   meta-security(...) / contract-security(...)
+#                                      http4k security assignments
+#   <scheme>                           a declared scheme with no parameters
+KOSI_DENY = "security-constraint(denied)"
+
+
+def _exposure(ep: Dict) -> Tuple[Optional[str], Optional[bool], str]:
+    """Tier an endpoint from kosi's own declarations, and nothing else.
+
+    The discipline this follows (kosi's docs say it, and the tier system
+    exists to enforce it): **an empty declaration is not a denial.**
+    ``authentication: []`` means no requirement was declared at a site kosi
+    models — a filter kosi does not model may still guard the route — so an
+    empty list must never become ``anonymous-http``; it stays ``unknown-auth``
+    via the kind path.
+
+    What a non-empty declaration *is* decides the mapping:
+
+    - ``security-constraint(denied)`` is a **deny rule**. Matching on
+      "security-constraint" would call a route that rejects everyone
+      "authenticated"; instead a deny maps to ``internal`` — the
+      least-exposed tier, and the honest sentence: nothing external may
+      reach this endpoint at all. The full string is matched, so a
+      hypothetical role literally named "denied" cannot hit this branch.
+    - ``exported: false`` is a positive engine statement (the component is
+      not externally launchable) and maps to ``internal``. ``exported:
+      true`` says reachable, which is not anonymous, so it maps to nothing.
+    - every other declaration is a positive requirement and maps to
+      ``authenticated-http``.
+
+    Returns (tier or None, allow_anonymous or None, evidence text). The
+    evidence string is what the tier is traceable to — never a guess.
+    """
+    auth = [a for a in (ep.get("authentication") or []) if isinstance(a, str)]
+    exported = ep.get("exported")
+    deny = any(a == KOSI_DENY for a in auth)
+    if deny:
+        return (
+            "internal",
+            False,
+            f"declares a deny rule ({KOSI_DENY}): no caller may reach this endpoint",
+        )
+    if exported is False:
+        return (
+            "internal",
+            None,
+            "records the component as not exported (not externally launchable)",
+        )
+    if auth:
+        return (
+            "authenticated-http",
+            False,
+            "declares " + ", ".join(sorted(set(auth))),
+        )
+    return None, None, ""
+
+
 def _endpoint(ep: Dict) -> List[Dict]:
     """One kosi ApiEndpoint as one or more unified endpoint dicts.
 
@@ -85,6 +149,7 @@ def _endpoint(ep: Dict) -> List[Dict]:
     """
     methods = [m for m in (ep.get("httpMethod") or []) if isinstance(m, str)]
     position = ep.get("position") or {}
+    exposure, allow_anonymous, evidence = _exposure(ep)
     # Only the dsl/annotation/descriptor findings name HTTP routes; the
     # manifest ones are android components (framework "android") and saying
     # "http-route" over them would be our word contradicting the framework
@@ -101,6 +166,11 @@ def _endpoint(ep: Dict) -> List[Dict]:
         "purl": ep.get("purl") or None,
         "id": ep.get("id"),
         "raw": ep,
+        # The tier kosi's own declarations support, or absent when they say
+        # nothing (attack-surface then renders unknown-auth, its honest gap).
+        **({"exposure": exposure} if exposure else {}),
+        **({"exposureEvidence": evidence} if evidence else {}),
+        **({"allowAnonymous": allow_anonymous} if allow_anonymous is not None else {}),
         **({} if methods else {"methodUnresolved": True}),
     }
     if not methods:

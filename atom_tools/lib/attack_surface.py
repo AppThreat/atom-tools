@@ -23,13 +23,18 @@ dosai is never joined this way — its own ``AttackSurface[]`` already carries
 the engine's per-entry-point weakness and sink-category data, which is
 strictly better than anything we could traverse, so it is taken verbatim.
 
-**Authentication state is only known to dosai.** Its ``AllowAnonymous`` flag is
-an input to its analysis, not the verdict (24 of the 27 ``anonymous-http`` entry
-points in the eShopOnWeb fixture have ``AllowAnonymous: false``), and nothing in
-another engine's ``Kind`` splits anonymous from authenticated. Every non-dosai
-endpoint lands in the ``unknown-auth`` tier — rendered last and marked as a gap,
-because a fabricated ``anonymous`` classification would be worse than an honest
-one.
+**Authentication is known to dosai, and declared by kosi.** dosai's
+``AllowAnonymous`` flag is an input to its analysis, not the verdict (24 of
+the 27 ``anonymous-http`` entry points in the eShopOnWeb fixture have
+``AllowAnonymous: false``). kosi instead publishes the requirements declared
+at the sites it models (``apiEndpoints[].authentication``): a non-empty list
+is a positive statement and lifts the endpoint to ``authenticated-http`` (a
+deny rule to ``internal``), while an **empty list is the absence of a
+declaration, not the presence of anonymity** — those endpoints stay in
+``unknown-auth``. Nothing in golem's, rusi's or atom's output splits
+anonymous from authenticated. Every unclassified endpoint lands in the
+``unknown-auth`` tier — rendered last and marked as a gap, because a
+fabricated ``anonymous`` classification would be worse than an honest one.
 
 **"Reaches nothing" and "reach not computed" are opposite findings** and get
 opposite renderings. Each entry point carries a reach *state*: ``engine``
@@ -140,7 +145,17 @@ class EntryPoint:
     cwes: List[str] = field(default_factory=list)
     weakness_kinds: List[str] = field(default_factory=list)
     sink_categories: List[str] = field(default_factory=list)
-    allow_anonymous: Optional[bool] = None  # dosai only; None = unknown
+    # dosai's own input flag, and kosi's declared requirements (False only
+    # when the engine declares a requirement; a denied endpoint is not
+    # anonymous either). None = the engine said nothing.
+    allow_anonymous: Optional[bool] = None
+    # kosi publishes an empty method list when no method was resolved at a
+    # site it models. That is "unknown", not "any": the label prints the path
+    # alone instead of asserting our own "ANY" over it.
+    method_unresolved: bool = False
+    # The field the exposure tier is traceable to, when an engine stated it
+    # (kosi's declarations). Empty for kind-derived and dosai tiers.
+    exposure_evidence: str = ""
     reach_state: str = REACH_NOT_COMPUTED
     reach_sinks: List[str] = field(default_factory=list)
     reach_purls: List[str] = field(default_factory=list)
@@ -163,6 +178,10 @@ class EntryPoint:
             if self.method:
                 return f"{self.method} {self.path}"
             if _METHOD_IN_PATH.match(self.path):
+                return self.path
+            # kosi's empty method list means no method was resolved, which is
+            # not the same claim as "every method" — print the path alone.
+            if self.method_unresolved:
                 return self.path
             return f"ANY {self.path}"
         # golem records Go's literal nil as the handler string of listeners on
@@ -205,6 +224,9 @@ class EntryPoint:
             "FileName": os.path.basename(self.file) if self.file else None,
             "LineNumber": self.line,
             "AllowAnonymous": self.allow_anonymous,
+            # kosi-only traceability: which engine field the tier came from.
+            **({"ExposureEvidence": self.exposure_evidence} if self.exposure_evidence else {}),
+            **({"MethodUnresolved": True} if self.method_unresolved else {}),
             "ExploitChainCount": self.chains,
             "WeaknessCount": self.weaknesses,
             "HighSeverityWeaknessCount": self.high_severity_weaknesses,
@@ -639,6 +661,12 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
             seen.add(key)
             kind = endpoint.get("kind") or ""
             tier, tier_source = tier_for_kind(kind)
+            # kosi states the tier itself where its declarations support one
+            # (see the kosi adapter's _exposure for the decision and its
+            # honesty rules); the endpoint dict carries nothing there, so
+            # golem and rusi take the kind path unchanged.
+            if endpoint.get("exposure"):
+                tier, tier_source = endpoint["exposure"], "engine"
             entry_points.append(
                 EntryPoint(
                     engine=engine,
@@ -653,6 +681,9 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
                     framework=endpoint.get("framework") or "",
                     handler=endpoint.get("handler"),
                     package=endpoint.get("package") or "",
+                    allow_anonymous=endpoint.get("allowAnonymous"),
+                    method_unresolved=bool(endpoint.get("methodUnresolved")),
+                    exposure_evidence=endpoint.get("exposureEvidence") or "",
                     reach_state=REACH_NOT_COMPUTED,
                     source_file=inp.path,
                     raw=endpoint,
@@ -1042,6 +1073,10 @@ def _entry_line(ep: EntryPoint) -> str:
     auth = ""
     if ep.allow_anonymous is None and ep.tier == UNKNOWN_AUTH:
         auth = "  [auth unknown]"
+    # The field the tier is traceable to, when an engine stated one — kosi's
+    # declarations, spelled out so a rendered tier is never unexplained.
+    elif ep.exposure_evidence:
+        auth = f"  [kosi {ep.exposure_evidence}]"
     if not ep.file:
         return f"{ep.label}{auth}"
     # atom routes carry no line number; printing "file:None" would put a
@@ -1065,10 +1100,17 @@ def render_console(document: Dict, max_entries: int = 200) -> List[str]:
         f"Attack surface: {summary['entryPoints']} entry point(s)"
         f" from {sources} report(s) ({engines})"
     )
-    lines.append(
-        "tiers run most-exposed first; only dosai classifies authentication —"
-        " every other engine's entries sit in unknown-auth, which is a gap, not a finding."
-    )
+    if "kosi" in document["engine"]:
+        lines.append(
+            "tiers run most-exposed first; dosai and kosi classify"
+            " authentication — every other engine's entries sit in"
+            " unknown-auth, which is a gap, not a finding."
+        )
+    else:
+        lines.append(
+            "tiers run most-exposed first; only dosai classifies authentication —"
+            " every other engine's entries sit in unknown-auth, which is a gap, not a finding."
+        )
     lines.append("")
     shown = 0
     truncated = False
@@ -1136,6 +1178,8 @@ def _ep_from_dict(ep_dict: Dict) -> EntryPoint:
         file=ep_dict.get("File") or "",
         line=ep_dict.get("LineNumber"),
         handler=ep_dict.get("Handler"),
+        method_unresolved=ep_dict.get("MethodUnresolved") is True,
+        exposure_evidence=ep_dict.get("ExposureEvidence") or "",
         reach_state=reach.get("state", REACH_NOT_COMPUTED),
         reach_sinks=reach.get("sinkCategories") or [],
         reach_purls=reach.get("purls") or [],

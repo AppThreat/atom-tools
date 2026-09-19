@@ -11,9 +11,13 @@ support; the renderers here implement the honest version of each (measured
 against the committed fixtures in ``test/data/ecosystem/``):
 
 - *"reachable from an anonymous HTTP route"* — only dosai classifies
-  authentication. Every golem, rusi and atom entry point sits in
-  ``unknown-auth`` on purpose (Phase 2), so for those engines the sentence
-  says the route's exposure is unknown, never "anonymous".
+  authentication outright, and kosi carries the requirements declared at the
+  sites it models. Every golem, rusi and atom entry point sits in
+  ``unknown-auth`` on purpose (Phase 2), and a kosi endpoint with an empty
+  ``authentication`` list stays there too: no requirement was declared at a
+  site kosi models, which is not the claim that the route is open. For
+  those, the sentence says the route's exposure is unknown, never
+  "anonymous".
 - *"``GET /owners/{ownerId}`` (OwnerController.java:78)"* — the endpoint→flow
   join is partial (31 of 57 golem endpoints anchor; 14 of 14 rusi; 0 for
   dosai, whose flows carry no entry-point reference). The join is reused from
@@ -281,11 +285,20 @@ def _reach_clause(flow: UnifiedFlow, ctx: ExplainContext) -> str:
             f"{subject} is reachable from {article} `{first['Exposure']}` entry point"
             f" {described}."
         )
-    return (
-        f"{subject} is reached from {described};"
-        f" {flow.engine or 'this engine'} does not classify authentication, so the"
-        " route's exposure is unknown."
-    )
+    if flow.engine == "kosi":
+        # kosi classifies some of its endpoints; an unknown-auth one means no
+        # requirement was declared at a site it models — an engine-level
+        # "does not classify" sentence would be false about kosi.
+        reason = (
+            "kosi records no authentication requirement for this route, so"
+            " its exposure is unknown"
+        )
+    else:
+        reason = (
+            f"{flow.engine or 'this engine'} does not classify authentication,"
+            " so the route's exposure is unknown"
+        )
+    return f"{subject} is reached from {described}; {reason}."
 
 
 def _path_clause(flow: UnifiedFlow) -> str:
