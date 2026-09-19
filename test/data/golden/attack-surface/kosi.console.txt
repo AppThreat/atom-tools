@@ -30,4 +30,4 @@ tiers run most-exposed first; dosai and kosi classify authentication — every o
        reach: computed — reaches no analysed flow
 
 tiers with no entry points here: anonymous-http, anonymous-rpc, anonymous, mcp, queue, cli, authenticated-rpc
-headline suppressed: no input classifies authentication, so no entry point is known to be anonymous — a percentage here would invent a denominator.
+headline suppressed: kosi states declared requirements, never that a route is anonymous, so no entry point is known to be anonymous — a percentage here would invent a denominator.

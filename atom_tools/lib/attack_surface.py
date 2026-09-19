@@ -1155,10 +1155,23 @@ def render_console(document: Dict, max_entries: int = 200) -> List[str]:
     if summary.get("headline"):
         lines.append(f"headline: {summary['headline']}")
     elif not summary["anonymousReach"]["computed"]:
-        lines.append(
-            "headline suppressed: no input classifies authentication, so no entry"
-            " point is known to be anonymous — a percentage here would invent a denominator."
-        )
+        # The reason must match the inputs: with kosi present, authentication
+        # *was* classified — kosi simply never states that a route is
+        # anonymous (an empty declaration is not a denial), so the denominator
+        # is still missing. Saying "no input classifies authentication" there
+        # would contradict the header sentence two screens up.
+        if "kosi" in document["engine"] and "dosai" not in document["engine"]:
+            reason = (
+                "headline suppressed: kosi states declared requirements, never"
+                " that a route is anonymous, so no entry point is known to be"
+                " anonymous"
+            )
+        else:
+            reason = (
+                "headline suppressed: no input classifies authentication, so no"
+                " entry point is known to be anonymous"
+            )
+        lines.append(f"{reason} — a percentage here would invent a denominator.")
     for diagnostic in document.get("diagnostics", []):
         lines.append(f"note: {diagnostic}")
     return lines

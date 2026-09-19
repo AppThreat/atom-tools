@@ -204,9 +204,8 @@ def parse(content, source_file: str = "") -> UnifiedReport:
         capped = ", ".join(f"{k} {v}" for k, v in sorted(truncations.items()))
         diagnostics.append(f"kosi hit analysis caps: {capped}")
 
+    # kosi emits an explicit null when the dataflow mode did not run.
     data_flow = content.get("dataFlow") or {}
-    if data_flow is None:
-        data_flow = {}
     mode = data_flow.get("mode") or "none"
 
     nodes_by_id = {n.get("id"): n for n in data_flow.get("nodes") or []}
