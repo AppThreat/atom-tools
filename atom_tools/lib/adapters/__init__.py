@@ -27,6 +27,7 @@ ENGINE_MODULES = {
     "dosai": "atom_tools.lib.adapters.dosai",
     "golem": "atom_tools.lib.adapters.golem",
     "rusi": "atom_tools.lib.adapters.rusi",
+    "kosi": "atom_tools.lib.adapters.kosi",
     "atom": "atom_tools.lib.adapters.atom",
     "unified": "atom_tools.lib.unified",
 }
@@ -62,6 +63,8 @@ def detect_engine(content) -> Optional[str]:
             return "golem"
         if name == "rusi" and ("data_flow" in content or "api_endpoints" in content):
             return "rusi"
+        if name == "kosi" and ("dataFlow" in content or "apiEndpoints" in content):
+            return "kosi"
     return None
 
 

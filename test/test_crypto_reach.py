@@ -1,10 +1,11 @@
 """Tests for crypto-reach: the crypto inventory × entry-point reachability join.
 
-The honest answer is per-engine because the three engines leave the join at
-three different granularities (dosai record-level engine verdicts, rusi
-function-level, golem package-level), and these tests pin each engine's join
-to counts measured on the committed fixtures (see PROVENANCE.md), plus the
-hedges that keep the weaker granularities from reading as stronger claims.
+The honest answer is per-engine because the engines leave the join at
+different granularities (dosai record-level engine verdicts, rusi
+function-level, golem package-level, kosi function/file-level by record
+kind), and these tests pin each engine's join to counts measured on the
+committed fixtures (see PROVENANCE.md), plus the hedges that keep the weaker
+granularities from reading as stronger claims.
 """
 
 import copy
@@ -287,6 +288,69 @@ def test_rusi_libraries_stay_at_package_grain(rusi_doc):
     assert all(i["Reach"]["granularity"] == "package" for i in libraries)
 
 
+# --- kosi: three grains, one per record kind ------------------------------------
+
+KOSI_CRYPTO = ECOSYSTEM / "kotlin-crypto-material-flow-kosi.json"
+
+
+@pytest.fixture(scope="module")
+def kosi_doc():
+    return compute_crypto_reach(inputs_for(KOSI_CRYPTO))
+
+
+def test_kosi_join_granularity_lists_the_grains_actually_used(kosi_doc):
+    """Operations join at function grain, materials and findings at file
+    grain, assets/protocols/libraries at none — the block label lists every
+    grain the items use, never just the finest one."""
+    block = _engine_block(kosi_doc, "kosi")
+    assert block["joinGranularity"] == "file/function"
+    assert block["joinSource"] == "derived"
+    assert block["itemsTotal"] == 8
+    assert block["inventory"] == {
+        "assets": 3,
+        "findings": 1,
+        "libraries": 0,
+        "materials": 2,
+        "operations": 2,
+        "protocols": 0,
+    }
+
+
+def test_kosi_operations_join_at_function_grain(kosi_doc):
+    block = _engine_block(kosi_doc, "kosi")
+    operations = _items(block, "operation")
+    assert len(operations) == 2
+    # The fixture has no endpoints, so the functions anchor in the graph but
+    # reach no anchored endpoint's closure — an answer, not a failure.
+    assert all(i["Reach"]["granularity"] == "function" for i in operations)
+    assert all(i["Reach"]["state"] == "in-graph-no-endpoint-reach" for i in operations)
+
+
+def test_kosi_materials_and_findings_join_at_file_grain(kosi_doc):
+    block = _engine_block(kosi_doc, "kosi")
+    materials = _items(block, "material")
+    findings = _items(block, "finding")
+    assert len(materials) == 2 and len(findings) == 1
+    for item in materials + findings:
+        assert item["Reach"]["granularity"] == "file"
+        # Both crypto slices live in TokenService.kt, the same file every
+        # crypto record sits in.
+        assert item["Reach"]["fileOnFlow"] is True
+        assert item["Reach"]["flowsThroughFile"] == 2
+    # The finding is the triage payload; it carries kosi's own severity.
+    assert findings[0]["Name"] == "low-iteration-pbkdf2"
+    assert findings[0]["Severity"] == "medium"
+    assert findings[0]["Attention"] is True
+
+
+def test_kosi_assets_and_strings_are_inventory_only(kosi_doc):
+    block = _engine_block(kosi_doc, "kosi")
+    for kind in ("asset", "protocol", "library"):
+        for item in _items(block, kind):
+            assert item["Reach"]["state"] == "no-location"
+            assert "nothing to join on" in item["Reach"]["reason"]
+
+
 # --- scope and shape -------------------------------------------------------------
 
 
@@ -434,6 +498,7 @@ GOLDEN_FIXTURES = {
     "dosai": DOSAI_CRYPTO.as_posix(),
     "golem": GOLEM.as_posix(),
     "rusi": RUSI.as_posix(),
+    "kosi": KOSI_CRYPTO.as_posix(),
 }
 
 

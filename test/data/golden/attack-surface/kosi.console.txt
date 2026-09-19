@@ -1,0 +1,33 @@
+Attack surface: 11 entry point(s) from 1 report(s) (kosi)
+tiers run most-exposed first; dosai and kosi classify authentication — every other engine's entries sit in unknown-auth, which is a gap, not a finding.
+
+  * authenticated-http: 2 entry point(s), 0 weakness(es) (0 high severity)
+   ├── GET /admin  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:167  [kosi declares role(ADMIN)]
+       reach: computed — reaches no analysed flow
+   └── GET /legacy/*  src/main/kotlin/fixtures/dslmedia/Servlets.kt:11  [kosi declares security-constraint(admin,auditor)]
+       reach: computed — reaches no analysed flow
+
+  * internal: 1 entry point(s), 0 weakness(es) (0 high severity)
+   └── GET /denied  src/main/kotlin/fixtures/dslmedia/Servlets.kt:19  [kosi declares a deny rule (security-constraint(denied)): no caller may reach this endpoint]
+       reach: computed — reaches no analysed flow
+
+  ? unknown-auth [auth unknown — not an exposure verdict]: 8 entry point(s), 0 weakness(es) (0 high severity)
+   ├── /secure  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /chain  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /chain-null  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /open  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:167  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /plain  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /public  src/main/kotlin/fixtures/dslmedia/Servlets.kt:15  [auth unknown]
+       reach: computed — reaches no analysed flow
+   ├── GET /simple  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:177  [auth unknown]
+       reach: computed — reaches no analysed flow
+   └── GET /token  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+       reach: computed — reaches no analysed flow
+
+tiers with no entry points here: anonymous-http, anonymous-rpc, anonymous, mcp, queue, cli, authenticated-rpc
+headline suppressed: kosi states declared requirements, never that a route is anonymous, so no entry point is known to be anonymous — a percentage here would invent a denominator.

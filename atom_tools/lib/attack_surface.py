@@ -9,23 +9,32 @@ seconds in CI.
 
 Three facts measured against the real fixtures shaped the design:
 
-**No engine emits an entry-point → flow link** (dosai's ``Slices`` carry no
-entry-point reference; golem's ``dataFlow.slices`` and ``apiEndpoints`` live in
-separate id spaces; rusi is the same). For golem and rusi the join therefore
-goes through the call graph: anchor the endpoint's handler in the call graph,
-take the transitive callee closure, and attach every flow whose source function
-sits inside that closure. dosai is never joined this way — its own
-``AttackSurface[]`` already carries the engine's per-entry-point weakness and
-sink-category data, which is strictly better than anything we could traverse,
-so it is taken verbatim.
+**Flow links come from the engine or through the call graph.** dosai's
+``Slices`` carry no entry-point reference and its per-entry-point reach is
+taken verbatim instead. golem's ``dataFlow.slices`` and ``apiEndpoints`` live
+in separate id spaces, and rusi is the same — for those two the join goes
+through the call graph: anchor the endpoint's handler in the call graph, take
+the transitive callee closure, and attach every flow whose source function
+sits inside that closure. kosi is the exception: its ``apiEndpoints[]``
+records name the slices that entered through them (``sliceIds``, populated
+when ``--endpoint-sources`` seeded the handler parameters), so those endpoints
+carry the engine's own link directly and the call graph is the fallback.
+dosai is never joined this way — its own ``AttackSurface[]`` already carries
+the engine's per-entry-point weakness and sink-category data, which is
+strictly better than anything we could traverse, so it is taken verbatim.
 
-**Authentication state is only known to dosai.** Its ``AllowAnonymous`` flag is
-an input to its analysis, not the verdict (24 of the 27 ``anonymous-http`` entry
-points in the eShopOnWeb fixture have ``AllowAnonymous: false``), and nothing in
-another engine's ``Kind`` splits anonymous from authenticated. Every non-dosai
-endpoint lands in the ``unknown-auth`` tier — rendered last and marked as a gap,
-because a fabricated ``anonymous`` classification would be worse than an honest
-one.
+**Authentication is known to dosai, and declared by kosi.** dosai's
+``AllowAnonymous`` flag is an input to its analysis, not the verdict (24 of
+the 27 ``anonymous-http`` entry points in the eShopOnWeb fixture have
+``AllowAnonymous: false``). kosi instead publishes the requirements declared
+at the sites it models (``apiEndpoints[].authentication``): a non-empty list
+is a positive statement and lifts the endpoint to ``authenticated-http`` (a
+deny rule to ``internal``), while an **empty list is the absence of a
+declaration, not the presence of anonymity** — those endpoints stay in
+``unknown-auth``. Nothing in golem's, rusi's or atom's output splits
+anonymous from authenticated. Every unclassified endpoint lands in the
+``unknown-auth`` tier — rendered last and marked as a gap, because a
+fabricated ``anonymous`` classification would be worse than an honest one.
 
 **"Reaches nothing" and "reach not computed" are opposite findings** and get
 opposite renderings. Each entry point carries a reach *state*: ``engine``
@@ -136,7 +145,17 @@ class EntryPoint:
     cwes: List[str] = field(default_factory=list)
     weakness_kinds: List[str] = field(default_factory=list)
     sink_categories: List[str] = field(default_factory=list)
-    allow_anonymous: Optional[bool] = None  # dosai only; None = unknown
+    # dosai's own input flag, and kosi's declared requirements (False only
+    # when the engine declares a requirement; a denied endpoint is not
+    # anonymous either). None = the engine said nothing.
+    allow_anonymous: Optional[bool] = None
+    # kosi publishes an empty method list when no method was resolved at a
+    # site it models. That is "unknown", not "any": the label prints the path
+    # alone instead of asserting our own "ANY" over it.
+    method_unresolved: bool = False
+    # The field the exposure tier is traceable to, when an engine stated it
+    # (kosi's declarations). Empty for kind-derived and dosai tiers.
+    exposure_evidence: str = ""
     reach_state: str = REACH_NOT_COMPUTED
     reach_sinks: List[str] = field(default_factory=list)
     reach_purls: List[str] = field(default_factory=list)
@@ -159,6 +178,10 @@ class EntryPoint:
             if self.method:
                 return f"{self.method} {self.path}"
             if _METHOD_IN_PATH.match(self.path):
+                return self.path
+            # kosi's empty method list means no method was resolved, which is
+            # not the same claim as "every method" — print the path alone.
+            if self.method_unresolved:
                 return self.path
             return f"ANY {self.path}"
         # golem records Go's literal nil as the handler string of listeners on
@@ -201,6 +224,9 @@ class EntryPoint:
             "FileName": os.path.basename(self.file) if self.file else None,
             "LineNumber": self.line,
             "AllowAnonymous": self.allow_anonymous,
+            # kosi-only traceability: which engine field the tier came from.
+            **({"ExposureEvidence": self.exposure_evidence} if self.exposure_evidence else {}),
+            **({"MethodUnresolved": True} if self.method_unresolved else {}),
             "ExploitChainCount": self.chains,
             "WeaknessCount": self.weaknesses,
             "HighSeverityWeaknessCount": self.high_severity_weaknesses,
@@ -336,7 +362,9 @@ class _CallGraph:
         self.by_id = {}
         # Every name spelling a node carries, keyed bare and paired with its
         # package: golem handlers are bare function names scoped by packagePath,
-        # rusi handlers are fully qualified (``pkg::path::to::fn``).
+        # rusi handlers are fully qualified (``pkg::path::to::fn``), kosi
+        # handlers are the JVM canonical name (``pkg.Class.method``, lambda
+        # spellings included) scoped by modulePath.
         self.by_name_pkg: Dict[Tuple[str, Optional[str]], List[str]] = defaultdict(list)
         self.by_name: Dict[str, List[str]] = defaultdict(list)
         self.by_file: Dict[str, List[Tuple[Optional[int], str]]] = defaultdict(list)
@@ -349,10 +377,12 @@ class _CallGraph:
                     node.get("name"),
                     node.get("qualified_name"),
                     node.get("canonical_name"),
+                    node.get("canonicalName"),
+                    node.get("qualifiedName"),
                 )
                 if n
             }
-            package = node.get("packagePath") or node.get("package_path")
+            package = node.get("packagePath") or node.get("package_path") or node.get("modulePath")
             for name in names:
                 self.by_name[name].append(node_id)
                 self.by_name_pkg[(name, package)].append(node_id)
@@ -399,7 +429,8 @@ class _CallGraph:
 
         golem's call-graph node ids *are* the function symbols its slices
         reference; rusi's ids are opaque hex and the qualified function name
-        must go through the name index.
+        must go through the name index, and kosi's are ``node-*`` integers —
+        its slices name functions, so the same name-index route applies.
         """
         if function in closure_ids:
             return True
@@ -414,15 +445,24 @@ class _CallGraph:
         positions, so a node whose position falls inside the range *is* the
         handler. Without a line span there is nothing to anchor to: a bare file
         name alone would pick up whichever function the engine listed first.
+        kosi publishes a single position per endpoint rather than a range; that
+        one line is the anchor, and only for kosi — widening this to every
+        engine's position field would change how rusi endpoints anchor, and
+        their reach verdicts are pinned against the committed fixtures.
         """
         raw = ep.get("raw") or {}
         rng = raw.get("range") or {}
         start, end = rng.get("start") or {}, rng.get("end") or {}
         filename = start.get("filename") or ep.get("file")
         first = start.get("line")
+        last = end.get("line")
+        if (not filename or first is None) and self.engine == "kosi":
+            position = raw.get("position") or {}
+            filename = position.get("filename") or ep.get("file")
+            first = position.get("line")
+            last = first
         if not filename or first is None:
             return []
-        last = end.get("line")
         if last is None:
             last = first
         return [
@@ -473,10 +513,60 @@ def _rusi_call_graph(raw: Dict) -> Optional[Tuple[_CallGraph, Dict]]:
     )
 
 
+def _kosi_call_graph(raw: Dict) -> Optional[Tuple[_CallGraph, Dict]]:
+    """kosi's ``callGraph`` section, or None when the run emitted an explicit
+    null (its callgraph modes off). The section describes the whole graph the
+    engine built — kosi's stats count the graph itself, so unlike golem there
+    is no full-run counter to compare against and no trim question."""
+    graph = (raw.get("callGraph") or {}) if isinstance(raw, dict) else {}
+    if not graph.get("nodes") and not graph.get("edges"):
+        return None
+    return (
+        _CallGraph("kosi", graph.get("nodes") or [], graph.get("edges") or []),
+        {"present": True, "nodes": len(graph.get("nodes") or []), "edges": len(graph.get("edges") or [])},
+    )
+
+
+def _apply_engine_slice_links(entry_points: List[EntryPoint], reports: List[UnifiedReport]) -> int:
+    """Attach the reach kosi states itself via ``apiEndpoints[].sliceIds``.
+
+    When ``--endpoint-sources`` seeded the handler parameters, an
+    endpoint-rooted slice names the endpoint it entered through — a direct
+    engine statement no traversal here could reproduce, and the one flow link
+    in the ecosystem that does not go through a call graph. Where the link
+    resolves, it replaces the closure-derived reach: the engine's own join is
+    the authority, the traversal the fallback for endpoints it says nothing
+    about. Returns how many endpoints carry an engine link.
+    """
+    flows_by_id = {f.id: f for r in reports for f in r.flows}
+    linked = 0
+    for ep in entry_points:
+        raw = ep.raw.get("raw") or ep.raw
+        slice_ids = raw.get("sliceIds") if isinstance(raw, dict) else None
+        if not slice_ids:
+            continue
+        matched = [flows_by_id[s] for s in slice_ids if s in flows_by_id]
+        if not matched:
+            continue
+        ep.reach_state = REACH_ENGINE
+        ep.seeds = []
+        ep.reach_flows = len(matched)
+        ep.reach_flow_ids = sorted(f.id for f in matched)
+        ep.reach_sinks = sorted({f.sink_category for f in matched if f.sink_category})
+        ep.reach_purls = sorted({p for f in matched for p in f.purls})
+        ep.reach_functions = sorted({_source_function(f) for f in matched if _source_function(f)})
+        ep.note = (
+            "reach from the engine's own slice link (apiEndpoints[].sliceIds),"
+            " not a call-graph traversal"
+        )
+        linked += 1
+    return linked
+
+
 def _source_function(flow: UnifiedFlow) -> str:
     """The function a flow's source sits in, in the engine's own spelling."""
     raw = flow.raw or {}
-    if flow.engine == "golem":
+    if flow.engine in ("golem", "kosi"):
         return raw.get("sourceFunction") or (flow.source.function if flow.source else "") or ""
     if flow.engine == "rusi":
         return raw.get("source_function") or ""
@@ -571,6 +661,12 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
             seen.add(key)
             kind = endpoint.get("kind") or ""
             tier, tier_source = tier_for_kind(kind)
+            # kosi states the tier itself where its declarations support one
+            # (see the kosi adapter's _exposure for the decision and its
+            # honesty rules); the endpoint dict carries nothing there, so
+            # golem and rusi take the kind path unchanged.
+            if endpoint.get("exposure"):
+                tier, tier_source = endpoint["exposure"], "engine"
             entry_points.append(
                 EntryPoint(
                     engine=engine,
@@ -585,6 +681,9 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
                     framework=endpoint.get("framework") or "",
                     handler=endpoint.get("handler"),
                     package=endpoint.get("package") or "",
+                    allow_anonymous=endpoint.get("allowAnonymous"),
+                    method_unresolved=bool(endpoint.get("methodUnresolved")),
+                    exposure_evidence=endpoint.get("exposureEvidence") or "",
                     reach_state=REACH_NOT_COMPUTED,
                     source_file=inp.path,
                     raw=endpoint,
@@ -771,6 +870,7 @@ def compute_attack_surface(inputs: List[SurfaceInput], min_exposure: str = "") -
     dosai_inputs = [i for i in inputs if i.engine == "dosai"]
     golem_inputs = [i for i in inputs if i.engine == "golem"]
     rusi_inputs = [i for i in inputs if i.engine == "rusi"]
+    kosi_inputs = [i for i in inputs if i.engine == "kosi"]
     atom_inputs = [i for i in inputs if i.engine == "atom"]
 
     if dosai_inputs:
@@ -789,6 +889,7 @@ def compute_attack_surface(inputs: List[SurfaceInput], min_exposure: str = "") -
     for engine, engine_inputs, loader in (
         ("golem", golem_inputs, _golem_call_graph),
         ("rusi", rusi_inputs, _rusi_call_graph),
+        ("kosi", kosi_inputs, _kosi_call_graph),
     ):
         if not engine_inputs:
             continue
@@ -805,11 +906,28 @@ def compute_attack_surface(inputs: List[SurfaceInput], min_exposure: str = "") -
                 metas.append(meta)
         if graphs:
             flows, attached = _join_call_graph(eps, [i.report for i in engine_inputs], graphs)
+            # kosi may state the join itself: endpoints whose records name the
+            # slices that entered through them take the engine's verdict over
+            # the closure this loop just derived.
+            engine_linked = 0
+            if engine == "kosi":
+                engine_linked = _apply_engine_slice_links(eps, [i.report for i in engine_inputs])
+                if engine_linked:
+                    diagnostics.append(
+                        f"{engine_linked} kosi endpoint(s) carry the engine's own"
+                        " slice link (apiEndpoints[].sliceIds); their reach is"
+                        " the engine's, not the call-graph traversal's."
+                    )
             coverage[engine] = {
                 "engine": engine,
                 "callGraphs": metas,
                 "endpoints": len(eps),
                 "endpointsAnchored": sum(1 for e in eps if e.reach_state == REACH_COMPUTED),
+                **(
+                    {"endpointsEngineLinked": engine_linked}
+                    if engine_linked
+                    else {}
+                ),
                 "flows": flows,
                 "flowsAttached": attached,
             }
@@ -955,6 +1073,10 @@ def _entry_line(ep: EntryPoint) -> str:
     auth = ""
     if ep.allow_anonymous is None and ep.tier == UNKNOWN_AUTH:
         auth = "  [auth unknown]"
+    # The field the tier is traceable to, when an engine stated one — kosi's
+    # declarations, spelled out so a rendered tier is never unexplained.
+    elif ep.exposure_evidence:
+        auth = f"  [kosi {ep.exposure_evidence}]"
     if not ep.file:
         return f"{ep.label}{auth}"
     # atom routes carry no line number; printing "file:None" would put a
@@ -978,10 +1100,17 @@ def render_console(document: Dict, max_entries: int = 200) -> List[str]:
         f"Attack surface: {summary['entryPoints']} entry point(s)"
         f" from {sources} report(s) ({engines})"
     )
-    lines.append(
-        "tiers run most-exposed first; only dosai classifies authentication —"
-        " every other engine's entries sit in unknown-auth, which is a gap, not a finding."
-    )
+    if "kosi" in document["engine"]:
+        lines.append(
+            "tiers run most-exposed first; dosai and kosi classify"
+            " authentication — every other engine's entries sit in"
+            " unknown-auth, which is a gap, not a finding."
+        )
+    else:
+        lines.append(
+            "tiers run most-exposed first; only dosai classifies authentication —"
+            " every other engine's entries sit in unknown-auth, which is a gap, not a finding."
+        )
     lines.append("")
     shown = 0
     truncated = False
@@ -1026,10 +1155,23 @@ def render_console(document: Dict, max_entries: int = 200) -> List[str]:
     if summary.get("headline"):
         lines.append(f"headline: {summary['headline']}")
     elif not summary["anonymousReach"]["computed"]:
-        lines.append(
-            "headline suppressed: no input classifies authentication, so no entry"
-            " point is known to be anonymous — a percentage here would invent a denominator."
-        )
+        # The reason must match the inputs: with kosi present, authentication
+        # *was* classified — kosi simply never states that a route is
+        # anonymous (an empty declaration is not a denial), so the denominator
+        # is still missing. Saying "no input classifies authentication" there
+        # would contradict the header sentence two screens up.
+        if "kosi" in document["engine"] and "dosai" not in document["engine"]:
+            reason = (
+                "headline suppressed: kosi states declared requirements, never"
+                " that a route is anonymous, so no entry point is known to be"
+                " anonymous"
+            )
+        else:
+            reason = (
+                "headline suppressed: no input classifies authentication, so no"
+                " entry point is known to be anonymous"
+            )
+        lines.append(f"{reason} — a percentage here would invent a denominator.")
     for diagnostic in document.get("diagnostics", []):
         lines.append(f"note: {diagnostic}")
     return lines
@@ -1049,6 +1191,8 @@ def _ep_from_dict(ep_dict: Dict) -> EntryPoint:
         file=ep_dict.get("File") or "",
         line=ep_dict.get("LineNumber"),
         handler=ep_dict.get("Handler"),
+        method_unresolved=ep_dict.get("MethodUnresolved") is True,
+        exposure_evidence=ep_dict.get("ExposureEvidence") or "",
         reach_state=reach.get("state", REACH_NOT_COMPUTED),
         reach_sinks=reach.get("sinkCategories") or [],
         reach_purls=reach.get("purls") or [],

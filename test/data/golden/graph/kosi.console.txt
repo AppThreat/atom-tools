@@ -1,0 +1,7 @@
+Call graph metric: chokepoints — nodes on the most source→sink paths (kosi, 1 input(s))
+kosi: 64 nodes (64 internal, 0 external), 13 edges
+  call types: static 13
+
+-- kosi (test/data/ecosystem/kotlin-dsl-media-auth-kosi.json) --
+seeds: 9 source(s) → 64 sink(s) via endpoints (engine); 0 source→sink pair(s) connected
+no node lies on any source→sink path.

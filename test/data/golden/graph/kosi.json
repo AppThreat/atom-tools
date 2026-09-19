@@ -1,0 +1,55 @@
+{
+    "diagnostics": [],
+    "engines": [
+        "kosi"
+    ],
+    "graphVersion": 1,
+    "graphs": [
+        {
+            "callTypeMix": {
+                "static": 13
+            },
+            "confidenceMix": {
+                "exact": 13
+            },
+            "edges": 13,
+            "engine": "kosi",
+            "engineDiagnostics": [
+                "2 call site(s) resolved to no callee and emit no edge; they are counted, never silently absent"
+            ],
+            "engineRootReasons": {},
+            "engineRoots": 0,
+            "engineRootsInGraph": 0,
+            "externalNodes": 0,
+            "internalNodes": 64,
+            "nodes": 64,
+            "sourceFile": "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json",
+            "trimmed": false
+        }
+    ],
+    "metric": "chokepoints",
+    "options": {
+        "includeExternal": false,
+        "maxChokepointSources": 64,
+        "minConfidence": null
+    },
+    "results": [
+        {
+            "computed": true,
+            "engine": "kosi",
+            "externalNodesExcludedFromRanking": 0,
+            "ranked": [],
+            "seeds": {
+                "pairs": 0,
+                "policy": "endpoints",
+                "sinks": 64,
+                "source": "engine",
+                "sources": 9
+            },
+            "sourceFile": "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json"
+    ]
+}

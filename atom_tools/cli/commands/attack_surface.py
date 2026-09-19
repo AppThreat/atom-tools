@@ -15,7 +15,7 @@ class AttackSurfaceCommand(Command):
     """
     This command groups a report's entry points by exposure tier and reports
     what each one reaches, in the shape of dosai's own ``AttackSurface[]``
-    view — for dosai, golem, rusi and atom alike.
+    view — for dosai, golem, rusi, kosi and atom alike.
     """
 
     name = "attack-surface"
@@ -76,7 +76,7 @@ how they are exposed, and what each one reaches.
 Only dosai classifies authentication (its own AttackSurface array is used
 verbatim, never re-derived); every other engine's entry points land in the
 unknown-auth tier, which is rendered as a gap rather than as a verdict. For
-golem and rusi, reach is computed by anchoring each endpoint's handler in the
+golem, rusi and kosi, reach is computed by anchoring each endpoint's handler in the
 engine's call graph and attaching the flows whose source function falls inside
 its transitive closure. Endpoints that cannot be anchored report
 seed-not-found; endpoints with no call graph report reach as not computed.

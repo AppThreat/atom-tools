@@ -12,21 +12,21 @@ from atom_tools.lib.utils import export_json
 
 logger = logging.getLogger(__name__)
 
-KNOWN_ENGINES = ("atom", "dosai", "golem", "rusi")
+KNOWN_ENGINES = ("atom", "dosai", "golem", "rusi", "kosi")
 
 
 class IngestCommand(Command):
     """
     This command normalises flow reports from any AppThreat ecosystem engine
-    (atom, dosai, golem, rusi) into one unified flow model — or, with
+    (atom, dosai, golem, rusi, kosi) into one unified flow model — or, with
     ``--emit reachables``, into an atom-compatible document every existing
     atom-tools command already understands.
     """
 
     name = "ingest"
     description = (
-        "Normalise dosai, golem, rusi or atom flow reports into the unified"
-        " flow model (or an atom-compatible reachables document)."
+        "Normalise dosai, golem, rusi, kosi or atom flow reports into the"
+        " unified flow model (or an atom-compatible reachables document)."
     )
     options = [
         option(
@@ -59,8 +59,8 @@ class IngestCommand(Command):
         option(
             "engine",
             None,
-            "Force the producing engine (atom, dosai, golem, rusi) instead of"
-            " detecting it from the report envelope.",
+            "Force the producing engine (atom, dosai, golem, rusi, kosi) instead"
+            " of detecting it from the report envelope.",
             flag=False,
             value_required=True,
         ),
@@ -68,7 +68,7 @@ class IngestCommand(Command):
     help = """Normalise engine reports into one flow model.
 
 The producing engine is detected from the report envelope (Dosai's
-Metadata.Tool, golem/rusi's tool.name). Every flow is hydrated — engine node
+Metadata.Tool, golem/rusi/kosi's tool.name). Every flow is hydrated — engine node
 id references are joined against the report's node table, with unresolvable
 ids dropped and diagnosed, never silently — and carries severity provenance
 (the engine's own severity where it emits one, taxonomy-derived otherwise),
@@ -76,7 +76,7 @@ truncated-witness flags and the raw engine record as an escape hatch.
 
 With --emit reachables the output loads through the existing atom slice
 loader, so stats, visualize, convert -f sarif, check-reachable and filter all
-work on dosai, golem and rusi reports unchanged."""
+work on dosai, golem, rusi and kosi reports unchanged."""
     loggers = [
         "atom_tools.lib.adapters",
         "atom_tools.lib.reachables",
@@ -108,7 +108,7 @@ work on dosai, golem and rusi reports unchanged."""
             if detected is None:
                 raise ValueError(
                     f"Could not detect the producing engine for {path};"
-                    " re-run with --engine atom|dosai|golem|rusi."
+                    " re-run with --engine atom|dosai|golem|rusi|kosi."
                 )
             report = parse_report(content, source_file=path, engine=detected)
             reports.append(report)

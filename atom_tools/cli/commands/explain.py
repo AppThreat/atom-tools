@@ -109,7 +109,7 @@ class ExplainCommand(Command):
         option(
             "engine",
             None,
-            "Force the producing engine (atom, dosai, golem, rusi) instead of"
+            "Force the producing engine (atom, dosai, golem, rusi, kosi) instead of"
             " detecting it from the report envelope.",
             flag=False,
             value_required=True,
@@ -140,8 +140,9 @@ generated, so the output is reproducible, citable and safe in CI:
     analysis; this run found none to report.
 
 Honesty rules, measured on the committed fixtures: only dosai classifies
-authentication (every other engine's entry points are unknown-auth, and the
-sentence says so); the endpoint→flow join is partial (31 of 57 golem
+authentication outright and kosi carries declared requirements (every other
+engine's entry points — and kosi's undeclared ones — are unknown-auth, and
+the sentence says so); the endpoint→flow join is partial (31 of 57 golem
 endpoints anchor; dosai flows carry no entry-point reference at all) and an
 unjoined flow says so instead of dropping the clause; atom slices carry no
 version, so none is printed; the sanitizer sentence appears only for engines

@@ -625,6 +625,112 @@ def test_headline_counts_high_risk_sinks_not_only_engine_weakness_counts():
     assert one("logging", high=3)["anonymousReach"]["reachingHighSeveritySink"] == 1
 
 
+# --- kosi: tiers only as far as the declarations go ----------------------------
+
+KOSI_DSL = ECOSYSTEM / "kotlin-dsl-media-auth-kosi.json"
+KOSI_ANDROID = ECOSYSTEM / "kotlin-android-manifest-app-kosi.json"
+KOSI_FLOWS = ECOSYSTEM / "kotlin-command-exec-kosi.json"
+
+
+@pytest.fixture(scope="module")
+def kosi_surface():
+    return surface(KOSI_DSL)
+
+
+def test_kosi_declared_requirements_lift_the_tier(kosi_surface):
+    """A non-empty ``authentication`` list is a positive statement. The two
+    endpoints with declared requirements land in authenticated-http with
+    ``tier_source`` "engine", and the evidence names the field they came
+    from."""
+    tier = entries_of(kosi_surface, "authenticated-http")
+    assert tier["EntryPointCount"] == 2
+    assert tier["TierSource"] == ["engine"]
+    by_route = {e["Route"]: e for e in tier["EntryPoints"]}
+    assert by_route["/admin"]["AllowAnonymous"] is False
+    assert by_route["/admin"]["ExposureEvidence"] == "declares role(ADMIN)"
+    assert by_route["/legacy/*"]["ExposureEvidence"] == (
+        "declares security-constraint(admin,auditor)"
+    )
+
+
+def test_kosi_deny_rule_is_internal_not_authenticated(kosi_surface):
+    """``security-constraint(denied)`` refuses every caller; matching the
+    "security-constraint" substring would call a closed route
+    "authenticated". It is the least-exposed tier instead, with the deny rule
+    spelled out in the evidence."""
+    tier = entries_of(kosi_surface, "internal")
+    assert tier["EntryPointCount"] == 1
+    entry = tier["EntryPoints"][0]
+    assert entry["Route"] == "/denied"
+    assert entry["AllowAnonymous"] is False
+    assert "deny rule" in entry["ExposureEvidence"]
+    assert "security-constraint(denied)" in entry["ExposureEvidence"]
+
+
+def test_kosi_empty_declaration_is_not_anonymous(kosi_surface):
+    """The heart of the honesty question: ``authentication: []`` means no
+    requirement was declared at a site kosi models — a filter kosi does not
+    model may still guard the route. Those eight endpoints stay in
+    unknown-auth, and no anonymous tier exists anywhere in the document."""
+    unknown = entries_of(kosi_surface, UNKNOWN_AUTH)
+    assert unknown["EntryPointCount"] == 8
+    assert all(e["AllowAnonymous"] is None for e in unknown["EntryPoints"])
+    assert all(
+        t["Exposure"] != "anonymous-http" for t in kosi_surface["tiers"]
+    )
+    assert kosi_surface["summary"]["anonymousReach"]["computed"] is False
+
+
+def test_kosi_unresolved_method_is_not_labelled_any(kosi_surface):
+    """An empty httpMethod list means no method was resolved at a site kosi
+    models — printing our own "ANY" would assert every method over a route
+    whose method kosi could not name."""
+    unknown = entries_of(kosi_surface, UNKNOWN_AUTH)
+    secure = next(e for e in unknown["EntryPoints"] if e["Route"] == "/secure")
+    assert secure["HttpMethod"] is None
+    assert secure["MethodUnresolved"] is True
+    # The dsl routes carry kosi's unattributed-route finding; kind stays the
+    # honest "http-route" the adapter records for them.
+    assert secure["Kind"] == "http-route"
+    # The label prints the path alone; the text rendering must agree.
+    text = "\n".join(render_console(kosi_surface))
+    assert "├── /secure " in text
+    assert "ANY /secure" not in text
+
+
+def test_kosi_exported_false_is_internal_and_true_is_not_anonymous():
+    """``exported: false`` is a positive statement (not externally
+    launchable) and maps to internal; ``exported: true`` says reachable,
+    which is not anonymous — those endpoints stay in unknown-auth."""
+    document = surface(KOSI_ANDROID)
+    internal = entries_of(document, "internal")
+    assert internal["EntryPointCount"] == 2
+    assert all(e["AllowAnonymous"] is None for e in internal["EntryPoints"])
+    assert all("not exported" in e["ExposureEvidence"] for e in internal["EntryPoints"])
+    unknown = entries_of(document, UNKNOWN_AUTH)
+    # The exported-true components (per the manifest itself) stay unknown.
+    assert {e["Route"] for e in unknown["EntryPoints"]} == {
+        "MetaProvider",
+        "android.intent.action.MAIN",
+        "android.intent.action.VIEW",
+    }
+    assert all(t["Exposure"] != "anonymous-http" for t in document["tiers"])
+
+
+def test_kosi_engine_slice_link_is_the_reach_verdict():
+    """The one endpoint whose record names its slices carries the engine's
+    own reach (state "engine"), not a traversal result — and the note says
+    so. No other engine except dosai supplies its verdicts like this."""
+    document = surface(KOSI_FLOWS)
+    entry = all_entries(document)[0]
+    assert entry["Route"] == "/run"
+    assert entry["Reach"]["state"] == "engine"
+    assert entry["Reach"]["flows"] == 1
+    assert entry["Reach"]["flowIds"] == ["slice-000001"]
+    assert "sliceIds" in entry["Reach"]["note"]
+    assert document["coverage"]["kosi"]["endpointsEngineLinked"] == 1
+
+
 # --- golden files ---------------------------------------------------------------
 
 
@@ -635,6 +741,7 @@ GOLDEN_FIXTURES = {
     "dosai": DOSAI.as_posix(),
     "golem": GOLEM.as_posix(),
     "rusi": RUSI.as_posix(),
+    "kosi": KOSI_DSL.as_posix(),
     "atom": PETCLINIC.as_posix(),
 }
 

@@ -418,6 +418,86 @@ def load_rusi(content: Dict, path: str) -> UnifiedCallGraph:
     )
 
 
+def load_kosi(content: Dict, path: str) -> UnifiedCallGraph:
+    """kosi ``callGraph``: one graph per report, with the engine's own
+    reachability from its configured root scopes.
+
+    kosi has no separate roots array (golem's ``roots[]`` has no equivalent
+    here — the root scopes the run was given live in each reachability
+    entry's ``roots`` list), so ``engine_roots`` stays empty and the
+    reachability verdicts are carried per node, exactly as emitted.
+    ``callGraph.stats`` counts the graph itself (``localNodes`` etc.), not a
+    larger run, so there is no trim evidence to report.
+    """
+    graph = content.get("callGraph") or {}
+    if not graph.get("nodes") and not graph.get("edges"):
+        raise ValueError(f"{path} carries no callGraph section.")
+    reach = {
+        r.get("nodeId"): r
+        for r in graph.get("reachability") or []
+        if isinstance(r, dict)
+    }
+    nodes = [
+        CallNode(
+            id=n.get("id") or "",
+            name=n.get("canonicalName") or n.get("qualifiedName") or n.get("name") or n.get("id") or "",
+            label=n.get("name") or "",
+            file=(n.get("position") or {}).get("filename") or n.get("filePath") or "",
+            line=(n.get("position") or {}).get("line"),
+            package=n.get("modulePath") or "",
+            purl=n.get("purl") or "",
+            external=bool(n.get("external")),
+            kind=n.get("kind") or "",
+            short_name=n.get("name") or "",
+            reachable_from_roots=(reach.get(n.get("id")) or {}).get("reached"),
+            min_depth_from_entry=(reach.get(n.get("id")) or {}).get("distance"),
+            depth_source=(
+                "engine"
+                if isinstance((reach.get(n.get("id")) or {}).get("distance"), int)
+                else ""
+            ),
+        )
+        for n in graph.get("nodes") or []
+    ]
+    edges = []
+    file_of = {
+        n.get("id"): (n.get("position") or {}).get("filename") or n.get("filePath") or ""
+        for n in graph.get("nodes") or []
+    }
+    for e in graph.get("edges") or []:
+        location = ""
+        if e.get("line") is not None:
+            location = file_of.get(e.get("sourceId"), "")
+            if location:
+                location += f":{e['line']}"
+                if e.get("column") is not None:
+                    location += f":{e['column']}"
+        edges.append(
+            CallEdge(
+                caller=e.get("sourceId") or "",
+                callee=e.get("targetId") or "",
+                call_type=e.get("callType") or "",
+                # ``static`` is a resolved call; an edge that names several
+                # candidates is a dispatch decision the engine narrowed but did
+                # not settle. Observed vocabulary so far is ``static`` only.
+                confidence=(
+                    "candidate"
+                    if isinstance(e.get("candidateCount"), int) and e["candidateCount"] > 1
+                    else "exact" if (e.get("callType") or "") == "static" else "unknown"
+                ),
+                location=location,
+                candidate_count=e.get("candidateCount"),
+            )
+        )
+    return UnifiedCallGraph(
+        engine="kosi",
+        source_file=str(path),
+        nodes=nodes,
+        edges=edges,
+        engine_diagnostics=[_diagnostic_text(d) for d in graph.get("diagnostics") or []],
+    )
+
+
 def load_dosai(content: Dict, path: str) -> UnifiedCallGraph:
     """dosai ``CallGraph`` joined to the top-level ``Reachability[]`` by
     ``NodeId`` — the fan-in/fan-out table is a separate section, exactly as
@@ -655,12 +735,14 @@ def load_call_graph(path: str, content: Optional[Any] = None) -> UnifiedCallGrap
         return load_golem(content, str(path))
     if engine == "rusi":
         return load_rusi(content, str(path))
+    if engine == "kosi":
+        return load_kosi(content, str(path))
     if engine == "dosai":
         return load_dosai(content, str(path))
     raise ValueError(
         f"{path} carries no call graph this command can read (detected engine:"
         f" {engine or 'none'}). Known sources: golem analyze, rusi analyze,"
-        " dosai methods, atom export --format graphml."
+        " dosai methods, kosi analyze, atom export --format graphml."
     )
 
 
@@ -670,15 +752,15 @@ def load_call_graph(path: str, content: Optional[Any] = None) -> UnifiedCallGrap
 def flow_functions(report) -> Tuple[Set[str], Set[str]]:
     """The flow model's own source and sink function spellings.
 
-    golem slices carry ``sourceFunction``/``sinkFunction``; rusi slices
-    ``source_function``/``sink_function``. dosai methods reports carry no
-    flows at all (flows live in the dataflows report, which has no call
+    golem and kosi slices carry ``sourceFunction``/``sinkFunction``; rusi
+    slices ``source_function``/``sink_function``. dosai methods reports carry
+    no flows at all (flows live in the dataflows report, which has no call
     graph) — the empty sets say so.
     """
     sources, sinks = set(), set()
     for flow in report.flows:
         raw = flow.raw or {}
-        if flow.engine == "golem":
+        if flow.engine in ("golem", "kosi"):
             if raw.get("sourceFunction"):
                 sources.add(raw["sourceFunction"])
             if raw.get("sinkFunction"):
@@ -1277,6 +1359,24 @@ def compute_dead_code(graph: UnifiedCallGraph) -> Dict:
                 "none of the engine's roots are nodes of this (sub)graph, so the"
                 " verdicts above cannot be re-checked here."
             )
+        return result
+    if graph.engine == "kosi":
+        verdicts = [n for n in graph.nodes if n.reachable_from_roots is not None]
+        unreachable = [n for n in verdicts if n.reachable_from_roots is False]
+        result.update(
+            {
+                "computed": True,
+                "source": "engine",
+                "unreachableFromRootsPerEngine": len(unreachable),
+                "nodesWithVerdict": len(verdicts),
+            }
+        )
+        result["diagnostics"].append(
+            "kosi's callGraph.reachability measures reachability from the root"
+            " scopes the run was given (--roots); unreachable-from-roots is the"
+            " engine's liveness verdict over its own graph, not a deletability"
+            " claim."
+        )
         return result
     result.update(
         {

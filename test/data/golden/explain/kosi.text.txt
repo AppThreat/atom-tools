@@ -1,0 +1,15 @@
+Flow report: kosi 0.2.0 (all mode) — 2 flow(s), 1 package record(s) from 1 input file(s) (kotlin-command-exec-kosi.json).
+severity: 2 error / 0 warning / 0 note; 2 engine-reported, 0 derived
+source tags: 2 of 2 flow(s) carry tags on the source node
+entry-point join: 1 of 2 flow(s) sit behind an anchored entry point.
+note: 1 kosi endpoint(s) carry the engine's own slice link (apiEndpoints[].sliceIds); their reach is the engine's, not the call-graph traversal's.
+
+1. Flow slice-000001 — untrusted-input → process-exec
+  Reachability: `pkg:generic/command-exec@unspecified` is reached from `GET /run` (src/main/kotlin/Cmd.kt:36); kosi records no authentication requirement for this route, so its exposure is unknown.
+  Path: source `store vthis` (src/main/kotlin/Cmd.kt:36) tagged `untrusted-input` which reaches `java.lang.ProcessBuilder` (src/main/kotlin/Cmd.kt:38) in 7 step(s), classified `process-exec`.
+  Evidence: kosi 0.2.0, all mode. Severity `error` (engine-reported). Confidence `high`.
+
+2. Flow slice-000002 — untrusted-input → process-exec
+  Reachability: `pkg:generic/command-exec@unspecified` is reached by this flow; kosi emits no entry-point link this command can read.
+  Path: source `kotlin.io.readLine` (src/main/kotlin/CommandExec.kt:30) tagged `untrusted-input` which reaches `java.lang.ProcessBuilder` (src/main/kotlin/CommandExec.kt:32) in 8 step(s), classified `process-exec`.
+  Evidence: kosi 0.2.0, all mode. Severity `error` (engine-reported). Confidence `high`.

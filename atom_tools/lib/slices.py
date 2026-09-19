@@ -111,7 +111,7 @@ def import_slice(filename: str | Path) -> Tuple[Dict, str, str]:
             content = {"reachables": content}
         engine_doc = normalize_engine_report(content, str(filename))
         if engine_doc is not None:
-            # dosai/golem/rusi reports: normalise into the atom reachables
+            # dosai/golem/rusi/kosi reports: normalise into the atom reachables
             # shape (keeping the engine's endpoint arrays) so every command
             # works on them unchanged. Engine detection happens before the
             # atom checks because e.g. rusi reports also carry a "modules"

@@ -97,7 +97,7 @@ class SliceStats:
             summary.update(self._parsedeps_stats())
         else:
             summary.update(self._generic_stats())
-        # Present only on engine (dosai/golem/rusi) compat documents; atom
+        # Present only on engine (dosai/golem/rusi/kosi) compat documents; atom
         # slices carry no such key, so their output is unchanged. Reporting a
         # count from a run the engine cut short, without saying so, overstates
         # what the evidence covers.

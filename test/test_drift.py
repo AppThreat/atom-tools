@@ -42,6 +42,8 @@ RUSI_CURRENT = ECOSYSTEM / "rust-microservices-kafka-rusi.json"
 GOLEM = ECOSYSTEM / "go-ipsw-golem.json"
 GOLEM_BASELINE = ECOSYSTEM / "go-ipsw-golem-baseline.json"
 DOSAI = ECOSYSTEM / "dotnet-eshoponweb-dosai-dataflows.json"
+KOSI = ECOSYSTEM / "kotlin-command-exec-kosi.json"
+KOSI_BASELINE = ECOSYSTEM / "kotlin-command-exec-kosi-baseline.json"
 
 
 def load(path):
@@ -87,6 +89,26 @@ def test_real_pair_records_that_rusi_severity_is_derived(rusi_pair):
     than presenting a taxonomy lookup as the engine's own judgement."""
     drift = compute_drift(*rusi_pair)
     assert drift["severitySources"] == {"baseline": ["derived"], "current": ["derived"]}
+
+
+def test_real_kosi_pair_shows_the_degradation_gap():
+    """Two real kosi runs of the same fixture: the baseline used
+    `--backend syntax`, which degrades to no flows, no endpoints and no call
+    graph with a single diagnostics entry as the trace; the current run used
+    `--backend resolved`. The delta is exactly the engine's own degradation,
+    not a code change."""
+    drift = compute_drift(report(KOSI_BASELINE), report(KOSI))
+    assert len(drift["AddedFlows"]) == 2
+    assert len(drift["RemovedFlows"]) == 0
+    assert len(drift["MovedFlows"]) == 0
+    assert len(drift["AddedEntryPoints"]) == 1
+    assert drift["RiskDelta"]["NewHighSeverityFlows"] == 2
+    # The current side's severity is the engine's; nothing derived crept in.
+    # (The baseline carries none — it has no flows at all to classify.)
+    assert drift["severitySources"]["current"] == ["engine"]
+    # A baseline that analysed nothing is not a coverage regression — the
+    # gate must stay silent while the counts tell the story.
+    assert drift["coverage"]["regressed"] is False
 
 
 # --- properties, on real fixtures ----------------------------------------
@@ -471,6 +493,7 @@ GOLDEN = Path("test/data/golden/drift")
 GOLDEN_PAIRS = {
     "golem": (GOLEM_BASELINE.as_posix(), GOLEM.as_posix()),
     "rusi": (RUSI_BASELINE.as_posix(), RUSI_CURRENT.as_posix()),
+    "kosi": (KOSI_BASELINE.as_posix(), KOSI.as_posix()),
 }
 
 

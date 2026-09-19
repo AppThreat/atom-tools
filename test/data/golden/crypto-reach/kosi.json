@@ -1,0 +1,256 @@
+{
+    "cryptoReachVersion": 1,
+    "diagnostics": [
+        "kosi: crypto assets, protocols and libraries carry no location and no strength field: they are inventory only, and weakness claims come from kosi's own findings."
+    ],
+    "engine": "kosi",
+    "engines": [
+        {
+            "attentionItems": 1,
+            "coverageNotes": [
+                "endpoint closures from the attack-surface join: 0 of 0 endpoint(s) anchored in this input's call graph"
+            ],
+            "diagnostics": [
+                "crypto assets, protocols and libraries carry no location and no strength field: they are inventory only, and weakness claims come from kosi's own findings."
+            ],
+            "engine": "kosi",
+            "inventory": {
+                "assets": 3,
+                "findings": 1,
+                "libraries": 0,
+                "materials": 2,
+                "operations": 2,
+                "protocols": 0
+            },
+            "items": [
+                {
+                    "Algorithm": "PBKDF2WithHmacSHA256",
+                    "Attention": true,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                    "Function": null,
+                    "Id": "",
+                    "Kind": "finding",
+                    "LineNumber": 30,
+                    "Name": "low-iteration-pbkdf2",
+                    "Package": null,
+                    "Reach": {
+                        "claim": "the crypto site sits in a file that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "file": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                        "fileOnFlow": true,
+                        "flowIds": [
+                            "slice-000001",
+                            "slice-000002"
+                        ],
+                        "flowsThroughFile": 2,
+                        "granularity": "file",
+                        "source": "derived"
+                    },
+                    "RuleId": "low-iteration-pbkdf2",
+                    "Severity": "medium",
+                    "SeverityLevel": "warning",
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "EC",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": null,
+                    "Function": null,
+                    "Id": "",
+                    "Kind": "asset",
+                    "LineNumber": null,
+                    "Name": "EC",
+                    "Package": null,
+                    "Reach": {
+                        "reason": "kosi's crypto assets carry no file, function or package field \u2014 there is nothing to join on; this is inventory only",
+                        "source": "derived",
+                        "state": "no-location"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "HmacSHA256",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": null,
+                    "Function": null,
+                    "Id": "",
+                    "Kind": "asset",
+                    "LineNumber": null,
+                    "Name": "HmacSHA256",
+                    "Package": null,
+                    "Reach": {
+                        "reason": "kosi's crypto assets carry no file, function or package field \u2014 there is nothing to join on; this is inventory only",
+                        "source": "derived",
+                        "state": "no-location"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "PBKDF2WithHmacSHA256",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": null,
+                    "Function": null,
+                    "Id": "",
+                    "Kind": "asset",
+                    "LineNumber": null,
+                    "Name": "PBKDF2WithHmacSHA256",
+                    "Package": null,
+                    "Reach": {
+                        "reason": "kosi's crypto assets carry no file, function or package field \u2014 there is nothing to join on; this is inventory only",
+                        "source": "derived",
+                        "state": "no-location"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "key",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                    "Function": null,
+                    "Id": "",
+                    "Kind": "material",
+                    "LineNumber": 23,
+                    "Name": "signingKey",
+                    "Package": null,
+                    "Reach": {
+                        "claim": "the crypto site sits in a file that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "file": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                        "fileOnFlow": true,
+                        "flowIds": [
+                            "slice-000001",
+                            "slice-000002"
+                        ],
+                        "flowsThroughFile": 2,
+                        "granularity": "file",
+                        "source": "derived"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "token",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                    "Function": null,
+                    "Id": "",
+                    "Kind": "material",
+                    "LineNumber": 36,
+                    "Name": "apiToken",
+                    "Package": null,
+                    "Reach": {
+                        "claim": "the crypto site sits in a file that carries tainted flows \u2014 not that the crypto call itself is on a tainted path",
+                        "file": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                        "fileOnFlow": true,
+                        "flowIds": [
+                            "slice-000001",
+                            "slice-000002"
+                        ],
+                        "flowsThroughFile": 2,
+                        "granularity": "file",
+                        "source": "derived"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "HmacSHA256",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                    "Function": "fixtures.cryptoflow.TokenService.macPayload",
+                    "Id": "",
+                    "Kind": "operation",
+                    "LineNumber": 25,
+                    "Name": "Mac HmacSHA256",
+                    "Package": null,
+                    "Reach": {
+                        "function": "fixtures.cryptoflow.TokenService.macPayload",
+                        "granularity": "function",
+                        "note": "anchors in the call graph with no static caller \u2014 either dead, or reached through dynamic dispatch the static graph does not model",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                },
+                {
+                    "Algorithm": "PBKDF2WithHmacSHA256",
+                    "Attention": null,
+                    "Confidence": null,
+                    "Cwe": null,
+                    "Engine": "kosi",
+                    "File": "src/main/kotlin/fixtures/cryptoflow/TokenService.kt",
+                    "Function": "fixtures.cryptoflow.TokenService.deriveKey",
+                    "Id": "",
+                    "Kind": "operation",
+                    "LineNumber": 31,
+                    "Name": "SecretKeyFactory PBKDF2WithHmacSHA256",
+                    "Package": null,
+                    "Reach": {
+                        "function": "fixtures.cryptoflow.TokenService.deriveKey",
+                        "granularity": "function",
+                        "note": "anchors in the call graph with no static caller \u2014 either dead, or reached through dynamic dispatch the static graph does not model",
+                        "source": "derived",
+                        "state": "in-graph-no-endpoint-reach"
+                    },
+                    "RuleId": null,
+                    "Severity": null,
+                    "SeverityLevel": null,
+                    "Strength": null
+                }
+            ],
+            "itemsTotal": 8,
+            "joinGranularity": "file/function",
+            "joinSource": "derived"
+        }
+    ],
+    "sources": [
+        "test/data/ecosystem/kotlin-crypto-material-flow-kosi.json"
+    ],
+    "summary": {
+        "outOfScope": null,
+        "perEngine": {
+            "kosi": {
+                "attentionItems": 1,
+                "itemsTotal": 8,
+                "joinGranularity": "file/function",
+                "joinSource": "derived"
+            }
+        }
+    },
+    "weakOnly": null
+}

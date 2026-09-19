@@ -1,0 +1,137 @@
+{
+  "entryPoints": [
+    {
+      "authClassifiedByEngine": false,
+      "exposure": "unknown-auth",
+      "label": "GET /run",
+      "location": "src/main/kotlin/Cmd.kt:36",
+      "method": "GET",
+      "reachFlows": 1,
+      "reachSinkCategories": [
+        "process-exec"
+      ],
+      "route": "/run"
+    }
+  ],
+  "explainVersion": 1,
+  "highRiskFlows": [
+    {
+      "confidence": "high",
+      "entryPoints": [
+        {
+          "exposure": "unknown-auth",
+          "label": "GET /run",
+          "location": "src/main/kotlin/Cmd.kt:36"
+        }
+      ],
+      "id": "slice-000001",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:generic/command-exec@unspecified"
+      ],
+      "sanitizerReported": null,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "src/main/kotlin/Cmd.kt",
+        "line": 38,
+        "name": "java.lang.ProcessBuilder"
+      },
+      "sinkCategory": "process-exec",
+      "source": {
+        "file": "src/main/kotlin/Cmd.kt",
+        "line": 36,
+        "name": "store vthis",
+        "tags": [
+          "untrusted-input"
+        ]
+      },
+      "sourceCategory": "untrusted-input",
+      "steps": 7
+    },
+    {
+      "confidence": "high",
+      "entryPoints": [],
+      "id": "slice-000002",
+      "pathTruncated": null,
+      "purls": [
+        "pkg:generic/command-exec@unspecified"
+      ],
+      "sanitizerReported": null,
+      "severity": "error",
+      "severitySource": "engine",
+      "sink": {
+        "file": "src/main/kotlin/CommandExec.kt",
+        "line": 32,
+        "name": "java.lang.ProcessBuilder"
+      },
+      "sinkCategory": "process-exec",
+      "source": {
+        "file": "src/main/kotlin/CommandExec.kt",
+        "line": 30,
+        "name": "kotlin.io.readLine",
+        "tags": [
+          "untrusted-input"
+        ]
+      },
+      "sourceCategory": "untrusted-input",
+      "steps": 8
+    }
+  ],
+  "reachablePackages": [
+    {
+      "flows": 2,
+      "purl": "pkg:generic/command-exec@unspecified"
+    }
+  ],
+  "relevantFiles": [
+    {
+      "file": "src/main/kotlin/CommandExec.kt",
+      "flows": 8
+    },
+    {
+      "file": "src/main/kotlin/Cmd.kt",
+      "flows": 7
+    }
+  ],
+  "schema": "atom-tools/explain-agent-context@1",
+  "suggestedNextCommands": [
+    "atom-tools explain -i kotlin-command-exec-kosi.json --flow slice-000001",
+    "atom-tools explain -i kotlin-command-exec-kosi.json --flow slice-000002",
+    "atom-tools explain -i kotlin-command-exec-kosi.json --query 'flows[severity=error] count'",
+    "atom-tools attack-surface -i kotlin-command-exec-kosi.json -f json -o attack-surface.json"
+  ],
+  "summary": {
+    "endpoints": 1,
+    "engineVersions": {
+      "kosi": [
+        "0.2.0"
+      ]
+    },
+    "engines": [
+      "kosi"
+    ],
+    "flows": 2,
+    "flowsBehindAnEntryPoint": 1,
+    "flowsWithSourceTags": 2,
+    "packageRecords": 1,
+    "severity": {
+      "error": 2,
+      "note": 0,
+      "warning": 0
+    },
+    "severitySource": {
+      "derived": 0,
+      "engine": 2
+    },
+    "sources": [
+      "kotlin-command-exec-kosi.json"
+    ]
+  },
+  "tokenBudget": {
+    "countingMethod": "characters/4 of the serialized JSON \u2014 an estimate, not a real tokeniser",
+    "estimatedTokens": 825,
+    "maxTokens": 4000,
+    "respected": true
+  }
+}

@@ -1,0 +1,362 @@
+{
+    "attackSurfaceVersion": 1,
+    "coverage": {
+        "kosi": {
+            "callGraphs": [
+                {
+                    "edges": 13,
+                    "engine": "kosi",
+                    "file": "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json",
+                    "nodes": 64,
+                    "present": true
+                }
+            ],
+            "endpoints": 11,
+            "endpointsAnchored": 11,
+            "engine": "kosi",
+            "flows": 0,
+            "flowsAttached": 0
+        }
+    },
+    "diagnostics": [],
+    "engine": "kosi",
+    "sources": [
+        "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json"
+    ],
+    "summary": {
+        "anonymousReach": {
+            "anonymousEntryPoints": 0,
+            "computed": false,
+            "reachingHighSeveritySink": 0
+        },
+        "byEngine": {
+            "kosi": 11
+        },
+        "byTier": {
+            "authenticated-http": 2,
+            "internal": 1,
+            "unknown-auth": 8
+        },
+        "entryPoints": 11,
+        "entryPointsWithReach": 0,
+        "reachComputed": true
+    },
+    "tierOrder": [
+        "anonymous-http",
+        "anonymous-rpc",
+        "anonymous",
+        "mcp",
+        "queue",
+        "cli",
+        "authenticated-http",
+        "authenticated-rpc",
+        "internal",
+        "unknown-auth"
+    ],
+    "tiers": [
+        {
+            "Engine": [
+                "kosi"
+            ],
+            "EntryPointCount": 2,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000002",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "ExposureEvidence": "declares role(ADMIN)",
+                    "File": "src/main/kotlin/fixtures/dslmedia/DslRoutes.kt",
+                    "FileName": "DslRoutes.kt",
+                    "Framework": "javalin",
+                    "Handler": "fixtures.dslmedia.buildJavalin$lambda5",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 167,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000007"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/admin",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000005",
+                    "ExploitChainCount": 0,
+                    "Exposure": "authenticated-http",
+                    "ExposureEvidence": "declares security-constraint(admin,auditor)",
+                    "File": "src/main/kotlin/fixtures/dslmedia/Servlets.kt",
+                    "FileName": "Servlets.kt",
+                    "Framework": "servlet",
+                    "Handler": "fixtures.dslmedia.LegacyServlet.doGet",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 11,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000002"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/legacy/*",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                }
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 0,
+            "ExploitChainCount": 0,
+            "Exposure": "authenticated-http",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "engine"
+            ],
+            "WeaknessCount": 0
+        },
+        {
+            "Engine": [
+                "kosi"
+            ],
+            "EntryPointCount": 1,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": false,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000004",
+                    "ExploitChainCount": 0,
+                    "Exposure": "internal",
+                    "ExposureEvidence": "declares a deny rule (security-constraint(denied)): no caller may reach this endpoint",
+                    "File": "src/main/kotlin/fixtures/dslmedia/Servlets.kt",
+                    "FileName": "Servlets.kt",
+                    "Framework": "servlet",
+                    "Handler": "fixtures.dslmedia.DeniedServlet.doGet",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 19,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000001"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/denied",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                }
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 0,
+            "ExploitChainCount": 0,
+            "Exposure": "internal",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "engine"
+            ],
+            "WeaknessCount": 0
+        },
+        {
+            "Engine": [
+                "kosi"
+            ],
+            "EntryPointCount": 8,
+            "EntryPoints": [
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000010",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "src/main/kotlin/fixtures/dslmedia/DslRoutes.kt",
+                    "FileName": "DslRoutes.kt",
+                    "Framework": "vertx",
+                    "Handler": null,
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": null,
+                    "Kind": "http-route",
+                    "LineNumber": 144,
+                    "MethodUnresolved": true,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000009"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/secure",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000007",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "src/main/kotlin/fixtures/dslmedia/DslRoutes.kt",
+                    "FileName": "DslRoutes.kt",
+                    "Framework": "vertx",
+                    "Handler": "fixtures.dslmedia.buildRouter$lambda0",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 144,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000010"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/chain",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000008",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "src/main/kotlin/fixtures/dslmedia/DslRoutes.kt",
+                    "FileName": "DslRoutes.kt",
+                    "Framework": "vertx",
+                    "Handler": "fixtures.dslmedia.buildRouter$lambda1",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 144,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000011"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/chain-null",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000003",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "src/main/kotlin/fixtures/dslmedia/DslRoutes.kt",
+                    "FileName": "DslRoutes.kt",
+                    "Framework": "javalin",
+                    "Handler": "fixtures.dslmedia.buildJavalin$lambda6",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 167,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000008"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/open",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                {
+                    "AllowAnonymous": null,
+                    "Cwes": [],
+                    "Engine": "kosi",
+                    "EntryPointId": "ep-000009",
+                    "ExploitChainCount": 0,
+                    "Exposure": "unknown-auth",
+                    "File": "src/main/kotlin/fixtures/dslmedia/DslRoutes.kt",
+                    "FileName": "DslRoutes.kt",
+                    "Framework": "vertx",
+                    "Handler": "fixtures.dslmedia.buildRouter$lambda2",
+                    "HighSeverityWeaknessCount": 0,
+                    "HttpMethod": "GET",
+                    "Kind": "http-route",
+                    "LineNumber": 144,
+                    "Package": ".",
+                    "Reach": {
+                        "flows": 0,
+                        "functions": [],
+                        "purls": [],
+                        "seeds": [
+                            "node-000012"
+                        ],
+                        "sinkCategories": [],
+                        "state": "computed"
+                    },
+                    "Route": "/plain",
+                    "SinkCategories": [],
+                    "WeaknessCount": 0,
+                    "WeaknessKinds": []
+                },
+                "... 3 more entry point(s) not pinned ..."
+            ],
+            "EntryPointsTruncated": false,
+            "EntryPointsWithReach": 0,
+            "ExploitChainCount": 0,
+            "Exposure": "unknown-auth",
+            "HighSeverityWeaknessCount": 0,
+            "TierSource": [
+                "kind"
+            ],
+            "WeaknessCount": 0
+        }
+    ]
+}
