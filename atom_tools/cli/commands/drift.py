@@ -29,7 +29,7 @@ class DriftCommand(Command):
         option(
             "old",
             None,
-            "Baseline report: dosai dataflows, golem analyze, rusi analyze or"
+            "Baseline report: dosai dataflows, golem analyze, rusi or kosi analyze or"
             " atom reachables.",
             flag=False,
             value_required=True,

@@ -9,15 +9,19 @@ seconds in CI.
 
 Three facts measured against the real fixtures shaped the design:
 
-**No engine emits an entry-point → flow link** (dosai's ``Slices`` carry no
-entry-point reference; golem's ``dataFlow.slices`` and ``apiEndpoints`` live in
-separate id spaces; rusi is the same). For golem and rusi the join therefore
-goes through the call graph: anchor the endpoint's handler in the call graph,
-take the transitive callee closure, and attach every flow whose source function
-sits inside that closure. dosai is never joined this way — its own
-``AttackSurface[]`` already carries the engine's per-entry-point weakness and
-sink-category data, which is strictly better than anything we could traverse,
-so it is taken verbatim.
+**Flow links come from the engine or through the call graph.** dosai's
+``Slices`` carry no entry-point reference and its per-entry-point reach is
+taken verbatim instead. golem's ``dataFlow.slices`` and ``apiEndpoints`` live
+in separate id spaces, and rusi is the same — for those two the join goes
+through the call graph: anchor the endpoint's handler in the call graph, take
+the transitive callee closure, and attach every flow whose source function
+sits inside that closure. kosi is the exception: its ``apiEndpoints[]``
+records name the slices that entered through them (``sliceIds``, populated
+when ``--endpoint-sources`` seeded the handler parameters), so those endpoints
+carry the engine's own link directly and the call graph is the fallback.
+dosai is never joined this way — its own ``AttackSurface[]`` already carries
+the engine's per-entry-point weakness and sink-category data, which is
+strictly better than anything we could traverse, so it is taken verbatim.
 
 **Authentication state is only known to dosai.** Its ``AllowAnonymous`` flag is
 an input to its analysis, not the verdict (24 of the 27 ``anonymous-http`` entry
@@ -336,7 +340,9 @@ class _CallGraph:
         self.by_id = {}
         # Every name spelling a node carries, keyed bare and paired with its
         # package: golem handlers are bare function names scoped by packagePath,
-        # rusi handlers are fully qualified (``pkg::path::to::fn``).
+        # rusi handlers are fully qualified (``pkg::path::to::fn``), kosi
+        # handlers are the JVM canonical name (``pkg.Class.method``, lambda
+        # spellings included) scoped by modulePath.
         self.by_name_pkg: Dict[Tuple[str, Optional[str]], List[str]] = defaultdict(list)
         self.by_name: Dict[str, List[str]] = defaultdict(list)
         self.by_file: Dict[str, List[Tuple[Optional[int], str]]] = defaultdict(list)
@@ -349,10 +355,12 @@ class _CallGraph:
                     node.get("name"),
                     node.get("qualified_name"),
                     node.get("canonical_name"),
+                    node.get("canonicalName"),
+                    node.get("qualifiedName"),
                 )
                 if n
             }
-            package = node.get("packagePath") or node.get("package_path")
+            package = node.get("packagePath") or node.get("package_path") or node.get("modulePath")
             for name in names:
                 self.by_name[name].append(node_id)
                 self.by_name_pkg[(name, package)].append(node_id)
@@ -399,7 +407,8 @@ class _CallGraph:
 
         golem's call-graph node ids *are* the function symbols its slices
         reference; rusi's ids are opaque hex and the qualified function name
-        must go through the name index.
+        must go through the name index, and kosi's are ``node-*`` integers —
+        its slices name functions, so the same name-index route applies.
         """
         if function in closure_ids:
             return True
@@ -414,15 +423,24 @@ class _CallGraph:
         positions, so a node whose position falls inside the range *is* the
         handler. Without a line span there is nothing to anchor to: a bare file
         name alone would pick up whichever function the engine listed first.
+        kosi publishes a single position per endpoint rather than a range; that
+        one line is the anchor, and only for kosi — widening this to every
+        engine's position field would change how rusi endpoints anchor, and
+        their reach verdicts are pinned against the committed fixtures.
         """
         raw = ep.get("raw") or {}
         rng = raw.get("range") or {}
         start, end = rng.get("start") or {}, rng.get("end") or {}
         filename = start.get("filename") or ep.get("file")
         first = start.get("line")
+        last = end.get("line")
+        if (not filename or first is None) and self.engine == "kosi":
+            position = raw.get("position") or {}
+            filename = position.get("filename") or ep.get("file")
+            first = position.get("line")
+            last = first
         if not filename or first is None:
             return []
-        last = end.get("line")
         if last is None:
             last = first
         return [
@@ -473,10 +491,60 @@ def _rusi_call_graph(raw: Dict) -> Optional[Tuple[_CallGraph, Dict]]:
     )
 
 
+def _kosi_call_graph(raw: Dict) -> Optional[Tuple[_CallGraph, Dict]]:
+    """kosi's ``callGraph`` section, or None when the run emitted an explicit
+    null (its callgraph modes off). The section describes the whole graph the
+    engine built — kosi's stats count the graph itself, so unlike golem there
+    is no full-run counter to compare against and no trim question."""
+    graph = (raw.get("callGraph") or {}) if isinstance(raw, dict) else {}
+    if not graph.get("nodes") and not graph.get("edges"):
+        return None
+    return (
+        _CallGraph("kosi", graph.get("nodes") or [], graph.get("edges") or []),
+        {"present": True, "nodes": len(graph.get("nodes") or []), "edges": len(graph.get("edges") or [])},
+    )
+
+
+def _apply_engine_slice_links(entry_points: List[EntryPoint], reports: List[UnifiedReport]) -> int:
+    """Attach the reach kosi states itself via ``apiEndpoints[].sliceIds``.
+
+    When ``--endpoint-sources`` seeded the handler parameters, an
+    endpoint-rooted slice names the endpoint it entered through — a direct
+    engine statement no traversal here could reproduce, and the one flow link
+    in the ecosystem that does not go through a call graph. Where the link
+    resolves, it replaces the closure-derived reach: the engine's own join is
+    the authority, the traversal the fallback for endpoints it says nothing
+    about. Returns how many endpoints carry an engine link.
+    """
+    flows_by_id = {f.id: f for r in reports for f in r.flows}
+    linked = 0
+    for ep in entry_points:
+        raw = ep.raw.get("raw") or ep.raw
+        slice_ids = raw.get("sliceIds") if isinstance(raw, dict) else None
+        if not slice_ids:
+            continue
+        matched = [flows_by_id[s] for s in slice_ids if s in flows_by_id]
+        if not matched:
+            continue
+        ep.reach_state = REACH_ENGINE
+        ep.seeds = []
+        ep.reach_flows = len(matched)
+        ep.reach_flow_ids = sorted(f.id for f in matched)
+        ep.reach_sinks = sorted({f.sink_category for f in matched if f.sink_category})
+        ep.reach_purls = sorted({p for f in matched for p in f.purls})
+        ep.reach_functions = sorted({_source_function(f) for f in matched if _source_function(f)})
+        ep.note = (
+            "reach from the engine's own slice link (apiEndpoints[].sliceIds),"
+            " not a call-graph traversal"
+        )
+        linked += 1
+    return linked
+
+
 def _source_function(flow: UnifiedFlow) -> str:
     """The function a flow's source sits in, in the engine's own spelling."""
     raw = flow.raw or {}
-    if flow.engine == "golem":
+    if flow.engine in ("golem", "kosi"):
         return raw.get("sourceFunction") or (flow.source.function if flow.source else "") or ""
     if flow.engine == "rusi":
         return raw.get("source_function") or ""
@@ -771,6 +839,7 @@ def compute_attack_surface(inputs: List[SurfaceInput], min_exposure: str = "") -
     dosai_inputs = [i for i in inputs if i.engine == "dosai"]
     golem_inputs = [i for i in inputs if i.engine == "golem"]
     rusi_inputs = [i for i in inputs if i.engine == "rusi"]
+    kosi_inputs = [i for i in inputs if i.engine == "kosi"]
     atom_inputs = [i for i in inputs if i.engine == "atom"]
 
     if dosai_inputs:
@@ -789,6 +858,7 @@ def compute_attack_surface(inputs: List[SurfaceInput], min_exposure: str = "") -
     for engine, engine_inputs, loader in (
         ("golem", golem_inputs, _golem_call_graph),
         ("rusi", rusi_inputs, _rusi_call_graph),
+        ("kosi", kosi_inputs, _kosi_call_graph),
     ):
         if not engine_inputs:
             continue
@@ -805,11 +875,28 @@ def compute_attack_surface(inputs: List[SurfaceInput], min_exposure: str = "") -
                 metas.append(meta)
         if graphs:
             flows, attached = _join_call_graph(eps, [i.report for i in engine_inputs], graphs)
+            # kosi may state the join itself: endpoints whose records name the
+            # slices that entered through them take the engine's verdict over
+            # the closure this loop just derived.
+            engine_linked = 0
+            if engine == "kosi":
+                engine_linked = _apply_engine_slice_links(eps, [i.report for i in engine_inputs])
+                if engine_linked:
+                    diagnostics.append(
+                        f"{engine_linked} kosi endpoint(s) carry the engine's own"
+                        " slice link (apiEndpoints[].sliceIds); their reach is"
+                        " the engine's, not the call-graph traversal's."
+                    )
             coverage[engine] = {
                 "engine": engine,
                 "callGraphs": metas,
                 "endpoints": len(eps),
                 "endpointsAnchored": sum(1 for e in eps if e.reach_state == REACH_COMPUTED),
+                **(
+                    {"endpointsEngineLinked": engine_linked}
+                    if engine_linked
+                    else {}
+                ),
                 "flows": flows,
                 "flowsAttached": attached,
             }

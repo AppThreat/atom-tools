@@ -167,6 +167,187 @@ def test_rusi_flows_match_own_stats_block():
     assert sum(len(f.nodes) for f in report.flows) == expected_nodes
 
 
+# ----------------------------------------------------- kosi (synthetic wire)
+
+# A minimal kosi report, transcribed from real 0.2.0 binary output (the
+# committed kosi fixtures carry the full shapes). Kept inline so the adapter's
+# contract — not the fixtures — is what these pin.
+KOSI_SYNTHETIC = {
+    "schemaVersion": "kosi/1",
+    "tool": {"name": "kosi", "version": "0.2.0", "description": "kosi", "commit": "2e1f7b53"},
+    "options": {"backend": "resolved", "dataflow": "all", "callgraph": "auto", "roots": ["all"]},
+    "callGraph": None,
+    "dataFlow": {
+        "mode": "all",
+        "nodes": [
+            {
+                "id": "dfn-000001",
+                "name": "store vcommand",
+                "kind": "source",
+                "modulePath": ".",
+                "purl": "pkg:generic/demo@unspecified",
+                "filePath": "src/main/kotlin/Demo.kt",
+                "position": {"filename": "src/main/kotlin/Demo.kt", "line": 12, "column": 5},
+            },
+            {
+                "id": "dfn-000002",
+                "name": "java.lang.ProcessBuilder",
+                "kind": "sink",
+                "modulePath": ".",
+                "purl": "pkg:generic/demo@unspecified",
+                "filePath": "src/main/kotlin/Demo.kt",
+                "position": {"filename": "src/main/kotlin/Demo.kt", "line": 14, "column": 5},
+            },
+        ],
+        "edges": [{"id": "dfe-000001", "kind": "data", "sourceId": "dfn-000001", "targetId": "dfn-000002"}],
+        "slices": [
+            {
+                "id": "slice-000001",
+                "sourceId": "dfn-000001",
+                "sinkId": "dfn-000002",
+                "sourceName": "endpoint-params fixtures.demo.Runner.run",
+                "sinkName": "java.lang.ProcessBuilder",
+                "sourceFunction": "fixtures.demo.Runner.run",
+                "sinkFunction": "fixtures.demo.Runner.run",
+                "sourceCategory": "untrusted-input",
+                "sinkCategory": "process-exec",
+                "severity": "critical",
+                "confidence": "high",
+                "riskScore": "9.0",
+                "ruleId": "taint/untrusted-input-to-process-exec",
+                "ruleName": "untrusted-input to process-exec",
+                "description": "Value from untrusted-input reaches process-exec sink.",
+                "purls": ["pkg:generic/demo@unspecified"],
+                "taintKinds": ["untrusted-input"],
+                "nodeIds": ["dfn-000001", "dfn-000002"],
+                "edgeIds": ["dfe-000001"],
+                "pathLength": 2,
+                "sinkArgumentIndex": 0,
+                "elided": None,
+                "sanitizerNodeIds": [],
+                "crossesModule": False,
+                "crossesDependency": False,
+                "reachableFromRoots": False,
+                "rootWitness": [],
+                "flowKey": "abc",
+                "origins": ["pack"],
+            }
+        ],
+    },
+    "apiEndpoints": [
+        {
+            "id": "ep-000001",
+            "framework": "javalin",
+            # The writer spells it singular even though the data class says
+            # httpMethods; read the wire, not the Kotlin.
+            "httpMethod": ["GET", "POST"],
+            "pathTemplate": "/demo",
+            "handlerSymbol": "fixtures.demo.app$lambda1",
+            "handlerCanonicalName": "fixtures.demo.app$lambda1",
+            "modulePath": ".",
+            "purl": "pkg:generic/demo@unspecified",
+            "position": {"filename": "src/main/kotlin/DemoRoutes.kt", "line": 9, "column": 5},
+            "authentication": ["role(ADMIN)"],
+            "exported": None,
+            "permissions": None,
+            "deepLinkHosts": None,
+            "pathParameters": [],
+            "queryParameters": [],
+            "consumes": [],
+            "produces": [],
+            "reachableSources": [],
+            "sliceIds": [],
+            "foundBy": "dsl",
+        },
+        {
+            "id": "ep-000002",
+            "framework": "android",
+            "httpMethod": [],
+            "pathTemplate": "MetaProvider",
+            "handlerSymbol": "fixtures.demo.MetaProvider.query",
+            "handlerCanonicalName": "fixtures.demo.MetaProvider.query",
+            "modulePath": "",
+            "purl": "",
+            "position": {"filename": "/abs/AndroidManifest.xml", "line": 1, "column": 1},
+            "authentication": [],
+            "exported": False,
+            "permissions": None,
+            "deepLinkHosts": None,
+            "pathParameters": [],
+            "queryParameters": [],
+            "consumes": [],
+            "produces": [],
+            "reachableSources": [],
+            "sliceIds": [],
+            "foundBy": "manifest",
+        },
+    ],
+    "packages": [{"name": "demo", "purl": "pkg:generic/demo@unspecified", "modulePath": ".", "files": []}],
+    "diagnostics": [],
+    "stats": {"sliceCount": 1, "truncations": {}, "degraded": None},
+}
+
+
+def test_kosi_detect_requires_a_flow_or_endpoint_section():
+    assert detect_engine(KOSI_SYNTHETIC) == "kosi"
+    assert detect_engine({"tool": {"name": "kosi"}, "schemaVersion": "kosi/1"}) is None
+
+
+def test_kosi_null_sections_are_not_computed_not_empty():
+    content = {**KOSI_SYNTHETIC, "dataFlow": None, "callGraph": None}
+    report = parse_report(content, source_file="kosi.json")
+    assert report.flows == []
+    # ``mode`` stays "none": the run said it did not compute data flow, which
+    # is the same distinction the graph command draws for a missing graph.
+    assert report.analysis_mode == "none"
+
+
+def test_kosi_severity_and_categories_come_from_the_slice():
+    report = parse_report(KOSI_SYNTHETIC, source_file="kosi.json")
+    assert len(report.flows) == 1
+    flow = report.flows[0]
+    assert flow.severity == "error"  # critical folded
+    assert flow.severity_source == "engine"
+    assert flow.confidence == "high"
+    assert flow.source_category == "untrusted-input"
+    assert flow.sink_category == "process-exec"
+    # kosi records categories on the slice, not its nodes; the terminal nodes
+    # carry them so tag-driven consumers see the same thing they see for the
+    # engines whose nodes carry categories.
+    assert flow.source.tags == ["untrusted-input"]
+    assert flow.sink.tags == ["process-exec"]
+    assert flow.sink.role == "sink"
+    # sinkArgumentIndex 0 is a real argument position and must survive the
+    # truthiness filter the other extras use.
+    assert flow.extra["sinkArgumentIndex"] == 0
+    assert flow.extra["ruleId"] == "taint/untrusted-input-to-process-exec"
+
+
+def test_kosi_endpoint_method_list_fans_out_and_empty_stays_unresolved():
+    report = parse_report(KOSI_SYNTHETIC, source_file="kosi.json")
+    # Two declared methods are two exposures, each keeping the verbatim record.
+    demo = [e for e in report.endpoints if e["path"] == "/demo"]
+    assert [e["method"] for e in demo] == ["GET", "POST"]
+    assert demo[0]["raw"] is demo[1]["raw"]
+    # An empty method list is not "any method": it means none was resolved.
+    provider = next(e for e in report.endpoints if e["path"] == "MetaProvider")
+    assert provider["method"] is None
+    assert provider.get("methodUnresolved") is True
+    assert provider["raw"]["exported"] is False
+
+
+def test_kosi_stats_degradation_is_diagnosed():
+    degraded = {
+        **KOSI_SYNTHETIC,
+        "stats": {"sliceCount": 1, "truncations": {"analysis-seconds": 1}, "degraded": "max-analysis-seconds"},
+    }
+    report = parse_report(degraded, source_file="kosi.json")
+    assert any("max-analysis-seconds" in d for d in report.diagnostics)
+    assert any("analysis-seconds" in d for d in report.diagnostics)
+    assert report.provenance["degraded"] == "max-analysis-seconds"
+    assert report.provenance["truncations"] == {"analysis-seconds": 1}
+
+
 # --------------------------------------------------------------------- atom
 
 

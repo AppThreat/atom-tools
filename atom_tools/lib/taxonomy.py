@@ -8,9 +8,10 @@ in ``sarif.py`` and is now the single taxonomy every engine adapter maps onto:
   "warning"; everything else "note".
 - ``CATEGORY_TO_TAG``: maps the source/sink category names emitted by dosai
   (``Secret``, ``Xxe``, ``Command``, ...), golem (``http-input``,
-  ``external-service``, ...) and rusi (``param-0``, ``network-request``, ...)
-  onto that same tag vocabulary. The vocabulary was taken from the real
-  fixtures in ``test/data/ecosystem/`` (see PROVENANCE.md there).
+  ``external-service``, ...), rusi (``param-0``, ``network-request``, ...) and
+  kosi (``process-exec``, ``crypto-asset``, ...) onto that same tag
+  vocabulary. The vocabulary was taken from the real fixtures in
+  ``test/data/ecosystem/`` (see PROVENANCE.md there).
 - severity normalisation: engines that emit an explicit severity use
   differing scales (dosai info/low/medium/high/critical, golem lower-case
   medium/high); everything is folded onto the SARIF levels error/warning/note.
@@ -98,12 +99,25 @@ CATEGORY_TO_TAG = {
     "http": "http",
     "http-response": "framework-output",
     "crypto": "crypto",
+    # kosi (Kotlin/JVM) sink/source categories from security-pack-v0 that have
+    # an honest home in this vocabulary. The rule used, the same one that
+    # keeps rusi's ``param-N`` categories unmapped: map when the existing
+    # tag's meaning covers the category's meaning, never when it would
+    # re-label the risk or assert a sink where kosi asserts a passthrough.
+    # ``code-execution`` and ``template-injection`` need no entry — they are
+    # already tags, matched by name in ``category_to_tag``.
+    "process-exec": "shell-exec",  # ProcessBuilder/Runtime.exec is the JVM's process-spawn surface
+    "crypto-asset": "crypto",  # a crypto API use, exactly what the crypto tag marks
+    "hardcoded-secret": "sensitive-data",  # literal secret material (a source category)
+    "js-injection": "code-execution",  # its only sink, WebView.evaluateJavascript, executes the JS
+    "log-injection": "log",  # the tag the log category exists for
+    "prompt-injection": "ai-prompt",  # untrusted text into an LLM prompt sink
 }
 
 # Tags that exist in the shared vocabulary but not in chen's set. Adding them
 # here (rather than to RULE_TAGS) keeps atom-slice rule derivation identical
 # to before; they are only reachable through engine category mapping.
-EXTENDED_RULE_TAGS = RULE_TAGS | {"crypto", "cli-source", "log"}
+EXTENDED_RULE_TAGS = RULE_TAGS | {"crypto", "cli-source", "log", "xss"}
 
 # dosai (info/low/medium/high/critical) and golem (lower-case) severity words
 # folded onto SARIF levels.

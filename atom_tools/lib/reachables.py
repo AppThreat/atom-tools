@@ -76,7 +76,7 @@ def parse_reachable_file(filename: str | Path) -> List[Dict]:
     if isinstance(content, list):
         return [entry for entry in content if isinstance(entry, dict)]
     if isinstance(content, dict):
-        # Non-atom engine reports (dosai/golem/rusi) are normalised into
+        # Non-atom engine reports (dosai/golem/rusi/kosi) are normalised into
         # reachables entries through the adapters so consumers that load
         # flows directly (sarif, visualize) work on them unchanged. Engine
         # reports without flows (endpoint-only extracts) yield no entries,

@@ -1,6 +1,6 @@
 """The unified flow model.
 
-Every supported engine (atom, dosai, golem, rusi) emits the same three shapes
+Every supported engine (atom, dosai, golem, rusi, kosi) emits the same three shapes
 — a source→sink flow, the nodes along its path, and an endpoint table — in
 four incompatible schemas. The adapters in :mod:`atom_tools.lib.adapters`
 normalise each of them into the dataclasses here, and
@@ -164,7 +164,7 @@ def detect(content) -> bool:
 
     The signature — a string ``engine``, a ``flows`` list, a ``provenance``
     dict and a string ``schema_version`` at the top level — is carried by no
-    engine's own report (dosai nests its metadata, golem/rusi use ``tool``,
+    engine's own report (dosai nests its metadata, golem/rusi/kosi use ``tool``,
     atom has no envelope), so it cannot shadow vendor detection.
     """
     return (
@@ -289,7 +289,7 @@ def _compat_node(node: UnifiedNode, flow_purls: List[str]) -> Dict:
 
 # The key each engine publishes its endpoint table under, used to rebuild that
 # table when the source document was a unified one rather than the engine's own.
-ENDPOINT_ARRAY_KEYS = {"golem": "apiEndpoints", "rusi": "api_endpoints"}
+ENDPOINT_ARRAY_KEYS = {"golem": "apiEndpoints", "rusi": "api_endpoints", "kosi": "apiEndpoints"}
 
 
 def to_reachables_document(report: UnifiedReport, original: Optional[Dict] = None) -> Dict:

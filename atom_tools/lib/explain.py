@@ -824,7 +824,7 @@ def build_mcp_server(ctx: ExplainContext, baseline: Optional[UnifiedReport] = No
         "atom-tools",
         instructions=(
             "Read-only tools over an already-loaded flow report (atom, dosai,"
-            " golem, rusi or unified). No engine invocation, no shell, no"
+            " golem, rusi, kosi or unified). No engine invocation, no shell, no"
             " filesystem access beyond the loaded report."
         ),
     )

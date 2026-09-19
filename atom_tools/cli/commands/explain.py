@@ -109,7 +109,7 @@ class ExplainCommand(Command):
         option(
             "engine",
             None,
-            "Force the producing engine (atom, dosai, golem, rusi) instead of"
+            "Force the producing engine (atom, dosai, golem, rusi, kosi) instead of"
             " detecting it from the report envelope.",
             flag=False,
             value_required=True,

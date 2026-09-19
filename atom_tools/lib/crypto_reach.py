@@ -37,6 +37,16 @@ sits in a package that carries tainted flows*, which is materially weaker
 than *this MD5 call is on a tainted path* — the renderings say the weaker
 sentence, every time.
 
+**kosi splits by record kind, and the label says so.** Its crypto operations
+carry the enclosing function (``function``) and join at function grain, the
+same way rusi's materials do. Its materials and findings carry only a file
+position — no enclosing function, no package — so they join at file grain:
+*a tainted flow runs through this file*, the middle rung between function and
+package, stated as exactly that. Its assets, protocols and libraries carry no
+location of any kind (assets name algorithms and primitives; protocols and
+libraries are bare strings) and are inventory only — there is nothing to
+join on, and the rendering says that instead of inventing a package.
+
 **rusi's zeros are coverage statements, not findings.** Its components come
 from a hard-coded symbol catalog (SHA-256/512/1, MD5, BLAKE3, ring, AES-GCM,
 ChaCha20-Poly1305, PBKDF2, JWT, TLS, RSA, Ed25519 —
@@ -77,10 +87,13 @@ JOIN_ENGINE = "engine"  # the engine's own reachability verdict (dosai)
 JOIN_DERIVED = "derived"  # our join over the engine's call graph / flows
 
 # Join granularity per engine: dosai's records carry their own verdict,
-# rusi's materials an enclosing function, golem's items only a package.
-GRANULARITIES = {"dosai": "record", "rusi": "function", "golem": "package"}
+# rusi's materials an enclosing function, golem's items only a package, and
+# kosi's per record kind — operations a function, materials and findings a
+# file, the rest nothing (the block label lists the grains actually used).
+GRANULARITIES = {"dosai": "record", "rusi": "function", "golem": "package", "kosi": "function"}
 GRANULARITY_PACKAGE = "package"
 GRANULARITY_FUNCTION = "function"
+GRANULARITY_FILE = "file"
 
 # Strength vocabularies observed in the fixtures. Neither engine declares
 # these as an enum — they are string literals in rule tables — so an
@@ -651,9 +664,242 @@ def _rusi_crypto(
     return items, sections, diagnostics
 
 
+# -- kosi: three grains, one per record kind ------------------------------------
+
+
+def _kosi_crypto(
+    raw: Dict, report, surface: Dict, graph
+) -> Tuple[List[CryptoItem], Dict[str, int], List[str]]:
+    """kosi crypto evidence joined at the grain each record kind supports.
+
+    Operations carry ``function`` — anchored in the call graph and tested
+    against every anchored endpoint's callee closure, the same derivation
+    rusi's materials get. Materials and findings carry a file position only,
+    so their claim is the file-level one. Assets, protocols and libraries
+    carry no location at all: they are inventory, and their reach says so
+    rather than borrowing a grain the record does not have.
+    """
+    crypto = raw.get("crypto") or {}
+    sections = {
+        section: len(crypto.get(section) or [])
+        for section in ("libraries", "assets", "operations", "materials", "protocols", "findings")
+    }
+    closures: List[Tuple[str, set]] = []  # (endpoint label, closure node ids)
+    from atom_tools.lib.attack_surface import _kosi_call_graph
+
+    loaded = _kosi_call_graph(raw)
+    if loaded and graph is not None:
+        mini, _ = loaded
+        for tier in surface.get("tiers") or []:
+            for entry in tier.get("EntryPoints") or []:
+                if entry.get("Engine") != "kosi":
+                    continue
+                endpoint = {
+                    "handler": entry.get("Handler"),
+                    "package": entry.get("Package"),
+                    "file": entry.get("File") or "",
+                    "raw": entry.get("raw") or {},
+                }
+                seeds, _how = mini.anchor(endpoint)
+                if seeds:
+                    route = entry.get("Route")
+                    label = (
+                        f"{entry.get('HttpMethod') or ''} {route}".strip()
+                        if route
+                        else (entry.get("Handler") or entry.get("EntryPointId") or "")
+                    )
+                    closures.append((label, set(mini.closure(seeds))))
+    flows_by_file: Dict[str, List[str]] = defaultdict(list)
+    for flow in report.flows:
+        for file in {n.file for n in flow.nodes if n.file}:
+            flows_by_file[file].append(flow.id)
+    items: List[CryptoItem] = []
+    diagnostics: List[str] = []
+
+    def function_reach(function: str) -> Dict:
+        reach: Dict = {
+            "granularity": GRANULARITY_FUNCTION,
+            "source": JOIN_DERIVED,
+            "function": function or None,
+        }
+        if graph is None or not function:
+            reach["state"] = "not-computed"
+            reach["reason"] = "no call graph to anchor the function in"
+            return reach
+        # anchor() refuses ambiguous names; for a reachability question
+        # "inside the closure of any same-named node" is the honest reading,
+        # so an ambiguous qualified name is accepted rather than reported as
+        # absent from the graph.
+        anchored = graph.anchor(function) or graph.by_name.get(function) or []
+        if not anchored:
+            reach["state"] = "function-not-in-graph"
+            return reach
+        reached_from = sorted(
+            label for label, closure in closures if any(n in closure for n in anchored)
+        )
+        if reached_from:
+            reach["state"] = "reachable-from-endpoint"
+            reach["endpoints"] = reached_from
+            return reach
+        reach["state"] = "in-graph-no-endpoint-reach"
+        callers = sorted(
+            {
+                graph.by_id[c].name
+                for node_id in anchored
+                for c in graph.in_edges.get(node_id, ())
+                if c in graph.by_id
+            }
+        )
+        if callers:
+            reach["callers"] = callers[:5]
+            reach["note"] = (
+                "inside the call graph but in no anchored endpoint's closure;"
+                " static callers listed — event handlers, main and background"
+                " listeners land here, as do functions reached only through"
+                " dynamic dispatch"
+            )
+        else:
+            reach["note"] = (
+                "anchors in the call graph with no static caller — either"
+                " dead, or reached through dynamic dispatch the static graph"
+                " does not model"
+            )
+        return reach
+
+    def file_reach(file: str) -> Dict:
+        flow_ids = sorted(set(flows_by_file.get(file) or []))
+        return {
+            "granularity": GRANULARITY_FILE,
+            "source": JOIN_DERIVED,
+            "file": file or None,
+            "fileOnFlow": bool(flow_ids),
+            "flowsThroughFile": len(flow_ids),
+            "flowIds": flow_ids[:20],
+            "claim": (
+                "the crypto site sits in a file that carries tainted flows —"
+                " not that the crypto call itself is on a tainted path"
+            ),
+        }
+
+    def no_location(kind: str) -> Dict:
+        return {
+            "source": JOIN_DERIVED,
+            "state": "no-location",
+            "reason": (
+                f"kosi's crypto {kind} carry no file, function or package"
+                " field — there is nothing to join on; this is inventory"
+                " only"
+            ),
+        }
+
+    for record in crypto.get("operations") or []:
+        items.append(
+            CryptoItem(
+                engine="kosi",
+                kind="operation",
+                id=record.get("id") or "",
+                name=" ".join(p for p in (record.get("kind"), record.get("asset")) if p),
+                algorithm=record.get("asset") or "",
+                file=record.get("filePath") or "",
+                line=(record.get("position") or {}).get("line"),
+                function=record.get("function") or "",
+                attention=False,
+                reach=function_reach(record.get("function") or ""),
+                raw=record,
+            )
+        )
+    for record in crypto.get("materials") or []:
+        position = record.get("position") or {}
+        items.append(
+            CryptoItem(
+                engine="kosi",
+                kind="material",
+                id=record.get("id") or "",
+                name=record.get("name") or "",
+                algorithm=record.get("kind") or "",
+                file=record.get("filePath") or "",
+                line=position.get("line"),
+                attention=False,
+                reach=file_reach(record.get("filePath") or ""),
+                raw=record,
+            )
+        )
+    for record in crypto.get("findings") or []:
+        code = record.get("code") or ""
+        severity = record.get("severity") or ""
+        items.append(
+            CryptoItem(
+                engine="kosi",
+                kind="finding",
+                id=record.get("id") or "",
+                name=code,
+                algorithm=record.get("asset") or "",
+                severity=severity,
+                severity_level=taxonomy.normalise_engine_severity(severity) or "",
+                rule_id=code,
+                file=record.get("filePath") or "",
+                line=(record.get("position") or {}).get("line"),
+                attention=_is_attention("finding", None, code),
+                reach=file_reach(record.get("filePath") or ""),
+                raw=record,
+            )
+        )
+    for record in crypto.get("assets") or []:
+        items.append(
+            CryptoItem(
+                engine="kosi",
+                kind="asset",
+                id=record.get("id") or "",
+                name=record.get("algorithm") or "",
+                algorithm=record.get("algorithm") or "",
+                attention=False,
+                reach=no_location("assets"),
+                raw=record,
+            )
+        )
+    for name in crypto.get("protocols") or []:
+        items.append(
+            CryptoItem(
+                engine="kosi",
+                kind="protocol",
+                id="",
+                name=name if isinstance(name, str) else str(name),
+                attention=False,
+                reach=no_location("protocols"),
+                raw={"protocol": name},
+            )
+        )
+    for name in crypto.get("libraries") or []:
+        items.append(
+            CryptoItem(
+                engine="kosi",
+                kind="library",
+                id="",
+                name=name if isinstance(name, str) else str(name),
+                attention=False,
+                reach=no_location("libraries"),
+                raw={"library": name},
+            )
+        )
+    if any(sections.values()):
+        diagnostics.append(
+            "crypto assets, protocols and libraries carry no location and no"
+            " strength field: they are inventory only, and weakness claims come"
+            " from kosi's own findings."
+        )
+    else:
+        diagnostics.append(
+            "the report's crypto section is empty — no record of any kind."
+            " Whether that means nothing matched kosi's shipped pattern pack"
+            " or the generating mode did not populate the section cannot be"
+            " read off the report itself."
+        )
+    return items, sections, diagnostics
+
+
 # -- the document ---------------------------------------------------------------
 
-ENGINES_WITH_CRYPTO = ("golem", "rusi", "dosai")
+ENGINES_WITH_CRYPTO = ("golem", "rusi", "dosai", "kosi")
 
 
 def _load_graph_softly(loader, raw: Dict, path: str):
@@ -673,7 +919,7 @@ def compute_crypto_reach(inputs: List, weak_only: bool = False) -> Dict:
     "reachable" into one number.
     """
     from atom_tools.lib.attack_surface import compute_attack_surface
-    from atom_tools.lib.callgraph import load_golem, load_rusi
+    from atom_tools.lib.callgraph import load_golem, load_kosi, load_rusi
     from atom_tools.lib.unified import detect as detect_unified
 
     blocks: List[Dict] = []
@@ -716,6 +962,11 @@ def compute_crypto_reach(inputs: List, weak_only: bool = False) -> Dict:
                 surface = compute_attack_surface([inp])
                 items, secs, diags = _golem_crypto(inp.raw, inp.report, surface, graph)
                 coverage_notes.extend(_coverage_notes("golem", surface, graph))
+            elif engine == "kosi":
+                graph = _load_graph_softly(load_kosi, inp.raw, inp.path)
+                surface = compute_attack_surface([inp])
+                items, secs, diags = _kosi_crypto(inp.raw, inp.report, surface, graph)
+                coverage_notes.extend(_coverage_notes("kosi", surface, graph))
             else:  # rusi
                 graph = _load_graph_softly(load_rusi, inp.raw, inp.path)
                 surface = compute_attack_surface([inp])
@@ -871,6 +1122,23 @@ def _item_lines(item: CryptoItem) -> List[str]:
             )
         else:
             lines.append(f"  reach: function-level · {reach.get('reason') or state}")
+        return lines
+    # kosi's assets, protocols and libraries: no file, function or package to
+    # join on. Saying so beats the package sentence the fall-through would
+    # print over a record that has no package.
+    if reach.get("state") == "no-location":
+        lines.append(f"  reach: none · {reach.get('reason')}")
+        return lines
+    # kosi's materials and findings: a file position, and nothing finer.
+    if reach.get("granularity") == GRANULARITY_FILE:
+        if reach.get("fileOnFlow"):
+            lines.append(
+                f"  reach: file-level · {reach.get('flowsThroughFile', 0)}"
+                " tainted flow(s) through this file"
+            )
+            lines.append(f"  claim: {reach.get('claim')}")
+        else:
+            lines.append("  reach: file-level · no analysed flow runs through this file")
         return lines
     # package-level: golem items, rusi libraries and findings
     if reach.get("packageOnFlow"):

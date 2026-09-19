@@ -17,9 +17,10 @@ class CryptoReachCommand(Command):
     reachability — the question cdxgen's CBOM cannot answer: is this weak
     algorithm on a path an entry point reaches? The join runs per engine at
     the granularity each engine's evidence supports (dosai record-level
-    engine verdicts, rusi function-level, golem package-level), and every
-    rendering states which one it is using. No cross-engine headline: three
-    granularities do not sum.
+    engine verdicts, rusi function-level, golem package-level, kosi
+    function/file-level by record kind), and every rendering states which
+    one it is using. No cross-engine headline: four granularities do not
+    sum.
     """
 
     name = "crypto-reach"
