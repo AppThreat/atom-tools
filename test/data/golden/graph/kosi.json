@@ -1,5 +1,7 @@
 {
-    "diagnostics": [],
+    "diagnostics": [
+        "kosi: 2 of 2 flow source function(s) and 2 of 2 sink function(s) anchored in the call graph; the rest are not nodes of it."
+    ],
     "engines": [
         "kosi"
     ],
@@ -7,12 +9,14 @@
     "graphs": [
         {
             "callTypeMix": {
-                "static": 13
+                "lambda-value": 21,
+                "static": 31
             },
             "confidenceMix": {
-                "exact": 13
+                "exact": 31,
+                "unknown": 21
             },
-            "edges": 13,
+            "edges": 52,
             "engine": "kosi",
             "engineDiagnostics": [
                 "2 call site(s) resolved to no callee and emit no edge; they are counted, never silently absent"
@@ -21,8 +25,8 @@
             "engineRoots": 0,
             "engineRootsInGraph": 0,
             "externalNodes": 0,
-            "internalNodes": 64,
-            "nodes": 64,
+            "internalNodes": 83,
+            "nodes": 83,
             "sourceFile": "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json",
             "trimmed": false
         }
@@ -41,10 +45,10 @@
             "ranked": [],
             "seeds": {
                 "pairs": 0,
-                "policy": "endpoints",
-                "sinks": 64,
+                "policy": "flow-sources\u2192flow-sinks",
+                "sinks": 2,
                 "source": "engine",
-                "sources": 9
+                "sources": 2
             },
             "sourceFile": "test/data/ecosystem/kotlin-dsl-media-auth-kosi.json"
         }

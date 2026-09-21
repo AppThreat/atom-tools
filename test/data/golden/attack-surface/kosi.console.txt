@@ -1,32 +1,44 @@
-Attack surface: 11 entry point(s) from 1 report(s) (kosi)
+Attack surface: 17 entry point(s) from 1 report(s) (kosi)
 tiers run most-exposed first; dosai and kosi classify authentication — every other engine's entries sit in unknown-auth, which is a gap, not a finding.
 
-  * authenticated-http: 2 entry point(s), 0 weakness(es) (0 high severity)
-   ├── GET /admin  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:167  [kosi declares role(ADMIN)]
+  * authenticated-http: 9 entry point(s), 0 weakness(es) (0 high severity)
+   ├── /secure  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:155  [kosi declares auth-handler(BasicAuthHandler)]
        reach: computed — reaches no analysed flow
-   └── GET /legacy/*  src/main/kotlin/fixtures/dslmedia/Servlets.kt:11  [kosi declares security-constraint(admin,auditor)]
+   ├── GET /admin  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:178  [kosi declares role(ADMIN)]
+       reach: computed — reaches no analysed flow
+   ├── GET /custom  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:207  [kosi declares meta-security(CustomSecurity)]
+       reach: computed — reaches no analysed flow
+   ├── GET /explicit-null  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:207  [kosi declares contract-security(ApiKeySecurity)]
+       reach: computed — reaches no analysed flow
+   ├── GET /inherited  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:207  [kosi declares contract-security(ApiKeySecurity)]
+       reach: computed — reaches no analysed flow
+   ├── GET /legacy/*  src/main/kotlin/fixtures/dslmedia/Servlets.kt:11  [kosi declares security-constraint(admin,auditor)]
+       reach: computed — reaches no analysed flow
+   ├── GET /oauth  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:207  [kosi declares meta-security(AuthCodeOAuthSecurity)]
+       reach: computed — reaches no analysed flow
+   ├── GET /overridden  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:207  [kosi declares meta-security(BasicAuthSecurity)]
+       reach: computed — reaches no analysed flow
+   └── GET /token  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:155  [kosi declares auth-handler(JWTAuthHandler)]
        reach: computed — reaches no analysed flow
 
   * internal: 1 entry point(s), 0 weakness(es) (0 high severity)
    └── GET /denied  src/main/kotlin/fixtures/dslmedia/Servlets.kt:19  [kosi declares a deny rule (security-constraint(denied)): no caller may reach this endpoint]
        reach: computed — reaches no analysed flow
 
-  ? unknown-auth [auth unknown — not an exposure verdict]: 8 entry point(s), 0 weakness(es) (0 high severity)
-   ├── /secure  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+  ? unknown-auth [auth unknown — not an exposure verdict]: 7 entry point(s), 0 weakness(es) (0 high severity)
+   ├── GET /chain  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:155  [auth unknown]
        reach: computed — reaches no analysed flow
-   ├── GET /chain  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+   ├── GET /chain-null  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:155  [auth unknown]
        reach: computed — reaches no analysed flow
-   ├── GET /chain-null  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+   ├── GET /open  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:178  [auth unknown]
        reach: computed — reaches no analysed flow
-   ├── GET /open  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:167  [auth unknown]
+   ├── GET /outside  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:228  [auth unknown]
        reach: computed — reaches no analysed flow
-   ├── GET /plain  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+   ├── GET /plain  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:155  [auth unknown]
        reach: computed — reaches no analysed flow
    ├── GET /public  src/main/kotlin/fixtures/dslmedia/Servlets.kt:15  [auth unknown]
        reach: computed — reaches no analysed flow
-   ├── GET /simple  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:177  [auth unknown]
-       reach: computed — reaches no analysed flow
-   └── GET /token  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:144  [auth unknown]
+   └── GET /simple  src/main/kotlin/fixtures/dslmedia/DslRoutes.kt:191  [auth unknown]
        reach: computed — reaches no analysed flow
 
 tiers with no entry points here: anonymous-http, anonymous-rpc, anonymous, mcp, queue, cli, authenticated-rpc

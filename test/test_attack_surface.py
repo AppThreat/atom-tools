@@ -638,12 +638,15 @@ def kosi_surface():
 
 
 def test_kosi_declared_requirements_lift_the_tier(kosi_surface):
-    """A non-empty ``authentication`` list is a positive statement. The two
+    """A non-empty ``authentication`` list is a positive statement. The nine
     endpoints with declared requirements land in authenticated-http with
     ``tier_source`` "engine", and the evidence names the field they came
-    from."""
+    from. (Two, when this fixture was first captured: kosi has since learned
+    to fold ``meta-security``, ``contract-security`` and ``auth-handler``
+    declarations, so seven routes moved out of unknown-auth into a stated
+    tier — the direction the tier system exists to reward.)"""
     tier = entries_of(kosi_surface, "authenticated-http")
-    assert tier["EntryPointCount"] == 2
+    assert tier["EntryPointCount"] == 9
     assert tier["TierSource"] == ["engine"]
     by_route = {e["Route"]: e for e in tier["EntryPoints"]}
     assert by_route["/admin"]["AllowAnonymous"] is False
@@ -670,10 +673,10 @@ def test_kosi_deny_rule_is_internal_not_authenticated(kosi_surface):
 def test_kosi_empty_declaration_is_not_anonymous(kosi_surface):
     """The heart of the honesty question: ``authentication: []`` means no
     requirement was declared at a site kosi models — a filter kosi does not
-    model may still guard the route. Those eight endpoints stay in
+    model may still guard the route. Those seven endpoints stay in
     unknown-auth, and no anonymous tier exists anywhere in the document."""
     unknown = entries_of(kosi_surface, UNKNOWN_AUTH)
-    assert unknown["EntryPointCount"] == 8
+    assert unknown["EntryPointCount"] == 7
     assert all(e["AllowAnonymous"] is None for e in unknown["EntryPoints"])
     assert all(
         t["Exposure"] != "anonymous-http" for t in kosi_surface["tiers"]
@@ -685,8 +688,10 @@ def test_kosi_unresolved_method_is_not_labelled_any(kosi_surface):
     """An empty httpMethod list means no method was resolved at a site kosi
     models — printing our own "ANY" would assert every method over a route
     whose method kosi could not name."""
-    unknown = entries_of(kosi_surface, UNKNOWN_AUTH)
-    secure = next(e for e in unknown["EntryPoints"] if e["Route"] == "/secure")
+    # /secure declares auth-handler(BasicAuthHandler), so it sits in
+    # authenticated-http; the method is a separate axis and still unresolved.
+    tier = entries_of(kosi_surface, "authenticated-http")
+    secure = next(e for e in tier["EntryPoints"] if e["Route"] == "/secure")
     assert secure["HttpMethod"] is None
     assert secure["MethodUnresolved"] is True
     # The dsl routes carry kosi's unattributed-route finding; kind stays the
@@ -715,6 +720,32 @@ def test_kosi_exported_false_is_internal_and_true_is_not_anonymous():
         "android.intent.action.VIEW",
     }
     assert all(t["Exposure"] != "anonymous-http" for t in document["tiers"])
+
+
+def test_kosi_unsubstantiated_endpoint_says_it_was_never_read():
+    """An entry point with no analysed handler must not read as a clean one.
+
+    kosi flags the manifest component whose class is absent from the tree.
+    It is a real declared entry point, so it stays in the surface — but its
+    reach line says why zero flows mean nothing here, and the entry line
+    says the handler code was never read. Without both, an unexamined route
+    is indistinguishable from an examined one that came back clean, which
+    is the single worst thing an attack-surface document can do.
+    """
+    document = surface(KOSI_ANDROID)
+    flagged = [
+        e
+        for tier in document["tiers"]
+        for e in tier["EntryPoints"]
+        if e.get("Substantiated") is False
+    ]
+    assert len(flagged) == 1, [e["Route"] for e in flagged]
+    text = "\n".join(render_console(document))
+    assert "declared only — handler code not read" in text
+    assert "zero flows here means unexamined, not clean" in text
+    # Every other entry point renders without the marker: a caveat on
+    # everything is a caveat on nothing.
+    assert text.count("declared only — handler code not read") == 1
 
 
 def test_kosi_engine_slice_link_is_the_reach_verdict():

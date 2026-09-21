@@ -8,6 +8,24 @@ All notable changes to atom-tools are documented here. The format follows
 
 ### Added
 
+- **kosi's "how much did I actually read" fields are carried, not dropped.**
+  Three of them, each the difference between a measurement and a silence:
+  - `apiEndpoints[].substantiated` — false when kosi declared a route and
+    read none of the code behind it. The entry point stays in the attack
+    surface (it is really declared) and is rendered `declared only — handler
+    code not read`, with a reach line saying zero flows there mean
+    unexamined, not clean. An unexamined route presented as a clean one is
+    the worst thing this document can do.
+  - `stats.sourceCoverage` — files discovered against files present, with
+    test files counted separately because a source root is a MAIN source
+    root. A run that read a tenth of the non-test sources and found nothing
+    now says so in the diagnostics, and the numbers ride in the provenance.
+  - `runtime` — kosi declared this section and its writer silently dropped
+    it; kosi now writes it and atom-tools reads it. `native_image` is the
+    one that matters: kosi ships a native binary and a fat jar built from
+    different metadata, and which artifact answered is a fact about how far
+    to trust the report.
+
 - **kosi (Kotlin/JVM) is the fifth engine** atom-tools reads, alongside atom,
   dosai, golem and rusi. kosi emits one camelCase envelope
   (`schemaVersion: "kosi/1"`); its `dataFlow.slices[]` carry the engine's own
@@ -48,6 +66,19 @@ All notable changes to atom-tools are documented here. The format follows
 
 ### Changed
 
+- **The kosi fixtures were regenerated against a current kosi** (2026-09-21),
+  and every count the kosi tests assert moved with them. All in the direction
+  of the engine finding more: `dsl-media-auth` 11 endpoints to 17 (2 with a
+  declared auth requirement to 9, as `meta-security`, `contract-security` and
+  `auth-handler` now fold) and its call graph 64/13 static-only to 83/52 with
+  lambda-valued calls resolved; `android-manifest-app` 5 endpoints to 6.
+  Manifest endpoints now carry a relative `position.filename` where they
+  carried an absolute one. Slices have dropped `reachableFromRoots`/
+  `rootWitness` for `pathKind`/`frames`/`framesCutBy`; the adapter reads both
+  spellings, so reports from either era still parse.
+  `test/data/ecosystem/PROVENANCE.md` records the old and new numbers side by
+  side, because a reader comparing against git history needs to know which
+  differences are the engine improving.
 - The `attack-surface` console header now says "dosai and kosi classify
   authentication" on reports that involve kosi; other reports keep the
   previous wording, so no existing rendering changes.

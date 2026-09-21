@@ -1,6 +1,6 @@
-unified document md5: e272113b2f01760f355f050876a94ca4
+unified document md5: 3c1110add9e63095b105410a4c7316a5
 engine: kosi 0.2.0, mode all
-counts: 2 flow(s), 1 endpoint(s), 1 package(s), 2 diagnostic(s)
+counts: 2 flow(s), 1 endpoint(s), 1 package(s), 3 diagnostic(s)
 flow[0]: {
   "analysis_mode": "all",
   "confidence": "high",
@@ -16,7 +16,7 @@ flow[0]: {
       "dfe-000005",
       "dfe-000006"
     ],
-    "flowKey": "5481f29ab0578441e7c1fcbbec83ad839dcd4a0cb8b042bee43e0e1d625873a4",
+    "flowKey": "6bb68ab35bb208afdf71eb42b9e46073b9bdda4b4ec918df2858d0246a851b2a",
     "origins": [
       "pack"
     ],
@@ -149,7 +149,73 @@ flow[0]: {
       "dfe-000006"
     ],
     "elided": null,
-    "flowKey": "5481f29ab0578441e7c1fcbbec83ad839dcd4a0cb8b042bee43e0e1d625873a4",
+    "flowKey": "6bb68ab35bb208afdf71eb42b9e46073b9bdda4b4ec918df2858d0246a851b2a",
+    "frames": [
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 36,
+        "role": "source"
+      },
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 36,
+        "role": "move"
+      },
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 37,
+        "role": "summary"
+      },
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 37,
+        "role": "summary"
+      },
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 36,
+        "role": "move"
+      },
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 38,
+        "role": "summary"
+      },
+      {
+        "dispatchNarrowedBy": null,
+        "dispatchTargets": [],
+        "dispatchWidth": null,
+        "file": "src/main/kotlin/Cmd.kt",
+        "function": "fixtures.exec.CmdRunner.runCommand",
+        "line": 38,
+        "role": "sink"
+      }
+    ],
+    "framesCutBy": null,
     "id": "slice-000001",
     "nodeIds": [
       "dfn-000003",
@@ -163,13 +229,12 @@ flow[0]: {
     "origins": [
       "pack"
     ],
+    "pathKind": "complete",
     "pathLength": 6,
     "purls": [
       "pkg:generic/command-exec@unspecified"
     ],
-    "reachableFromRoots": false,
     "riskScore": "9.0",
-    "rootWitness": [],
     "ruleId": "taint/untrusted-input-to-process-exec",
     "ruleName": "untrusted-input to process-exec",
     "sanitizerNodeIds": [],
@@ -185,7 +250,9 @@ flow[0]: {
     "sourceId": "dfn-000003",
     "sourceModulePath": ".",
     "sourceName": "endpoint-params fixtures.exec.CmdRunner.runCommand",
+    "sourceParameter": "#0",
     "sourcePurl": "pkg:generic/command-exec@unspecified",
+    "sourceTransport": "query",
     "taintKinds": [
       "untrusted-input"
     ],
@@ -243,6 +310,7 @@ endpoint[0]: {
     ],
     "sliceIds": [
       "slice-000001"
-    ]
+    ],
+    "substantiated": true
   }
 }
