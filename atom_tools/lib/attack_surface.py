@@ -153,6 +153,12 @@ class EntryPoint:
     # site it models. That is "unknown", not "any": the label prints the path
     # alone instead of asserting our own "ANY" over it.
     method_unresolved: bool = False
+    # False when the engine declares the endpoint but read NONE of the code
+    # behind it (kosi: an Android manifest naming a class absent from the
+    # tree). The route is a declaration, not evidence — no handler was
+    # analysed, so zero weaknesses here means "not looked at", which is the
+    # opposite of what zero usually means. None = the engine said nothing.
+    substantiated: Optional[bool] = None
     # The field the exposure tier is traceable to, when an engine stated it
     # (kosi's declarations). Empty for kind-derived and dosai tiers.
     exposure_evidence: str = ""
@@ -227,6 +233,7 @@ class EntryPoint:
             # kosi-only traceability: which engine field the tier came from.
             **({"ExposureEvidence": self.exposure_evidence} if self.exposure_evidence else {}),
             **({"MethodUnresolved": True} if self.method_unresolved else {}),
+            **({"Substantiated": False} if self.substantiated is False else {}),
             "ExploitChainCount": self.chains,
             "WeaknessCount": self.weaknesses,
             "HighSeverityWeaknessCount": self.high_severity_weaknesses,
@@ -683,6 +690,7 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
                     package=endpoint.get("package") or "",
                     allow_anonymous=endpoint.get("allowAnonymous"),
                     method_unresolved=bool(endpoint.get("methodUnresolved")),
+                    substantiated=endpoint.get("substantiated"),
                     exposure_evidence=endpoint.get("exposureEvidence") or "",
                     reach_state=REACH_NOT_COMPUTED,
                     source_file=inp.path,
@@ -1056,6 +1064,16 @@ def _apply_min_exposure(
 
 
 def _reach_line(ep: EntryPoint) -> str:
+    # An endpoint whose handler code was never read cannot have a reach, and
+    # saying "not computed (no call graph to traverse)" over it names the
+    # wrong cause: there is nothing to traverse TO. This is checked before
+    # the states because it outranks all of them — an engine-reported reach
+    # on an unread handler would itself be the finding.
+    if ep.substantiated is False:
+        return (
+            "reach: not analysable — the engine read none of this endpoint's"
+            " code, so zero flows here means unexamined, not clean"
+        )
     if ep.reach_state == REACH_ENGINE:
         sinks = ", ".join(ep.sink_categories) if ep.sink_categories else "none reported"
         return f"reach: engine · sinks: {sinks}"
@@ -1077,6 +1095,8 @@ def _entry_line(ep: EntryPoint) -> str:
     # declarations, spelled out so a rendered tier is never unexplained.
     elif ep.exposure_evidence:
         auth = f"  [kosi {ep.exposure_evidence}]"
+    if ep.substantiated is False:
+        auth += "  [declared only — handler code not read]"
     if not ep.file:
         return f"{ep.label}{auth}"
     # atom routes carry no line number; printing "file:None" would put a
@@ -1192,6 +1212,7 @@ def _ep_from_dict(ep_dict: Dict) -> EntryPoint:
         line=ep_dict.get("LineNumber"),
         handler=ep_dict.get("Handler"),
         method_unresolved=ep_dict.get("MethodUnresolved") is True,
+        substantiated=False if ep_dict.get("Substantiated") is False else None,
         exposure_evidence=ep_dict.get("ExposureEvidence") or "",
         reach_state=reach.get("state", REACH_NOT_COMPUTED),
         reach_sinks=reach.get("sinkCategories") or [],

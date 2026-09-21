@@ -198,6 +198,12 @@ reports what each one reaches, in the shape of dosai's own `AttackSurface[]` vie
   Endpoints that cannot be anchored report `seed-not-found`; endpoints with no call graph report
   reach as `not computed` — "reaches nothing" and "not computed" are opposite findings and always
   render differently.
+- **An endpoint whose handler was never read says so.** kosi flags a declared route it read no
+  code behind (`apiEndpoints[].substantiated: false` — an Android manifest naming a class that is
+  not in the tree). It stays in the surface, because it is a real declared entry point, and it is
+  marked `declared only — handler code not read`; its reach line says zero flows there mean
+  unexamined, not clean. Dropping it would hide an entry point and publishing it unmarked would
+  present an unexamined route as a clean one.
 - `-f json` carries every entry point (the console and `-f html` renderings are bounded by
   `--max-entries`); `-f html` writes a mermaid diagram and a single-file page.
 

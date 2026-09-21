@@ -82,7 +82,7 @@
     "coverage": {
         "new": {
             "analysisMode": "all",
-            "diagnostics": 2,
+            "diagnostics": 3,
             "endpoints": 1,
             "engine": "kosi",
             "engineVersion": "0.2.0",
@@ -98,7 +98,7 @@
         },
         "old": {
             "analysisMode": "none",
-            "diagnostics": 1,
+            "diagnostics": 3,
             "endpoints": 0,
             "engine": "kosi",
             "engineVersion": "0.2.0",
@@ -121,11 +121,14 @@
     "driftVersion": 1,
     "engineDiagnostics": {
         "baseline": [
+            "callgraph-not-run: --callgraph auto needs the resolved backend: the syntax tier resolves no calls, so no callGraph is published",
+            "dataflow-not-run: --dataflow all needs the resolved backend: the syntax tier lowers no IR, so no dataFlow is published and sliceCount is 0 because nothing ran, not because nothing was found",
             "syntax-backend-no-resolution: syntax backend parses without a classpath; no symbol resolution is performed and resolvedCallRatio is 0.0 by construction"
         ],
         "current": [
+            "dataflow-skipped-policy: 1 function(s) skipped by policy 'generated-functions' (summaries still apply; nothing was cut by a cap \u2014 see stats.policySkips)",
             "resolution-errors: frontend resolution reported 1 diagnostic(s) in src/main/kotlin/Cmd.kt: CONFLICTING_OVERLOADS=1",
-            "resolution-errors: frontend resolution reported 2 diagnostic(s) in src/main/kotlin/CommandExec.kt: CONFLICTING_OVERLOADS=1, DEPRECATION=1"
+            "resolution-errors: frontend resolution reported 1 diagnostic(s) in src/main/kotlin/CommandExec.kt: CONFLICTING_OVERLOADS=1"
         ]
     },
     "severitySources": {

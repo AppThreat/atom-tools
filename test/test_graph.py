@@ -136,15 +136,16 @@ def kosi_graph():
 def test_kosi_graph_is_whole_and_its_verdicts_are_verbatim(kosi_graph):
     """The fixture commits kosi's whole callGraph section, so counts are the
     engine's own; the reachability entries carry the run's
-    reach-from-root-scopes verdict per node (40 of 64 reachable), exactly as
-    emitted."""
+    reach-from-root-scopes verdict per node (73 of 83 reachable), exactly as
+    emitted. kosi has since learned to resolve lambda-valued calls, which is
+    why the edge mix is no longer static-only."""
     assert kosi_graph.engine == "kosi"
-    assert len(kosi_graph.nodes) == 64
-    assert len(kosi_graph.edges) == 13
-    assert kosi_graph.call_type_mix() == {"static": 13}
+    assert len(kosi_graph.nodes) == 83
+    assert len(kosi_graph.edges) == 52
+    assert kosi_graph.call_type_mix() == {"static": 31, "lambda-value": 21}
     verdicts = [n.reachable_from_roots for n in kosi_graph.nodes if n.reachable_from_roots is not None]
-    assert len(verdicts) == 64
-    assert sum(1 for v in verdicts if v) == 40
+    assert len(verdicts) == 83
+    assert sum(1 for v in verdicts if v) == 73
     # kosi nodes name their functions (canonicalName) — anchoring goes
     # through the same name index rusi's opaque ids need.
     assert any(n.name == "fixtures.dslmedia.DeniedServlet.doGet" for n in kosi_graph.nodes)
@@ -154,8 +155,8 @@ def test_kosi_dead_code_is_the_engine_verdict(kosi_graph):
     result = cg.compute_dead_code(kosi_graph)
     assert result["computed"] is True
     assert result["source"] == "engine"
-    assert result["unreachableFromRootsPerEngine"] == 24
-    assert result["nodesWithVerdict"] == 64
+    assert result["unreachableFromRootsPerEngine"] == 10
+    assert result["nodesWithVerdict"] == 83
     assert any("not a deletability" in d for d in result["diagnostics"])
 
 

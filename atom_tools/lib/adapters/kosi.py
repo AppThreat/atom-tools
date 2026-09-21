@@ -11,21 +11,40 @@ Envelope honesty, read off the wire rather than the Kotlin data classes (the
 writer in ``KosiReport.kt`` is the contract, and it diverges from the data
 class in both directions):
 
-- ``runtime`` is declared on ``KosiReport`` but the JSON writer never emits
-  it — a report has 18 top-level keys, not the 19 the data class declares.
 - ``callGraph`` and ``dataFlow`` are emitted as explicit ``null`` when their
   modes did not run. ``null`` is not-computed, the same distinction the
   ``graph`` command draws; neither is folded into an empty section.
 - ``ApiEndpoint.httpMethods`` (plural, on the data class) is written as
   ``httpMethod`` (singular). Field names here are checked against real
   report bytes, not the schema sources.
+- ``runtime`` WAS declared and not written — a report had 18 top-level keys
+  where the data class declared 19. kosi now writes it, and it is read here
+  (see ``provenance`` below). ``runtime.nativeImage`` in particular is
+  material: the native binary and the fat jar are different artifacts, and
+  which one produced a report is a fact about how far to trust it.
 
-The committed fixtures were produced by the 0.2.0 binary (commit
-``2e1f7b53``), which predates the P22 schema rework: slices carry
-``reachableFromRoots``/``rootWitness``/``elided`` and no ``pathKind``/``frames``/
-``framesCutBy``. Every one of those is read when present and never assumed,
-so a newer kosi report parses unchanged (see ``path_truncated`` below).
-kosi is pre-1.0 and moving; ``schemaVersion`` is the pin, not the shape.
+Two spellings of the witness fields exist in the wild and both are read.
+The first kosi binary this adapter saw emitted
+``reachableFromRoots``/``rootWitness``/``elided`` and no ``pathKind``;
+current kosi has dropped that pair and emits
+``pathKind``/``frames``/``framesCutBy`` instead. Neither is assumed, so
+reports from either era parse unchanged (see ``path_truncated`` below) —
+and a path that was never walked (``symbol-only``) is not a truncated one,
+which is a different and weaker claim. kosi is pre-1.0 and moving;
+``schemaVersion`` is the pin, not the shape, and
+``test/data/ecosystem/PROVENANCE.md`` records which binary produced the
+committed fixtures and what moved between captures.
+
+Two fields carry kosi's own statement about how much it actually READ, and
+dropping either would let a thin run reach a consumer looking like a
+complete one:
+
+- ``ApiEndpoint.substantiated`` — false when kosi read none of the code
+  behind a declared endpoint (an Android manifest naming a class that is not
+  in the tree). The route is a declaration, not evidence.
+- ``stats.sourceCoverage`` — files discovered against files present, with
+  the test files counted separately because a source root is a MAIN source
+  root. ``nonTestRatio`` is the one that measures discovery.
 """
 
 import logging
@@ -81,6 +100,11 @@ def _node(raw: Dict, role: str) -> UnifiedNode:
 #                                      http4k security assignments
 #   <scheme>                           a declared scheme with no parameters
 KOSI_DENY = "security-constraint(denied)"
+
+
+def _snake(camel: str) -> str:
+    """kosi's camelCase key as the snake_case the provenance dict uses."""
+    return "".join("_" + c.lower() if c.isupper() else c for c in camel)
 
 
 def _exposure(ep: Dict) -> Tuple[Optional[str], Optional[bool], str]:
@@ -172,6 +196,13 @@ def _endpoint(ep: Dict) -> List[Dict]:
         **({"exposureEvidence": evidence} if evidence else {}),
         **({"allowAnonymous": allow_anonymous} if allow_anonymous is not None else {}),
         **({} if methods else {"methodUnresolved": True}),
+        # kosi read NONE of the code behind this endpoint — the manifest (or
+        # descriptor) declares a class that is not among the declarations the
+        # run collected. The route is real as a declaration and worthless as
+        # evidence: no handler was analysed, so no flow can ever reach it and
+        # "no weaknesses" here means "not looked at". Carried only when kosi
+        # says false; absent means substantiated or not stated.
+        **({"substantiated": False} if ep.get("substantiated") is False else {}),
     }
     if not methods:
         return [{**base, "method": None}]
@@ -203,6 +234,21 @@ def parse(content, source_file: str = "") -> UnifiedReport:
     if isinstance(truncations, dict) and truncations:
         capped = ", ".join(f"{k} {v}" for k, v in sorted(truncations.items()))
         diagnostics.append(f"kosi hit analysis caps: {capped}")
+    # How much of the project kosi read. A run that discovered a tenth of the
+    # non-test sources and found nothing has not said the project is clean,
+    # and without the denominator the two are the same report. kosi's own
+    # ``source-coverage-gap`` diagnostic fires on nonTestRatio, so the note
+    # here is a floor, not a duplicate: it fires whenever the ratio is
+    # stated and low, including on runs below kosi's own threshold.
+    raw_coverage = stats.get("sourceCoverage")
+    coverage: Dict = raw_coverage if isinstance(raw_coverage, dict) else {}
+    ratio = coverage.get("nonTestRatio")
+    if isinstance(ratio, (int, float)) and ratio < 1:
+        diagnostics.append(
+            f"kosi read {coverage.get('discovered')} of {coverage.get('present')} "
+            f"source file(s) ({coverage.get('testPresent')} under test "
+            f"directories); non-test discovery {ratio}"
+        )
 
     # kosi emits an explicit null when the dataflow mode did not run.
     data_flow = content.get("dataFlow") or {}
@@ -336,6 +382,19 @@ def parse(content, source_file: str = "") -> UnifiedReport:
         provenance["degraded"] = stats["degraded"]
     if isinstance(truncations, dict) and truncations:
         provenance["truncations"] = dict(truncations)
+    if coverage:
+        provenance["source_coverage"] = dict(coverage)
+    # The substrate the report came from. ``native_image`` is the one that
+    # decides which ARTIFACT answered: kosi ships a native binary and a fat
+    # jar, they are built from different metadata, and a report is only as
+    # trustworthy as the binary that produced it.
+    runtime = content.get("runtime")
+    if isinstance(runtime, dict) and runtime:
+        for key in ("host", "jvmVersion", "kotlinVersion"):
+            if runtime.get(key):
+                provenance[_snake(key)] = runtime[key]
+        if isinstance(runtime.get("nativeImage"), bool):
+            provenance["native_image"] = runtime["nativeImage"]
     return UnifiedReport(
         engine=ENGINE,
         engine_version=tool.get("version", ""),

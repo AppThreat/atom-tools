@@ -388,10 +388,10 @@ def test_kosi_endpoint_carries_the_engine_slice_link():
 def test_kosi_endpoint_wire_names_are_read_not_assumed():
     report = parse(KOSI_DSL)
     d = load(KOSI_DSL)
-    # 11 apiEndpoints in, 11 out: each declares a single method or none.
-    assert len(report.endpoints) == len(d["apiEndpoints"]) == 11
+    # 17 apiEndpoints in, 17 out: each declares a single method or none.
+    assert len(report.endpoints) == len(d["apiEndpoints"]) == 17
     declared = sum(1 for e in d["apiEndpoints"] if e.get("httpMethod"))
-    assert sum(1 for e in report.endpoints if e["method"]) == declared == 10
+    assert sum(1 for e in report.endpoints if e["method"]) == declared == 16
     # The writer emits httpMethod (singular) where the data class declares
     # httpMethods; parsing the data class's spelling would find nothing.
     assert all("httpMethod" in e for e in d["apiEndpoints"])
@@ -402,16 +402,61 @@ def test_kosi_android_endpoints_exported_both_ways():
     d = load(KOSI_ANDROID)
     report = parse(KOSI_ANDROID)
     exported = [e["raw"]["exported"] for e in report.endpoints]
-    assert exported.count(True) == 3
+    assert exported.count(True) == 4
     assert exported.count(False) == 2
-    assert len(report.endpoints) == len(d["apiEndpoints"]) == 5
+    assert len(report.endpoints) == len(d["apiEndpoints"]) == 6
     # Manifest endpoints are components, not HTTP routes: no method was
     # resolved and none may be invented.
     assert all(e["method"] is None and e.get("methodUnresolved") for e in report.endpoints)
-    # And the manifest records absolute paths where source endpoints are
-    # relative — the fixture keeps both spellings verbatim.
-    manifest_file = d["apiEndpoints"][0]["position"]["filename"]
-    assert manifest_file.startswith("/")
+    # Manifest endpoints USED to carry an absolute filename where source
+    # endpoints carried a relative one, and the adapter reads the value
+    # rather than either convention. kosi has since made them relative, so
+    # what is pinned now is the current fact — and, more usefully, that no
+    # filename here names this machine, because a fixture that bakes in a
+    # developer's home directory is a fixture nobody else can verify.
+    files = [e["position"]["filename"] for e in d["apiEndpoints"]]
+    assert all(not f.startswith("/") for f in files), files
+    assert all("/Users/" not in f for f in files), files
+
+
+def test_kosi_unsubstantiated_endpoint_is_marked_not_dropped():
+    """An endpoint kosi declared but read no code for is carried AND flagged.
+
+    The manifest fixture names six components and kosi read the class behind
+    five of them. The sixth is a declaration with nothing behind it: no
+    handler was analysed, so no flow can ever reach it and zero weaknesses
+    there means unexamined, not clean. Dropping it would hide a declared
+    entry point; carrying it silently would publish an unexamined one as
+    evidence. Both are wrong, so it is carried and flagged.
+    """
+    d = load(KOSI_ANDROID)
+    report = parse(KOSI_ANDROID)
+    on_the_wire = [e.get("substantiated") for e in d["apiEndpoints"]]
+    assert on_the_wire.count(False) == 1, on_the_wire
+    flagged = [e for e in report.endpoints if e.get("substantiated") is False]
+    assert len(flagged) == 1
+    # Only the false case travels: absent means substantiated or not stated,
+    # and a key present on every endpoint would say nothing.
+    assert all(
+        "substantiated" not in e
+        for e in report.endpoints
+        if e["raw"].get("substantiated") is not False
+    )
+
+
+def test_kosi_runtime_provenance_is_read_now_that_kosi_writes_it():
+    """``runtime`` used to be declared and dropped by the writer; it is not.
+
+    ``native_image`` is the one that matters: kosi ships a native binary and
+    a fat jar built from different metadata, and which artifact answered is
+    a fact about how far to trust the report.
+    """
+    d = load(KOSI)
+    assert isinstance(d.get("runtime"), dict), "kosi now writes runtime"
+    report = parse(KOSI)
+    assert report.provenance["native_image"] is d["runtime"]["nativeImage"]
+    assert report.provenance["kotlin_version"] == d["runtime"]["kotlinVersion"]
+    assert report.provenance["host"] == d["runtime"]["host"]
 
 
 def test_kosi_syntax_backend_degrades_to_near_empty_with_a_named_reason():
