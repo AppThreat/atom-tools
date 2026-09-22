@@ -16,13 +16,13 @@ the [AppThreat/atom](https://github.com/AppThreat/atom?tab=readme-ov-file) GitHu
 
 Atom installs from a
 [native image](https://github.com/AppThreat/atom#atom-native-image-advanced-users-only) or with
-npm `npm install -g @appthreat/atom`. The golem and rusi binaries are published in the
+npm `npm install -g @appthreat/atom`. The golem, rusi and kosi binaries are published in the
 [cdxgen-plugins-bin](https://github.com/cdxgen/cdxgen-plugins-bin/releases) releases (and bundled
 in the atom-tools Docker image); dosai builds from [OWASP/dosai](https://github.com/OWASP/dosai)
-with `dotnet`. kosi ships from the `thirdparty/kosi` directory of cdxgen-plugins-bin. It is pre-1.0, and
-native binaries are published for `linux-amd64`, `linux-arm64`, `linuxmusl-amd64` and
-`darwin-arm64`; `darwin-amd64` takes the jar fallback, because no GraalVM for JDK 25 ships a
-macOS x64 build. CI on Linux can therefore run kosi directly — an earlier version of this
+with `dotnet`. kosi ships native binaries for `linux-amd64`, `linux-arm64`, `linuxmusl-amd64` and
+`darwin-arm64`, plus a portable `kosi-portable.jar` for every other platform (JDK 21+ required);
+`darwin-amd64` takes the jar fallback, because no GraalVM for JDK 25 ships a macOS x64 build.
+CI on Linux can therefore run kosi directly — an earlier version of this
 README said darwin-arm64 was the only target and that CI could not run it, which has not been
 true since the Linux natives began publishing.
 
@@ -39,15 +39,18 @@ at `ghcr.io/appthreat/atom-tools`.
 docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -w /app ghcr.io/appthreat/atom-tools
 ```
 
-The image bundles the `rusi` and `golem` analyzer binaries from
+The image bundles the `rusi`, `golem` and `kosi` analyzer binaries from
 the [cdxgen-plugins-bin](https://github.com/cdxgen/cdxgen-plugins-bin/releases) releases. `rusi`
-discovers the api endpoints of Rust projects and `golem` does the same for Go projects. Their
-reports can be passed straight to the convert command with `-t rust` or `-t go`.
+discovers the api endpoints of Rust projects, `golem` does the same for Go projects and `kosi`
+for Kotlin/JVM projects. Their reports can be passed straight to the convert command with
+`-t rust`, `-t go` or `-t kotlin`.
 
 During the image build, the binary for the target platform (amd64 or arm64) is downloaded from the
 GitHub release and checked against the published sha256 checksum before it is installed. A
-corrupted or replaced download fails the build instead of shipping quietly. Override the
-`CDXGEN_PLUGINS_BIN_VERSION` build argument to bundle a different release.
+corrupted or replaced download fails the build instead of shipping quietly. kosi publishes no
+native binary outside linux amd64/arm64, so other architectures bundle `kosi-portable.jar` instead
+(same checksum verification), installed as a `kosi` wrapper that runs it through the image's JDK.
+Override the `CDXGEN_PLUGINS_BIN_VERSION` build argument to bundle a different release.
 
 Generate a Rust report inside the container:
 
@@ -61,10 +64,17 @@ Generate a Go report:
 docker run --rm -v $(pwd):/app -w /app --entrypoint golem ghcr.io/appthreat/atom-tools analyze --dir . --out golem.json
 ```
 
-Convert either report into an OpenAPI document:
+Generate a Kotlin report (the resolved backend wants a JDK home; the image ships Java 21):
 
 ```
-docker run --rm -v $(pwd):/app -w /app ghcr.io/appthreat/atom-tools convert -i rusi.json -t rust -f openapi3.0.1 -o openapi.json
+docker run --rm -v $(pwd):/app -w /app --entrypoint kosi ghcr.io/appthreat/atom-tools \
+  analyze --dir . --backend resolved --jdk-home /usr/lib/jvm/jre-21 --endpoint-sources --out kosi.json
+```
+
+Convert any of these reports into an OpenAPI document:
+
+```
+docker run --rm -v $(pwd):/app -w /app ghcr.io/appthreat/atom-tools convert -i kosi.json -t kotlin -f openapi3.0.1 -o openapi.json
 ```
 
 Since the image bundles atom itself, the analyze command works out of the box to slice a
@@ -314,9 +324,9 @@ question a CBOM cannot answer: is this weak algorithm on a path an entry point r
 
 The convert command turns an atom slice into a different format. It builds the endpoints of an
 OpenAPI 3.x paths object from a usages slice, or a SARIF 2.1.0 document from a reachable slice.
-The api discovery reports produced by the rusi (Rust) and golem (Go) analyzers are accepted as
-input as well, using `-t rust` and `-t go`. Future releases will fill the path item objects
-with more detail taken from atom slices.
+The api discovery reports produced by the rusi (Rust), golem (Go) and kosi (Kotlin) analyzers are
+accepted as input as well, using `-t rust`, `-t go` and `-t kotlin`. Future releases will fill the
+path item objects with more detail taken from atom slices.
 
 ```
 Description:
@@ -348,6 +358,20 @@ Help:
 **Example**
 
 > `atom-tools convert -i usages.slices.json -f openapi3.0.1 -o openapi_usages.json -t java -s https://myserver.com`
+
+#### Kotlin (kosi)
+
+`-t kotlin` (alias `-t kt`) converts a kosi analyze report into OpenAPI. kosi records the served
+methods as a list on a single endpoint record, so a route serving GET and POST becomes two
+operations; the path and query parameter tables become OpenAPI parameters (kosi carries names,
+not types, so the schemas are strings); `consumes`/`produces` shape the request body media types
+and the default 200 response. Two of kosi's honesty rules carry over: an endpoint with no
+resolved HTTP method is skipped rather than asserted under an invented verb (it stays visible
+through ingest and attack-surface, which render the method-less shape), and an endpoint kosi
+flags `substantiated: false` — a declared route whose handler code was never read — carries
+`x-kosi-substantiated: false`, so zero declared weaknesses on it reads as unexamined, not clean.
+
+> `atom-tools convert -i kosi.json -t kotlin -f openapi3.0.1 -o openapi.json`
 
 #### SARIF
 

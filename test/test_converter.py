@@ -1742,10 +1742,7 @@ def test_go_normalize_path_gin_catchall():
 
     assert normalize_path("/static/*filepath") == "/static/{filepath}"
     # Colon and catch-all placeholders on the same path both normalise.
-    assert (
-        normalize_path("/api/v1/users/:id/files/*path")
-        == "/api/v1/users/{id}/files/{path}"
-    )
+    assert normalize_path("/api/v1/users/:id/files/*path") == "/api/v1/users/{id}/files/{path}"
     # Already-OpenAPI paths pass through unchanged.
     assert normalize_path("/api/v1/users/{id}") == "/api/v1/users/{id}"
 
@@ -1760,3 +1757,356 @@ def test_go_type_to_schema_normalises_interface_with_space():
     assert go_type_to_schema("interface{}") == {"type": "object"}
     # any is Go 1.18+'s alias for interface{} and must produce the same shape.
     assert go_type_to_schema("any") == {"type": "object"}
+
+
+@pytest.fixture
+def kotlin_usages_1():
+    # Real kosi report (cdxgen-plugins-bin v4.0.0, kosi 0.2.0) emitted by
+    # `kosi analyze --backend resolved --dataflow all --callgraph auto
+    # --roots all --endpoint-sources` against the endpoint-parameter-
+    # semantics Kotlin/Spring-MVC app from the kosi fixture corpus:
+    # 7 endpoints across /catalog, /items/{id}, /me, /model, /search
+    # (GET and POST) and /submit. The fixture exercises the path and
+    # query parameter tables and the multi-method path record.
+    return OpenAPI("openapi3.0.1", "kotlin", "test/data/kotlin-endpoint-params-kosi.json")
+
+
+def test_kosi_convert_emits_expected_paths(kotlin_usages_1):
+    """The kotlin converter should produce one OpenAPI path entry per
+    kosi HTTP route, with the template placeholders (already Spring's
+    ``{id}``) carried through."""
+    result = kotlin_usages_1.convert_usages()
+    assert set(result.keys()) == {
+        "/catalog",
+        "/items/{id}",
+        "/me",
+        "/model",
+        "/search",
+        "/submit",
+    }
+
+
+def test_kosi_methods_per_path(kotlin_usages_1):
+    """kosi records the served methods as a list on a single endpoint
+    record; GET and POST on /search must land as two operations."""
+    result = kotlin_usages_1.convert_usages()
+    assert set(result["/search"].keys()) == {"get", "post"}
+
+
+def test_kosi_path_param_extraction(kotlin_usages_1):
+    """kosi's pathParameters table becomes a required OpenAPI path
+    parameter matching the template placeholder."""
+    result = kotlin_usages_1.convert_usages()
+    op = result["/items/{id}"]["get"]
+    params = op.get("parameters", [])
+    assert params == [
+        {
+            "name": "id",
+            "in": "path",
+            "required": True,
+            "schema": {"type": "string"},
+        }
+    ]
+
+
+def test_kosi_query_param_extraction(kotlin_usages_1):
+    """kosi's queryParameters table becomes query parameters; kosi
+    carries names only, so the schema is the honest string."""
+    result = kotlin_usages_1.convert_usages()
+    op = result["/search"]["get"]
+    assert op["parameters"] == [{"name": "query", "in": "query", "schema": {"type": "string"}}]
+
+
+def test_kosi_framework_attribution_and_operation_id(kotlin_usages_1):
+    """Each operation carries the detected framework under an x-
+    extension and the handler canonical name as operationId, and the
+    handler position as per-operation x-atom-usages so query-endpoints
+    and visualize keep working."""
+    result = kotlin_usages_1.convert_usages()
+    op = result["/items/{id}"]["get"]
+    assert op["x-kosi-framework"] == "spring-mvc"
+    assert op["operationId"] == "fixtures.endpointparams.SearchApi.fetchByPath"
+    assert op["x-atom-usages"] == {"call": {"src/main/kotlin/Api.kt": [68]}}
+
+
+def test_kosi_endpoints_to_openapi(kotlin_usages_1):
+    """The full OpenAPI-document export wraps the kotlin converter's
+    paths dict in the standard envelope."""
+    result = kotlin_usages_1.endpoints_to_openapi()
+    assert result["openapi"] == "3.0.1"
+    assert "/items/{id}" in result["paths"]
+
+
+def test_kosi_normalize_path_placeholders():
+    """Framework-native placeholders must normalise to OpenAPI's
+    ``{name}`` form: a ``{id:regex}`` pattern drops the regex (even one
+    containing ``*`` quantifiers), a ``:id`` segment-start placeholder
+    becomes ``{id}``, a mid-segment colon stays a literal segment, and
+    catch-all wildcards become named wildcard parameters."""
+    from atom_tools.lib.kosi_converter import normalize_path
+
+    assert normalize_path("/items/{id}") == "/items/{id}"
+    assert normalize_path("/items/{id:\\d+}") == "/items/{id}"
+    assert normalize_path("/items/{id:\\d*}") == "/items/{id}"
+    assert normalize_path("/items/:id") == "/items/{id}"
+    assert normalize_path("/legacy/*") == "/legacy/{path}"
+    # A mid-segment colon is a literal segment, not a placeholder:
+    # converting one would invent a required path parameter.
+    assert normalize_path("/v1/users:batchGet") == "/v1/users:batchGet"
+    assert normalize_path("") == ""
+
+
+def test_kosi_normalize_path_wildcard_runs_collapse_and_number():
+    """A run of one or more ``*`` is ONE wildcard. Spring ant-style
+    ``**`` collapses to a single placeholder (OpenAPI cannot express a
+    multi-segment wildcard), and repeated wildcards on one path are
+    numbered so no placeholder name repeats — a duplicate name would be
+    invalid OpenAPI, with one declared parameter standing in for two
+    segments."""
+    from atom_tools.lib.kosi_converter import normalize_path
+
+    assert normalize_path("/legacy/**") == "/legacy/{path}"
+    assert normalize_path("/x/*/y/*") == "/x/{path}/y/{path1}"
+    assert normalize_path("/x/*/y/**") == "/x/{path}/y/{path1}"
+    assert normalize_path("/a/**/b/**") == "/a/{path}/b/{path1}"
+
+
+def _kosi_report(endpoints):
+    """A minimal kosi report carrying just the endpoint table."""
+    return {"tool": {"name": "kosi", "version": "0.2.0"}, "apiEndpoints": endpoints}
+
+
+def _write_kosi_report(tmp_path, endpoints):
+    import json
+
+    report = tmp_path / "kosi.json"
+    report.write_text(json.dumps(_kosi_report(endpoints)))
+    return str(report)
+
+
+def test_kosi_methodless_endpoints_are_skipped(tmp_path, caplog):
+    """An endpoint whose httpMethod list is empty has no resolved
+    method at a site kosi models — it is not 'any method'. OpenAPI
+    cannot carry a route without asserting a method, so the route is
+    skipped instead of invented."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _write_kosi_report(
+        tmp_path,
+        [
+            {
+                "id": "ep-000001",
+                "pathTemplate": "/secure",
+                "httpMethod": [],
+                "foundBy": "dsl",
+                "framework": "vertx",
+                "authentication": ["auth-handler(BasicAuthHandler)"],
+                "position": {"filename": "src/Main.kt", "line": 7},
+                "substantiated": True,
+            },
+            {
+                "id": "ep-000002",
+                "pathTemplate": "/open",
+                "httpMethod": ["GET"],
+                "foundBy": "dsl",
+                "framework": "vertx",
+                "authentication": [],
+                "position": {"filename": "src/Main.kt", "line": 12},
+                "substantiated": True,
+            },
+        ],
+    )
+    result = convert(AtomSlice(report, "kotlin"))
+    assert set(result.keys()) == {"/open"}
+
+
+def test_kosi_manifest_components_are_not_http_routes(tmp_path):
+    """Android manifest components are not HTTP routes: their
+    pathTemplate is an intent action or component name, never a URL
+    path, and none of it may leak into the paths dict."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _write_kosi_report(
+        tmp_path,
+        [
+            {
+                "id": "ep-000001",
+                "pathTemplate": "com.example.APP_ACTIVITY",
+                "httpMethod": [],
+                "foundBy": "manifest",
+                "framework": "android",
+                "exported": True,
+                "substantiated": True,
+            },
+        ],
+    )
+    result = convert(AtomSlice(report, "kotlin"))
+    assert result == {}
+
+
+def test_kosi_unsubstantiated_endpoint_is_marked(tmp_path):
+    """substantiated: false means kosi read none of the code behind the
+    declared route; the operation must carry that verdict so a silence
+    on flows reads as 'not looked at', not 'clean'."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _write_kosi_report(
+        tmp_path,
+        [
+            {
+                "id": "ep-000001",
+                "pathTemplate": "/declared",
+                "httpMethod": ["GET"],
+                "foundBy": "descriptor",
+                "framework": "servlet",
+                "position": {"filename": "src/Main.kt", "line": 3},
+                "substantiated": False,
+            },
+        ],
+    )
+    result = convert(AtomSlice(report, "kotlin"))
+    assert result["/declared"]["get"]["x-kosi-substantiated"] is False
+
+
+def test_kosi_authentication_declarations_are_carried(tmp_path):
+    """A non-empty authentication list is kosi's declared requirement,
+    carried verbatim; an empty list is a silence, not anonymity, and is
+    dropped rather than rendered as 'no auth'."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _write_kosi_report(
+        tmp_path,
+        [
+            {
+                "id": "ep-000001",
+                "pathTemplate": "/admin",
+                "httpMethod": ["GET"],
+                "foundBy": "dsl",
+                "framework": "vertx",
+                "authentication": ["security-constraint(admin,auditor)"],
+                "position": {"filename": "src/Main.kt", "line": 9},
+                "substantiated": True,
+            },
+            {
+                "id": "ep-000002",
+                "pathTemplate": "/open",
+                "httpMethod": ["GET"],
+                "foundBy": "dsl",
+                "framework": "vertx",
+                "authentication": [],
+                "position": {"filename": "src/Main.kt", "line": 14},
+                "substantiated": True,
+            },
+        ],
+    )
+    result = convert(AtomSlice(report, "kotlin"))
+    assert result["/admin"]["get"]["x-kosi-authentication"] == [
+        "security-constraint(admin,auditor)"
+    ]
+    assert "x-kosi-authentication" not in result["/open"]["get"]
+
+
+def test_kosi_merge_operations_concatenates_usages_without_mutating():
+    """Two records for one route discovered twice: the merge
+    concatenates the x-atom-usages line numbers and keeps the first
+    record's fields — and it must do so WITHOUT writing through to the
+    first operation, which the caller may still hold."""
+    from atom_tools.lib.kosi_converter import _merge_operations
+
+    existing = {
+        "operationId": "first.Handler",
+        "x-kosi-framework": "servlet",
+        "x-atom-usages": {"call": {"src/A.kt": [10]}},
+    }
+    new = {
+        "operationId": "second.Handler",
+        "x-kosi-framework": "annotation",
+        "x-atom-usages": {"call": {"src/A.kt": [10, 99], "src/B.kt": [7]}},
+    }
+    merged = _merge_operations(existing, new)
+
+    # Fields prefer the existing entry.
+    assert merged["operationId"] == "first.Handler"
+    assert merged["x-kosi-framework"] == "servlet"
+    # Line numbers concatenate, deduplicated, across files.
+    assert merged["x-atom-usages"]["call"] == {"src/A.kt": [10, 99], "src/B.kt": [7]}
+    # The inputs are untouched: no nested write-through.
+    assert existing["x-atom-usages"]["call"] == {"src/A.kt": [10]}
+    assert new["operationId"] == "second.Handler"
+
+
+def _kosi_merge_report(tmp_path, records):
+    """A report with several endpoint records on the same path."""
+    return _write_kosi_report(
+        tmp_path,
+        [
+            {
+                "id": f"ep-{i:06d}",
+                "pathTemplate": "/dupe",
+                "httpMethod": ["GET"],
+                "foundBy": "descriptor",
+                "framework": "servlet",
+                "position": {"filename": "src/Main.kt", "line": line},
+                "substantiated": substantiated,
+            }
+            for i, (line, substantiated) in enumerate(records, start=1)
+        ],
+    )
+
+
+@pytest.mark.parametrize(
+    "records",
+    [
+        [(3, False), (9, True)],
+        [(3, True), (9, False)],
+    ],
+    ids=["unsubstantiated-first", "unsubstantiated-second"],
+)
+def test_kosi_merge_marks_mixed_substantiation(tmp_path, records):
+    """The same route registered twice where only one record was
+    substantiated: whichever way the records order, the merged
+    operation keeps the 'never read' verdict. Losing it with the
+    first-encountered record would present an unread handler's route as
+    an examined clean one."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _kosi_merge_report(tmp_path, records)
+    result = convert(AtomSlice(report, "kotlin"))
+    operation = result["/dupe"]["get"]
+    assert operation["x-kosi-substantiated"] is False
+    # Both records' positions survive the merge.
+    assert sorted(operation["x-atom-usages"]["call"]["src/Main.kt"]) == [3, 9]
+
+
+def test_kosi_twice_registered_fully_substantiated_stays_clean(tmp_path):
+    """The merge flag is monotonic, not sticky: two substantiated
+    records on one route produce a clean operation."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _kosi_merge_report(tmp_path, [(3, True), (9, True)])
+    result = convert(AtomSlice(report, "kotlin"))
+    assert "x-kosi-substantiated" not in result["/dupe"]["get"]
+
+
+def test_kosi_atom_slice_input_warns_instead_of_silence(tmp_path, caplog):
+    """An ATOM usages slice (objectSlices, no apiEndpoints) converted as
+    kotlin yields an empty document — Kotlin is the one language where
+    both kinds of input are plausible, so the converter says why instead
+    of letting the empty paths read as 'the app has no endpoints'."""
+    import json
+
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = tmp_path / "atom-slice.json"
+    report.write_text(json.dumps({"objectSlices": [{"fileName": "User.kt", "usages": []}]}))
+    with caplog.at_level("WARNING", logger="atom_tools.lib.kosi_converter"):
+        result = convert(AtomSlice(str(report), "kotlin"))
+    assert result == {}
+    assert any("objectSlices" in r.message for r in caplog.records)

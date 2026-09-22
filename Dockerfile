@@ -75,11 +75,15 @@ RUN npm install -g @appthreat/atom @cyclonedx/cdxgen --omit=dev \
     && rm -rf /root/.npm /root/.cache /tmp/* /var/cache/dnf /var/tmp/*
 
 # Analyzer binaries that produce the reports consumed by the convert command.
-# rusi analyses Rust projects and golem analyses Go projects. They are published
-# per platform in the cdxgen-plugins-bin GitHub releases together with a .sha256
-# sidecar, which is downloaded and verified before the binary is installed.
+# rusi analyses Rust projects, golem analyses Go projects and kosi analyses
+# Kotlin/JVM projects. They are published per platform in the cdxgen-plugins-bin
+# GitHub releases together with a .sha256 sidecar, which is downloaded and
+# verified before the binary is installed. kosi publishes native binaries only
+# for linux amd64/arm64; every other architecture takes the kosi-portable.jar
+# fallback, installed as a `kosi` wrapper that runs the jar through the JDK
+# this image already carries (the same invocation shape cdxgen itself uses).
 # Bump CDXGEN_PLUGINS_BIN_VERSION to move to a newer release.
-ARG CDXGEN_PLUGINS_BIN_VERSION=3.1.0
+ARG CDXGEN_PLUGINS_BIN_VERSION=4.0.0
 ARG TARGETARCH
 RUN set -eux; \
     arch="${TARGETARCH:-$(uname -m)}"; \
@@ -94,19 +98,41 @@ RUN set -eux; \
     workdir="$(mktemp -d)"; \
     cd "${workdir}"; \
     base_url="https://github.com/cdxgen/cdxgen-plugins-bin/releases/download/v${CDXGEN_PLUGINS_BIN_VERSION}"; \
+    fetch() { \
+        curl -fsSL --retry 3 -o "${1}" "${base_url}/${1}"; \
+        curl -fsSL --retry 3 -o "${1}.sha256" "${base_url}/${1}.sha256"; \
+    }; \
+    verify() { \
+        expected="$(cut -d " " -f1 "${1}.sha256")"; \
+        actual="$(sha256sum "${1}" | cut -d " " -f1)"; \
+        echo "${1}: expected ${expected} got ${actual}"; \
+        if [ "${expected}" != "${actual}" ]; then \
+            echo >&2 "sha256 mismatch for ${1}"; exit 1; \
+        fi; \
+    }; \
     for tool in rusi golem; do \
         asset="${tool}-linux-${arch}"; \
-        curl -fsSL --retry 3 -o "${asset}" "${base_url}/${asset}"; \
-        curl -fsSL --retry 3 -o "${asset}.sha256" "${base_url}/${asset}.sha256"; \
-        expected="$(cut -d " " -f1 "${asset}.sha256")"; \
-        actual="$(sha256sum "${asset}" | cut -d " " -f1)"; \
-        echo "${asset}: expected ${expected} got ${actual}"; \
-        if [ "${expected}" != "${actual}" ]; then \
-            echo >&2 "sha256 mismatch for ${asset}"; exit 1; \
-        fi; \
+        fetch "${asset}"; verify "${asset}"; \
         install -m 0755 "${asset}" "/usr/local/bin/${tool}"; \
         "/usr/local/bin/${tool}" --help > /dev/null; \
     done; \
+    case "${arch}" in \
+        amd64|arm64) \
+            asset="kosi-linux-${arch}"; \
+            fetch "${asset}"; verify "${asset}"; \
+            install -m 0755 "${asset}" /usr/local/bin/kosi; \
+            ;; \
+        *) \
+            asset="kosi-portable.jar"; \
+            fetch "${asset}"; verify "${asset}"; \
+            mkdir -p /usr/local/lib/kosi; \
+            install -m 0644 "${asset}" /usr/local/lib/kosi/kosi-portable.jar; \
+            printf '#!/bin/sh\nexec java -Djava.awt.headless=true -jar /usr/local/lib/kosi/kosi-portable.jar "$@"\n' \
+                > /usr/local/bin/kosi; \
+            chmod 0755 /usr/local/bin/kosi; \
+            ;; \
+    esac; \
+    /usr/local/bin/kosi --help > /dev/null; \
     cd /; \
     rm -rf "${workdir}"
 

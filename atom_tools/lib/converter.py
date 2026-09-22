@@ -22,6 +22,7 @@ from atom_tools.lib.regex_utils import (
 )
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.go_converter import convert as go_convert
+from atom_tools.lib.kosi_converter import convert as kosi_convert
 from atom_tools.lib.ruby_converter import convert as ruby_convert
 from atom_tools.lib.rust_converter import convert as rust_convert
 from atom_tools.lib.scala_converter import convert as scala_convert
@@ -34,6 +35,7 @@ _RUBY_ORIGIN_TYPES = ("rb", "ruby")
 _SCALA_ORIGIN_TYPES = ("scala", "sbt")
 _RUST_ORIGIN_TYPES = ("rs", "rust")
 _GO_ORIGIN_TYPES = ("go", "golang")
+_KOTLIN_ORIGIN_TYPES = ("kt", "kotlin")
 # Aliases handled by the JVM-style path that follows the dedicated converters
 # in convert_usages (Java, JavaScript/TypeScript and Python).
 _JVM_STYLE_ORIGIN_TYPES = (
@@ -54,6 +56,7 @@ SUPPORTED_ORIGIN_TYPES = frozenset(
     + _SCALA_ORIGIN_TYPES
     + _RUST_ORIGIN_TYPES
     + _GO_ORIGIN_TYPES
+    + _KOTLIN_ORIGIN_TYPES
     + _JVM_STYLE_ORIGIN_TYPES
 )
 
@@ -419,6 +422,8 @@ class OpenAPI:
             return rust_convert(self.usages)
         if self.usages.origin_type in _GO_ORIGIN_TYPES:
             return go_convert(self.usages)
+        if self.usages.origin_type in _KOTLIN_ORIGIN_TYPES:
+            return kosi_convert(self.usages)
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
         self.target_line_nums = self._identify_target_line_nums(methods)
