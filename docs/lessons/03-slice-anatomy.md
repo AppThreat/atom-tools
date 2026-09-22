@@ -171,19 +171,19 @@ first.
 ## Which fields feed which command
 
 ```text
-    reachables                          usages
-    ---------                          ------
-    flows[].tags            filter (purl criteria),
-    flows[].parentFileName  check-reachable, visualize,
-    flows[].lineNumber      validate-lines, sarif
-    flows[].code            visualize labels, sarif snippets
-    purls[]                 filter -p, check-reachable -p,
-                            visualize SBOM join
-                            objectSlices[].fullName      filter
-                            usages[].invokedCalls        query-endpoints,
-                            usages[].targetObj           convert (openapi)
-                            usages[].argToCalls          filter (callName,
-                                                         resolvedMethod)
+    reachables                              usages
+    ------------------                      ------------------------------------
+    flows[].tags          sarif rules,      objectSlices[].fullName   filter
+                          visualize
+    flows[].parentFileName,                 usages[].invokedCalls     query-endpoints,
+    flows[].lineNumber    check-reachable,                            convert (openapi)
+                          validate-lines,
+                          visualize, sarif
+    flows[].code          visualize labels, usages[].targetObj        convert (openapi)
+                          sarif snippets
+    purls[]               filter -p,        usages[].argToCalls       filter (callName,
+                          check-reachable -p,                         resolvedMethod)
+                          visualize SBOM join
 ```
 
 ## Exercises
