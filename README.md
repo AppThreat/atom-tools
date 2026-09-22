@@ -19,9 +19,12 @@ Atom installs from a
 npm `npm install -g @appthreat/atom`. The golem and rusi binaries are published in the
 [cdxgen-plugins-bin](https://github.com/cdxgen/cdxgen-plugins-bin/releases) releases (and bundled
 in the atom-tools Docker image); dosai builds from [OWASP/dosai](https://github.com/OWASP/dosai)
-with `dotnet`. kosi ships from the `thirdparty/kosi` directory of cdxgen-plugins-bin — it is
-pre-1.0 and currently built for darwin-arm64 only, so CI environments cannot run it; generate
-kosi reports on a Mac and commit or pass the JSON along like any other report.
+with `dotnet`. kosi ships from the `thirdparty/kosi` directory of cdxgen-plugins-bin. It is pre-1.0, and
+native binaries are published for `linux-amd64`, `linux-arm64`, `linuxmusl-amd64` and
+`darwin-arm64`; `darwin-amd64` takes the jar fallback, because no GraalVM for JDK 25 ships a
+macOS x64 build. CI on Linux can therefore run kosi directly — an earlier version of this
+README said darwin-arm64 was the only target and that CI could not run it, which has not been
+true since the Linux natives began publishing.
 
 ## Install atom-tools
 
