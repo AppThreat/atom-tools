@@ -1,6 +1,9 @@
 site_name: atom-tools lessons
 site_description: Hands-on lessons for atom-tools, the post-processing toolkit for the AppThreat analysis ecosystem, taught on a real project (cdxgen).
-site_url: https://appthreat.github.io/atom-tools/
+# Served at the org's custom domain (the user site's CNAME routes project pages
+# to www.appthreat.com/<repo>/); MkDocs links are relative, so the site works
+# under this subpath unchanged.
+site_url: https://www.appthreat.com/atom-tools/
 repo_name: AppThreat/atom-tools
 repo_url: https://github.com/AppThreat/atom-tools
 edit_uri: edit/main/docs/

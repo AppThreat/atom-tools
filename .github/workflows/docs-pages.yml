@@ -1,0 +1,63 @@
+name: docs pages
+
+# The lesson site under docs/ is MkDocs source, not built HTML, so GitHub Pages
+# must build it before serving. This workflow is the "GitHub Actions" source
+# the repo's Pages setting points at: build with mkdocs (strict, so broken
+# links fail like a test), then publish the site/ directory as the pages
+# artifact. Settings -> Pages should stay on Source: GitHub Actions; the
+# custom-domain routing to www.appthreat.com/atom-tools/ comes from the org's
+# user site (same as chen), so no CNAME belongs on this repo.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - '.github/workflows/docs-pages.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      with:
+        persist-credentials: false
+    - name: Set up Python
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
+      with:
+        python-version: '3.12'
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip setuptools
+        python3 -m pip install .[docs]
+    - name: Build the lesson site
+      run: mkdocs build --strict
+    - name: Configure Pages
+      uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
+    - name: Upload Pages artifact
+      uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+      with:
+        path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5.0.1
