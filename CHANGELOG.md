@@ -98,6 +98,28 @@ All notable changes to atom-tools are documented here. The format follows
   authentication" on reports that involve kosi; other reports keep the
   previous wording, so no existing rendering changes.
 
+## [1.0.1] - 2026-09-22
+
+### Fixed
+
+- **The built wheel and sdist now include `atom_tools.lib.adapters`.** The
+  explicit `packages` list in `pyproject.toml` omitted the subpackage, so
+  setuptools silently dropped it and every non-editable install failed at
+  import with `No module named 'atom_tools.lib.adapters'`, breaking
+  `convert` for all five backends. Running from a source checkout or with
+  `pip install -e .` masked the problem. PyPI cannot replace version 1.0.0,
+  so installs from there must upgrade to 1.0.1.
+- **`atom-tools --version` now reports the installed version** instead of a
+  literal that had drifted to disagree with the package metadata: the 1.0.1
+  wheel introduced itself as 1.0.0. `__version__` is read from
+  `importlib.metadata`, with the literal kept only as the fallback for a
+  source checkout that was never installed.
+- **`merge-slices --help` no longer crashes.** The command's help text showed
+  a literal `{"reachables": [...]}` example; cleo runs help through
+  `str.format`, so the bare braces were read as a replacement field and the
+  command errored out with `KeyError: '"reachables"'` before printing the
+  options. The braces are now escaped and the example renders as intended.
+
 ## [1.0.0] - 2026-09-19
 
 atom-tools now reads the reports of the whole AppThreat analysis ecosystem —
