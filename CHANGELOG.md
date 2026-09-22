@@ -8,6 +8,15 @@ All notable changes to atom-tools are documented here. The format follows
 
 ### Added
 
+- **The convert command reads kosi (Kotlin) reports** with `-t kotlin` (alias `-t kt`),
+  the same direct-report path rusi and golem already had. kosi records the served methods
+  as a list on a single endpoint record, so a route serving GET and POST becomes two
+  operations; the path/query parameter tables become OpenAPI parameters (names only, so
+  the schemas are strings); `consumes`/`produces` shape the request body media types and
+  the default 200 response. The honesty rules carry over: an endpoint with no resolved
+  HTTP method is skipped rather than asserted under an invented verb, and a
+  `substantiated: false` endpoint (declared, handler never read) carries
+  `x-kosi-substantiated: false` so its silence reads as unexamined, not clean.
 - **kosi's "how much did I actually read" fields are carried, not dropped.**
   Three of them, each the difference between a measurement and a silence:
   - `apiEndpoints[].substantiated` — false when kosi declared a route and
@@ -66,6 +75,12 @@ All notable changes to atom-tools are documented here. The format follows
 
 ### Changed
 
+- **The Docker image bundles kosi alongside rusi and golem**, from
+  cdxgen-plugins-bin v4.0.0 (`CDXGEN_PLUGINS_BIN_VERSION` bumped from 3.1.0), with the
+  same per-asset sha256 verification. kosi publishes linux natives only for amd64 and
+  arm64 — the two platforms the image CI builds; any other architecture takes the new
+  `kosi-portable.jar` release asset instead, installed as a `kosi` wrapper script that
+  runs the jar through the image's JDK (the invocation shape cdxgen itself uses).
 - **The kosi fixtures were regenerated against a current kosi** (2026-09-21),
   and every count the kosi tests assert moved with them. All in the direction
   of the engine finding more: `dsl-media-auth` 11 endpoints to 17 (2 with a

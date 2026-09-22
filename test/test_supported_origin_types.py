@@ -38,6 +38,8 @@ EXPECTED_TYPES = {
     "rust",
     "go",
     "golang",
+    "kotlin",
+    "kt",
 }
 
 # A real slice file per alias, used for end-to-end acceptance of every type.
@@ -61,6 +63,8 @@ LANGUAGE_FIXTURES = {
     "rust": "test/data/rust-axum-sample-rusi.json",
     "go": "test/data/go-gin-sample-golem.json",
     "golang": "test/data/go-gin-sample-golem.json",
+    "kotlin": "test/data/kotlin-endpoint-params-kosi.json",
+    "kt": "test/data/kotlin-endpoint-params-kosi.json",
 }
 
 PATH_COUNTS = [
@@ -68,6 +72,7 @@ PATH_COUNTS = [
     ("rs", "test/data/rust-axum-sample-rusi.json", 8),
     ("go", "test/data/go-gin-sample-golem.json", 6),
     ("go", "test/data/ecosystem/go-ipsw-golem.json", 50),
+    ("kotlin", "test/data/kotlin-endpoint-params-kosi.json", 6),
 ]
 
 
@@ -121,7 +126,7 @@ def test_fixture_coverage_tracks_the_constant():
 
 
 @pytest.mark.parametrize("command_name", ["convert", "query-endpoints"])
-@pytest.mark.parametrize("unknown_type", ["kt", "swift"])
+@pytest.mark.parametrize("unknown_type", ["swift", "zig"])
 def test_unknown_type_lists_supported_values(command_name, unknown_type):
     app = Application()
     tester = CommandTester(app.find(command_name))
@@ -149,6 +154,7 @@ def test_type_option_help_lists_supported_values(command_cls):
         ("rs", "test/data/rust-axum-sample-rusi.json", 8),
         ("rb", "test/data/rb-railsgoat-usages.json", 31),
         ("java", "test/data/java-piggymetrics-usages.json", 18),
+        ("kotlin", "test/data/kotlin-endpoint-params-kosi.json", 6),
     ],
 )
 def test_console_listing_is_not_empty(origin_type, fixture, expected_lines, capsys):
