@@ -1,0 +1,69 @@
+site_name: atom-tools lessons
+site_description: Hands-on lessons for atom-tools, the post-processing toolkit for the AppThreat analysis ecosystem, taught on a real project (cdxgen).
+site_url: https://appthreat.github.io/atom-tools/
+repo_name: AppThreat/atom-tools
+repo_url: https://github.com/AppThreat/atom-tools
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - navigation.progress
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.action.edit
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: true
+
+nav:
+  - Course overview: index.md
+  - Start here:
+      - "Lesson 1: The ecosystem and where atom-tools fits": lessons/01-ecosystem.md
+      - "Lesson 2: First analysis of cdxgen": lessons/02-analyze.md
+      - "Lesson 3: Anatomy of a slice": lessons/03-slice-anatomy.md
+  - Slice craft:
+      - "Lesson 4: Stats, triage and check-reachable": lessons/04-stats.md
+      - "Lesson 5: Filter": lessons/05-filter.md
+      - "Lesson 6: Merge slices and validate lines": lessons/06-merge-validate.md
+  - Pictures and documents:
+      - "Lesson 7: Visualize flows": lessons/07-visualize.md
+      - "Lesson 8: Endpoints and OpenAPI": lessons/08-endpoints.md
+      - "Lesson 9: SARIF for IDEs and code scanning": lessons/09-sarif.md
+  - The engine federation:
+      - "Lesson 10: Ingest and the unified flow model": lessons/10-ingest.md
+      - "Lesson 11: Attack surface": lessons/11-attack-surface.md
+      - "Lesson 12: Drift between two runs": lessons/12-drift.md
+      - "Lesson 13: Call graph metrics": lessons/13-graph.md
+      - "Lesson 14: Explain": lessons/14-explain.md
+      - "Lesson 15: Crypto reach": lessons/15-crypto-reach.md
+  - Putting it together:
+      - "Lesson 16: A CI assembly line": lessons/16-ci.md
+  - Reference:
+      - "Command reference": reference/commands.md
+      - "Lesson fixtures": reference/fixtures.md

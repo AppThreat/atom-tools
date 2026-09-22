@@ -222,7 +222,9 @@ def filter_flows(reachables: List[Dict], filename: str, ln: Tuple[int, int]) -> 
     for flows in reachables:
         for f in flows.get("flows", []):
             num = f.get("lineNumber")
-            if num and num not in ln:
+            # ln is a (start, end) tuple: membership in the tuple matched only
+            # the two endpoints, so an interior line of a range never hit.
+            if num and ln and not (min(ln) <= num <= max(ln)):
                 continue
             if f.get("parentFileName").endswith(filename):
                 return True

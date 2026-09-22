@@ -161,6 +161,9 @@ def test_check_reachable():
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:400") == False
     assert check_reachable(atom_slice.content, "", "routes/updateUserProfile.ts:400-600") == False
     assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:400-600") == False
+    # Interior lines of a range must hit too: this file has a flow at 27 and
+    # none at 26 or 28, so only an interval check can return True here.
+    assert check_reachable(atom_slice.content, "", "updateUserProfile.ts:26-28") == True
 
 
 def test_check_reachable_matches_versionless_and_verbatim_purls():
