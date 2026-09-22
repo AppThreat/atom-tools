@@ -59,12 +59,14 @@ class MergeSlicesCommand(Command):
             "Keep duplicate flow groups instead of dropping them.",
         ),
     ]
+    # The literal JSON example must double its braces: cleo runs help text
+    # through str.format, and a bare {"reachables": ...} raises KeyError.
     help = """Merges reachable slice files into a single document.
 
 atom chunks reachable slices at 1000 flow groups per file and writes them as
 bare JSON arrays. This command loads every matching file plus its sibling
 chunks, de-duplicates identical flow groups, and writes a single
-{"reachables": [...]} document usable by filter, convert, check-reachable and
+{{"reachables": [...]}} document usable by filter, convert, check-reachable and
 the other commands."""
 
     loggers = [
