@@ -1839,16 +1839,36 @@ def test_kosi_endpoints_to_openapi(kotlin_usages_1):
 
 def test_kosi_normalize_path_placeholders():
     """Framework-native placeholders must normalise to OpenAPI's
-    ``{name}`` form: a ``{id:regex}`` pattern drops the regex, a
-    ``:id`` segment becomes ``{id}``, and a servlet catch-all ``*``
-    becomes a named wildcard parameter."""
+    ``{name}`` form: a ``{id:regex}`` pattern drops the regex (even one
+    containing ``*`` quantifiers), a ``:id`` segment-start placeholder
+    becomes ``{id}``, a mid-segment colon stays a literal segment, and
+    catch-all wildcards become named wildcard parameters."""
     from atom_tools.lib.kosi_converter import normalize_path
 
     assert normalize_path("/items/{id}") == "/items/{id}"
     assert normalize_path("/items/{id:\\d+}") == "/items/{id}"
+    assert normalize_path("/items/{id:\\d*}") == "/items/{id}"
     assert normalize_path("/items/:id") == "/items/{id}"
     assert normalize_path("/legacy/*") == "/legacy/{path}"
+    # A mid-segment colon is a literal segment, not a placeholder:
+    # converting one would invent a required path parameter.
+    assert normalize_path("/v1/users:batchGet") == "/v1/users:batchGet"
     assert normalize_path("") == ""
+
+
+def test_kosi_normalize_path_wildcard_runs_collapse_and_number():
+    """A run of one or more ``*`` is ONE wildcard. Spring ant-style
+    ``**`` collapses to a single placeholder (OpenAPI cannot express a
+    multi-segment wildcard), and repeated wildcards on one path are
+    numbered so no placeholder name repeats — a duplicate name would be
+    invalid OpenAPI, with one declared parameter standing in for two
+    segments."""
+    from atom_tools.lib.kosi_converter import normalize_path
+
+    assert normalize_path("/legacy/**") == "/legacy/{path}"
+    assert normalize_path("/x/*/y/*") == "/x/{path}/y/{path1}"
+    assert normalize_path("/x/*/y/**") == "/x/{path}/y/{path1}"
+    assert normalize_path("/a/**/b/**") == "/a/{path}/b/{path1}"
 
 
 def _kosi_report(endpoints):
@@ -1988,3 +2008,105 @@ def test_kosi_authentication_declarations_are_carried(tmp_path):
         "security-constraint(admin,auditor)"
     ]
     assert "x-kosi-authentication" not in result["/open"]["get"]
+
+
+def test_kosi_merge_operations_concatenates_usages_without_mutating():
+    """Two records for one route discovered twice: the merge
+    concatenates the x-atom-usages line numbers and keeps the first
+    record's fields — and it must do so WITHOUT writing through to the
+    first operation, which the caller may still hold."""
+    from atom_tools.lib.kosi_converter import _merge_operations
+
+    existing = {
+        "operationId": "first.Handler",
+        "x-kosi-framework": "servlet",
+        "x-atom-usages": {"call": {"src/A.kt": [10]}},
+    }
+    new = {
+        "operationId": "second.Handler",
+        "x-kosi-framework": "annotation",
+        "x-atom-usages": {"call": {"src/A.kt": [10, 99], "src/B.kt": [7]}},
+    }
+    merged = _merge_operations(existing, new)
+
+    # Fields prefer the existing entry.
+    assert merged["operationId"] == "first.Handler"
+    assert merged["x-kosi-framework"] == "servlet"
+    # Line numbers concatenate, deduplicated, across files.
+    assert merged["x-atom-usages"]["call"] == {"src/A.kt": [10, 99], "src/B.kt": [7]}
+    # The inputs are untouched: no nested write-through.
+    assert existing["x-atom-usages"]["call"] == {"src/A.kt": [10]}
+    assert new["operationId"] == "second.Handler"
+
+
+def _kosi_merge_report(tmp_path, records):
+    """A report with several endpoint records on the same path."""
+    return _write_kosi_report(
+        tmp_path,
+        [
+            {
+                "id": f"ep-{i:06d}",
+                "pathTemplate": "/dupe",
+                "httpMethod": ["GET"],
+                "foundBy": "descriptor",
+                "framework": "servlet",
+                "position": {"filename": "src/Main.kt", "line": line},
+                "substantiated": substantiated,
+            }
+            for i, (line, substantiated) in enumerate(records, start=1)
+        ],
+    )
+
+
+@pytest.mark.parametrize(
+    "records",
+    [
+        [(3, False), (9, True)],
+        [(3, True), (9, False)],
+    ],
+    ids=["unsubstantiated-first", "unsubstantiated-second"],
+)
+def test_kosi_merge_marks_mixed_substantiation(tmp_path, records):
+    """The same route registered twice where only one record was
+    substantiated: whichever way the records order, the merged
+    operation keeps the 'never read' verdict. Losing it with the
+    first-encountered record would present an unread handler's route as
+    an examined clean one."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _kosi_merge_report(tmp_path, records)
+    result = convert(AtomSlice(report, "kotlin"))
+    operation = result["/dupe"]["get"]
+    assert operation["x-kosi-substantiated"] is False
+    # Both records' positions survive the merge.
+    assert sorted(operation["x-atom-usages"]["call"]["src/Main.kt"]) == [3, 9]
+
+
+def test_kosi_twice_registered_fully_substantiated_stays_clean(tmp_path):
+    """The merge flag is monotonic, not sticky: two substantiated
+    records on one route produce a clean operation."""
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = _kosi_merge_report(tmp_path, [(3, True), (9, True)])
+    result = convert(AtomSlice(report, "kotlin"))
+    assert "x-kosi-substantiated" not in result["/dupe"]["get"]
+
+
+def test_kosi_atom_slice_input_warns_instead_of_silence(tmp_path, caplog):
+    """An ATOM usages slice (objectSlices, no apiEndpoints) converted as
+    kotlin yields an empty document — Kotlin is the one language where
+    both kinds of input are plausible, so the converter says why instead
+    of letting the empty paths read as 'the app has no endpoints'."""
+    import json
+
+    from atom_tools.lib.kosi_converter import convert
+    from atom_tools.lib.slices import AtomSlice
+
+    report = tmp_path / "atom-slice.json"
+    report.write_text(json.dumps({"objectSlices": [{"fileName": "User.kt", "usages": []}]}))
+    with caplog.at_level("WARNING", logger="atom_tools.lib.kosi_converter"):
+        result = convert(AtomSlice(str(report), "kotlin"))
+    assert result == {}
+    assert any("objectSlices" in r.message for r in caplog.records)
