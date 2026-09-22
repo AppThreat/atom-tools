@@ -58,6 +58,8 @@ dev = [
 # The stdio MCP server behind `atom-tools explain --mcp`. Pinned below 2.0:
 # the 2.x SDK renamed FastMCP to MCPServer and changed the registration API.
 mcp = ["mcp>=1.0.0,<2"]
+# Builds the lesson site in docs/ with `mkdocs build --strict`.
+docs = ["mkdocs-material>=9.5"]
 
 [build-system]
 requires = ["setuptools>=65", "wheel"]
