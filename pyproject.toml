@@ -70,7 +70,8 @@ packages = [
   "atom_tools",
   "atom_tools.cli",
   "atom_tools.cli.commands",
-  "atom_tools.lib"
+  "atom_tools.lib",
+  "atom_tools.lib.adapters"
 ]
 include-package-data = true
 
