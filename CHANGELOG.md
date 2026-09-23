@@ -91,7 +91,7 @@ All notable changes to atom-tools are documented here. The format follows
 ### Changed
 
 - **The Docker image bundles kosi alongside rusi and golem**, from
-  cdxgen-plugins-bin v4.0.0 (`CDXGEN_PLUGINS_BIN_VERSION` bumped from 3.1.0), with the
+  cdxgen-plugins-bin v4.0.1 (`CDXGEN_PLUGINS_BIN_VERSION` bumped from 3.1.0), with the
   same per-asset sha256 verification. kosi publishes linux natives only for amd64 and
   arm64 — the two platforms the image CI builds; any other architecture takes the new
   `kosi-portable.jar` release asset instead, installed as a `kosi` wrapper script that
