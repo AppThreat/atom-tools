@@ -2,7 +2,7 @@
 Kotlin converter helper.
 
 Consumes a kosi report (produced by the ``kosi`` analyzer shipped in
-``cdxgen/cdxgen-plugins-bin`` v4.0.0+) and produces an OpenAPI paths dict
+``cdxgen/cdxgen-plugins-bin`` v4.0.1+) and produces an OpenAPI paths dict
 in the same shape that the JVM-style processing in
 ``atom_tools.lib.converter`` does for other languages.
 
