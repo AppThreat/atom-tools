@@ -113,3 +113,30 @@ def test_verbs_openapi_cannot_carry_are_kept_named(tmp_path):
     assert list(doc["paths"]) == ["/files"] and list(doc["paths"]["/files"]) == ["get"]
     reasons = {e["handler"]: e["reason"] for e in doc["x-kosi-unsupported-methods"]}
     assert "CONNECT" in reasons["demo.Tunnel.connect"] and "LOCK" in reasons["demo.Files.lock"]
+
+
+def test_declared_verb_wins_over_any_method_in_either_order(tmp_path):
+    for order in (0, 1):
+        records = [
+            _endpoint("/items", [], "demo.Items.any", anyMethod=True),
+            _endpoint("/items", ["GET"], "demo.Items.get"),
+        ]
+        doc = _document(tmp_path, records[::-1] if order else records)
+        validate(doc)
+        assert "x-kosi-any-method" not in doc["paths"]["/items"]["get"]
+        assert doc["paths"]["/items"]["post"]["x-kosi-any-method"] is True
+
+
+def test_path_unresolved_survives_a_merge_in_either_order(tmp_path):
+    for order in (0, 1):
+        records = [
+            _endpoint("/stock", ["GET"], "demo.A.get"),
+            _endpoint("/stock", ["GET"], "demo.B.get", pathUnresolved="base path unproven"),
+        ]
+        doc = _document(tmp_path, records[::-1] if order else records)
+        assert doc["paths"]["/stock"]["get"]["x-kosi-path-unresolved"] == "base path unproven"
+
+
+def test_handler_list_never_holds_a_missing_name(tmp_path):
+    doc = _document(tmp_path, [_endpoint("/x", ["GET"], ""), _endpoint("/x", ["GET"], "demo.X.get")])
+    assert None not in doc["paths"]["/x"]["get"].get("x-kosi-handlers", [])

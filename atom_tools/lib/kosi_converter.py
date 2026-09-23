@@ -380,7 +380,7 @@ def _merge_operations(existing: Dict, new: Dict) -> Dict:
     # Two HANDLERS at one path+method (every GraphQL operation is served at
     # POST /graphql; one route declared in two app modules) keep both names.
     if new.get("operationId") and new.get("operationId") != existing.get("operationId"):
-        handlers = merged.setdefault("x-kosi-handlers", [existing.get("operationId")])
+        handlers = merged.setdefault("x-kosi-handlers", [h for h in [existing.get("operationId")] if h])
         if new["operationId"] not in handlers:
             handlers.append(new["operationId"])
     unsubstantiated = (
@@ -388,6 +388,13 @@ def _merge_operations(existing: Dict, new: Dict) -> Dict:
     )
     if unsubstantiated:
         merged["x-kosi-substantiated"] = False
+    # A verb one record DECLARES is not an any-method expansion, whichever
+    # record arrived first; an unproven base path is never cleared by a
+    # record that happens to lack the note.
+    if not (existing.get("x-kosi-any-method") and new.get("x-kosi-any-method")):
+        merged.pop("x-kosi-any-method", None)
+    if not merged.get("x-kosi-path-unresolved") and new.get("x-kosi-path-unresolved"):
+        merged["x-kosi-path-unresolved"] = new["x-kosi-path-unresolved"]
     new_calls = new.get("x-atom-usages", {}).get("call", {})
     if new_calls:
         existing_calls = merged.setdefault("x-atom-usages", {}).setdefault("call", {})
