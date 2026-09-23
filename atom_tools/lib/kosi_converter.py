@@ -224,12 +224,15 @@ def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict
       kosi did not link it; ``pathUnresolved`` says so).
     - ``x-kosi-method-unresolved`` — an HTTP route whose method kosi could
       not resolve and does not report as serving any method.
+    - ``x-kosi-unsupported-methods`` — verbs an OpenAPI path item cannot
+      carry (``CONNECT``; a custom verb such as WebDAV's ``LOCK``).
     """
     routes: List[Tuple[Dict, str, List[str]]] = []
     extensions: Dict[str, List[Dict]] = {
         "x-kosi-non-http-endpoints": [],
         "x-kosi-unmounted-handlers": [],
         "x-kosi-method-unresolved": [],
+        "x-kosi-unsupported-methods": [],
     }
     if not usages or not usages.content:
         return routes, extensions
@@ -251,6 +254,17 @@ def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict
             continue
         path = normalize_path(raw_path)
         methods = _http_methods(endpoint)
+        # Verbs an OpenAPI path item has no field for (CONNECT, WebDAV's
+        # LOCK via Micronaut's @CustomHttpMethod) are kept, named.
+        unsupported = [
+            m for m in (endpoint.get("httpMethod") or []) if isinstance(m, str) and m.lower() not in _ALL_METHODS
+        ]
+        if unsupported:
+            extensions["x-kosi-unsupported-methods"].append(
+                _handler_ref(endpoint, "OpenAPI has no operation field for " + ", ".join(sorted(unsupported)))
+            )
+        if not methods and unsupported:
+            continue
         if not methods:
             extensions["x-kosi-method-unresolved"].append(
                 _handler_ref(endpoint, "kosi resolved no HTTP method at this route")

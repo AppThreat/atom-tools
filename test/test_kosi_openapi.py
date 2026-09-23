@@ -97,3 +97,19 @@ def test_one_route_many_handlers_keeps_them_all(tmp_path):
     )
     validate(doc)
     assert doc["paths"]["/graphql"]["post"]["x-kosi-handlers"] == ["demo.Graph.book", "demo.Graph.author"]
+
+
+def test_verbs_openapi_cannot_carry_are_kept_named(tmp_path):
+    # CONNECT has no OpenAPI operation field; LOCK is Micronaut's
+    # @CustomHttpMethod. Neither may vanish from the document.
+    doc = _document(
+        tmp_path,
+        [
+            _endpoint("/tunnel", ["CONNECT"], "demo.Tunnel.connect", framework="vertx"),
+            _endpoint("/files", ["LOCK", "GET"], "demo.Files.lock", framework="micronaut"),
+        ],
+    )
+    validate(doc)
+    assert list(doc["paths"]) == ["/files"] and list(doc["paths"]["/files"]) == ["get"]
+    reasons = {e["handler"]: e["reason"] for e in doc["x-kosi-unsupported-methods"]}
+    assert "CONNECT" in reasons["demo.Tunnel.connect"] and "LOCK" in reasons["demo.Files.lock"]
