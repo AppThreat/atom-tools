@@ -52,6 +52,8 @@ dev = [
 "flake8",
 "ruff>=0.14.0",
 "mypy",
+# test/test_kosi_openapi.py validates every converted document.
+"openapi-spec-validator",
 "pre-commit",
 "pytest",
 ]
