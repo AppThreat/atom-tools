@@ -23,6 +23,7 @@ from atom_tools.lib.regex_utils import (
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.go_converter import convert as go_convert
 from atom_tools.lib.kosi_converter import convert as kosi_convert
+from atom_tools.lib.kosi_converter import extensions as kosi_extensions
 from atom_tools.lib.ruby_converter import convert as ruby_convert
 from atom_tools.lib.rust_converter import convert as rust_convert
 from atom_tools.lib.scala_converter import convert as scala_convert
@@ -513,6 +514,11 @@ class OpenAPI:
         }
         if server:
             output["servers"] = [{"url": server}]  # type: ignore[list-item]
+        if self.usages.origin_type in _KOTLIN_ORIGIN_TYPES:
+            # kosi endpoints that have no place in `paths` (non-HTTP
+            # transports, unmounted handlers, unresolved methods) are kept
+            # as document extensions, never dropped.
+            output.update(kosi_extensions(self.usages))
 
         return output
 

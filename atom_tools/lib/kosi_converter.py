@@ -35,7 +35,7 @@ the document never asserts a type the engine did not state.
 import logging
 import re
 from copy import deepcopy
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from atom_tools.lib.slices import AtomSlice
 
@@ -173,6 +173,93 @@ def _build_operation(endpoint: Dict, path: str) -> Dict:
     return operation
 
 
+# Every HTTP method an OpenAPI path item can carry. A route kosi reports as
+# serving ANY method (``anyMethod``: ``@RequestMapping`` without ``method``,
+# a servlet filter, Vert.x ``route()``) is expanded to all of them, each
+# operation marked so the expansion is never mistaken for eight declarations.
+_ALL_METHODS = ("get", "put", "post", "delete", "options", "head", "patch", "trace")
+
+
+def _http_methods(endpoint: Dict) -> List[str]:
+    methods = [m.lower() for m in (endpoint.get("httpMethod") or []) if isinstance(m, str) and m]
+    if not methods and endpoint.get("anyMethod") is True:
+        return list(_ALL_METHODS)
+    return [m for m in methods if m in _ALL_METHODS]
+
+
+def _handler_ref(endpoint: Dict, reason: str) -> Dict:
+    """A kosi endpoint that has no place in ``paths``, kept with why."""
+    position = endpoint.get("position") or {}
+    ref = {
+        "handler": endpoint.get("handlerCanonicalName") or endpoint.get("handlerSymbol") or "",
+        "framework": endpoint.get("framework") or "",
+        "reason": reason,
+    }
+    for key, value in (
+        ("path", endpoint.get("pathTemplate") or ""),
+        ("methods", endpoint.get("httpMethod") or []),
+        ("transport", endpoint.get("transport") or ""),
+        ("file", position.get("filename") or ""),
+        ("line", position.get("line")),
+        ("pathUnresolved", endpoint.get("pathUnresolved") or ""),
+    ):
+        if value not in ("", [], None):
+            ref[key] = value
+    return ref
+
+
+def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict[str, List[Dict]]]:
+    """Split kosi's endpoints into OpenAPI operations and everything else.
+
+    Returns ``(routes, extensions)``: ``routes`` are ``(endpoint, path,
+    methods)`` triples that belong in ``paths``; ``extensions`` holds the
+    endpoints that cannot, each under the document-level key that says why,
+    so a converted document never loses one silently:
+
+    - ``x-kosi-non-http-endpoints`` — kosi says the transport is not HTTP
+      (``transport``: messaging listeners, gRPC, Android components,
+      event-triggered cloud functions).
+    - ``x-kosi-unmounted-handlers`` — a handler with no path (a Ratpack
+      ``Handler`` or Lambda ``RequestHandler`` whose route is bound where
+      kosi did not link it; ``pathUnresolved`` says so).
+    - ``x-kosi-method-unresolved`` — an HTTP route whose method kosi could
+      not resolve and does not report as serving any method.
+    """
+    routes: List[Tuple[Dict, str, List[str]]] = []
+    extensions: Dict[str, List[Dict]] = {
+        "x-kosi-non-http-endpoints": [],
+        "x-kosi-unmounted-handlers": [],
+        "x-kosi-method-unresolved": [],
+    }
+    if not usages or not usages.content:
+        return routes, extensions
+    for endpoint in usages.content.get("apiEndpoints", []) or []:
+        transport = endpoint.get("transport") or ""
+        # Android manifest components are not HTTP routes even in reports
+        # that predate the transport field: their pathTemplate is an intent
+        # action or component name, never a URL path.
+        if transport or endpoint.get("foundBy") == "manifest":
+            extensions["x-kosi-non-http-endpoints"].append(
+                _handler_ref(endpoint, f"served over {transport or 'android'}, not HTTP")
+            )
+            continue
+        raw_path = endpoint.get("pathTemplate", "") or ""
+        if not raw_path.startswith("/"):
+            extensions["x-kosi-unmounted-handlers"].append(
+                _handler_ref(endpoint, endpoint.get("pathUnresolved") or "kosi reported no URL path")
+            )
+            continue
+        path = normalize_path(raw_path)
+        methods = _http_methods(endpoint)
+        if not methods:
+            extensions["x-kosi-method-unresolved"].append(
+                _handler_ref(endpoint, "kosi resolved no HTTP method at this route")
+            )
+            continue
+        routes.append((endpoint, path, methods))
+    return routes, extensions
+
+
 def convert(usages: AtomSlice) -> Dict[str, Dict]:
     """Convert a kosi report into an OpenAPI ``paths`` dict.
 
@@ -180,13 +267,12 @@ def convert(usages: AtomSlice) -> Dict[str, Dict]:
     and :func:`atom_tools.lib.rust_converter.convert`: returns a
     ``{path: {method: operation}}`` mapping. The caller (the
     :class:`atom_tools.lib.converter.OpenAPI` class) wraps this into
-    the full OpenAPI document.
+    the full OpenAPI document and adds :func:`extensions`.
     """
     result: Dict[str, Dict] = {}
     if not usages or not usages.content:
         return result
-    endpoints = usages.content.get("apiEndpoints", [])
-    if not endpoints:
+    if not usages.content.get("apiEndpoints"):
         # Kotlin is the one language where two kinds of input are
         # plausible: a kosi report here, but an ATOM usages slice
         # elsewhere in the same pipeline. An atom slice converted as
@@ -201,34 +287,8 @@ def convert(usages: AtomSlice) -> Dict[str, Dict]:
             )
         return result
 
-    for endpoint in endpoints:
-        # Android manifest components are not HTTP routes: their
-        # pathTemplate is an intent action or component name, never a
-        # URL path.
-        if endpoint.get("foundBy") == "manifest":
-            continue
-        raw_path = endpoint.get("pathTemplate", "") or ""
-        if not raw_path.startswith("/"):
-            continue
-        path = normalize_path(raw_path)
-        if not path:
-            continue
-
-        methods = [
-            m.lower() for m in (endpoint.get("httpMethod") or []) if isinstance(m, str) and m
-        ]
-        if not methods:
-            # Method unresolved at a site kosi models. OpenAPI cannot
-            # carry a route without asserting a method, so say so and
-            # move on rather than inventing one.
-            logger.debug(
-                "kosi endpoint %s (%s) has no resolved HTTP method; "
-                "skipped in the OpenAPI document",
-                endpoint.get("id"),
-                raw_path,
-            )
-            continue
-
+    routes, _ = classify(usages)
+    for endpoint, path, methods in routes:
         path_item = result.setdefault(path, {})
         unsubstantiated = endpoint.get("substantiated") is False
         for method in methods:
@@ -239,13 +299,54 @@ def convert(usages: AtomSlice) -> Dict[str, Dict]:
             # belongs to is visible.
             if unsubstantiated:
                 operation["x-kosi-substantiated"] = False
+            if endpoint.get("anyMethod") is True and not endpoint.get("httpMethod"):
+                operation["x-kosi-any-method"] = True
+            if unresolved := endpoint.get("pathUnresolved"):
+                operation["x-kosi-path-unresolved"] = unresolved
             existing = path_item.get(method)
             if existing:
                 path_item[method] = _merge_operations(existing, operation)
             else:
                 path_item[method] = operation
 
-    return result
+    return _unique_operation_ids(result)
+
+
+def extensions(usages: AtomSlice) -> Dict[str, List[Dict]]:
+    """The document-level ``x-kosi-*`` lists, only the non-empty ones."""
+    _, ext = classify(usages)
+    return {key: value for key, value in ext.items() if value}
+
+
+def _unique_operation_ids(paths: Dict[str, Dict]) -> Dict[str, Dict]:
+    """Make every ``operationId`` unique, as OpenAPI requires.
+
+    One kosi handler routinely backs several operations: a method list fans
+    out per verb, a repository resource serves GET/POST/PUT/..., a mapping
+    names several paths. The first operation (in path, then method order)
+    keeps the handler's name; every later one gets ``<handler>_<method>_<path
+    slug>``, numbered if that still collides, and the handler stays readable
+    in ``x-kosi-handler``.
+    """
+    seen: set = set()
+    for path in sorted(paths):
+        for method in sorted(paths[path]):
+            operation = paths[path][method]
+            if not isinstance(operation, dict) or "operationId" not in operation:
+                continue
+            handler = operation["operationId"]
+            candidate = handler
+            if candidate in seen:
+                slug = re.sub(r"[^A-Za-z0-9]+", "_", path).strip("_") or "root"
+                candidate = f"{handler}_{method}_{slug}"
+                counter = 2
+                while candidate in seen:
+                    candidate = f"{handler}_{method}_{slug}_{counter}"
+                    counter += 1
+                operation["x-kosi-handler"] = handler
+            operation["operationId"] = candidate
+            seen.add(candidate)
+    return paths
 
 
 def _merge_operations(existing: Dict, new: Dict) -> Dict:
@@ -262,6 +363,12 @@ def _merge_operations(existing: Dict, new: Dict) -> Dict:
     The flag is monotonic — merge never clears it.
     """
     merged = deepcopy(existing)
+    # Two HANDLERS at one path+method (every GraphQL operation is served at
+    # POST /graphql; one route declared in two app modules) keep both names.
+    if new.get("operationId") and new.get("operationId") != existing.get("operationId"):
+        handlers = merged.setdefault("x-kosi-handlers", [existing.get("operationId")])
+        if new["operationId"] not in handlers:
+            handlers.append(new["operationId"])
     unsubstantiated = (
         new.get("x-kosi-substantiated") is False or existing.get("x-kosi-substantiated") is False
     )
