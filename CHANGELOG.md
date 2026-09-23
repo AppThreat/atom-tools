@@ -6,6 +6,21 @@ All notable changes to atom-tools are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-09-23
+
+### Fixed
+
+- **`convert -t kotlin` produces a valid OpenAPI document that keeps every kosi
+  endpoint** (#92). Duplicate `operationId`s made documents invalid whenever one
+  handler backed several operations; they are now unique, with the handler kept in
+  `x-kosi-handler`. Routes kosi reports as serving any method (`anyMethod`) expand
+  to every verb, marked `x-kosi-any-method`; an unproven base path travels as
+  `x-kosi-path-unresolved`; two handlers at one path and method keep both in
+  `x-kosi-handlers`. Endpoints `paths` cannot hold are listed, never dropped, in
+  `x-kosi-non-http-endpoints`, `x-kosi-unmounted-handlers`,
+  `x-kosi-method-unresolved` and `x-kosi-unsupported-methods`. Needs kosi from
+  cdxgen-plugins-bin 4.0.1 for the path fixes on the engine side.
+
 ### Added
 
 - **The convert command reads kosi (Kotlin) reports** with `-t kotlin` (alias `-t kt`),

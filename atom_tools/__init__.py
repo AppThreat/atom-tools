@@ -8,4 +8,4 @@ try:
     __version__ = version("atom-tools")
 except PackageNotFoundError:
     # Source checkout that was never installed: metadata does not exist yet.
-    __version__ = "1.0.1"
+    __version__ = "1.0.2"
