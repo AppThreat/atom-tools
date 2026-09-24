@@ -8,6 +8,7 @@ passes the OpenAPI validator.
 """
 
 import json
+from pathlib import Path
 
 from openapi_spec_validator import validate
 
@@ -140,3 +141,50 @@ def test_path_unresolved_survives_a_merge_in_either_order(tmp_path):
 def test_handler_list_never_holds_a_missing_name(tmp_path):
     doc = _document(tmp_path, [_endpoint("/x", ["GET"], ""), _endpoint("/x", ["GET"], "demo.X.get")])
     assert None not in doc["paths"]["/x"]["get"].get("x-kosi-handlers", [])
+
+
+def test_path_unresolved_dsl_route_is_its_own_list(tmp_path):
+    """atom-tools#95: a Ktor route whose path is computed at run time is a
+    real registration with an unknown URL, not an unmounted handler. It is
+    listed under ``x-kosi-path-unresolved-routes`` with kosi's reason, and
+    never lands in ``paths`` under an invented template."""
+    doc = _document(
+        tmp_path,
+        [
+            _endpoint("/control", ["GET"], "demo.module$lambda0", framework="ktor", foundBy="dsl"),
+            _endpoint(
+                "",
+                ["GET"],
+                "demo.dynamic$lambda1",
+                framework="ktor",
+                foundBy="dsl",
+                pathUnresolved="the route's own path argument is computed at run time and did not fold to a constant",
+            ),
+            _endpoint("", [], "demo.Search.handle", framework="ratpack", pathUnresolved="declares no route"),
+        ],
+    )
+    validate(doc)
+    assert list(doc["paths"]) == ["/control"]
+    [route] = doc["x-kosi-path-unresolved-routes"]
+    assert route["handler"] == "demo.dynamic$lambda1"
+    assert route["methods"] == ["GET"] and route["reason"].startswith("the route's own path argument")
+    # The Ratpack handler kosi never saw registered stays an unmounted handler.
+    assert [e["handler"] for e in doc["x-kosi-unmounted-handlers"]] == ["demo.Search.handle"]
+
+
+def test_loop_registered_routes_from_a_real_kosi_report(tmp_path):
+    """The kosi dsl-loop-paths fixture, as kosi 4.0.2 reports it: literal
+    loops expand to one operation per element, and no loop variable's name
+    is ever a path."""
+    source = Path(__file__).parent / "data" / "ecosystem" / "kotlin-dsl-loop-paths-kosi.json"
+    doc = OpenAPI("openapi3.1.0", "kotlin", str(source)).endpoints_to_openapi()
+    validate(doc)
+    assert sorted(doc["paths"]) == [
+        "/api/p", "/api/q", "/control", "/each/a", "/each/b", "/m", "/on", "/one", "/two", "/x", "/y",
+    ]
+    assert not {"/vroute", "/vq", "/vit", "/vp"} & set(doc["paths"])
+    unresolved = doc["x-kosi-path-unresolved-routes"]
+    assert sorted(e["handler"].split(".")[-1].split("$")[0] for e in unresolved) == [
+        "computed", "dynamic", "grown", "indexed",
+    ]
+    assert "x-kosi-unmounted-handlers" not in doc

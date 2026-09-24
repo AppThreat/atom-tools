@@ -1,0 +1,3783 @@
+{
+  "apiEndpoints": [
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.computed$lambda12",
+      "handlerSymbol": "fixtures.looppaths.computed$lambda12",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000001",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the route's own path argument is computed at run time and did not fold to a constant",
+      "permissions": [],
+      "position": {
+        "column": 78,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 78
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.dynamic$lambda6$lambda7",
+      "handlerSymbol": "fixtures.looppaths.dynamic$lambda6$lambda7",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000002",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the route's own path argument is computed at run time and did not fold to a constant",
+      "permissions": [],
+      "position": {
+        "column": 63,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 63
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.grown$lambda10$lambda11",
+      "handlerSymbol": "fixtures.looppaths.grown$lambda10$lambda11",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000003",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the route's own path argument is computed at run time and did not fold to a constant",
+      "permissions": [],
+      "position": {
+        "column": 73,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 73
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.indexed$lambda8$lambda9",
+      "handlerSymbol": "fixtures.looppaths.indexed$lambda8$lambda9",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000004",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the route's own path argument is computed at run time and did not fold to a constant",
+      "permissions": [],
+      "position": {
+        "column": 67,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 67
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.nested$lambda1$lambda2$lambda3",
+      "handlerSymbol": "fixtures.looppaths.nested$lambda1$lambda2$lambda3",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000005",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/api/p",
+      "permissions": [],
+      "position": {
+        "column": 54,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 54
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.nested$lambda1$lambda2$lambda3",
+      "handlerSymbol": "fixtures.looppaths.nested$lambda1$lambda2$lambda3",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000006",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/api/q",
+      "permissions": [],
+      "position": {
+        "column": 54,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 54
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.module$lambda13$lambda14",
+      "handlerSymbol": "fixtures.looppaths.module$lambda13$lambda14",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000007",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/control",
+      "permissions": [],
+      "position": {
+        "column": 83,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 83
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.forLoop$lambda0",
+      "handlerSymbol": "fixtures.looppaths.forLoop$lambda0",
+      "httpMethod": [
+        "POST"
+      ],
+      "id": "ep-000008",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/each/a",
+      "permissions": [],
+      "position": {
+        "column": 46,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 46
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.forLoop$lambda0",
+      "handlerSymbol": "fixtures.looppaths.forLoop$lambda0",
+      "httpMethod": [
+        "POST"
+      ],
+      "id": "ep-000009",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/each/b",
+      "permissions": [],
+      "position": {
+        "column": 46,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 46
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.module$lambda13$lambda19$lambda20",
+      "handlerSymbol": "fixtures.looppaths.module$lambda13$lambda19$lambda20",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000010",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/m",
+      "permissions": [],
+      "position": {
+        "column": 87,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 87
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.onEachPaths$lambda4$lambda5",
+      "handlerSymbol": "fixtures.looppaths.onEachPaths$lambda4$lambda5",
+      "httpMethod": [
+        "DELETE"
+      ],
+      "id": "ep-000011",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/on",
+      "permissions": [],
+      "position": {
+        "column": 59,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 59
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.module$lambda13$lambda17$lambda18",
+      "handlerSymbol": "fixtures.looppaths.module$lambda13$lambda17$lambda18",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000012",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/one",
+      "permissions": [],
+      "position": {
+        "column": 86,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 86
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.module$lambda13$lambda17$lambda18",
+      "handlerSymbol": "fixtures.looppaths.module$lambda13$lambda17$lambda18",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000013",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/two",
+      "permissions": [],
+      "position": {
+        "column": 86,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 86
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.module$lambda13$lambda15$lambda16",
+      "handlerSymbol": "fixtures.looppaths.module$lambda13$lambda15$lambda16",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000014",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/x",
+      "permissions": [],
+      "position": {
+        "column": 85,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 85
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "dsl",
+      "framework": "ktor",
+      "handlerCanonicalName": "fixtures.looppaths.module$lambda13$lambda15$lambda16",
+      "handlerSymbol": "fixtures.looppaths.module$lambda13$lambda15$lambda16",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000015",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/y",
+      "permissions": [],
+      "position": {
+        "column": 85,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 85
+      },
+      "produces": [],
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    }
+  ],
+  "callGraph": {
+    "algorithmUsed": "vta",
+    "diagnostics": [
+      {
+        "code": "callgraph-root-not-found",
+        "count": 1,
+        "message": "root scope main matched no function; the graph's reachability starts nowhere for it",
+        "position": {
+          "column": 1,
+          "filename": ".",
+          "line": 1
+        },
+        "severity": "warning"
+      }
+    ],
+    "edges": [],
+    "mode": "auto",
+    "nodes": [
+      {
+        "canonicalName": "fixtures.looppaths.PATHS",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000001",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "PATHS",
+        "ownerVisibility": null,
+        "position": {
+          "column": 5,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 44
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.PATHS",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.computed",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000002",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "computed",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 78
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.computed",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.computed$lambda12",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000003",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "computed$lambda12",
+        "ownerVisibility": null,
+        "position": {
+          "column": 24,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 79
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.computed$lambda12",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.dynamic",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000004",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/util/List;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "dynamic",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 62
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.dynamic",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.dynamic$lambda6",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000005",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "dynamic$lambda6",
+        "ownerVisibility": null,
+        "position": {
+          "column": 19,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 63
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.dynamic$lambda6",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.dynamic$lambda6$lambda7",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000006",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "dynamic$lambda6$lambda7",
+        "ownerVisibility": null,
+        "position": {
+          "column": 33,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 63
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.dynamic$lambda6$lambda7",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.forLoop",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000007",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "forLoop",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 46
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.forLoop",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.forLoop$lambda0",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000008",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "forLoop$lambda0",
+        "ownerVisibility": null,
+        "position": {
+          "column": 17,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 48
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.forLoop$lambda0",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.grown",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000009",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "grown",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 70
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.grown",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.grown$lambda10",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000010",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "grown$lambda10",
+        "ownerVisibility": null,
+        "position": {
+          "column": 19,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 73
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.grown$lambda10",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.grown$lambda10$lambda11",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000011",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "grown$lambda10$lambda11",
+        "ownerVisibility": null,
+        "position": {
+          "column": 33,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 73
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.grown$lambda10$lambda11",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.indexed",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000012",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "indexed",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 66
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.indexed",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.indexed$lambda8",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000013",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "indexed$lambda8",
+        "ownerVisibility": null,
+        "position": {
+          "column": 34,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 67
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.indexed$lambda8",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.indexed$lambda8$lambda9",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000014",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "indexed$lambda8$lambda9",
+        "ownerVisibility": null,
+        "position": {
+          "column": 51,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 67
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.indexed$lambda8$lambda9",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000015",
+        "jvmDescriptor": "(Lio/ktor/server/application/Application;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module",
+        "ownerVisibility": null,
+        "position": {
+          "column": 17,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 82
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000016",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13",
+        "ownerVisibility": null,
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 83
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda14",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000017",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda14",
+        "ownerVisibility": null,
+        "position": {
+          "column": 25,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 84
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda14",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda15",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000018",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda15",
+        "ownerVisibility": null,
+        "position": {
+          "column": 36,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 85
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda15",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda15$lambda16",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000019",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda15$lambda16",
+        "ownerVisibility": null,
+        "position": {
+          "column": 58,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 85
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda15$lambda16",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda17",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000020",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda17",
+        "ownerVisibility": null,
+        "position": {
+          "column": 23,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 86
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda17",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda17$lambda18",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000021",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda17$lambda18",
+        "ownerVisibility": null,
+        "position": {
+          "column": 37,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 86
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda17$lambda18",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda19",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000022",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda19",
+        "ownerVisibility": null,
+        "position": {
+          "column": 30,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 87
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda19",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.module$lambda13$lambda19$lambda20",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000023",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "module$lambda13$lambda19$lambda20",
+        "ownerVisibility": null,
+        "position": {
+          "column": 40,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 87
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.module$lambda13$lambda19$lambda20",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.nested",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000024",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "nested",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 52
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.nested",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.nested$lambda1",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000025",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "nested$lambda1",
+        "ownerVisibility": null,
+        "position": {
+          "column": 19,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 53
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.nested$lambda1",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.nested$lambda1$lambda2",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000026",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "nested$lambda1$lambda2",
+        "ownerVisibility": null,
+        "position": {
+          "column": 36,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 54
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.nested$lambda1$lambda2",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.nested$lambda1$lambda2$lambda3",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000027",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "nested$lambda1$lambda2$lambda3",
+        "ownerVisibility": null,
+        "position": {
+          "column": 46,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 54
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.nested$lambda1$lambda2$lambda3",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.onEachPaths",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000028",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "onEachPaths",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 58
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.onEachPaths",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.onEachPaths$lambda4",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000029",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "onEachPaths$lambda4",
+        "ownerVisibility": null,
+        "position": {
+          "column": 26,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 59
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.onEachPaths$lambda4",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.onEachPaths$lambda4$lambda5",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000030",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "onEachPaths$lambda4$lambda5",
+        "ownerVisibility": null,
+        "position": {
+          "column": 43,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 59
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.onEachPaths$lambda4$lambda5",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "private"
+      },
+      {
+        "canonicalName": "fixtures.looppaths.pathFor",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "id": "node-000031",
+        "jvmDescriptor": "(Ljava/lang/String;)Ljava/lang/String;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "pathFor",
+        "ownerVisibility": null,
+        "position": {
+          "column": 5,
+          "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+          "line": 76
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/looppaths/Routes.kt:fixtures.looppaths.pathFor",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.<init>",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000032",
+        "jvmDescriptor": null,
+        "kind": "constructor",
+        "local": true,
+        "modulePath": ".",
+        "name": "<init>",
+        "ownerVisibility": null,
+        "position": {
+          "column": 7,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 4
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.<init>",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": true,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Delete",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000033",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Delete",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 10
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Delete",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Get",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000034",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Get",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 6
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Get",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Head",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000035",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Head",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 11
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Head",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Options",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000036",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Options",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 12
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Options",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Patch",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000037",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Patch",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 9
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Patch",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Post",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000038",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Post",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 7
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Post",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.http.HttpMethod.Companion.Put",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "id": "node-000039",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "Put",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 13,
+          "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+          "line": 8
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/http/HttpMethod.kt:io.ktor.http.HttpMethod.Companion.Put",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.Route.handle",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000040",
+        "jvmDescriptor": "(Lkotlin/jvm/functions/Function2;)Lkotlin/Unit;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "handle",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 9,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 13
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.Route.handle",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.Routing.handle",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000041",
+        "jvmDescriptor": "(Lkotlin/jvm/functions/Function2;)Lkotlin/Unit;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "handle",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 18,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 16
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.Routing.handle",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.delete",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000042",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lio/ktor/server/routing/Route;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "delete",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 25
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.delete",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.get",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000043",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lio/ktor/server/routing/Route;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "get",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 23
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.get",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.method",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000044",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Lio/ktor/http/HttpMethod;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Route;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "method",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 22
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.method",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.post",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000045",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lio/ktor/server/routing/Route;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "post",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 24
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.post",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.route",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000046",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lio/ktor/http/HttpMethod;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Route;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "route",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 21
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.route",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.route",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000047",
+        "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Route;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "route",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 20
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.route",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "io.ktor.server.routing.routing",
+        "external": false,
+        "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "id": "node-000048",
+        "jvmDescriptor": "(Lio/ktor/server/application/Application;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Routing;",
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "routing",
+        "ownerVisibility": null,
+        "position": {
+          "column": 17,
+          "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+          "line": 19
+        },
+        "purl": "pkg:generic/dsl-loop-paths@unspecified",
+        "qualifiedName": "src/main/kotlin/io/ktor/server/routing/Routing.kt:io.ktor.server.routing.routing",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      }
+    ],
+    "reachability": [
+      {
+        "distance": -1,
+        "nodeId": "node-000001",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000002",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000003",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000004",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000005",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000006",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000007",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000008",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000009",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000010",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000011",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000012",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000013",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000014",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000015",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000016",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000017",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000018",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000019",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000020",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000021",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000022",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000023",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000024",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000025",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000026",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000027",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000028",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000029",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000030",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000031",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000032",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000033",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000034",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000035",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000036",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000037",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000038",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000039",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000040",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000041",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000042",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000043",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000044",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000045",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000046",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000047",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000048",
+        "reached": false,
+        "roots": []
+      }
+    ],
+    "stats": {
+      "dependencyEdges": 0,
+      "dependencyNodes": 0,
+      "localEdges": 0,
+      "localNodes": 47,
+      "stdlibEdges": 0,
+      "stdlibNodes": 0,
+      "syntheticEdges": 0,
+      "syntheticNodes": 1
+    }
+  },
+  "crypto": {
+    "assets": [],
+    "findings": [],
+    "libraries": [],
+    "materials": [],
+    "operations": [],
+    "protocols": []
+  },
+  "dataFlow": null,
+  "declarations": [
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.PATHS",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000001",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "PATHS",
+      "overrides": [],
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 44
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.PATHS",
+      "returnType": null,
+      "signature": "val PATHS",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.forLoop",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000002",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "forLoop",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 46
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.forLoop",
+      "returnType": null,
+      "signature": "fun Route.forLoop()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.nested",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000003",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "nested",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 52
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.nested",
+      "returnType": null,
+      "signature": "fun Route.nested()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.onEachPaths",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000004",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "onEachPaths",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 58
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.onEachPaths",
+      "returnType": null,
+      "signature": "fun Route.onEachPaths()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.dynamic",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000005",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/util/List;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "dynamic",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 62
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.dynamic",
+      "returnType": null,
+      "signature": "fun Route.dynamic(paths: List<String>)",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.indexed",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000006",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "indexed",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 66
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.indexed",
+      "returnType": null,
+      "signature": "fun Route.indexed()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.grown",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000007",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "grown",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 70
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.grown",
+      "returnType": null,
+      "signature": "fun Route.grown()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.paths",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000008",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "paths",
+      "overrides": [],
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 71
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.paths",
+      "returnType": null,
+      "signature": "val paths",
+      "supertypes": [],
+      "visibility": "local"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.pathFor",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000009",
+      "jvmDescriptor": "(Ljava/lang/String;)Ljava/lang/String;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "pathFor",
+      "overrides": [],
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 76
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.pathFor",
+      "returnType": "String",
+      "signature": "fun pathFor(name: String): String",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.computed",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000010",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "computed",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 78
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.computed",
+      "returnType": null,
+      "signature": "fun Route.computed(name: String)",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.looppaths.module",
+      "extensionReceiverType": "Application",
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "generated": null,
+      "id": "dec-000011",
+      "jvmDescriptor": "(Lio/ktor/server/application/Application;)Lkotlin/Unit;",
+      "jvmOwner": "fixtures/looppaths/RoutesKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "module",
+      "overrides": [],
+      "position": {
+        "column": 17,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 82
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:fixtures.looppaths.module",
+      "returnType": null,
+      "signature": "fun Application.module()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000012",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 4
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000013",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "companion",
+      "modifiers": [
+        "companion"
+      ],
+      "modulePath": ".",
+      "name": "Companion",
+      "overrides": [],
+      "position": {
+        "column": 15,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 5
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Get",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000014",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Get",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 6
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Get",
+      "returnType": null,
+      "signature": "val Get",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Post",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000015",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Post",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 7
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Post",
+      "returnType": null,
+      "signature": "val Post",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Put",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000016",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Put",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 8
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Put",
+      "returnType": null,
+      "signature": "val Put",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Patch",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000017",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Patch",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 9
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Patch",
+      "returnType": null,
+      "signature": "val Patch",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Delete",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000018",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Delete",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 10
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Delete",
+      "returnType": null,
+      "signature": "val Delete",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Head",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000019",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Head",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 11
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Head",
+      "returnType": null,
+      "signature": "val Head",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.http.HttpMethod.Companion.Options",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "generated": null,
+      "id": "dec-000020",
+      "jvmDescriptor": null,
+      "jvmOwner": "io/ktor/http/HttpMethod/Companion",
+      "kind": "property",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Options",
+      "overrides": [],
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 12
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.http.HttpMethod.Companion.Options",
+      "returnType": null,
+      "signature": "val Options",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.application.Application",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/server/application/Application.kt",
+      "generated": null,
+      "id": "dec-000021",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Application",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/io/ktor/server/application/Application.kt",
+        "line": 3
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.application.Application",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.RoutingContext",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000022",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "RoutingContext",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 8
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.RoutingContext",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.Route",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000023",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "interface",
+      "modifiers": [
+        "abstract"
+      ],
+      "modulePath": ".",
+      "name": "Route",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 12
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.Route",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.Route.handle",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000024",
+      "jvmDescriptor": "(Lkotlin/jvm/functions/Function2;)Lkotlin/Unit;",
+      "jvmOwner": "io/ktor/server/routing/Route",
+      "kind": "method",
+      "modifiers": [
+        "abstract"
+      ],
+      "modulePath": ".",
+      "name": "handle",
+      "overrides": [],
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 13
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.Route.handle",
+      "returnType": null,
+      "signature": "fun handle(body: suspendRoutingContext.()->Unit)",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.Routing",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000025",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Routing",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 15
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.Routing",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [
+        "io.ktor.server.routing.Route"
+      ],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.Routing.handle",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000026",
+      "jvmDescriptor": "(Lkotlin/jvm/functions/Function2;)Lkotlin/Unit;",
+      "jvmOwner": "io/ktor/server/routing/Routing",
+      "kind": "method",
+      "modifiers": [
+        "override"
+      ],
+      "modulePath": ".",
+      "name": "handle",
+      "overrides": [
+        "io.ktor.server.routing.Route.handle"
+      ],
+      "position": {
+        "column": 18,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 16
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.Routing.handle",
+      "returnType": null,
+      "signature": "fun handle(body: suspendRoutingContext.()->Unit)",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.routing",
+      "extensionReceiverType": "Application",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000027",
+      "jvmDescriptor": "(Lio/ktor/server/application/Application;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Routing;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "routing",
+      "overrides": [],
+      "position": {
+        "column": 17,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 19
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.routing",
+      "returnType": "Routing",
+      "signature": "fun Application.routing(configuration: Routing.()->Unit): Routing",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.route",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000028",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Route;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "route",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 20
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.route",
+      "returnType": "Route",
+      "signature": "fun Route.route(path: String, build: Route.()->Unit): Route",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.route",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000029",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lio/ktor/http/HttpMethod;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Route;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "route",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 21
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.route",
+      "returnType": "Route",
+      "signature": "fun Route.route(path: String, method: HttpMethod, build: Route.()->Unit): Route",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.method",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000030",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Lio/ktor/http/HttpMethod;Lkotlin/jvm/functions/Function1;)Lio/ktor/server/routing/Route;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "method",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 22
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.method",
+      "returnType": "Route",
+      "signature": "fun Route.method(method: HttpMethod, body: Route.()->Unit): Route",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.get",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000031",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lio/ktor/server/routing/Route;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "get",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 23
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.get",
+      "returnType": "Route",
+      "signature": "fun Route.get(path: String, body: suspendRoutingContext.()->Unit): Route",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.post",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000032",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lio/ktor/server/routing/Route;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "post",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 24
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.post",
+      "returnType": "Route",
+      "signature": "fun Route.post(path: String, body: suspendRoutingContext.()->Unit): Route",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "io.ktor.server.routing.delete",
+      "extensionReceiverType": "Route",
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "generated": null,
+      "id": "dec-000033",
+      "jvmDescriptor": "(Lio/ktor/server/routing/Route;Ljava/lang/String;Lkotlin/jvm/functions/Function2;)Lio/ktor/server/routing/Route;",
+      "jvmOwner": "io/ktor/server/routing/RoutingKt",
+      "kind": "extension-function",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "delete",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 25
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "qualifiedName": ".:io.ktor.server.routing.delete",
+      "returnType": "Route",
+      "signature": "fun Route.delete(path: String, body: suspendRoutingContext.()->Unit): Route",
+      "supertypes": [],
+      "visibility": "public"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "endpoint-path-unresolved",
+      "count": 4,
+      "message": "4 endpoint(s) have a path kosi could not prove (a base path the deployment sets, or a path computed at run time); their pathTemplate is partial or empty and each names why in pathUnresolved",
+      "position": {
+        "column": 1,
+        "filename": ".",
+        "line": 1
+      },
+      "severity": "warning"
+    }
+  ],
+  "files": [
+    {
+      "generated": false,
+      "language": "kotlin",
+      "modulePath": ".",
+      "path": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "purl": "pkg:generic/dsl-loop-paths@unspecified"
+    },
+    {
+      "generated": false,
+      "language": "kotlin",
+      "modulePath": ".",
+      "path": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "purl": "pkg:generic/dsl-loop-paths@unspecified"
+    },
+    {
+      "generated": false,
+      "language": "kotlin",
+      "modulePath": ".",
+      "path": "src/main/kotlin/io/ktor/server/application/Application.kt",
+      "purl": "pkg:generic/dsl-loop-paths@unspecified"
+    },
+    {
+      "generated": false,
+      "language": "kotlin",
+      "modulePath": ".",
+      "path": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "purl": "pkg:generic/dsl-loop-paths@unspecified"
+    }
+  ],
+  "imports": [
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "name": "io.ktor.http.HttpMethod",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 5
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.application.Application",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 36
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "name": "io.ktor.server.application.Application",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 6
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.routing.Route",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 37
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.routing.delete",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 38
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.routing.get",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 39
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.routing.post",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 40
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.routing.route",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 41
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "name": "io.ktor.server.routing.routing",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 42
+      },
+      "purl": null,
+      "star": false
+    }
+  ],
+  "modules": [
+    {
+      "declaredApiVersion": null,
+      "declaredLanguageVersion": null,
+      "effectiveLanguageVersion": "2.4",
+      "jvmTarget": null,
+      "modulePath": ".",
+      "name": "dsl-loop-paths",
+      "platform": "jvm",
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "sourceRoots": [
+        "src/main/kotlin"
+      ],
+      "workspaceMember": ":"
+    }
+  ],
+  "options": {
+    "accessPathDepth": 5,
+    "apiVersion": null,
+    "backend": "resolved",
+    "callgraph": "auto",
+    "callgraphTimeoutSeconds": 60,
+    "classpath": [],
+    "classpathFile": null,
+    "classpathStrategy": "auto",
+    "dataflow": "none",
+    "dataflowMaxFunctionInstructions": 20000,
+    "dataflowMaxSlices": 1000,
+    "dataflowMaxSummarySinkEffects": 8192,
+    "dataflowMaxTraceEdges": 128,
+    "dataflowMaxTraceNodes": 64,
+    "dataflowSkipGenerated": true,
+    "dataflowWorkers": 1,
+    "dependencyDetail": "collapse",
+    "deps": false,
+    "depsMaxClasses": 500,
+    "endpointSources": false,
+    "format": "json",
+    "includeStdlib": false,
+    "jdkHome": null,
+    "jvmTarget": null,
+    "languageVersion": null,
+    "maxPathsPerSymbol": 3,
+    "multiplatformTarget": null,
+    "optIn": [],
+    "pretty": false,
+    "progressive": false,
+    "roots": [
+      "main"
+    ],
+    "unknownCall": "propagate"
+  },
+  "packages": [
+    {
+      "files": [
+        "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "src/main/kotlin/io/ktor/server/application/Application.kt",
+        "src/main/kotlin/io/ktor/server/routing/Routing.kt"
+      ],
+      "modulePath": ".",
+      "name": "dsl-loop-paths",
+      "purl": "pkg:generic/dsl-loop-paths@unspecified"
+    }
+  ],
+  "runtime": {
+    "host": "darwin-aarch64",
+    "jvmVersion": "26.0.2",
+    "kotlinVersion": "2.4.20",
+    "languageVersionRange": {
+      "first": "2.0",
+      "firstNonDeprecated": "2.2",
+      "latestStable": "2.4"
+    },
+    "nativeImage": false,
+    "workingDirectory": "fixtures/dsl-loop-paths"
+  },
+  "schemaVersion": "kosi/1",
+  "securitySignals": [],
+  "services": [],
+  "stats": {
+    "bodylessRecords": 0,
+    "callsResolved": 48,
+    "callsTotal": 48,
+    "classpath": {
+      "attempts": [
+        {
+          "jars": 0,
+          "note": "no classpath.txt or .classpath at the analysed root",
+          "strategy": "file"
+        },
+        {
+          "jars": 0,
+          "note": "no libs/ directory at the root or a module",
+          "strategy": "jars"
+        },
+        {
+          "jars": 0,
+          "note": "0 coordinate(s) declared in build files",
+          "strategy": "cache"
+        }
+      ],
+      "entries": 0,
+      "missing": 0,
+      "strategy": "none"
+    },
+    "crossDependencySliceCount": 0,
+    "crossModuleSliceCount": 0,
+    "declarationCount": 33,
+    "degraded": null,
+    "dependencyClasses": 0,
+    "dependencyFunctions": 0,
+    "fileCount": 4,
+    "fixpointCapHits": 0,
+    "functionsAnalysed": 0,
+    "functionsLowered": 26,
+    "importCount": 9,
+    "loweringFailures": {},
+    "policySkips": {},
+    "reachableSliceCount": 0,
+    "resolvedCallRatio": 1,
+    "sccIterationCapHits": 0,
+    "sccsProcessed": 0,
+    "sinkCount": 0,
+    "sliceCount": 0,
+    "sourceCount": 0,
+    "sourceCoverage": {
+      "discovered": 4,
+      "nonTestRatio": 1,
+      "present": 4,
+      "ratio": 1,
+      "testPresent": 0
+    },
+    "suspendCrossingSliceCount": 0,
+    "truncations": {},
+    "unknownCallPropagations": 0,
+    "unnameableInvokes": 0,
+    "usageCount": 49
+  },
+  "tool": {
+    "commit": "179cbd54453813995292eab10d5e32caf3941456",
+    "description": "kosi — Kotlin Source Inspector (static analysis for cdxgen)",
+    "name": "kosi",
+    "version": "4.0.1"
+  },
+  "urls": [],
+  "usages": [
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000001",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 19,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 6
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000002",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 20,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 7
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000003",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 19,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 8
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000004",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 21,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 9
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000005",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 22,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 10
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000006",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 20,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 11
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+      "id": "use-000007",
+      "modulePath": ".",
+      "name": "HttpMethod",
+      "position": {
+        "column": 23,
+        "filename": "src/main/kotlin/io/ktor/http/HttpMethod.kt",
+        "line": 12
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "HttpMethod",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000008",
+      "modulePath": ".",
+      "name": "PATHS.forEach",
+      "position": {
+        "column": 15,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 86
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+      "id": "use-000009",
+      "modulePath": ".",
+      "name": "Routing",
+      "position": {
+        "column": 71,
+        "filename": "src/main/kotlin/io/ktor/server/routing/Routing.kt",
+        "line": 19
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "Routing",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000010",
+      "modulePath": ".",
+      "name": "computed",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 94
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "computed",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000011",
+      "modulePath": ".",
+      "name": "delete",
+      "position": {
+        "column": 33,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 59
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "delete",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000012",
+      "modulePath": ".",
+      "name": "dynamic",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 91
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "dynamic",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000013",
+      "modulePath": ".",
+      "name": "forLoop",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 88
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forLoop",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000014",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 38,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 54
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000015",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 26,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 63
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000016",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 44,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 67
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000017",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 26,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 73
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000018",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 79
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000019",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 84
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000020",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 47,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 85
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000021",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 30,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 86
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000022",
+      "modulePath": ".",
+      "name": "get",
+      "position": {
+        "column": 32,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 87
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "get",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000023",
+      "modulePath": ".",
+      "name": "grown",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 93
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "grown",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000024",
+      "modulePath": ".",
+      "name": "indexed",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 92
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "indexed",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000025",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 13,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 44
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000026",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 15,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 47
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000027",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 54
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000028",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 59
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000029",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 67
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000030",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 85
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000031",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 87
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000032",
+      "modulePath": ".",
+      "name": "listOf",
+      "position": {
+        "column": 17,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 91
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "listOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000033",
+      "modulePath": ".",
+      "name": "listOf.forEach",
+      "position": {
+        "column": 28,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 54
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000034",
+      "modulePath": ".",
+      "name": "listOf.forEach",
+      "position": {
+        "column": 28,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 85
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000035",
+      "modulePath": ".",
+      "name": "listOf.forEach",
+      "position": {
+        "column": 22,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 87
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000036",
+      "modulePath": ".",
+      "name": "listOf.forEachIndexed",
+      "position": {
+        "column": 19,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 67
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEachIndexed",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000037",
+      "modulePath": ".",
+      "name": "listOf.onEach",
+      "position": {
+        "column": 19,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 59
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "onEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000038",
+      "modulePath": ".",
+      "name": "mutableListOf",
+      "position": {
+        "column": 17,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 71
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "mutableListOf",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000039",
+      "modulePath": ".",
+      "name": "name.reversed",
+      "position": {
+        "column": 48,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 76
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "reversed",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000040",
+      "modulePath": ".",
+      "name": "nested",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 89
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "nested",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000041",
+      "modulePath": ".",
+      "name": "onEachPaths",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 90
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "onEachPaths",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000042",
+      "modulePath": ".",
+      "name": "pathFor",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 79
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "pathFor",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000043",
+      "modulePath": ".",
+      "name": "paths.add",
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 72
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "add",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000044",
+      "modulePath": ".",
+      "name": "paths.forEach",
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 63
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000045",
+      "modulePath": ".",
+      "name": "paths.forEach",
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 73
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "forEach",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000046",
+      "modulePath": ".",
+      "name": "plus",
+      "position": {
+        "column": 41,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 76
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "plus",
+      "usageKind": "operator"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000047",
+      "modulePath": ".",
+      "name": "post",
+      "position": {
+        "column": 9,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 48
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "post",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000048",
+      "modulePath": ".",
+      "name": "route",
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 53
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "route",
+      "usageKind": "call"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+      "id": "use-000049",
+      "modulePath": ".",
+      "name": "routing",
+      "position": {
+        "column": 5,
+        "filename": "src/main/kotlin/fixtures/looppaths/Routes.kt",
+        "line": 83
+      },
+      "purl": "pkg:generic/dsl-loop-paths@unspecified",
+      "simpleName": "routing",
+      "usageKind": "call"
+    }
+  ]
+}

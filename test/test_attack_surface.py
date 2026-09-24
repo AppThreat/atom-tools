@@ -837,3 +837,20 @@ def test_a_path_that_names_its_own_method_is_not_labelled_any():
     # the hedge, so this is not a blanket removal of the word. dosai's razor
     # pages are that case.
     assert any(re.search(r"ANY /[A-Za-z]", ln) for ln in render_console(surface(DOSAI)))
+
+
+KOSI_LOOP_PATHS = ECOSYSTEM / "kotlin-dsl-loop-paths-kosi.json"
+
+
+def test_kosi_path_unresolved_route_says_why():
+    """atom-tools#95: a route whose path kosi could not prove carries kosi's
+    reason into the document and the rendering, instead of an empty route
+    that reads as "no path at all" — and a proven route carries nothing."""
+    document = surface(KOSI_LOOP_PATHS)
+    entries = all_entries(document)
+    flagged = [e for e in entries if e.get("PathUnresolved")]
+    assert len(flagged) == 4
+    assert all(e["Route"] == "" and "computed at run time" in e["PathUnresolved"] for e in flagged)
+    assert not [e for e in entries if e["Route"] in ("/vroute", "/vq", "/vit", "/vp")]
+    text = "\n".join(render_console(document))
+    assert text.count("[path unresolved — ") == 4

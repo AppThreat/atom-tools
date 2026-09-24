@@ -2,7 +2,7 @@
 Kotlin converter helper.
 
 Consumes a kosi report (produced by the ``kosi`` analyzer shipped in
-``cdxgen/cdxgen-plugins-bin`` v4.0.1+) and produces an OpenAPI paths dict
+``cdxgen/cdxgen-plugins-bin`` v4.0.2+) and produces an OpenAPI paths dict
 in the same shape that the JVM-style processing in
 ``atom_tools.lib.converter`` does for other languages.
 
@@ -208,6 +208,17 @@ def _handler_ref(endpoint: Dict, reason: str) -> Dict:
     return ref
 
 
+def _is_route_registration(endpoint: Dict) -> bool:
+    """A DSL route call kosi found but whose path it could not prove.
+
+    The call site is the route's registration, so the route is real and only
+    its URL is unknown — unlike an unmounted handler, which kosi never saw
+    registered at all.
+    """
+    found_by = endpoint.get("foundBy") or ""
+    return bool(endpoint.get("pathUnresolved")) and (found_by == "dsl" or found_by.startswith("dsl-"))
+
+
 def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict[str, List[Dict]]]:
     """Split kosi's endpoints into OpenAPI operations and everything else.
 
@@ -219,6 +230,11 @@ def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict
     - ``x-kosi-non-http-endpoints`` — kosi says the transport is not HTTP
       (``transport``: messaging listeners, gRPC, Android components,
       event-triggered cloud functions).
+    - ``x-kosi-path-unresolved-routes`` — a route REGISTRATION kosi found
+      (a DSL call such as Ktor's ``get(path) { }``) whose path it could not
+      prove: computed at run time, or under a ``route(..)`` prefix that did
+      not fold. The route exists; its URL is unknown, and ``pathUnresolved``
+      says why (atom-tools#95).
     - ``x-kosi-unmounted-handlers`` — a handler with no path (a Ratpack
       ``Handler`` or Lambda ``RequestHandler`` whose route is bound where
       kosi did not link it; ``pathUnresolved`` says so).
@@ -230,6 +246,7 @@ def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict
     routes: List[Tuple[Dict, str, List[str]]] = []
     extensions: Dict[str, List[Dict]] = {
         "x-kosi-non-http-endpoints": [],
+        "x-kosi-path-unresolved-routes": [],
         "x-kosi-unmounted-handlers": [],
         "x-kosi-method-unresolved": [],
         "x-kosi-unsupported-methods": [],
@@ -247,6 +264,11 @@ def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict
             )
             continue
         raw_path = endpoint.get("pathTemplate", "") or ""
+        if not raw_path.startswith("/") and _is_route_registration(endpoint):
+            extensions["x-kosi-path-unresolved-routes"].append(
+                _handler_ref(endpoint, endpoint["pathUnresolved"])
+            )
+            continue
         if not raw_path.startswith("/"):
             extensions["x-kosi-unmounted-handlers"].append(
                 _handler_ref(endpoint, endpoint.get("pathUnresolved") or "kosi reported no URL path")

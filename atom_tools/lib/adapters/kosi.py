@@ -203,6 +203,10 @@ def _endpoint(ep: Dict) -> List[Dict]:
         # "no weaknesses" here means "not looked at". Carried only when kosi
         # says false; absent means substantiated or not stated.
         **({"substantiated": False} if ep.get("substantiated") is False else {}),
+        # kosi could not prove this route's path (a DSL path computed at run
+        # time, an unproven base path): the template is partial or empty and
+        # this says why. Without it an empty route reads as "no path at all".
+        **({"pathUnresolved": ep["pathUnresolved"]} if ep.get("pathUnresolved") else {}),
     }
     if not methods:
         return [{**base, "method": None}]
