@@ -1,6 +1,6 @@
 [project]
 name = "atom-tools"
-version = "1.0.2"
+version = "1.0.3"
 description = "Collection of tools for post-processing the reports of the AppThreat analysis ecosystem: atom slices, dosai (.NET), golem (Go) and rusi (Rust) flow reports."
 authors = [
   { name = "Team AppThreat", email = "cloud@appthreat.com" },

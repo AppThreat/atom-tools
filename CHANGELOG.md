@@ -6,6 +6,30 @@ All notable changes to atom-tools are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-09-24
+
+### Fixed
+
+- **A route kosi could not prove a path for is named, not hidden** (#95). A DSL
+  route whose own path is computed at run time (Ktor `get(p) { }` over a
+  parameter, a grown list, a computed string) now lands in a new
+  `x-kosi-path-unresolved-routes` list with kosi's reason. It is a registration
+  kosi saw with an unknown URL, which `x-kosi-unmounted-handlers` (a handler
+  kosi never saw registered) misdescribed.
+- **attack-surface carries kosi's `pathUnresolved`** as `PathUnresolved` and
+  renders `[path unresolved — <reason>]`. Every path-less route in one file
+  used to collapse into the first one, because the de-duplication key was
+  method, path, kind and file; path-less records are now told apart by
+  handler and line.
+
+### Changed
+
+- The Docker image bundles cdxgen-plugins-bin 4.0.2. Its kosi publishes one
+  route per element for loop-registered paths instead of the loop variable's
+  name (`/vroute`). It publishes Spring and JAX-RS mappings that a controller
+  inherits from a base class or interface. Its native binary no longer exits 3
+  on larger repositories.
+
 ## [1.0.2] - 2026-09-23
 
 ### Fixed
