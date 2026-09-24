@@ -21,6 +21,13 @@ All notable changes to atom-tools are documented here. The format follows
   used to collapse into the first one, because the de-duplication key was
   method, path, kind and file; path-less records are now told apart by
   handler and line.
+- **`convert -t kotlin` stays valid on anonymous placeholders.** JAX-RS and
+  http4k `/{.*}` name no parameter; it became `/{.{path}}`, which no validator
+  accepts. A placeholder that is not a name is now a numbered wildcard, `*` is
+  a catch-all only outside braces, and a reported path parameter that is not a
+  name (http4k's `{$}` anchor in older kosi reports) is never declared. The
+  whole http4k tree (349 paths) converts to a document with 0 validation
+  errors.
 
 ### Changed
 
