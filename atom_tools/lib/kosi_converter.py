@@ -61,6 +61,9 @@ _PLACEHOLDER_REGEX_BRACE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*):[^}]+\}")
 # multi-segment wildcard, so its multi-segment reach is approximated,
 # never silently widened to "matches everything".
 _CATCH_ALL = re.compile(r"\*+")
+_PARAM_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+# A parameter name kosi may report (Javalin allows `{user-id}`).
+_PARAM_REF = re.compile(r"[A-Za-z_][A-Za-z0-9_.-]*")
 
 
 def normalize_path(path: str) -> str:
@@ -76,13 +79,39 @@ def normalize_path(path: str) -> str:
     path = _PLACEHOLDER_COLON.sub(r"{\1}", path)
     counter = 0
 
-    def wildcard(_match: re.Match) -> str:
+    def wildcard_name() -> str:
         nonlocal counter
         name = "path" if counter == 0 else f"path{counter}"
         counter += 1
         return "{" + name + "}"
 
-    return _CATCH_ALL.sub(wildcard, path)
+    # Walk the template once: a brace placeholder whose content is not a
+    # parameter name (an anonymous regex, JAX-RS/http4k `/{.*}`) is a
+    # wildcard segment and gets a wildcard name; a `*` run OUTSIDE braces is
+    # a catch-all. Substituting `*` everywhere turned `{.*}` into `{.{path}}`,
+    # which no OpenAPI validator accepts (http4k, atom-tools#95).
+    out = []
+    i = 0
+    while i < len(path):
+        ch = path[i]
+        if ch == "{":
+            end = path.find("}", i)
+            if end < 0:
+                out.append(path[i:])
+                break
+            inner = path[i + 1:end]
+            out.append("{" + inner + "}" if _PARAM_NAME.fullmatch(inner) else wildcard_name())
+            i = end + 1
+        elif ch == "*":
+            j = i
+            while j < len(path) and path[j] == "*":
+                j += 1
+            out.append(wildcard_name())
+            i = j
+        else:
+            out.append(ch)
+            i += 1
+    return "".join(out)
 
 
 def _path_param_names(path: str) -> List[str]:
@@ -135,7 +164,9 @@ def _build_operation(endpoint: Dict, path: str) -> Dict:
         for name in known
     ]
     for name in endpoint.get("pathParameters") or []:
-        if name and name not in known:
+        # Only a real name: older kosi reports listed http4k's `{$}` end
+        # anchor as a parameter called `$`, which no template declares.
+        if name and name not in known and _PARAM_REF.fullmatch(name):
             known.add(name)
             parameters.append(
                 {

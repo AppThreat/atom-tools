@@ -188,3 +188,26 @@ def test_loop_registered_routes_from_a_real_kosi_report(tmp_path):
         "computed", "dynamic", "grown", "indexed",
     ]
     assert "x-kosi-unmounted-handlers" not in doc
+
+
+def test_anonymous_regex_placeholder_is_a_valid_wildcard(tmp_path):
+    """JAX-RS `@Path("/{.*}")` and http4k `"/{.*}" bind GET` name no
+    parameter. Substituting the catch-all `*` inside the braces produced
+    `/{.{path}}`, and the whole http4k document failed validation."""
+    doc = _document(
+        tmp_path,
+        [
+            _endpoint("/{.*}", ["GET"], "demo.Bridge.get", framework="quarkus"),
+            _endpoint("/prefix/{.*}", ["GET"], "demo.Routes.any", framework="http4k", foundBy="dsl"),
+            _endpoint("/x/{id:[0-9]+}/{.+}", ["GET"], "demo.Mixed.get"),
+        ],
+    )
+    validate(doc)
+    assert set(doc["paths"]) == {"/{path}", "/prefix/{path}", "/x/{id}/{path}"}
+
+
+def test_a_non_name_path_parameter_is_not_declared(tmp_path):
+    """An older kosi listed http4k's `{$}` end anchor as a parameter `$`."""
+    doc = _document(tmp_path, [_endpoint("/a", ["GET"], "demo.Routes.a", framework="http4k", pathParameters=["$"])])
+    validate(doc)
+    assert "parameters" not in doc["paths"]["/a"]["get"]
