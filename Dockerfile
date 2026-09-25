@@ -83,7 +83,7 @@ RUN npm install -g @appthreat/atom @cyclonedx/cdxgen --omit=dev \
 # fallback, installed as a `kosi` wrapper that runs the jar through the JDK
 # this image already carries (the same invocation shape cdxgen itself uses).
 # Bump CDXGEN_PLUGINS_BIN_VERSION to move to a newer release.
-ARG CDXGEN_PLUGINS_BIN_VERSION=4.0.1
+ARG CDXGEN_PLUGINS_BIN_VERSION=4.0.2
 ARG TARGETARCH
 RUN set -eux; \
     arch="${TARGETARCH:-$(uname -m)}"; \

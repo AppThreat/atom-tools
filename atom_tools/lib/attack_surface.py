@@ -159,6 +159,9 @@ class EntryPoint:
     # analysed, so zero weaknesses here means "not looked at", which is the
     # opposite of what zero usually means. None = the engine said nothing.
     substantiated: Optional[bool] = None
+    # kosi's pathUnresolved: why the route's path is partial or empty (a DSL
+    # path computed at run time, an unproven base path). Empty = proven.
+    path_unresolved: str = ""
     # The field the exposure tier is traceable to, when an engine stated it
     # (kosi's declarations). Empty for kind-derived and dosai tiers.
     exposure_evidence: str = ""
@@ -234,6 +237,7 @@ class EntryPoint:
             **({"ExposureEvidence": self.exposure_evidence} if self.exposure_evidence else {}),
             **({"MethodUnresolved": True} if self.method_unresolved else {}),
             **({"Substantiated": False} if self.substantiated is False else {}),
+            **({"PathUnresolved": self.path_unresolved} if self.path_unresolved else {}),
             "ExploitChainCount": self.chains,
             "WeaknessCount": self.weaknesses,
             "HighSeverityWeaknessCount": self.high_severity_weaknesses,
@@ -663,6 +667,11 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
                 endpoint.get("kind") or "",
                 normalize_path(endpoint.get("file") or "", ""),
             )
+            # With no path, method+kind+file names nothing: every path-less
+            # route in one file (kosi's pathUnresolved DSL routes) collapsed
+            # into the first. The handler and line tell them apart.
+            if not key[1]:
+                key += (endpoint.get("handler") or "", endpoint.get("line"))
             if key in seen:
                 continue
             seen.add(key)
@@ -691,6 +700,7 @@ def _engine_entry_points(inputs: List[SurfaceInput], engine: str) -> List[EntryP
                     allow_anonymous=endpoint.get("allowAnonymous"),
                     method_unresolved=bool(endpoint.get("methodUnresolved")),
                     substantiated=endpoint.get("substantiated"),
+                    path_unresolved=endpoint.get("pathUnresolved") or "",
                     exposure_evidence=endpoint.get("exposureEvidence") or "",
                     reach_state=REACH_NOT_COMPUTED,
                     source_file=inp.path,
@@ -1097,6 +1107,8 @@ def _entry_line(ep: EntryPoint) -> str:
         auth = f"  [kosi {ep.exposure_evidence}]"
     if ep.substantiated is False:
         auth += "  [declared only — handler code not read]"
+    if ep.path_unresolved:
+        auth += f"  [path unresolved — {ep.path_unresolved}]"
     if not ep.file:
         return f"{ep.label}{auth}"
     # atom routes carry no line number; printing "file:None" would put a
@@ -1213,6 +1225,7 @@ def _ep_from_dict(ep_dict: Dict) -> EntryPoint:
         handler=ep_dict.get("Handler"),
         method_unresolved=ep_dict.get("MethodUnresolved") is True,
         substantiated=False if ep_dict.get("Substantiated") is False else None,
+        path_unresolved=ep_dict.get("PathUnresolved") or "",
         exposure_evidence=ep_dict.get("ExposureEvidence") or "",
         reach_state=reach.get("state", REACH_NOT_COMPUTED),
         reach_sinks=reach.get("sinkCategories") or [],
