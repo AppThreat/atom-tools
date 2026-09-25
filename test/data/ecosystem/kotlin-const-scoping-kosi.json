@@ -1,0 +1,4281 @@
+{
+  "apiEndpoints": [
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.ext",
+      "handlerSymbol": "fixtures.constscopebare.CC.ext",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000006",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the mapping's path is the constant LibPaths.USERS, which neither the classpath nor the analysed sources fold to one value",
+      "permissions": [],
+      "position": {
+        "column": 68,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 68
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.imp",
+      "handlerSymbol": "fixtures.constscopebare.CC.imp",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000007",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the mapping's path is the constant IMPORTED, which neither the classpath nor the analysed sources fold to one value",
+      "permissions": [],
+      "position": {
+        "column": 69,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 69
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.mixed",
+      "handlerSymbol": "fixtures.constscopebare.CC.mixed",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000008",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the mapping's path is the constant LibPaths.X, which neither the classpath nor the analysed sources fold to one value",
+      "permissions": [],
+      "position": {
+        "column": 74,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 74
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "micronaut",
+      "handlerCanonicalName": "fixtures.constscopebare.ExternalPrefix.e",
+      "handlerSymbol": "fixtures.constscopebare.ExternalPrefix.e",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000001",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the mapping's path is written as \"${LibPaths.BASE}/ext\", which neither the classpath nor the analysed sources fold to one value",
+      "permissions": [],
+      "position": {
+        "column": 109,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 109
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.Unset.z",
+      "handlerSymbol": "fixtures.constscopebare.Unset.z",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000009",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "",
+      "pathUnresolved": "the mapping's path uses the property ${no.such.key}, which no config file of a default run sets",
+      "permissions": [],
+      "position": {
+        "column": 26,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 26
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "micronaut",
+      "handlerCanonicalName": "fixtures.constscopebare.Concat.c",
+      "handlerSymbol": "fixtures.constscopebare.Concat.c",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000002",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/api/v2/concat/c",
+      "permissions": [],
+      "position": {
+        "column": 103,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 103
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "micronaut",
+      "handlerCanonicalName": "fixtures.constscopebare.Monitors.all",
+      "handlerSymbol": "fixtures.constscopebare.Monitors.all",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000003",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/api/v2/monitors",
+      "permissions": [],
+      "position": {
+        "column": 96,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 96
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "micronaut",
+      "handlerCanonicalName": "fixtures.constscopebare.Monitors.one",
+      "handlerSymbol": "fixtures.constscopebare.Monitors.one",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000004",
+      "modulePath": ".",
+      "pathParameters": [
+        "id"
+      ],
+      "pathTemplate": "/api/v2/monitors/{id}",
+      "permissions": [],
+      "position": {
+        "column": 95,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 95
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "micronaut",
+      "handlerCanonicalName": "fixtures.constscopebare.Plain.p",
+      "handlerSymbol": "fixtures.constscopebare.Plain.p",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000005",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/api/v2/plain/p",
+      "permissions": [],
+      "position": {
+        "column": 100,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 100
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.SpringPrefixed.s",
+      "handlerSymbol": "fixtures.constscopebare.SpringPrefixed.s",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000010",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/api/v2/spring/s",
+      "permissions": [],
+      "position": {
+        "column": 106,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 106
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.WithDefault.y",
+      "handlerSymbol": "fixtures.constscopebare.WithDefault.y",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000011",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/gen/y",
+      "permissions": [],
+      "position": {
+        "column": 23,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 23
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.javaIface",
+      "handlerSymbol": "fixtures.constscopebare.CC.javaIface",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000012",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/java-iface",
+      "permissions": [],
+      "position": {
+        "column": 75,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 75
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.cat",
+      "handlerSymbol": "fixtures.constscopebare.CC.cat",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000013",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/jb/cat",
+      "permissions": [],
+      "position": {
+        "column": 73,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 73
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.tpl",
+      "handlerSymbol": "fixtures.constscopebare.CC.tpl",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000014",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/jb/tpl",
+      "permissions": [],
+      "position": {
+        "column": 72,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 72
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.javaComposed",
+      "handlerSymbol": "fixtures.constscopebare.CC.javaComposed",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000015",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/jbase/composed",
+      "permissions": [],
+      "position": {
+        "column": 76,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 76
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.mixed",
+      "handlerSymbol": "fixtures.constscopebare.CC.mixed",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000016",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/lit",
+      "permissions": [],
+      "position": {
+        "column": 74,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 74
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.pathArg",
+      "handlerSymbol": "fixtures.constscopebare.CC.pathArg",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000017",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/local-users",
+      "permissions": [],
+      "position": {
+        "column": 70,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 70
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.CC.verb",
+      "handlerSymbol": "fixtures.constscopebare.CC.verb",
+      "httpMethod": [
+        "POST"
+      ],
+      "id": "ep-000018",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/local-users/m",
+      "permissions": [],
+      "position": {
+        "column": 71,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 71
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.K1Controller.own",
+      "handlerSymbol": "fixtures.constscopebare.K1Controller.own",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000019",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/own-k1",
+      "permissions": [],
+      "position": {
+        "column": 83,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 83
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.K2Controller.own",
+      "handlerSymbol": "fixtures.constscopebare.K2Controller.own",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000020",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/own-k2",
+      "permissions": [],
+      "position": {
+        "column": 89,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 89
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    },
+    {
+      "authentication": [],
+      "consumes": [],
+      "deepLinkHosts": [],
+      "exported": null,
+      "foundBy": "annotation",
+      "framework": "spring-mvc",
+      "handlerCanonicalName": "fixtures.constscopebare.FromConfig.x",
+      "handlerSymbol": "fixtures.constscopebare.FromConfig.x",
+      "httpMethod": [
+        "GET"
+      ],
+      "id": "ep-000021",
+      "modulePath": ".",
+      "pathParameters": [],
+      "pathTemplate": "/v1/users/x",
+      "permissions": [],
+      "position": {
+        "column": 20,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 20
+      },
+      "produces": [],
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "queryParameters": [],
+      "reachableSources": [],
+      "sliceIds": [],
+      "substantiated": true
+    }
+  ],
+  "callGraph": {
+    "algorithmUsed": "vta",
+    "diagnostics": [
+      {
+        "code": "callgraph-root-not-found",
+        "count": 1,
+        "message": "root scope main matched no function; the graph's reachability starts nowhere for it",
+        "position": {
+          "column": 1,
+          "filename": ".",
+          "line": 1
+        },
+        "severity": "warning"
+      }
+    ],
+    "edges": [],
+    "mode": "auto",
+    "nodes": [
+      {
+        "canonicalName": "fixtures.constscopebare.API",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000001",
+        "jvmDescriptor": null,
+        "kind": "function",
+        "local": true,
+        "modulePath": ".",
+        "name": "API",
+        "ownerVisibility": null,
+        "position": {
+          "column": 11,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 60
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.API",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.cat",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000002",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "cat",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 38,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 73
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.cat",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.ext",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000003",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "ext",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 37,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 68
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.ext",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.imp",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000004",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "imp",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 31,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 69
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.imp",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.javaComposed",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000005",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "javaComposed",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 36,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 76
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.javaComposed",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.javaIface",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000006",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "javaIface",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 35,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 75
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.javaIface",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.mixed",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000007",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "mixed",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 51,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 74
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.mixed",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.pathArg",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000008",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "pathArg",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 43,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 70
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.pathArg",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.tpl",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000009",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "tpl",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 38,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 72
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.tpl",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.CC.verb",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000010",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "verb",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 86,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 71
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.CC.verb",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Concat.c",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000011",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "c",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 31,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 103
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Concat.c",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.ExternalPrefix.e",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000012",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "e",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 39,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 109
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.ExternalPrefix.e",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.FromConfig.x",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "id": "node-000013",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "x",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 42,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+          "line": 20
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt:fixtures.constscopebare.FromConfig.x",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.J.BASE",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000014",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "BASE",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 22,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 64
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.J.BASE",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.K1Controller.<init>",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000015",
+        "jvmDescriptor": null,
+        "kind": "constructor",
+        "local": true,
+        "modulePath": ".",
+        "name": "<init>",
+        "ownerVisibility": null,
+        "position": {
+          "column": 7,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 81
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.K1Controller.<init>",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": true,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.K1Controller.Companion.OWN",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000016",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "OWN",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 34,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 82
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.K1Controller.Companion.OWN",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.K1Controller.own",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000017",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "own",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 26,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 83
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.K1Controller.own",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.K2Controller.Companion.OWN",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000018",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "OWN",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 34,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 88
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.K2Controller.Companion.OWN",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.K2Controller.own",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000019",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "own",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 26,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 89
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.K2Controller.own",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Local.IMPORTED",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000020",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "IMPORTED",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 60,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 62
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Local.IMPORTED",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Local.USERS",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000021",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "USERS",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 26,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 62
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Local.USERS",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Local.X",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000022",
+        "jvmDescriptor": null,
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "X",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 100,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 62
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Local.X",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Monitors.all",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000023",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "all",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 14,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 96
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Monitors.all",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Monitors.one",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000024",
+        "jvmDescriptor": "(Ljava/lang/String;)Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "one",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 23,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 95
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Monitors.one",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Plain.p",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000025",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "p",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 30,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 100
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.Plain.p",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.SpringPrefixed.s",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "id": "node-000026",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "s",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 46,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+          "line": 106
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Controllers.kt:fixtures.constscopebare.SpringPrefixed.s",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.Unset.z",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "id": "node-000027",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "z",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 37,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+          "line": 26
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt:fixtures.constscopebare.Unset.z",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      },
+      {
+        "canonicalName": "fixtures.constscopebare.WithDefault.y",
+        "external": false,
+        "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "id": "node-000028",
+        "jvmDescriptor": "()Ljava/lang/String;",
+        "kind": "method",
+        "local": true,
+        "modulePath": ".",
+        "name": "y",
+        "ownerVisibility": "public",
+        "position": {
+          "column": 43,
+          "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+          "line": 23
+        },
+        "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+        "qualifiedName": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt:fixtures.constscopebare.WithDefault.y",
+        "receiver": null,
+        "stdlib": false,
+        "suspend": false,
+        "synthetic": false,
+        "visibility": "public"
+      }
+    ],
+    "reachability": [
+      {
+        "distance": -1,
+        "nodeId": "node-000001",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000002",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000003",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000004",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000005",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000006",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000007",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000008",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000009",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000010",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000011",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000012",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000013",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000014",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000015",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000016",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000017",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000018",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000019",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000020",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000021",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000022",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000023",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000024",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000025",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000026",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000027",
+        "reached": false,
+        "roots": []
+      },
+      {
+        "distance": -1,
+        "nodeId": "node-000028",
+        "reached": false,
+        "roots": []
+      }
+    ],
+    "stats": {
+      "dependencyEdges": 0,
+      "dependencyNodes": 0,
+      "localEdges": 0,
+      "localNodes": 27,
+      "stdlibEdges": 0,
+      "stdlibNodes": 0,
+      "syntheticEdges": 0,
+      "syntheticNodes": 1
+    }
+  },
+  "crypto": {
+    "assets": [],
+    "findings": [],
+    "libraries": [],
+    "materials": [],
+    "operations": [],
+    "protocols": []
+  },
+  "dataFlow": {
+    "diagnostics": [],
+    "edges": [],
+    "mode": "security",
+    "nodes": [],
+    "patterns": {
+      "builtin": [
+        "security-pack-v0"
+      ],
+      "effectCount": 5,
+      "passthroughCount": 95,
+      "sanitizerCount": 12,
+      "sinkCount": 143,
+      "sourceCount": 181,
+      "user": []
+    },
+    "slices": [],
+    "stats": {
+      "bytecodeSummaries": 0,
+      "connectivity": 1,
+      "crossDependencyBytecodeSlices": 0,
+      "crossDependencySlices": 0,
+      "crossModuleSlices": 0,
+      "defaultOriginSlices": 0,
+      "depthHistogram": {},
+      "dispatchJoins": {},
+      "dispatchWidthHistogram": {},
+      "integrityViolations": 0,
+      "maxObservedDepth": 0,
+      "reachableSlices": 0,
+      "skips": {
+        "generated-functions": 1
+      },
+      "sliceCount": 0,
+      "summariesByOrigin": {
+        "computed": 28
+      },
+      "summariesComputed": 28,
+      "summaryCrossingSlices": 0,
+      "suspendCrossingSlices": 0,
+      "truncations": {},
+      "uniqueFlows": 0
+    },
+    "summaries": [
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.API",
+        "functionId": "fixtures.constscopebare.API",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [],
+        "parameterTypes": [],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.cat",
+        "functionId": "fixtures.constscopebare.CC.cat",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.ext",
+        "functionId": "fixtures.constscopebare.CC.ext",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.imp",
+        "functionId": "fixtures.constscopebare.CC.imp",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.javaComposed",
+        "functionId": "fixtures.constscopebare.CC.javaComposed",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.javaIface",
+        "functionId": "fixtures.constscopebare.CC.javaIface",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.mixed",
+        "functionId": "fixtures.constscopebare.CC.mixed",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.pathArg",
+        "functionId": "fixtures.constscopebare.CC.pathArg",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.tpl",
+        "functionId": "fixtures.constscopebare.CC.tpl",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.CC.verb",
+        "functionId": "fixtures.constscopebare.CC.verb",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Concat.c",
+        "functionId": "fixtures.constscopebare.Concat.c",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.ExternalPrefix.e",
+        "functionId": "fixtures.constscopebare.ExternalPrefix.e",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.FromConfig.x",
+        "functionId": "fixtures.constscopebare.FromConfig.x",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.J.BASE",
+        "functionId": "fixtures.constscopebare.J.BASE",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {
+          "p1": "unused"
+        },
+        "function": "fixtures.constscopebare.K1Controller.<init>",
+        "functionId": "fixtures.constscopebare.K1Controller.<init>",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [
+          "p1"
+        ],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this",
+          "unused"
+        ],
+        "parameterTypes": [
+          "",
+          "String"
+        ],
+        "returnType": "",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.K1Controller.Companion.OWN",
+        "functionId": "fixtures.constscopebare.K1Controller.Companion.OWN",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.K1Controller.own",
+        "functionId": "fixtures.constscopebare.K1Controller.own",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.K2Controller.Companion.OWN",
+        "functionId": "fixtures.constscopebare.K2Controller.Companion.OWN",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.K2Controller.own",
+        "functionId": "fixtures.constscopebare.K2Controller.own",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Local.IMPORTED",
+        "functionId": "fixtures.constscopebare.Local.IMPORTED",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Local.USERS",
+        "functionId": "fixtures.constscopebare.Local.USERS",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Local.X",
+        "functionId": "fixtures.constscopebare.Local.X",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Monitors.all",
+        "functionId": "fixtures.constscopebare.Monitors.all",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Monitors.one",
+        "functionId": "fixtures.constscopebare.Monitors.one",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [
+          "p1"
+        ],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this",
+          "id"
+        ],
+        "parameterTypes": [
+          "",
+          "String"
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Plain.p",
+        "functionId": "fixtures.constscopebare.Plain.p",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.SpringPrefixed.s",
+        "functionId": "fixtures.constscopebare.SpringPrefixed.s",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.Unset.z",
+        "functionId": "fixtures.constscopebare.Unset.z",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      },
+      {
+        "accessPaths": {},
+        "function": "fixtures.constscopebare.WithDefault.y",
+        "functionId": "fixtures.constscopebare.WithDefault.y",
+        "invokedArgSinks": [],
+        "invokes": [],
+        "origin": "computed",
+        "paramFieldToReturn": [],
+        "paramToParam": [],
+        "paramToReceiver": [],
+        "paramToReturn": [],
+        "paramToReturnFields": [],
+        "paramToSink": {},
+        "parameterNames": [
+          "this"
+        ],
+        "parameterTypes": [
+          ""
+        ],
+        "returnType": "kotlin.String",
+        "sanitizes": [],
+        "sourceFieldWrites": [],
+        "sourceReturnFields": [],
+        "sourceReturns": []
+      }
+    ]
+  },
+  "declarations": [
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.JavaPaths",
+      "extensionReceiverType": null,
+      "filePath": "src/main/java/fixtures/constscopebare/JavaPaths.java",
+      "generated": null,
+      "id": "dec-000001",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "interface",
+      "modifiers": [
+        "abstract"
+      ],
+      "modulePath": ".",
+      "name": "JavaPaths",
+      "overrides": [],
+      "position": {
+        "column": 18,
+        "filename": "src/main/java/fixtures/constscopebare/JavaPaths.java",
+        "line": 4
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.JavaPaths",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.JavaPaths.JI",
+      "extensionReceiverType": null,
+      "filePath": "src/main/java/fixtures/constscopebare/JavaPaths.java",
+      "generated": null,
+      "id": "dec-000002",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/JavaPaths",
+      "kind": "property",
+      "modifiers": [
+        "final",
+        "static"
+      ],
+      "modulePath": ".",
+      "name": "JI",
+      "overrides": [],
+      "position": {
+        "column": 12,
+        "filename": "src/main/java/fixtures/constscopebare/JavaPaths.java",
+        "line": 5
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.JavaPaths.JI",
+      "returnType": "java.lang.String",
+      "signature": "val JI: java.lang.String",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.JavaPaths2",
+      "extensionReceiverType": null,
+      "filePath": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+      "generated": null,
+      "id": "dec-000003",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "JavaPaths2",
+      "overrides": [],
+      "position": {
+        "column": 14,
+        "filename": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+        "line": 4
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.JavaPaths2",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.JavaPaths2.B",
+      "extensionReceiverType": null,
+      "filePath": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+      "generated": null,
+      "id": "dec-000004",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/JavaPaths2",
+      "kind": "property",
+      "modifiers": [
+        "final",
+        "static"
+      ],
+      "modulePath": ".",
+      "name": "B",
+      "overrides": [],
+      "position": {
+        "column": 32,
+        "filename": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+        "line": 5
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.JavaPaths2.B",
+      "returnType": "java.lang.String",
+      "signature": "val B: java.lang.String",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.JavaPaths2.JC",
+      "extensionReceiverType": null,
+      "filePath": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+      "generated": null,
+      "id": "dec-000005",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/JavaPaths2",
+      "kind": "property",
+      "modifiers": [
+        "final",
+        "static"
+      ],
+      "modulePath": ".",
+      "name": "JC",
+      "overrides": [],
+      "position": {
+        "column": 32,
+        "filename": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+        "line": 6
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.JavaPaths2.JC",
+      "returnType": "java.lang.String",
+      "signature": "val JC: java.lang.String",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.JavaPaths2.DOLLAR",
+      "extensionReceiverType": null,
+      "filePath": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+      "generated": null,
+      "id": "dec-000006",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/JavaPaths2",
+      "kind": "property",
+      "modifiers": [
+        "final",
+        "static"
+      ],
+      "modulePath": ".",
+      "name": "DOLLAR",
+      "overrides": [],
+      "position": {
+        "column": 32,
+        "filename": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+        "line": 7
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.JavaPaths2.DOLLAR",
+      "returnType": "java.lang.String",
+      "signature": "val DOLLAR: java.lang.String",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.API",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000007",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/ControllersKt",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "API",
+      "overrides": [],
+      "position": {
+        "column": 11,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 60
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.API",
+      "returnType": null,
+      "signature": "val API",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.Local",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000008",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "object",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Local",
+      "overrides": [],
+      "position": {
+        "column": 8,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 62
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Local",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.Local.USERS",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000009",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/Local",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "USERS",
+      "overrides": [],
+      "position": {
+        "column": 26,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 62
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Local.USERS",
+      "returnType": null,
+      "signature": "val USERS",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.Local.IMPORTED",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000010",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/Local",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "IMPORTED",
+      "overrides": [],
+      "position": {
+        "column": 60,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 62
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Local.IMPORTED",
+      "returnType": null,
+      "signature": "val IMPORTED",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.Local.X",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000011",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/Local",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "X",
+      "overrides": [],
+      "position": {
+        "column": 100,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 62
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Local.X",
+      "returnType": null,
+      "signature": "val X",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.J",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000012",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "object",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "J",
+      "overrides": [],
+      "position": {
+        "column": 8,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 64
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.J",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.J.BASE",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000013",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/J",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "BASE",
+      "overrides": [],
+      "position": {
+        "column": 22,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 64
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.J.BASE",
+      "returnType": null,
+      "signature": "val BASE",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 66
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000014",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "CC",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 67
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 68
+          },
+          "value": "LibPaths.USERS"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.ext",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000015",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "ext",
+      "overrides": [],
+      "position": {
+        "column": 37,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 68
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.ext",
+      "returnType": null,
+      "signature": "fun ext()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 69
+          },
+          "value": "IMPORTED"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.imp",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000016",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "imp",
+      "overrides": [],
+      "position": {
+        "column": 31,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 69
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.imp",
+      "returnType": null,
+      "signature": "fun imp()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 70
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.pathArg",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000017",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "pathArg",
+      "overrides": [],
+      "position": {
+        "column": 43,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 70
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.pathArg",
+      "returnType": null,
+      "signature": "fun pathArg()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RequestMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 71
+          },
+          "value": "Local.USERS + \"/m\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.verb",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000018",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "verb",
+      "overrides": [],
+      "position": {
+        "column": 86,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 71
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.verb",
+      "returnType": null,
+      "signature": "fun verb()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 72
+          },
+          "value": "\"${J.BASE}/tpl\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.tpl",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000019",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "tpl",
+      "overrides": [],
+      "position": {
+        "column": 38,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 72
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.tpl",
+      "returnType": null,
+      "signature": "fun tpl()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 73
+          },
+          "value": "J.BASE + \"/cat\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.cat",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000020",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "cat",
+      "overrides": [],
+      "position": {
+        "column": 38,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 73
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.cat",
+      "returnType": null,
+      "signature": "fun cat()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 74
+          },
+          "value": "LibPaths.X"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.mixed",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000021",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "mixed",
+      "overrides": [],
+      "position": {
+        "column": 51,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 74
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.mixed",
+      "returnType": null,
+      "signature": "fun mixed()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 75
+          },
+          "value": "JavaPaths.JI"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.javaIface",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000022",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "javaIface",
+      "overrides": [],
+      "position": {
+        "column": 35,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 75
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.javaIface",
+      "returnType": null,
+      "signature": "fun javaIface()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 76
+          },
+          "value": "JavaPaths2.JC"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.CC.javaComposed",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000023",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/CC",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "javaComposed",
+      "overrides": [],
+      "position": {
+        "column": 36,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 76
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.CC.javaComposed",
+      "returnType": null,
+      "signature": "fun javaComposed()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 80
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.K1Controller",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000024",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "K1Controller",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 81
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K1Controller",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.K1Controller.Companion",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000025",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "companion",
+      "modifiers": [
+        "companion"
+      ],
+      "modulePath": ".",
+      "name": "Companion",
+      "overrides": [],
+      "position": {
+        "column": 15,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 82
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K1Controller.Companion",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.K1Controller.Companion.OWN",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000026",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/K1Controller/Companion",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "OWN",
+      "overrides": [],
+      "position": {
+        "column": 34,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 82
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K1Controller.Companion.OWN",
+      "returnType": null,
+      "signature": "val OWN",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 83
+          },
+          "value": "OWN"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.K1Controller.own",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000027",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/K1Controller",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "own",
+      "overrides": [],
+      "position": {
+        "column": 26,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 83
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K1Controller.own",
+      "returnType": null,
+      "signature": "fun own()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 86
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.K2Controller",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000028",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "K2Controller",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 87
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K2Controller",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.K2Controller.Companion",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000029",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "companion",
+      "modifiers": [
+        "companion"
+      ],
+      "modulePath": ".",
+      "name": "Companion",
+      "overrides": [],
+      "position": {
+        "column": 15,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 88
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K2Controller.Companion",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [],
+      "canonicalName": "fixtures.constscopebare.K2Controller.Companion.OWN",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000030",
+      "jvmDescriptor": null,
+      "jvmOwner": "fixtures/constscopebare/K2Controller/Companion",
+      "kind": "property",
+      "modifiers": [
+        "const"
+      ],
+      "modulePath": ".",
+      "name": "OWN",
+      "overrides": [],
+      "position": {
+        "column": 34,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 88
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K2Controller.Companion.OWN",
+      "returnType": null,
+      "signature": "val OWN",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 89
+          },
+          "value": "OWN"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.K2Controller.own",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000031",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/K2Controller",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "own",
+      "overrides": [],
+      "position": {
+        "column": 26,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 89
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.K2Controller.own",
+      "returnType": null,
+      "signature": "fun own()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Controller",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 93
+          },
+          "value": "\"${API}/monitors\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Monitors",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000032",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Monitors",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 94
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Monitors",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Get",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 95
+          },
+          "value": "/{id}"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Monitors.one",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000033",
+      "jvmDescriptor": "(Ljava/lang/String;)Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/Monitors",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "one",
+      "overrides": [],
+      "position": {
+        "column": 23,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 95
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Monitors.one",
+      "returnType": null,
+      "signature": "fun one(id: String)",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Get",
+          "position": {
+            "column": 5,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 96
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Monitors.all",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000034",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/Monitors",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "all",
+      "overrides": [],
+      "position": {
+        "column": 14,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 96
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Monitors.all",
+      "returnType": null,
+      "signature": "fun all()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Controller",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 99
+          },
+          "value": "\"$API/plain\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Plain",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000035",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Plain",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 100
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Plain",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Get",
+          "position": {
+            "column": 15,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 100
+          },
+          "value": "/p"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Plain.p",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000036",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/Plain",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "p",
+      "overrides": [],
+      "position": {
+        "column": 30,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 100
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Plain.p",
+      "returnType": null,
+      "signature": "fun p()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Controller",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 102
+          },
+          "value": "API + \"/concat\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Concat",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000037",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Concat",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 103
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Concat",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Get",
+          "position": {
+            "column": 16,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 103
+          },
+          "value": "/c"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Concat.c",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000038",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/Concat",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "c",
+      "overrides": [],
+      "position": {
+        "column": 31,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 103
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Concat.c",
+      "returnType": null,
+      "signature": "fun c()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RequestMapping",
+          "position": {
+            "column": 17,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 105
+          },
+          "value": "\"${API}/spring\""
+        },
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 105
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.SpringPrefixed",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000039",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "SpringPrefixed",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 106
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.SpringPrefixed",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 24,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 106
+          },
+          "value": "/s"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.SpringPrefixed.s",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000040",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/SpringPrefixed",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "s",
+      "overrides": [],
+      "position": {
+        "column": 46,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 106
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.SpringPrefixed.s",
+      "returnType": null,
+      "signature": "fun s()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Controller",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 108
+          },
+          "value": "\"${LibPaths.BASE}/ext\""
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.ExternalPrefix",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000041",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "ExternalPrefix",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 109
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.ExternalPrefix",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "Get",
+          "position": {
+            "column": 24,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+            "line": 109
+          },
+          "value": "/e"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.ExternalPrefix.e",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "generated": null,
+      "id": "dec-000042",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/ExternalPrefix",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "e",
+      "overrides": [],
+      "position": {
+        "column": 39,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 109
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.ExternalPrefix.e",
+      "returnType": null,
+      "signature": "fun e()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RequestMapping",
+          "position": {
+            "column": 17,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 19
+          },
+          "value": "${api.base}/users"
+        },
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 19
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.FromConfig",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "generated": null,
+      "id": "dec-000043",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "FromConfig",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 20
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.FromConfig",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 20,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 20
+          },
+          "value": "/x"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.FromConfig.x",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "generated": null,
+      "id": "dec-000044",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/FromConfig",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "x",
+      "overrides": [],
+      "position": {
+        "column": 42,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 20
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.FromConfig.x",
+      "returnType": null,
+      "signature": "fun x()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RequestMapping",
+          "position": {
+            "column": 17,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 22
+          },
+          "value": "${openapi.missing:}/gen"
+        },
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 22
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.WithDefault",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "generated": null,
+      "id": "dec-000045",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "WithDefault",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 23
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.WithDefault",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 21,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 23
+          },
+          "value": "/y"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.WithDefault.y",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "generated": null,
+      "id": "dec-000046",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/WithDefault",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "y",
+      "overrides": [],
+      "position": {
+        "column": 43,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 23
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.WithDefault.y",
+      "returnType": null,
+      "signature": "fun y()",
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "RequestMapping",
+          "position": {
+            "column": 17,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 25
+          },
+          "value": "${no.such.key}"
+        },
+        {
+          "name": "RestController",
+          "position": {
+            "column": 1,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 25
+          }
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Unset",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "generated": null,
+      "id": "dec-000047",
+      "jvmDescriptor": null,
+      "jvmOwner": null,
+      "kind": "class",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "Unset",
+      "overrides": [],
+      "position": {
+        "column": 7,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 26
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Unset",
+      "returnType": null,
+      "signature": null,
+      "supertypes": [],
+      "visibility": "public"
+    },
+    {
+      "annotations": [
+        {
+          "name": "GetMapping",
+          "position": {
+            "column": 15,
+            "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+            "line": 26
+          },
+          "value": "/z"
+        }
+      ],
+      "canonicalName": "fixtures.constscopebare.Unset.z",
+      "extensionReceiverType": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "generated": null,
+      "id": "dec-000048",
+      "jvmDescriptor": "()Ljava/lang/String;",
+      "jvmOwner": "fixtures/constscopebare/Unset",
+      "kind": "method",
+      "modifiers": [],
+      "modulePath": ".",
+      "name": "z",
+      "overrides": [],
+      "position": {
+        "column": 37,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 26
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "qualifiedName": ".:fixtures.constscopebare.Unset.z",
+      "returnType": null,
+      "signature": "fun z()",
+      "supertypes": [],
+      "visibility": "public"
+    }
+  ],
+  "diagnostics": [
+    {
+      "code": "annotation-import-resolved",
+      "count": 35,
+      "message": "35 annotation use(s) did not resolve against the classpath and were read at the FQN their file explicitly imports; the classpath lacks the framework's jars — pass the project's resolved classpath for full resolution",
+      "position": {
+        "column": 1,
+        "filename": ".",
+        "line": 1
+      },
+      "severity": "warning"
+    },
+    {
+      "code": "dataflow-skipped-policy",
+      "count": 1,
+      "message": "1 function(s) skipped by policy 'generated-functions' (summaries still apply; nothing was cut by a cap — see stats.policySkips)",
+      "severity": "info"
+    },
+    {
+      "code": "endpoint-path-unresolved",
+      "count": 5,
+      "message": "5 endpoint(s) have a path kosi could not prove (a base path the deployment sets, or a path computed at run time); their pathTemplate is partial or empty and each names why in pathUnresolved",
+      "position": {
+        "column": 1,
+        "filename": ".",
+        "line": 1
+      },
+      "severity": "warning"
+    },
+    {
+      "code": "resolution-errors",
+      "count": 12,
+      "message": "frontend resolution reported 12 diagnostic(s) in src/main/kotlin/fixtures/constscopebare/Placeholders.kt: UNRESOLVED_REFERENCE=9, UNRESOLVED_IMPORT=3",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 1
+      },
+      "severity": "warning"
+    },
+    {
+      "code": "resolution-errors",
+      "count": 40,
+      "message": "frontend resolution reported 40 diagnostic(s) in src/main/kotlin/fixtures/constscopebare/Controllers.kt: UNRESOLVED_REFERENCE=31, UNRESOLVED_IMPORT=8, ANNOTATION_ARGUMENT_MUST_BE_CONST=1",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 1
+      },
+      "severity": "warning"
+    }
+  ],
+  "files": [
+    {
+      "generated": false,
+      "language": "java",
+      "modulePath": ".",
+      "path": "src/main/java/fixtures/constscopebare/JavaPaths.java",
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified"
+    },
+    {
+      "generated": false,
+      "language": "java",
+      "modulePath": ".",
+      "path": "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified"
+    },
+    {
+      "generated": false,
+      "language": "kotlin",
+      "modulePath": ".",
+      "path": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified"
+    },
+    {
+      "generated": false,
+      "language": "kotlin",
+      "modulePath": ".",
+      "path": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified"
+    }
+  ],
+  "imports": [
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "com.external.lib.LibPaths",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 51
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "com.external.lib.LibPaths.IMPORTED",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 52
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "io.micronaut.http.annotation.Controller",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 53
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "io.micronaut.http.annotation.Get",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 54
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "org.springframework.web.bind.annotation.GetMapping",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 55
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "name": "org.springframework.web.bind.annotation.GetMapping",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 15
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "org.springframework.web.bind.annotation.RequestMapping",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 56
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "name": "org.springframework.web.bind.annotation.RequestMapping",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 16
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "org.springframework.web.bind.annotation.RequestMethod",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 57
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "name": "org.springframework.web.bind.annotation.RestController",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 58
+      },
+      "purl": null,
+      "star": false
+    },
+    {
+      "alias": null,
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+      "name": "org.springframework.web.bind.annotation.RestController",
+      "position": {
+        "column": 1,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Placeholders.kt",
+        "line": 17
+      },
+      "purl": null,
+      "star": false
+    }
+  ],
+  "modules": [
+    {
+      "declaredApiVersion": null,
+      "declaredLanguageVersion": null,
+      "effectiveLanguageVersion": "2.4",
+      "jvmTarget": null,
+      "modulePath": ".",
+      "name": "spring-const-scoping-unresolved",
+      "platform": "jvm",
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "sourceRoots": [
+        "src/main/java",
+        "src/main/kotlin"
+      ],
+      "workspaceMember": ":"
+    }
+  ],
+  "options": {
+    "accessPathDepth": 5,
+    "apiVersion": null,
+    "backend": "resolved",
+    "callgraph": "auto",
+    "callgraphTimeoutSeconds": 60,
+    "classpath": [],
+    "classpathFile": null,
+    "classpathStrategy": "auto",
+    "dataflow": "security",
+    "dataflowMaxFunctionInstructions": 20000,
+    "dataflowMaxSlices": 1000,
+    "dataflowMaxSummarySinkEffects": 8192,
+    "dataflowMaxTraceEdges": 128,
+    "dataflowMaxTraceNodes": 64,
+    "dataflowPathWidening": false,
+    "dataflowSkipGenerated": true,
+    "dataflowWorkers": 1,
+    "dependencyDetail": "collapse",
+    "deps": false,
+    "depsMaxClasses": 500,
+    "endpointSources": false,
+    "format": "json",
+    "includeStdlib": false,
+    "jdkHome": null,
+    "jvmTarget": null,
+    "languageVersion": null,
+    "maxPathsPerSymbol": 3,
+    "multiplatformTarget": null,
+    "optIn": [],
+    "pretty": true,
+    "progressive": false,
+    "roots": [
+      "main"
+    ],
+    "unknownCall": "propagate"
+  },
+  "packages": [
+    {
+      "files": [
+        "src/main/java/fixtures/constscopebare/JavaPaths.java",
+        "src/main/java/fixtures/constscopebare/JavaPaths2.java",
+        "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "src/main/kotlin/fixtures/constscopebare/Placeholders.kt"
+      ],
+      "modulePath": ".",
+      "name": "spring-const-scoping-unresolved",
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified"
+    }
+  ],
+  "runtime": {
+    "host": "darwin-aarch64",
+    "jvmVersion": "26.0.2",
+    "kotlinVersion": "2.4.20",
+    "languageVersionRange": {
+      "first": "2.0",
+      "firstNonDeprecated": "2.2",
+      "latestStable": "2.4"
+    },
+    "nativeImage": false,
+    "workingDirectory": "/Users/prabhu/work/cdxgen/cdxgen-plugins-bin/thirdparty/kosi/fixtures/spring-const-scoping-unresolved"
+  },
+  "schemaVersion": "kosi/1",
+  "securitySignals": [],
+  "services": [],
+  "stats": {
+    "bodylessRecords": 0,
+    "callsResolved": 0,
+    "callsTotal": 0,
+    "classpath": {
+      "attempts": [
+        {
+          "jars": 0,
+          "note": "no classpath.txt or .classpath at the analysed root",
+          "strategy": "file"
+        },
+        {
+          "jars": 0,
+          "note": "no libs/ directory at the root or a module",
+          "strategy": "jars"
+        },
+        {
+          "jars": 0,
+          "note": "0 coordinate(s) declared in build files",
+          "strategy": "cache"
+        }
+      ],
+      "entries": 0,
+      "missing": 0,
+      "strategy": "none"
+    },
+    "crossDependencySliceCount": 0,
+    "crossModuleSliceCount": 0,
+    "declarationCount": 48,
+    "degraded": null,
+    "dependencyClasses": 0,
+    "dependencyFunctions": 0,
+    "fileCount": 4,
+    "fixpointCapHits": 0,
+    "functionsAnalysed": 27,
+    "functionsLowered": 27,
+    "importCount": 11,
+    "loweringFailures": {},
+    "policySkips": {
+      "generated-functions": 1
+    },
+    "reachableSliceCount": 0,
+    "resolvedCallRatio": 0,
+    "sccIterationCapHits": 0,
+    "sccsProcessed": 28,
+    "sinkCount": 0,
+    "sliceCount": 0,
+    "sourceCount": 0,
+    "sourceCoverage": {
+      "discovered": 4,
+      "nonTestRatio": 1,
+      "present": 4,
+      "ratio": 1,
+      "testPresent": 0
+    },
+    "suspendCrossingSliceCount": 0,
+    "truncations": {},
+    "unknownCallPropagations": 0,
+    "unnameableInvokes": 0,
+    "usageCount": 3
+  },
+  "tool": {
+    "commit": "0b73a0845a80220adfd4b4855c0c2b20ab917b5f",
+    "description": "kosi — Kotlin Source Inspector (static analysis for cdxgen)",
+    "name": "kosi",
+    "version": "4.0.2"
+  },
+  "urls": [],
+  "usages": [
+    {
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "id": "use-000001",
+      "modulePath": ".",
+      "name": "plus",
+      "position": {
+        "column": 42,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 71
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "simpleName": "plus",
+      "usageKind": "operator"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "id": "use-000002",
+      "modulePath": ".",
+      "name": "plus",
+      "position": {
+        "column": 24,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 73
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "simpleName": "plus",
+      "usageKind": "operator"
+    },
+    {
+      "filePath": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+      "id": "use-000003",
+      "modulePath": ".",
+      "name": "plus",
+      "position": {
+        "column": 17,
+        "filename": "src/main/kotlin/fixtures/constscopebare/Controllers.kt",
+        "line": 102
+      },
+      "purl": "pkg:generic/spring-const-scoping-unresolved@unspecified",
+      "simpleName": "plus",
+      "usageKind": "operator"
+    }
+  ]
+}

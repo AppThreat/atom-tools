@@ -50,7 +50,6 @@ logger = logging.getLogger(__name__)
 # placeholder, and converting one would invent a required path
 # parameter out of nothing.
 _PLACEHOLDER_COLON = re.compile(r"(?<=/):([A-Za-z_][A-Za-z0-9_]*)")
-_PLACEHOLDER_REGEX_BRACE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*):[^}]+\}")
 # A run of one or more ``*`` — one wildcard, whether servlet-style
 # single-segment (``/legacy/*``) or Spring ant-style multi-segment
 # (``/legacy/**``). Each run becomes its own placeholder and the names
@@ -61,9 +60,10 @@ _PLACEHOLDER_REGEX_BRACE = re.compile(r"\{([A-Za-z_][A-Za-z0-9_]*):[^}]+\}")
 # multi-segment wildcard, so its multi-segment reach is approximated,
 # never silently widened to "matches everything".
 _CATCH_ALL = re.compile(r"\*+")
-_PARAM_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
-# A parameter name kosi may report (Javalin allows `{user-id}`).
-_PARAM_REF = re.compile(r"[A-Za-z_][A-Za-z0-9_.-]*")
+# A path-variable NAME, the grammar kosi reports (its PARAMETER_NAME):
+# Javalin allows `{user-id}`, and a dotted `{a.b}` is a name too. Anything
+# else inside braces (`{.*}`, `{$}`, `{name?}`) names nothing.
+_PARAM_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_.-]*")
 
 
 def normalize_path(path: str) -> str:
@@ -75,7 +75,6 @@ def normalize_path(path: str) -> str:
     """
     if not path:
         return ""
-    path = _PLACEHOLDER_REGEX_BRACE.sub(r"{\1}", path)
     path = _PLACEHOLDER_COLON.sub(r"{\1}", path)
     counter = 0
 
@@ -95,12 +94,24 @@ def normalize_path(path: str) -> str:
     while i < len(path):
         ch = path[i]
         if ch == "{":
-            end = path.find("}", i)
+            # The MATCHING brace: a `{id:\d{3}}` regex nests its own, and
+            # the first `}` left a stray one behind (`/x/{id}}`).
+            depth, end = 0, -1
+            for j in range(i, len(path)):
+                if path[j] == "{":
+                    depth += 1
+                elif path[j] == "}":
+                    depth -= 1
+                    if depth == 0:
+                        end = j
+                        break
             if end < 0:
                 out.append(path[i:])
                 break
             inner = path[i + 1:end]
-            out.append("{" + inner + "}" if _PARAM_NAME.fullmatch(inner) else wildcard_name())
+            # `{id:regex}` (Spring, JAX-RS) names `id`; the regex is dropped.
+            name = inner.split(":", 1)[0] if ":" in inner else inner
+            out.append("{" + name + "}" if _PARAM_NAME.fullmatch(name) else wildcard_name())
             i = end + 1
         elif ch == "*":
             j = i
@@ -116,7 +127,7 @@ def normalize_path(path: str) -> str:
 
 def _path_param_names(path: str) -> List[str]:
     """The placeholder names a normalized path template declares."""
-    return re.findall(r"\{([A-Za-z_][A-Za-z0-9_]*)\}", path)
+    return [name for name in re.findall(r"\{([^{}]*)\}", path) if _PARAM_NAME.fullmatch(name)]
 
 
 def _build_operation(endpoint: Dict, path: str) -> Dict:
@@ -150,10 +161,12 @@ def _build_operation(endpoint: Dict, path: str) -> Dict:
 
     # Path and query parameters. kosi reports names only, so the schema
     # is the honest "string" rather than an invented type. Path
-    # parameters come from the template itself (OpenAPI requires every
-    # placeholder to have one); kosi's pathParameters are merged in when
-    # they name something the template does not.
-    known = set(_path_param_names(path))
+    # parameters come from the template itself: OpenAPI requires every
+    # placeholder to have one, and a declared path parameter the template
+    # does not carry fails validation for the WHOLE document. So kosi's
+    # pathParameters never add a name: an older report's `$` (http4k's
+    # `{$}` end anchor), or a name the template normalised to a wildcard
+    # (`{name?}` -> `{path}`), would each have invalidated it.
     parameters = [
         {
             "name": name,
@@ -161,21 +174,8 @@ def _build_operation(endpoint: Dict, path: str) -> Dict:
             "required": True,
             "schema": {"type": "string"},
         }
-        for name in known
+        for name in dict.fromkeys(_path_param_names(path))
     ]
-    for name in endpoint.get("pathParameters") or []:
-        # Only a real name: older kosi reports listed http4k's `{$}` end
-        # anchor as a parameter called `$`, which no template declares.
-        if name and name not in known and _PARAM_REF.fullmatch(name):
-            known.add(name)
-            parameters.append(
-                {
-                    "name": name,
-                    "in": "path",
-                    "required": True,
-                    "schema": {"type": "string"},
-                }
-            )
     parameters.extend(
         {
             "name": name,
@@ -240,14 +240,21 @@ def _handler_ref(endpoint: Dict, reason: str) -> Dict:
 
 
 def _is_route_registration(endpoint: Dict) -> bool:
-    """A DSL route call kosi found but whose path it could not prove.
+    """A route kosi found REGISTERED but whose path it could not prove.
 
-    The call site is the route's registration, so the route is real and only
-    its URL is unknown — unlike an unmounted handler, which kosi never saw
-    registered at all.
+    A DSL call site (Ktor's ``get(path) { }``) or a mapping annotation
+    (``@GetMapping(SOME_CONSTANT)``) is the route's registration, so the
+    route is real and only its URL is unknown — unlike an unmounted
+    handler, which kosi never saw registered at all. A mapping always states
+    its verbs or serves every one (``anyMethod``); an unmounted handler
+    (a Ratpack ``Handler``, a Lambda ``RequestHandler``) states neither.
     """
+    if not endpoint.get("pathUnresolved"):
+        return False
     found_by = endpoint.get("foundBy") or ""
-    return bool(endpoint.get("pathUnresolved")) and (found_by == "dsl" or found_by.startswith("dsl-"))
+    if found_by == "dsl" or found_by.startswith("dsl-"):
+        return True
+    return found_by == "annotation" and bool(endpoint.get("httpMethod") or endpoint.get("anyMethod"))
 
 
 def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict[str, List[Dict]]]:
@@ -262,7 +269,8 @@ def classify(usages: AtomSlice) -> Tuple[List[Tuple[Dict, str, List[str]]], Dict
       (``transport``: messaging listeners, gRPC, Android components,
       event-triggered cloud functions).
     - ``x-kosi-path-unresolved-routes`` — a route REGISTRATION kosi found
-      (a DSL call such as Ktor's ``get(path) { }``) whose path it could not
+      (a DSL call such as Ktor's ``get(path) { }``, or a mapping annotation
+      whose path is a constant kosi could not fold) whose path it could not
       prove: computed at run time, or under a ``route(..)`` prefix that did
       not fold. The route exists; its URL is unknown, and ``pathUnresolved``
       says why (atom-tools#95).
