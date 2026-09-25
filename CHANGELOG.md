@@ -6,7 +6,7 @@ All notable changes to atom-tools are documented here. The format follows
 
 ## [Unreleased]
 
-## [1.0.3] - 2026-09-24
+## [1.0.3] - 2026-09-25
 
 ### Fixed
 
@@ -28,13 +28,25 @@ All notable changes to atom-tools are documented here. The format follows
   name (http4k's `{$}` anchor in older kosi reports) is never declared. The
   whole http4k tree (349 paths) converts to a document with 0 validation
   errors.
+- **Hyphenated and dotted parameter names stay names.** The placeholder walk
+  above read Javalin's `{user-id}` (and `{a.b}`) as a wildcard, renamed it
+  `{path}` while the parameter kept its name, and one such route made the
+  whole document invalid. Names now follow kosi's grammar; a nested regex
+  brace (`{id:\d{3}}`) no longer leaves a stray `}`; and a reported path
+  parameter the template does not carry is never declared.
+- **A mapping over a constant kosi could not fold is a path-unresolved
+  route**, like a DSL route: `@GetMapping(LibPaths.USERS)` names its verb,
+  so it is a registration with an unknown URL, not an unmounted handler.
 
 ### Changed
 
 - The Docker image bundles cdxgen-plugins-bin 4.0.2. Its kosi publishes one
   route per element for loop-registered paths instead of the loop variable's
   name (`/vroute`). It publishes Spring and JAX-RS mappings that a controller
-  inherits from a base class or interface. Its native binary no longer exits 3
+  inherits from a base class or interface, under the nearest class-level path.
+  It folds mapping paths written as constants, templates and concatenations
+  the way the compiler scopes them (kuvasz's `"${API_V2_PREFIX}/monitors"`),
+  and never guesses a same-named constant. Its native binary no longer exits 3
   on larger repositories.
 
 ## [1.0.2] - 2026-09-23
