@@ -1,0 +1,27 @@
+atom_tools/__init__.py
+  s_fd07128e7dbdfd::t_5d8f17ff96f597 11
+pyproject.toml
+  s_fd07128e7dbdfd::t_5d8f17ff96f597 3
+Dockerfile
+  s_fd07128e7dbdfd::t_5d8f17ff96f597 86
+CHANGELOG.md
+  s_fd07128e7dbdfd::t_437285ec2bf438 9-32
+uv.lock
+  s_fd07128e7dbdfd::t_c062434a99968e 80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "fce2b1e8e81264ef466bed488dccdc7ce6d9cf2f",
+  "prompts": {},
+  "sessions": {
+    "s_fd07128e7dbdfd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5da061be-63ce-496e-8fda-dc88d919c400",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
