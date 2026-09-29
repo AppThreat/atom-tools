@@ -6,6 +6,32 @@ All notable changes to atom-tools are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-09-30
+
+### Fixed
+
+- **Every rusi sink category has a tag.** `filesystem-read`,
+  `filesystem-open`, `filesystem-delete` and `filesystem-permission` are
+  `file-io`, like `filesystem-write`. `html-response` is `framework-output`,
+  like `http-response`, and `network-connect` is `service-egress`. Their sink
+  nodes had no tag, so `filter`, `stats` and SARIF rule derivation saw no
+  sink on those flows. rusi 4.0.3 reports them on ordinary code: `File::open`,
+  `OpenOptions::open`, `remove_dir_all` and `set_permissions`.
+
+### Changed
+
+- The Docker image bundles cdxgen-plugins-bin 4.0.4.
+  - Its rusi follows taint through pattern bindings, struct fields, statics
+    and lock guards, and it reports path-taking filesystem calls. It fires
+    `get` and `send` only on HTTP clients and request builders.
+  - Its kosi checks every vararg argument, treats Java NIO and
+    `kotlin.io.path` I/O as path-traversal sinks, and follows taint through
+    `StringBuilder` scopes and shared static and singleton-bean state. It
+    names framework calls from a file's imports when no classpath is given.
+  - Its plugins manifest and helper SBOMs cover every bundled helper and
+    list only what each binary contains.
+  - Neither engine's report schema changed.
+
 ## [1.0.3] - 2026-09-25
 
 ### Fixed
