@@ -99,6 +99,16 @@ CATEGORY_TO_TAG = {
     "http": "http",
     "http-response": "framework-output",
     "crypto": "crypto",
+    # rusi's remaining sink categories, mapped by the rule the kosi block
+    # below states. The filesystem family is file I/O like
+    # ``filesystem-write``: rusi reports a path-taking call, not a proven
+    # traversal, so ``path-traversal`` would over-claim.
+    "filesystem-read": "file-io",  # File::open, fs::read*
+    "filesystem-open": "file-io",  # OpenOptions::open
+    "filesystem-delete": "file-io",  # remove_file, remove_dir(_all)
+    "filesystem-permission": "file-io",  # set_permissions
+    "html-response": "framework-output",  # an HTML response body, as http-response
+    "network-connect": "service-egress",  # TcpStream/UdpSocket connect: an outbound connection
     # kosi (Kotlin/JVM) sink/source categories from security-pack-v0 that have
     # an honest home in this vocabulary. The rule used, the same one that
     # keeps rusi's ``param-N`` categories unmapped: map when the existing

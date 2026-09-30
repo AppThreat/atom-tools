@@ -27,7 +27,7 @@ from atom_tools.lib.adapters import (
 from atom_tools.lib.sarif import Sarif
 from atom_tools.lib.slices import AtomSlice
 from atom_tools.lib.stats import SliceStats
-from atom_tools.lib.taxonomy import normalise_engine_severity
+from atom_tools.lib.taxonomy import derive_level_and_tag, normalise_engine_severity
 from atom_tools.lib.unified import merge_reports
 
 ECOSYSTEM = Path(__file__).parent / "data" / "ecosystem"
@@ -598,6 +598,30 @@ def test_severity_normalisation():
     assert normalise_engine_severity("info") == "note"
     assert normalise_engine_severity(None) is None
     assert normalise_engine_severity("bogus") is None
+
+
+def test_rusi_sink_categories_map_onto_tags():
+    """Every rusi sink category has a tag, as filesystem-write already did.
+
+    rusi 4.0.3 reports File::open, OpenOptions::open, remove_dir_all and
+    set_permissions on ordinary code; unmapped, their sink nodes carried no
+    tag, so tag-driven consumers (filter, stats, sarif rules) saw no sink.
+    """
+    for category in (
+        "filesystem-read",
+        "filesystem-open",
+        "filesystem-delete",
+        "filesystem-permission",
+        "filesystem-write",
+    ):
+        assert derive_level_and_tag("env", category) == ("warning", "file-io")
+    assert derive_level_and_tag("http-request", "html-response") == (
+        "warning",
+        "framework-output",
+    )
+    assert derive_level_and_tag("env", "network-connect") == ("warning", "service-egress")
+    # A mapped sink names the flow, even when the source is mapped too.
+    assert derive_level_and_tag("secret", "filesystem-read") == ("warning", "file-io")
 
 
 # ------------------------------- engine tags reach tag-driven consumers
