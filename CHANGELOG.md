@@ -6,6 +6,12 @@ All notable changes to atom-tools are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed
+
+- The Docker image bundles cdxgen-plugins-bin 4.1.0. Its rusi runs its
+  data-flow fixpoints to convergence, so it reports flows through deep call
+  chains and loops that 4.0.4 missed.
+
 ## [1.0.4] - 2026-09-30
 
 ### Fixed
