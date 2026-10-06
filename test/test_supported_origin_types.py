@@ -43,9 +43,9 @@ EXPECTED_TYPES = {
 }
 
 # A real slice file per alias, used for end-to-end acceptance of every type.
-# Scala has no usages fixture in this repository; the java usages file is used
-# there purely to exercise acceptance (scala_convert returns no paths without
-# a semantics slice, and no fixture is invented for it).
+# Scala acceptance reuses the java usages file here; its real fixtures (the
+# recorded scalasem reports, converted without a usages slice) live in
+# test_scala_converter.py.
 LANGUAGE_FIXTURES = {
     "java": "test/data/java-piggymetrics-usages.json",
     "jar": "test/data/java-piggymetrics-usages.json",
