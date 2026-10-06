@@ -8,9 +8,16 @@ All notable changes to atom-tools are documented here. The format follows
 
 ### Changed
 
-- The Docker image bundles cdxgen-plugins-bin 4.1.0. Its rusi runs its
-  data-flow fixpoints to convergence, so it reports flows through deep call
-  chains and loops that 4.0.4 missed.
+- The Docker image bundles cdxgen-plugins-bin 4.1.1.
+  - Its rusi runs its data-flow fixpoints to convergence, so it reports flows
+    through deep call chains and loops that 4.0.4 missed.
+  - Its golem stamps every data-flow slice with a reachableFromRoots verdict
+    computed on the RTA call graph from the resolved entry roots, and records
+    how the verdicts were computed in a dataFlow.sliceReachability section that
+    also lists the packages reached through non-init code. Library projects
+    skip the verdict instead of labelling every exported API unreachable.
+  - Its dosai runs on musl hosts; the musl packages previously installed the
+    binary under a name cdxgen never resolved.
 
 ## [1.0.4] - 2026-09-30
 
