@@ -4,7 +4,23 @@ All notable changes to atom-tools are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [1.0.5] - 2026-10-07
+
+### Added
+
+- **`convert -t scala` reads scalasem version 2 reports.** Every framework's
+  routes come from the report's `endpoints[]`: Play, tapir, http4s, cask,
+  zio-http, akka-http, pekko and scalatra. The usages slice is optional, and
+  the title comes from the report's project path.
+  - Each operation records its declaration in `x-atom-usages`.
+  - Anonymous captures and wildcards become named path parameters.
+  - A route that serves any method is expanded to every verb and marked
+    `x-scalasem-any-method`.
+  - One path and method declared twice keeps every handler in
+    `x-scalasem-handlers`.
+  - A verb an OpenAPI path item cannot carry is listed in
+    `x-scalasem-unsupported-methods`.
+  - Version 1 semantics slices convert as before.
 
 ### Changed
 

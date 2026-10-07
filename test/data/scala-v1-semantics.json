@@ -1,0 +1,26 @@
+{
+  "config": {
+    "routes": [
+      {
+        "method": "GET",
+        "pattern": "/legacy/:userName",
+        "controllerMethod": "controllers.LegacyController.show",
+        "file": "conf/routes",
+        "line": 3
+      },
+      {
+        "method": "POST",
+        "pattern": "/legacy/submit",
+        "controllerMethod": "controllers.LegacyController.submit",
+        "file": "conf/routes",
+        "line": 4
+      }
+    ]
+  },
+  "app/controllers/LegacyController.scala": {
+    "sourceFile": "app/controllers/LegacyController.scala",
+    "usedTypes": ["play.api.mvc.Controller"],
+    "literals": [],
+    "tags": []
+  }
+}

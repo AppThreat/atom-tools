@@ -27,6 +27,7 @@ from atom_tools.lib.kosi_converter import extensions as kosi_extensions
 from atom_tools.lib.ruby_converter import convert as ruby_convert
 from atom_tools.lib.rust_converter import convert as rust_convert
 from atom_tools.lib.scala_converter import convert as scala_convert
+from atom_tools.lib.scala_converter import extensions as scala_extensions
 
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
@@ -396,34 +397,52 @@ class OpenAPI:
         usages: str,
         semantics: str = None,
     ) -> None:
-        self.usages: AtomSlice = AtomSlice(usages, origin_type)
+        # Scala needs no usages slice: a version 2 scalasem report alone is a
+        # complete endpoint table, so a missing usages file is not an error.
+        # Every other language keeps reading the slice it was given.
+        scala_without_usages = origin_type in _SCALA_ORIGIN_TYPES and not (
+            usages and Path(usages).exists()
+        )
+        self.usages: AtomSlice | None = (
+            None if scala_without_usages else AtomSlice(usages, origin_type)
+        )
         self.semantics: AtomSlice = (
             AtomSlice(semantics, origin_type) if semantics and Path(semantics).exists() else None
         )
+        self.origin_type = origin_type
         self.openapi_version = dest_format.replace("openapi", "")
-        self.title = (
-            f"{Path(usages).parent.stem} OpenAPI Specification"
-            if Path(usages).parent.stem
-            else "OpenAPI Specification"
-        )
+        self.title = self._title(usages)
         self.file_endpoint_map: Dict = {}
         self.params: Dict[str, List[Dict]] = {}
         self.regex_param_count = 0
         self.target_line_nums: Dict[str, Dict] = {}
 
+    def _title(self, usages) -> str:
+        semantics_meta = (self.semantics.content or {}).get("_meta", {}) if self.semantics else {}
+        project_path = semantics_meta.get("projectPath")
+        if project_path:
+            return f"{Path(project_path).name} OpenAPI Specification"
+        if usages and Path(usages).parent.stem:
+            return f"{Path(usages).parent.stem} OpenAPI Specification"
+        return "OpenAPI Specification"
+
+    @property
+    def origin(self) -> str:
+        return self.usages.origin_type if self.usages else self.origin_type
+
     def convert_usages(self) -> Dict[str, Dict]:
         """
         Converts usages to OpenAPI.
         """
-        if self.usages.origin_type in _RUBY_ORIGIN_TYPES:
+        if self.origin in _RUBY_ORIGIN_TYPES:
             return ruby_convert(self.usages)
-        if self.usages.origin_type in _SCALA_ORIGIN_TYPES:
+        if self.origin in _SCALA_ORIGIN_TYPES:
             return scala_convert(self.usages, self.semantics)
-        if self.usages.origin_type in _RUST_ORIGIN_TYPES:
+        if self.origin in _RUST_ORIGIN_TYPES:
             return rust_convert(self.usages)
-        if self.usages.origin_type in _GO_ORIGIN_TYPES:
+        if self.origin in _GO_ORIGIN_TYPES:
             return go_convert(self.usages)
-        if self.usages.origin_type in _KOTLIN_ORIGIN_TYPES:
+        if self.origin in _KOTLIN_ORIGIN_TYPES:
             return kosi_convert(self.usages)
         methods = self._process_methods()
         methods = self.methods_to_endpoints(methods)
@@ -514,11 +533,15 @@ class OpenAPI:
         }
         if server:
             output["servers"] = [{"url": server}]  # type: ignore[list-item]
-        if self.usages.origin_type in _KOTLIN_ORIGIN_TYPES:
+        if self.origin in _KOTLIN_ORIGIN_TYPES:
             # kosi endpoints that have no place in `paths` (non-HTTP
             # transports, unmounted handlers, unresolved methods) are kept
             # as document extensions, never dropped.
             output.update(kosi_extensions(self.usages))
+        if self.origin in _SCALA_ORIGIN_TYPES:
+            # Routes whose method an OpenAPI path item cannot carry stay
+            # visible as a document extension.
+            output.update(scala_extensions(self.semantics))
 
         return output
 

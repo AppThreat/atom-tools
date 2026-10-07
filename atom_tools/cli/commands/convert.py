@@ -5,6 +5,7 @@ Convert Command for the atom-tools CLI.
 import logging
 import os
 import sys
+from pathlib import Path
 
 from cleo.helpers import option
 
@@ -101,11 +102,23 @@ and a SARIF 2.1.0 document based on a reachable slice."""
             )
         match self.option("format"):
             case "openapi3.1.0" | "openapi3.0.1":
+                origin_type = self.option("type")
+                input_slice = self.option("input-slice")
+                semantics_slice = self.option("semantics-slice")
+                if origin_type in ("scala", "sbt"):
+                    if not Path(input_slice).exists():
+                        # A version 2 scalasem report is a complete endpoint
+                        # table on its own; the usages slice is optional.
+                        input_slice = None
+                    if not semantics_slice or not Path(semantics_slice).exists():
+                        logger.warning(
+                            "Scala endpoints come from the scalasem report; pass it with -e."
+                        )
                 converter = OpenAPI(
                     self.option("format"),
-                    self.option("type"),
-                    self.option("input-slice"),
-                    self.option("semantics-slice"),
+                    origin_type,
+                    input_slice,
+                    semantics_slice,
                 )
 
                 if not (result := converter.endpoints_to_openapi(self.option("server"))):
