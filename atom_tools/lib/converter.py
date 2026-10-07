@@ -27,6 +27,7 @@ from atom_tools.lib.kosi_converter import extensions as kosi_extensions
 from atom_tools.lib.ruby_converter import convert as ruby_convert
 from atom_tools.lib.rust_converter import convert as rust_convert
 from atom_tools.lib.scala_converter import convert as scala_convert
+from atom_tools.lib.scala_converter import extensions as scala_extensions
 
 logger = logging.getLogger(__name__)
 regex = OpenAPIRegexCollection()
@@ -398,10 +399,12 @@ class OpenAPI:
     ) -> None:
         # Scala needs no usages slice: a version 2 scalasem report alone is a
         # complete endpoint table, so a missing usages file is not an error.
+        # Every other language keeps reading the slice it was given.
+        scala_without_usages = origin_type in _SCALA_ORIGIN_TYPES and not (
+            usages and Path(usages).exists()
+        )
         self.usages: AtomSlice | None = (
-            AtomSlice(usages, origin_type)
-            if usages and Path(usages).exists()
-            else None
+            None if scala_without_usages else AtomSlice(usages, origin_type)
         )
         self.semantics: AtomSlice = (
             AtomSlice(semantics, origin_type) if semantics and Path(semantics).exists() else None
@@ -535,6 +538,10 @@ class OpenAPI:
             # transports, unmounted handlers, unresolved methods) are kept
             # as document extensions, never dropped.
             output.update(kosi_extensions(self.usages))
+        if self.origin in _SCALA_ORIGIN_TYPES:
+            # Routes whose method an OpenAPI path item cannot carry stay
+            # visible as a document extension.
+            output.update(scala_extensions(self.semantics))
 
         return output
 

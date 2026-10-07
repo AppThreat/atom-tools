@@ -384,7 +384,7 @@ def convert(usages: AtomSlice) -> Dict[str, Dict]:
             else:
                 path_item[method] = operation
 
-    return _unique_operation_ids(result)
+    return unique_operation_ids(result, "x-kosi-handler")
 
 
 def extensions(usages: AtomSlice) -> Dict[str, List[Dict]]:
@@ -393,7 +393,7 @@ def extensions(usages: AtomSlice) -> Dict[str, List[Dict]]:
     return {key: value for key, value in ext.items() if value}
 
 
-def _unique_operation_ids(paths: Dict[str, Dict]) -> Dict[str, Dict]:
+def unique_operation_ids(paths: Dict[str, Dict], handler_key: str) -> Dict[str, Dict]:
     """Make every ``operationId`` unique, as OpenAPI requires.
 
     One kosi handler routinely backs several operations: a method list fans
@@ -401,7 +401,7 @@ def _unique_operation_ids(paths: Dict[str, Dict]) -> Dict[str, Dict]:
     names several paths. The first operation (in path, then method order)
     keeps the handler's name; every later one gets ``<handler>_<method>_<path
     slug>``, numbered if that still collides, and the handler stays readable
-    in ``x-kosi-handler``.
+    in ``handler_key`` (``x-kosi-handler`` for kosi).
     """
     seen: set = set()
     for path in sorted(paths):
@@ -418,7 +418,7 @@ def _unique_operation_ids(paths: Dict[str, Dict]) -> Dict[str, Dict]:
                 while candidate in seen:
                     candidate = f"{handler}_{method}_{slug}_{counter}"
                     counter += 1
-                operation["x-kosi-handler"] = handler
+                operation[handler_key] = handler
             operation["operationId"] = candidate
             seen.add(candidate)
     return paths
