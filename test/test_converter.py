@@ -2110,3 +2110,15 @@ def test_kosi_atom_slice_input_warns_instead_of_silence(tmp_path, caplog):
         result = convert(AtomSlice(str(report), "kotlin"))
     assert result == {}
     assert any("objectSlices" in r.message for r in caplog.records)
+
+
+def test_js_routes_read_from_code():
+    # atom keeps a JS call's resolved name in resolvedMethod and its source text in code; the
+    # endpoints must come out the same as from slices that carried the text in resolvedMethod.
+    new = OpenAPI("openapi3.0.1", "js", "test/data/js-usages-code-field.json")
+    old = OpenAPI("openapi3.0.1", "js", "test/data/js-usages-code-in-resolved.json")
+    new_paths = new.endpoints_to_openapi().get("paths", {})
+    old_paths = old.endpoints_to_openapi().get("paths", {})
+    assert old_paths
+    assert new_paths == old_paths
+    assert "/users/{id}" in new_paths
