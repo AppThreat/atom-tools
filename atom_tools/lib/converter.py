@@ -800,7 +800,7 @@ class OpenAPI:
             + " || ".join(file_names)
             + (
                 "][].{file_name: fileName, methods: usages[].targetObj[].{resolved_method: "
-                "resolvedMethod || callName || code || name, line_number: lineNumber}}"
+                "code || resolvedMethod || callName || name, line_number: lineNumber}}"
             )
         )
         pattern = jmespath.compile(conditional)  # type: ignore
@@ -1575,6 +1575,24 @@ class OpenAPI:
             "[].resolvedMethod[]}"
         )
 
+        # JavaScript slices keep the resolved callee name in resolvedMethod and the call's source
+        # text (route definitions such as app.get("/x", ...), decorators) in code.
+        for query in (
+            "objectSlices[].{file_name: fileName, resolved_methods: usages[].*.code[]}",
+            "objectSlices[].{file_name: fileName, resolved_methods: usages[].*[?code][][].code[]}",
+        ):
+            for key, value in self._process_methods_helper(query).items():
+                # an import binding's code is its import expression; its module path is no route
+                codes = [
+                    c
+                    for c in value.get("resolved_methods")
+                    if not c.startswith(("require(", "import("))
+                ]
+                if calls.get(key):
+                    calls[key]["resolved_methods"].extend(codes)
+                else:
+                    calls[key] = {"resolved_methods": codes}
+
         user_defined_types = self._process_methods_helper(
             "userDefinedTypes[].{file_name: fileName, resolved_methods: fields[].name}"
         )
@@ -1703,6 +1721,10 @@ class OpenAPI:
             m = call.get("resolvedMethod", "")
             if m and m in resolved_methods:
                 calls.append(call)
+            elif (code := call.get("code")) and code in resolved_methods:
+                # JavaScript: the call's source text, which endpoint extraction parses, is in
+                # code; resolvedMethod holds the resolved callee name.
+                calls.append({**call, "resolvedMethod": code})
         return calls
 
     def _query_calls_helper(self, file_name: str) -> List[Dict]:

@@ -1,0 +1,48 @@
+{
+ "objectSlices": [
+  {
+   "fullName": "src/app.js::program",
+   "signature": "",
+   "fileName": "src/app.js",
+   "lineNumber": 1,
+   "columnNumber": 0,
+   "usages": [
+    {
+     "targetObj": {
+      "name": "app",
+      "typeFullName": "express:Express",
+      "lineNumber": null,
+      "columnNumber": null,
+      "label": "LOCAL"
+     },
+     "definedBy": {
+      "name": "express",
+      "typeFullName": "ANY",
+      "resolvedMethod": "express",
+      "isExternal": true,
+      "lineNumber": 3,
+      "columnNumber": 12,
+      "label": "CALL"
+     },
+     "invokedCalls": [],
+     "argToCalls": [
+      {
+       "callName": "get",
+       "resolvedMethod": "app.get(\"/users/:id\", (req, res) => {\\n\\tres.send(req.params.id)\\n})",
+       "paramTypes": [
+        "__ecma.String",
+        "LAMBDA"
+       ],
+       "returnType": "ANY",
+       "position": 0,
+       "isExternal": true,
+       "lineNumber": 5,
+       "columnNumber": 0
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "userDefinedTypes": []
+}
