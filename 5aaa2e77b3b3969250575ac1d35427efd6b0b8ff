@@ -1,0 +1,23 @@
+atom_tools/lib/attack_surface.py
+  s_11b4201fc5b29d::t_8588a060d7e50f 1158-1174
+test/data/golden/attack-surface/kosi.console.txt
+  s_11b4201fc5b29d::t_7888162ca475f2 33
+atom_tools/lib/adapters/kosi.py
+  s_11b4201fc5b29d::t_c884835cb36572 207
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "5aaa2e77b3b3969250575ac1d35427efd6b0b8ff",
+  "prompts": {},
+  "sessions": {
+    "s_11b4201fc5b29d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c4aaa429-a47f-4d19-ac33-46415e81970c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

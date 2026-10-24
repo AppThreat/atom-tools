@@ -1,0 +1,19 @@
+test/test_ingest.py
+  s_9642d93d0a8346::t_97b9e9566fa990 170-350
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c1ab92477aa5ad24b78c07e92650be885d843000",
+  "prompts": {},
+  "sessions": {
+    "s_9642d93d0a8346": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "778f9d1d-86b0-444d-a9ac-3f9aa38d3cb5",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

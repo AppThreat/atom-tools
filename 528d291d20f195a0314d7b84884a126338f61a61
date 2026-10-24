@@ -1,0 +1,28 @@
+test/data/ecosystem/PROVENANCE.md
+  s_11b4201fc5b29d::t_4d1a78f1ec2d30 246-297
+test/data/ecosystem/go-ipsw-golem-baseline.json
+  s_11b4201fc5b29d::t_11dcb3052e91d6 1
+test/test_drift.py
+  s_11b4201fc5b29d::t_9356a011c46c38 32,42,392-461
+atom_tools/lib/drift.py
+  s_11b4201fc5b29d::t_e0c1aa855dc2c8 121-127
+  s_11b4201fc5b29d::t_2f7405eecabe55 498-499
+  s_11b4201fc5b29d::t_5731c4341a7ddf 533-537,540-550,552-553
+  s_11b4201fc5b29d::t_a0701deac7e2ac 454-474
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "528d291d20f195a0314d7b84884a126338f61a61",
+  "prompts": {},
+  "sessions": {
+    "s_11b4201fc5b29d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c4aaa429-a47f-4d19-ac33-46415e81970c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}

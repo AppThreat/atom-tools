@@ -1,0 +1,29 @@
+atom_tools/__init__.py
+  s_be4a6ad278f92a::t_ec6084772ce1cb 5-11
+atom_tools/cli/commands/merge_slices.py
+  s_ce505af18ddad7::t_2be7093f247ccd 62-63,69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "8f70cbfa8cd8d96a00ed2c920315053d3a00a6ea",
+  "prompts": {},
+  "sessions": {
+    "s_be4a6ad278f92a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0ff64c36-3822-4501-a594-f3ce8590a96c",
+        "model": "claude-opus-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    },
+    "s_ce505af18ddad7": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "12350b12-bb44-4911-8fad-a3b40cf5a3dc",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
