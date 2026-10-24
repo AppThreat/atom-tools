@@ -1,0 +1,25 @@
+atom_tools/__init__.py
+  s_e335fe820b41b8::t_3a213646dc1f62 11
+CHANGELOG.md
+  s_e335fe820b41b8::t_3a213646dc1f62 7-18
+pyproject.toml
+  s_e335fe820b41b8::t_3a213646dc1f62 3
+uv.lock
+  s_e335fe820b41b8::t_93c739ce9baa3a 80
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b9b308f7185fe6c90e962565ca8b4b1465ea21da",
+  "prompts": {},
+  "sessions": {
+    "s_e335fe820b41b8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "120fe233-8899-4149-b780-6eac261dbd9d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
