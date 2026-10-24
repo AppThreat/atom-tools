@@ -1,0 +1,25 @@
+test/data/js-usages-code-in-resolved.json
+  s_e335fe820b41b8::t_25eef0f31f17c0 1-48
+test/test_converter.py
+  s_e335fe820b41b8::t_25eef0f31f17c0 2113-2124
+test/data/js-usages-code-field.json
+  s_e335fe820b41b8::t_25eef0f31f17c0 1-51
+atom_tools/lib/converter.py
+  s_e335fe820b41b8::t_77fde66f6de39d 803,1578-1595,1724-1727
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "adcd92fabc823c898e6e801301e706757beb5d6c",
+  "prompts": {},
+  "sessions": {
+    "s_e335fe820b41b8": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "120fe233-8899-4149-b780-6eac261dbd9d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
