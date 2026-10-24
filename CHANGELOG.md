@@ -6,6 +6,18 @@ All notable changes to atom-tools are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-24
+
+### Changed
+
+- **JavaScript routes are read from the usages slice's `code` field.** atom now puts the
+  resolved callee name (`express:Router`, `@babel/parser:parse`) in `resolvedMethod` and the
+  call's source text in a new `code` field, so the converter matches routes against `code`
+  first and falls back to `resolvedMethod` for slices from older atom versions. Text from
+  `require(` and `import(` calls is skipped so module specifiers no longer show up as
+  endpoints. OpenAPI output is unchanged on juice-shop, nestjs-realworld,
+  node-express-boilerplate and node-express-realworld.
+
 ## [1.0.2] - 2026-09-23
 
 ### Fixed
