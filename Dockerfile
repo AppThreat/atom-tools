@@ -64,8 +64,9 @@ RUN microdnf install -y make gcc g++ ncurses nodejs nodejs-devel npm \
     && /opt/android-sdk-linux/cmdline-tools/latest/bin/sdkmanager 'build-tools;36.0.0' --sdk_root=/opt/android-sdk-linux
 
 COPY . /opt/atom-tools
-RUN npm install -g @appthreat/atom @cyclonedx/cdxgen --omit=dev \
+RUN npm install -g @appthreat/atom @appthreat/atom-parsetools @cyclonedx/cdxgen --omit=dev \
     && atom --help \
+    && astgen --version \
     && python3 -m pip install --no-cache-dir "blint[extended]" \
     && blint --help \
     && python3 -m pip install --no-cache-dir /opt/atom-tools \
