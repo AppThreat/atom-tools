@@ -1,0 +1,19 @@
+Dockerfile
+  s_8808d9e6ee938f::t_39e4414afca7b7 67,69
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c04571dbf7be5e4c4148d1a8cedf5bcc682015ca",
+  "prompts": {},
+  "sessions": {
+    "s_8808d9e6ee938f": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5df8b5bb-b1b1-4554-b720-2a19c73c15c2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
