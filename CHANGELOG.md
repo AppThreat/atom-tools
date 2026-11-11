@@ -15,6 +15,9 @@ All notable changes to atom-tools are documented here. The format follows
   `require(` and `import(` calls is skipped so module specifiers no longer show up as
   endpoints. OpenAPI output is unchanged on juice-shop, nestjs-realworld,
   node-express-boilerplate and node-express-realworld.
+- The Docker image bundles cdxgen-plugins-bin 4.3.0, whose golem, rusi and kosi mark
+  request values resolved from `Forwarded` and `X-Forwarded-*` headers as `proxy-derived`
+  sources.
 
 ## [1.0.5] - 2026-10-07
 
