@@ -13,7 +13,7 @@ LABEL maintainer="appthreat" \
       org.opencontainers.docker.cmd="docker run --rm -it -v /tmp:/tmp -v $(pwd):/app:rw -w /app -t ghcr.io/appthreat/atom-tools"
 
 RUN mkdir -p /mnt/sys-root; \
-    dnf install --installroot /mnt/sys-root glibc-minimal-langpack microdnf java-21-openjdk-headless findutils which tar gzip zip unzip sudo nodejs nodejs-devel \
+    dnf install --installroot /mnt/sys-root glibc-minimal-langpack microdnf java-21-openjdk-headless findutils which tar gzip zip unzip sudo nodejs24 nodejs24-npm nodejs24-devel \
     bzip2 python3 python3-devel python3-pip \
     --releasever 10 --setopt install_weak_deps=false --nodocs -y; \
     dnf --installroot /mnt/sys-root clean all;
@@ -46,7 +46,14 @@ ENV ANDROID_HOME=/opt/android-sdk-linux \
     NYXSTONE_LLVM_PREFIX="/usr/lib64/llvm18"
 ENV PATH=${PATH}:/usr/local/bin/:/root/.local/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/tools:${ANDROID_HOME}/tools/bin:${ANDROID_HOME}/platform-tools:
 
-RUN microdnf install -y make gcc g++ ncurses nodejs nodejs-devel npm \
+# AlmaLinux 10's default nodejs package is Node 22, and cdxgen 13 needs Node 24
+# or newer. The nodejs24 packages install the commands as node-24, npm-24 and
+# npx-24, so the unversioned names are linked into /usr/local/bin.
+RUN microdnf install -y make gcc g++ ncurses nodejs24 nodejs24-npm nodejs24-devel \
+    && ln -sf /usr/bin/node-24 /usr/local/bin/node \
+    && ln -sf /usr/bin/npm-24 /usr/local/bin/npm \
+    && ln -sf /usr/bin/npx-24 /usr/local/bin/npx \
+    && node --version \
     && alternatives --install /usr/bin/python3 python /usr/bin/python3.12 1 \
     && python3 --version \
     && python3 -m pip install --upgrade pip \

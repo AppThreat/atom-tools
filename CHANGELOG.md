@@ -9,6 +9,8 @@ All notable changes to atom-tools are documented here. The format follows
 ### Changed
 
 - The Docker image installs cdxgen from `@cdxgen/cdxgen` (13.x). The old `@cyclonedx/cdxgen` package stops at 12.9.1.
+- The Docker image runs Node.js 24 from AlmaLinux's `nodejs24` packages instead of Node.js 22,
+  since cdxgen 13 requires Node.js 24 or newer.
 
 ## [1.1.0] - 2026-10-24
 
