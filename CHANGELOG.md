@@ -4,6 +4,12 @@ All notable changes to atom-tools are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- The Docker image installs cdxgen from `@cdxgen/cdxgen` (13.x). The old `@cyclonedx/cdxgen` package stops at 12.9.1.
+
 ## [1.1.0] - 2026-10-24
 
 ### Changed
