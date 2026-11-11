@@ -1,0 +1,21 @@
+CHANGELOG.md
+  s_866a1aa64ce7cf::t_5dd99d36f2a8cd 7-12
+Dockerfile
+  s_866a1aa64ce7cf::t_e90dc2d13f3a48 67
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a35a7dbb8e58916e3d1b9e49282ef8de6326bb4d",
+  "prompts": {},
+  "sessions": {
+    "s_866a1aa64ce7cf": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bdc4aa31-7d82-41d4-b4e8-e95071da2a4e",
+        "model": "claude-sonnet-5-5"
+      },
+      "human_author": "Prabhu Subramanian <prabhu@appthreat.com>"
+    }
+  }
+}
