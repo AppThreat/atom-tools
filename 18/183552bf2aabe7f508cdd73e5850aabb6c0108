@@ -1,0 +1,28 @@
+test/data/ts-import-subpath-usages.json
+  s_3c101267cf4b8f::t_4b55d51d6972f3 1-208
+atom_tools/lib/converter.py
+  s_3c101267cf4b8f::t_7a625675954817 307-317
+  s_3c101267cf4b8f::t_bac170aa1820cc 767,775
+  s_3c101267cf4b8f::t_dfcf61eda3d0de 793-794
+test/test_converter.py
+  s_3c101267cf4b8f::t_34793026f081fd 1468-1470
+  s_3c101267cf4b8f::t_7546b75a3c9b30 1527-1528,1533-1571
+  s_3c101267cf4b8f::t_3ad9e6572ad0a5 1529-1532
+  s_3c101267cf4b8f::t_8138f1a3bb0ccb 1526
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "18183552bf2aabe7f508cdd73e5850aabb6c0108",
+  "prompts": {},
+  "sessions": {
+    "s_3c101267cf4b8f": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "sess_b3ef0e1b-6d28-424c-a5e1-cc89dfceb2eb",
+        "model": "GLM-5.3"
+      },
+      "human_author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
