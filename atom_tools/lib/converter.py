@@ -304,6 +304,17 @@ def js_filterable(code):
     return False
 
 
+# Quoted module specifiers of import expressions reach endpoint extraction in
+# many shapes: require("pkg/sub").X, import("pkg/sub").X, program:require("pkg/sub"),
+# await import("pkg/sub"), or the source text of an import statement
+# (import { X } from "pkg/sub", import "pkg/sub"). A bare package subpath holds
+# a slash and no file extension, so the js filter mistakes it for a URI
+# fragment. It names a module, not a route, wherever it sits in the string.
+_JS_IMPORT_SPECIFIER = re.compile(
+    r"\b(?:require\s*\(\s*|import\s*\(\s*|import\s+|from\s+)[\"']([^\"']+)[\"']"
+)
+
+
 # --- Third-party API discovery constants ---
 
 # Patterns in resolvedMethod that indicate an outbound HTTP client call.
@@ -753,6 +764,7 @@ class OpenAPI:
         """
         filtered_matches: List[str] = []
         possible_uri_fragment = False
+        import_specifiers = set()
         match self.usages.origin_type:
             case "java" | "jar":
                 if not (
@@ -760,6 +772,7 @@ class OpenAPI:
                 ):
                     return filtered_matches
             case "js" | "ts" | "javascript" | "typescript":
+                import_specifiers = set(_JS_IMPORT_SPECIFIER.findall(code))
                 try:
                     if "/" in code and not js_filterable(code):
                         url_obj = urlparse(code)
@@ -776,6 +789,8 @@ class OpenAPI:
         for m in matches:
             if m and m[0] not in (".", "@", ","):
                 if "/" not in m or "node_modules" in m or "@types" in m:
+                    continue
+                if m in import_specifiers:
                     continue
                 nm = m.replace('"', "").replace("'", "").lstrip("/").lstrip(")}")
                 filtered_matches.append(f"/{nm}")
