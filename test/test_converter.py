@@ -1465,13 +1465,10 @@ def test_js(js_usages_1):
     js_usages_1.file_endpoint_map = js_usages_1.create_file_to_method_dict(methods)
     file_endpoint_map = sort_openapi_result(js_usages_1.file_endpoint_map)
     assert file_endpoint_map
+    # score-board.component.ts reaches this map only through its import
+    # binding import(".../challenge.model").Challenge[]:map; a quoted module
+    # specifier is not an endpoint, so the file has no entry here.
     assert js_usages_1.target_line_nums == {
-        "frontend/src/app/score-board/score-board.component.ts": {
-            "__whatwg.console:warn": [168],
-            "frontend/src/app/score-board/score-board.component.ts::program:ScoreBoardComponent:rewriteLegacyChallengeDirectLink": [
-                83
-            ],
-        },
         "routes/dataErasure.ts": {"()": [80]},
         "server.ts": {"()": [694], "server.ts::program:readyCallback": [702]},
     }
@@ -1524,6 +1521,52 @@ def test_ts_custom_router_openapi(ts_usages_1):
     assert "/items" in paths
     assert "/users" in paths
     assert "/render" in paths
+
+
+@pytest.fixture
+def ts_usages_2():
+    # Slices of a project that imports from package subpaths (primeng/button
+    # and friends): import bindings whose resolvedMethod is the import
+    # expression, a program-prefixed require, an await dynamic import, ESM
+    # statement text in code, and one real express route as the control that
+    # must survive.
+    return OpenAPI("openapi3.1.0", "typescript", "test/data/ts-import-subpath-usages.json")
+
+
+def test_ts_import_subpath_is_not_a_path(ts_usages_2):
+    result = ts_usages_2.convert_usages()
+    assert list(result.keys()) == ["/api/users/{id}"]
+    assert not any("primeng" in path for path in result)
+
+
+def test_js_import_specifiers_extract_no_endpoints(ts_usages_2):
+    # Import expressions reach endpoint extraction in more shapes than a
+    # leading require( or import(: program-prefixed bindings, await dynamic
+    # imports, assignments and ESM statement text all quote a module
+    # specifier that must not become a route.
+    for method in (
+        'require("primeng/button").ButtonModule',
+        "require('primeng/button').ButtonModule",
+        'import("primeng/button").ButtonModule',
+        "src/app.ts::program:require('primeng/button')",
+        'await import("primeng/api")',
+        'const ButtonModule = require("primeng/button")',
+        '   require("primeng/button").ButtonModule',
+        'import ("primeng/button").ButtonModule',
+        'require ("primeng/button").ButtonModule',
+        'import { ButtonModule } from "primeng/button"',
+        'import "primeng/button/styles.css"',
+        'export { ButtonModule } from "primeng/button"',
+        'use(require("primeng/button"))',
+    ):
+        assert ts_usages_2._extract_endpoints(method) == [], method
+    # A real route keeps its place, including beside an import call.
+    assert ts_usages_2._extract_endpoints(
+        'app.get("/api/users/:id", (req, res) => res.send())'
+    ) == ["/api/users/:id"]
+    assert ts_usages_2._extract_endpoints(
+        'app.use("/static", require("serve-static/encoder"))'
+    ) == ["/static"]
 
 
 @pytest.fixture

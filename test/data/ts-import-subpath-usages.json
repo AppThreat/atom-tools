@@ -1,0 +1,208 @@
+{
+    "objectSlices": [
+        {
+            "fullName": "src/app.module.ts::program",
+            "signature": "",
+            "fileName": "src/app.module.ts",
+            "lineNumber": 1,
+            "columnNumber": 0,
+            "usages": [
+                {
+                    "targetObj": {
+                        "name": "ButtonModule",
+                        "typeFullName": "ANY",
+                        "lineNumber": 1,
+                        "columnNumber": 9,
+                        "label": "LOCAL"
+                    },
+                    "definedBy": {
+                        "name": "ButtonModule",
+                        "typeFullName": "ANY",
+                        "resolvedMethod": "require(\"primeng/button\").ButtonModule",
+                        "isExternal": true,
+                        "lineNumber": 1,
+                        "columnNumber": 27,
+                        "label": "CALL"
+                    },
+                    "invokedCalls": [],
+                    "argToCalls": []
+                },
+                {
+                    "targetObj": {
+                        "name": "TooltipModule",
+                        "typeFullName": "ANY",
+                        "lineNumber": 2,
+                        "columnNumber": 9,
+                        "label": "LOCAL"
+                    },
+                    "definedBy": {
+                        "name": "TooltipModule",
+                        "typeFullName": "ANY",
+                        "resolvedMethod": "require(\"primeng/tooltip\").TooltipModule",
+                        "isExternal": true,
+                        "lineNumber": 2,
+                        "columnNumber": 29,
+                        "label": "CALL"
+                    },
+                    "invokedCalls": [],
+                    "argToCalls": []
+                },
+                {
+                    "targetObj": {
+                        "name": "TableModule",
+                        "typeFullName": "ANY",
+                        "lineNumber": 3,
+                        "columnNumber": 9,
+                        "label": "LOCAL"
+                    },
+                    "definedBy": {
+                        "name": "TableModule",
+                        "typeFullName": "ANY",
+                        "resolvedMethod": "require(\"primeng/table\").TableModule",
+                        "isExternal": true,
+                        "lineNumber": 3,
+                        "columnNumber": 27,
+                        "label": "CALL"
+                    },
+                    "invokedCalls": [],
+                    "argToCalls": []
+                }
+            ]
+        },
+        {
+            "fullName": "src/dynamic.ts::program",
+            "signature": "",
+            "fileName": "src/dynamic.ts",
+            "lineNumber": 1,
+            "columnNumber": 0,
+            "usages": [
+                {
+                    "targetObj": {
+                        "name": "lazy",
+                        "typeFullName": "ANY",
+                        "lineNumber": 4,
+                        "columnNumber": 9,
+                        "label": "LOCAL"
+                    },
+                    "definedBy": {
+                        "name": "lazy",
+                        "typeFullName": "ANY",
+                        "resolvedMethod": "src/dynamic.ts::program:lazy",
+                        "isExternal": false,
+                        "lineNumber": 4,
+                        "columnNumber": 16,
+                        "label": "CALL"
+                    },
+                    "invokedCalls": [
+                        {
+                            "callName": "utils",
+                            "resolvedMethod": "src/dynamic.ts::program:require('primeng/utils')",
+                            "paramTypes": [],
+                            "returnType": "ANY",
+                            "position": 0,
+                            "isExternal": true,
+                            "lineNumber": 5,
+                            "columnNumber": 4
+                        }
+                    ],
+                    "argToCalls": [
+                        {
+                            "callName": "then",
+                            "resolvedMethod": "Promise:then",
+                            "paramTypes": ["LAMBDA"],
+                            "returnType": "ANY",
+                            "position": 0,
+                            "isExternal": true,
+                            "lineNumber": 2,
+                            "columnNumber": 26,
+                            "code": "await import(\"primeng/api\")"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "fullName": "src/styles.ts::program",
+            "signature": "",
+            "fileName": "src/styles.ts",
+            "lineNumber": 1,
+            "columnNumber": 0,
+            "usages": [
+                {
+                    "targetObj": {
+                        "name": "styles",
+                        "typeFullName": "ANY",
+                        "lineNumber": 1,
+                        "columnNumber": 13,
+                        "label": "LOCAL"
+                    },
+                    "definedBy": {
+                        "name": "styles",
+                        "typeFullName": "ANY",
+                        "resolvedMethod": "src/styles.ts::program:styles",
+                        "isExternal": false,
+                        "lineNumber": 1,
+                        "columnNumber": 20,
+                        "label": "CALL"
+                    },
+                    "invokedCalls": [],
+                    "argToCalls": [
+                        {
+                            "callName": "get",
+                            "resolvedMethod": "express:Express:get",
+                            "paramTypes": ["__ecma.String", "LAMBDA"],
+                            "returnType": "ANY",
+                            "position": 0,
+                            "isExternal": true,
+                            "lineNumber": 6,
+                            "columnNumber": 0,
+                            "code": "import { TooltipModule } from \"primeng/tooltip\""
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "fullName": "src/server.ts::program",
+            "signature": "",
+            "fileName": "src/server.ts",
+            "lineNumber": 1,
+            "columnNumber": 0,
+            "usages": [
+                {
+                    "targetObj": {
+                        "name": "app",
+                        "typeFullName": "express:Express",
+                        "lineNumber": null,
+                        "columnNumber": null,
+                        "label": "LOCAL"
+                    },
+                    "definedBy": {
+                        "name": "express",
+                        "typeFullName": "ANY",
+                        "resolvedMethod": "express",
+                        "isExternal": true,
+                        "lineNumber": 3,
+                        "columnNumber": 12,
+                        "label": "CALL"
+                    },
+                    "invokedCalls": [],
+                    "argToCalls": [
+                        {
+                            "callName": "get",
+                            "resolvedMethod": "express:Express:get",
+                            "paramTypes": ["__ecma.String", "LAMBDA"],
+                            "returnType": "ANY",
+                            "position": 0,
+                            "isExternal": true,
+                            "lineNumber": 5,
+                            "columnNumber": 0,
+                            "code": "app.get(\"/api/users/:id\", (req, res) => {\n\tres.send(req.params.id)\n})"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "userDefinedTypes": []
+}
