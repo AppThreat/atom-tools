@@ -1,0 +1,20 @@
+pyrefly.toml
+  s_aaee579a5278f8::t_e92fada08fe085 1-4
+  s_aaee579a5278f8::t_153e874b75c8e3 5-11
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9ed3b7bef07692447b30cdc5159f994dd706ca72",
+  "prompts": {},
+  "sessions": {
+    "s_aaee579a5278f8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "sess_5e7ef323-4862-458f-9597-0fa3f73f8197",
+        "model": "GLM-5.3"
+      },
+      "human_author": "Team AppThreat <cloud@appthreat.com>"
+    }
+  }
+}
