@@ -1,0 +1,23 @@
+pyrefly.toml
+  s_aaee579a5278f8::t_e92fada08fe085 1-4
+  s_aaee579a5278f8::t_153e874b75c8e3 5-11
+.github/workflows/test.yml
+  s_aaee579a5278f8::t_4c0ac15efdb882 39-41
+  s_aaee579a5278f8::t_861e7e89968af0 36-38
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d5e0b87201e58903a87ff6cfebdd0ed9988d2bf4",
+  "prompts": {},
+  "sessions": {
+    "s_aaee579a5278f8": {
+      "agent_id": {
+        "tool": "opencode",
+        "id": "sess_5e7ef323-4862-458f-9597-0fa3f73f8197",
+        "model": "GLM-5.3"
+      },
+      "human_author": null
+    }
+  }
+}
