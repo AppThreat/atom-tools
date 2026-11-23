@@ -33,10 +33,16 @@ jobs:
       uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
       with:
         python-version: '3.12'
-    - name: Install ruff
-      run: python3 -m pip install ruff
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip setuptools
+        # The mcp extra is needed for pyrefly: explain.py imports
+        # mcp.server.fastmcp inside the --mcp code paths.
+        python3 -m pip install .[dev,mcp]
     - name: Lint
       run: ruff check .
+    - name: Pyrefly
+      run: pyrefly check .
 
   build:
     if: github.event_name != 'merge_group'

@@ -1,0 +1,11 @@
+# The default (full) preset reports 120 errors on this codebase; the
+# high-confidence basic preset gates CI while annotation work catches up.
+preset = "basic"
+
+project-includes = [
+    "**/*.py*",
+]
+project-excludes = [
+    "**/__pycache__",
+    "**/.venv",
+]
